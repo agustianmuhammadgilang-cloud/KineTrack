@@ -30,8 +30,10 @@
 
 <div class="sidebar">
     <h4 class="text-center text-white mb-4">KINETRACK</h4>
+    
+<a href="<?= base_url('atasan') ?>">🏠 Dashboard</a>
+<a href="<?= base_url('atasan/laporan') ?>">📄 Laporan Masuk</a>
 
-    <a href="<?= base_url('atasan/laporan') ?>">📄 Laporan Masuk</a>
 
     <hr class="text-white">
     <a href="<?= base_url('logout') ?>">Logout</a>
