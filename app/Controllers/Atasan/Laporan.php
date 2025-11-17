@@ -29,8 +29,6 @@ class Laporan extends BaseController
                 ->findAll();
         }
 
-        dd($bidangAtasan, $staffIds);
-
 
         return view('atasan/laporan/index', $data);
     }
