@@ -53,6 +53,7 @@ $routes->group('staff', ['filter'=>'auth'], function($routes) {
     $routes->post('laporan/store', 'Staff\Laporan::store');
 });
 
+$routes->get('atasan', 'Atasan\Dashboard::index', ['filter' => 'auth']);
 $routes->group('atasan', ['filter' => 'auth'], function($routes){
 
     $routes->get('laporan', 'Atasan\Laporan::index');
