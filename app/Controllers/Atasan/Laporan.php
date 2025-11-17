@@ -29,6 +29,9 @@ class Laporan extends BaseController
                 ->findAll();
         }
 
+        dd($bidangAtasan, $staffIds);
+
+
         return view('atasan/laporan/index', $data);
     }
 
@@ -69,4 +72,5 @@ class Laporan extends BaseController
 
         return redirect()->to('/atasan/laporan')->with('success', 'Laporan ditolak.');
     }
+    
 }
