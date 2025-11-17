@@ -52,3 +52,13 @@ $routes->group('staff', ['filter'=>'auth'], function($routes) {
     $routes->get('laporan/create', 'Staff\Laporan::create');
     $routes->post('laporan/store', 'Staff\Laporan::store');
 });
+
+$routes->group('atasan', ['filter' => 'auth'], function($routes){
+
+    $routes->get('laporan', 'Atasan\Laporan::index');
+    $routes->get('laporan/detail/(:num)', 'Atasan\Laporan::detail/$1');
+
+    $routes->get('laporan/approve/(:num)', 'Atasan\Laporan::approve/$1');
+    $routes->post('laporan/reject/(:num)', 'Atasan\Laporan::reject/$1');
+});
+
