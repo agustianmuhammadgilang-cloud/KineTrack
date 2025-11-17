@@ -43,3 +43,12 @@ $routes->group('admin', ['filter'=>'auth'], function($routes){
     $routes->get('users/delete/(:num)', 'Admin\User::delete/$1');
 
 });
+
+$routes->group('staff', ['filter'=>'auth'], function($routes) {
+
+    $routes->get('/', 'Staff\Laporan::index');
+
+    $routes->get('laporan', 'Staff\Laporan::index');
+    $routes->get('laporan/create', 'Staff\Laporan::create');
+    $routes->post('laporan/store', 'Staff\Laporan::store');
+});
