@@ -30,7 +30,7 @@
 
 <div class="sidebar">
     <h4 class="text-center text-white mb-4">KINETRACK</h4>
-    
+
 <a href="<?= base_url('atasan') ?>">🏠 Dashboard</a>
 <a href="<?= base_url('atasan/laporan') ?>">📄 Laporan Masuk</a>
 
@@ -42,6 +42,8 @@
 <div class="content">
     <?= $this->renderSection('content') ?>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
