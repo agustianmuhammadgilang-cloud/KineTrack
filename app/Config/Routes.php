@@ -33,4 +33,13 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     $routes->get('bidang/delete/(:num)', 'Admin\Bidang::delete/$1');
 });
 
+$routes->group('admin', ['filter'=>'auth'], function($routes){
 
+    $routes->get('users', 'Admin\User::index');
+    $routes->get('users/create', 'Admin\User::create');
+    $routes->post('users/store', 'Admin\User::store');
+    $routes->get('users/edit/(:num)', 'Admin\User::edit/$1');
+    $routes->post('users/update/(:num)', 'Admin\User::update/$1');
+    $routes->get('users/delete/(:num)', 'Admin\User::delete/$1');
+
+});
