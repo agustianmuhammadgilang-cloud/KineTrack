@@ -47,4 +47,42 @@ class Laporan extends BaseController
 
         return redirect()->to('/staff/laporan')->with('success', 'Laporan berhasil dikirim!');
     }
+
+    public function rejected($id)
+{
+    $model = new LaporanModel();
+
+    $data['lap'] = $model
+        ->select('laporan.*, users.nama')
+        ->join('users', 'users.id = laporan.user_id')
+        ->find($id);
+
+    return view('staff/laporan/rejected_detail', $data);
+}
+
+public function resubmit($id)
+{
+    $model = new LaporanModel();
+
+    // upload file baru
+    $file = $this->request->getFile('file_bukti');
+    $fileName = $this->request->getPost('file_lama'); // default file lama
+
+    if ($file && $file->isValid()) {
+        $fileName = $file->getRandomName();
+        $file->move('uploads/bukti', $fileName);
+    }
+
+    $model->update($id, [
+        'judul'     => $this->request->getPost('judul'),
+        'deskripsi' => $this->request->getPost('deskripsi'),
+        'tanggal'   => $this->request->getPost('tanggal'),
+        'file_bukti'=> $fileName,
+        'status'    => 'pending',
+        'catatan_atasan' => null
+    ]);
+
+    return redirect()->to('/staff/laporan')->with('success', 'Laporan berhasil dikirim ulang!');
+}
+
 }

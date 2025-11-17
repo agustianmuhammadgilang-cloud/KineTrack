@@ -7,14 +7,19 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 $routes->get('/', 'Landing::index');
+
+// AUTH
 $routes->get('/login', 'Auth\Login::index');
 $routes->post('/login/process', 'Auth\Login::process');
 $routes->get('/logout', 'Auth\Login::logout');
-$routes->group('admin', ['filter' => 'auth'], function($routes) {
-    $routes->get('/', 'Admin\Dashboard::index');
-});
 
+// ==========================
+// ADMIN
+// ==========================
 $routes->group('admin', ['filter' => 'auth'], function($routes) {
+
+    // Dashboard
+    $routes->get('/', 'Admin\Dashboard::index');
 
     // Jabatan
     $routes->get('jabatan', 'Admin\Jabatan::index');
@@ -31,10 +36,8 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     $routes->get('bidang/edit/(:num)', 'Admin\Bidang::edit/$1');
     $routes->post('bidang/update/(:num)', 'Admin\Bidang::update/$1');
     $routes->get('bidang/delete/(:num)', 'Admin\Bidang::delete/$1');
-});
 
-$routes->group('admin', ['filter'=>'auth'], function($routes){
-
+    // Users
     $routes->get('users', 'Admin\User::index');
     $routes->get('users/create', 'Admin\User::create');
     $routes->post('users/store', 'Admin\User::store');
@@ -44,22 +47,37 @@ $routes->group('admin', ['filter'=>'auth'], function($routes){
 
 });
 
-$routes->group('staff', ['filter'=>'auth'], function($routes) {
 
+// ==========================
+// STAFF
+// ==========================
+$routes->group('staff', ['filter' => 'auth'], function($routes) {
+
+    // dashboard staff
     $routes->get('/', 'Staff\Laporan::index');
 
+    // laporan staff
     $routes->get('laporan', 'Staff\Laporan::index');
     $routes->get('laporan/create', 'Staff\Laporan::create');
     $routes->post('laporan/store', 'Staff\Laporan::store');
+
+    // fitur baru (rejected)
+    $routes->get('laporan/rejected/(:num)', 'Staff\Laporan::rejected/$1');
+    $routes->post('laporan/resubmit/(:num)', 'Staff\Laporan::resubmit/$1');
 });
 
+
+// ==========================
+// ATASAN
+// ==========================
 $routes->get('atasan', 'Atasan\Dashboard::index', ['filter' => 'auth']);
+
 $routes->group('atasan', ['filter' => 'auth'], function($routes){
 
     $routes->get('laporan', 'Atasan\Laporan::index');
     $routes->get('laporan/detail/(:num)', 'Atasan\Laporan::detail/$1');
 
+    // approval
     $routes->get('laporan/approve/(:num)', 'Atasan\Laporan::approve/$1');
     $routes->post('laporan/reject/(:num)', 'Atasan\Laporan::reject/$1');
 });
-
