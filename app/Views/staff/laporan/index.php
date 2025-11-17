@@ -19,6 +19,7 @@
                 <th>Tanggal</th>
                 <th>Status</th>
                 <th>Bukti</th>
+                <th>Aksi</th>
             </tr>
         </thead>
 
@@ -28,6 +29,7 @@
                 <td><?= $no++ ?></td>
                 <td><?= esc($l['judul']) ?></td>
                 <td><?= $l['tanggal'] ?></td>
+
                 <td>
                     <?php if($l['status']=='pending'): ?>
                         <span class="badge bg-secondary">Pending</span>
@@ -40,15 +42,26 @@
 
                 <td>
                     <?php if($l['file_bukti']): ?>
-                        <a href="<?= base_url('uploads/bukti/'.$l['file_bukti']) ?>" target="_blank" class="btn btn-sm btn-info">View</a>
+                        <a href="<?= base_url('uploads/bukti/'.$l['file_bukti']) ?>" 
+                           target="_blank" class="btn btn-sm btn-info">View</a>
                     <?php else: ?>
                         -
                     <?php endif ?>
                 </td>
+
+                <td>
+                    <?php if($l['status']=='rejected'): ?>
+                        <a href="<?= base_url('staff/laporan/rejected/'.$l['id']) ?>" 
+                           class="btn btn-sm btn-warning">
+                           Lihat
+                        </a>
+                    <?php else: ?>
+                        -
+                    <?php endif; ?>
+                </td>
             </tr>
             <?php endforeach ?>
         </tbody>
-
     </table>
 </div>
 
