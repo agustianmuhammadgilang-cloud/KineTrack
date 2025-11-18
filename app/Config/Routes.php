@@ -96,3 +96,7 @@ $routes->group('atasan', ['filter' => 'auth'], function($routes){
 // polling / API sederhana untuk notifikasi atasan
 $routes->get('atasan/notifications/pending-count', 'Atasan\Notifications::pendingCount', ['filter' => 'auth']);
 $routes->get('atasan/notifications/list', 'Atasan\Notifications::list', ['filter' => 'auth']); // optional - untuk detail
+
+$routes->group('admin/bidang', ['filter' => 'auth'], function($routes) {
+    $routes->get('detail/(:num)', 'Admin\BidangDetail::index/$1');
+});
