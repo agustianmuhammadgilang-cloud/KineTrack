@@ -14,7 +14,7 @@
     <table class="table table-bordered table-hover">
         <thead style="background:var(--polban-blue); color:white;">
             <tr>
-                <th>#</th>
+                <th>No</th>
                 <th>Nama</th>
                 <th>Email</th>
                 <th>Jabatan</th>
