@@ -60,6 +60,13 @@ class Laporan extends BaseController
 
 
         return redirect()->to('/atasan/laporan')->with('success', 'Laporan disetujui!');
+
+        session()->setFlashdata('alert', [
+        'type' => 'success',
+        'title' => 'Disetujui!',
+        'message' => 'Laporan telah berhasil disetujui.'
+    ]);
+
     }
 
     public function reject($id)
@@ -79,6 +86,13 @@ class Laporan extends BaseController
 
 
         return redirect()->to('/atasan/laporan')->with('success', 'Laporan ditolak.');
+
+        session()->setFlashdata('alert', [
+        'type' => 'error',
+        'title' => 'Ditolak!',
+        'message' => 'Laporan berhasil ditolak dan dikirim kembali ke staff.'
+    ]);
+
     }
     
 }
