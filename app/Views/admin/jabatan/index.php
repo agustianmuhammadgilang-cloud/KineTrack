@@ -14,7 +14,7 @@
     <table class="table table-bordered table-hover">
         <thead style="background: var(--polban-blue); color:white;">
             <tr>
-                <th width="70">#</th>
+                <th width="70">No</th>
                 <th>Nama Jabatan</th>
                 <th width="180">Aksi</th>
             </tr>

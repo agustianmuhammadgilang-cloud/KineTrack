@@ -8,22 +8,73 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 
     <style>
-        :root{
-            --polban-blue:#1D2F83;
-            --polban-orange:#F58025;
+        :root {
+            --polban-blue: #1D2F83;
+            --polban-orange: #F58025;
         }
-        body { background: #f5f7fa; }
-        .btn-polban{ background: var(--polban-orange); color:white; }
-        .btn-polban:hover{ background:#c7671e; color:white; }
-        .sidebar{
-            width:250px; height:100vh; position:fixed; background:var(--polban-blue); padding-top:20px;
+
+        body {
+            background: #f5f7fa;
+            font-family: 'Poppins', sans-serif;
         }
-        .sidebar a{
-            color:white; text-decoration:none; padding:12px 20px; display:block;
+
+        .btn-polban {
+            background: var(--polban-orange);
+            color: white;
         }
-        .sidebar a:hover{ background:rgba(255,255,255,0.1); }
-        .content{
-            margin-left:260px; padding:30px;
+
+        .btn-polban:hover {
+            background: #c7671e;
+            color: white;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            background: var(--polban-blue);
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            display: block;
+            font-size: 15px;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* CONTENT */
+        .content {
+            margin-left: 260px;
+            padding: 30px;
+        }
+
+        /* STAT CARDS */
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.3rem;
+            font-weight: 700;
+            color: var(--polban-blue);
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #777;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -38,24 +89,31 @@
     <a href="<?= base_url('admin/users') ?>">👤 User</a>
     <a href="<?= base_url('admin/jabatan') ?>">🏅 Jabatan</a>
     <a href="<?= base_url('admin/bidang') ?>">📁 Bidang</a>
+    <a href="<?= base_url('admin/bidang-select') ?>">📊 Analisis Bidang</a>
 
     <hr class="text-white">
     <a href="<?= base_url('logout') ?>">Logout</a>
 </div>
 
-<!-- CONTENT -->
+<!-- CONTENT WRAPPER -->
 <div class="content">
     <?= $this->renderSection('content') ?>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <?php if (session()->getFlashdata('alert')): 
     $a = session()->getFlashdata('alert'); ?>
 <script>
-  Swal.fire({
-    toast: true, position: 'top-end', showConfirmButton:false, timer:4000,
-    icon: '<?= esc($a['type']) ?>', title: '<?= esc($a['title']) ?>', text: '<?= esc($a['message']) ?>'
-  });
+Swal.fire({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 4000,
+    icon: '<?= esc($a['type']) ?>',
+    title: '<?= esc($a['title']) ?>',
+    text: '<?= esc($a['message']) ?>'
+});
 </script>
 <?php endif; ?>
 
