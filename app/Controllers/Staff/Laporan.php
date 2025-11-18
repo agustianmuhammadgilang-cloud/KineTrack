@@ -37,6 +37,7 @@ class Laporan extends BaseController
 
     public function store()
     {
+
         $model = new LaporanModel();
 
         $file = $this->request->getFile('file_bukti');
@@ -56,6 +57,13 @@ class Laporan extends BaseController
             'status'    => 'pending'
         ]);
 
+        session()->setFlashdata('alert', [
+        'type' => 'success',
+        'title' => 'Berhasil!',
+        'message' => 'Laporan berhasil dikirim.'
+]);
+
+
         return redirect()->to('/staff/laporan')->with('success', 'Laporan berhasil dikirim!');
     }
 
@@ -69,6 +77,13 @@ class Laporan extends BaseController
         ->find($id);
 
     return view('staff/laporan/rejected_detail', $data);
+
+    session()->setFlashdata('alert', [
+    'type' => 'warning',
+    'title' => 'Laporan Ditolak',
+    'message' => 'Silakan perbaiki laporan Anda sesuai catatan atasan.'
+]);
+
 }
 
 public function resubmit($id)
@@ -94,6 +109,13 @@ public function resubmit($id)
     ]);
 
     return redirect()->to('/staff/laporan')->with('success', 'Laporan berhasil dikirim ulang!');
+
+    session()->setFlashdata('alert', [
+    'type' => 'success',
+    'title' => 'Berhasil Dikirim Ulang',
+    'message' => 'Laporan berhasil diperbaiki dan dikirim ulang.'
+]);
+    
 }
 
 }

@@ -26,6 +26,20 @@
     </style>
 </head>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<?php if (session()->getFlashdata('alert')) : ?>
+<script>
+    Swal.fire({
+        icon: '<?= session()->getFlashdata('alert')['type'] ?>',
+        title: '<?= session()->getFlashdata('alert')['title'] ?>',
+        text: '<?= session()->getFlashdata('alert')['message'] ?>',
+        confirmButtonColor: '#0d6efd'
+    });
+</script>
+<?php endif; ?>
+
+
 <body>
 
 <div class="sidebar">
