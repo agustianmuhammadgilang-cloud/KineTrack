@@ -1,18 +1,23 @@
 <?= $this->extend('layout/admin_template') ?>
 <?= $this->section('content') ?>
 
-<h4 class="fw-bold mb-3">Tambah Jabatan</h4>
+<h4 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-6">Tambah Jabatan</h4>
 
-<div class="card shadow p-4">
-    <form action="<?= base_url('admin/jabatan/store'); ?>" method="POST">
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-md">
+    <form action="<?= base_url('admin/jabatan/store'); ?>" method="POST" class="space-y-4">
 
-        <div class="mb-3">
-            <label class="form-label">Nama Jabatan</label>
-            <input type="text" class="form-control" name="nama_jabatan" required>
+        <div>
+            <label class="block mb-1 text-gray-700 dark:text-gray-200 font-medium">Nama Jabatan</label>
+            <input type="text" name="nama_jabatan" placeholder="Masukkan nama jabatan"
+                   class="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-400 dark:bg-gray-700 dark:text-white" required>
         </div>
 
-        <button class="btn btn-polban">Simpan</button>
-        <a href="<?= base_url('admin/jabatan'); ?>" class="btn btn-secondary">Kembali</a>
+        <div class="flex gap-2 mt-4">
+            <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md font-medium shadow transition">Simpan</button>
+            <a href="<?= base_url('admin/jabatan'); ?>" 
+               class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-md font-medium shadow transition">Kembali</a>
+        </div>
+
     </form>
 </div>
 
