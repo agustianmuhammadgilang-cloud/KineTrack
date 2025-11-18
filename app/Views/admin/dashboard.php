@@ -168,12 +168,6 @@
             </div>
         </div>
 
-        <!-- ANALYTICS BUTTON -->
-        <div class="card shadow p-4">
-            <h5 class="fw-bold mb-2">🚀 Modul Analisis Kinerja (Tahap 1–5)</h5>
-            <p class="text-muted">Tekan tombol berikut untuk membuka halaman analisis per bidang.</p>
-            <a href="<?= base_url('admin/bidang'); ?>" class="btn btn-polban mt-2">Buka Manajemen Bidang</a>
-        </div>
 
         <!-- WELCOME -->
         <div class="card shadow p-4 mt-4">
