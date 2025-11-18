@@ -4,20 +4,31 @@ namespace App\Controllers\Staff;
 
 use App\Controllers\BaseController;
 use App\Models\LaporanModel;
+use App\Models\UserModel;
 
 class Laporan extends BaseController
 {
     public function index()
-    {
-        $model = new LaporanModel();
+{
+    $laporanModel = new LaporanModel();
+    $userModel = new UserModel();
 
-        $data['laporan'] = $model
-            ->where('user_id', session('user_id'))
-            ->orderBy('id', 'DESC')
-            ->findAll();
+    // Ambil data lengkap staff
+    $staff = $userModel
+        ->select('users.*, jabatan.nama_jabatan, bidang.nama_bidang')
+        ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
+        ->join('bidang', 'bidang.id = users.bidang_id', 'left')
+        ->find(session('user_id'));
 
-        return view('staff/laporan/index', $data);
-    }
+    // Ambil semua laporan milik staff
+    $data = [
+        'staff' => $staff,
+        'laporan' => $laporanModel->where('user_id', session('user_id'))->findAll()
+    ];
+
+    return view('staff/laporan/index', $data);
+}
+
 
     public function create()
     {
