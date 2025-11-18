@@ -20,4 +20,32 @@ class LaporanModel extends Model
     ];
 
     protected $returnType = 'array';
+
+    public function getDailyData($userId)
+{
+    return $this->select("DATE(tanggal) as tgl, COUNT(*) as total")
+                ->where('user_id', $userId)
+                ->groupBy('DATE(tanggal)')
+                ->orderBy('tgl', 'ASC')
+                ->findAll();
+}
+
+public function getWeeklyData($userId)
+{
+    return $this->select("WEEK(tanggal) as minggu, COUNT(*) as total")
+                ->where('user_id', $userId)
+                ->groupBy('minggu')
+                ->orderBy('minggu', 'ASC')
+                ->findAll();
+}
+
+public function getMonthlyData($userId)
+{
+    return $this->select("MONTH(tanggal) as bulan, COUNT(*) as total")
+                ->where('user_id', $userId)
+                ->groupBy('bulan')
+                ->orderBy('bulan', 'ASC')
+                ->findAll();
+}
+
 }
