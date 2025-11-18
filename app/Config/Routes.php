@@ -29,7 +29,7 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     $routes->post('jabatan/update/(:num)', 'Admin\Jabatan::update/$1');
     $routes->get('jabatan/delete/(:num)', 'Admin\Jabatan::delete/$1');
 
-    // Bidang
+    // Bidang CRUD
     $routes->get('bidang', 'Admin\Bidang::index');
     $routes->get('bidang/create', 'Admin\Bidang::create');
     $routes->post('bidang/store', 'Admin\Bidang::store');
@@ -46,6 +46,31 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     $routes->get('users/delete/(:num)', 'Admin\User::delete/$1');
 
 });
+
+// ==========================
+// ADMIN - DETAIL BIDANG
+// ==========================
+$routes->group('admin/bidang', ['filter' => 'auth'], function($routes) {
+
+    // Tahap 1 → Halaman Detail Bidang (List Pegawai + Card Level 1)
+    $routes->get('detail/(:num)', 'Admin\BidangDetail::index/$1');
+
+    // Tahap 2 → Detail Pegawai (Card Level 2)
+    $routes->get('pegawai/(:num)', 'Admin\BidangDetail::pegawaiDetail/$1');
+
+    // Tahap 3 → Export Pegawai
+    $routes->get('detail/export/(:num)', 'Admin\BidangDetail::exportPegawai/$1');
+
+    // Tahap 4 → Export Bidang
+    $routes->get('detail/export/bidang/(:num)', 'Admin\BidangDetail::exportBidang/$1');
+
+    
+
+
+});
+
+$routes->get('admin/bidang-select', 'Admin\BidangDetail::select', ['filter' => 'auth']);
+
 
 
 // ==========================

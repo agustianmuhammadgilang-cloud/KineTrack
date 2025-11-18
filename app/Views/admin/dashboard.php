@@ -15,61 +15,105 @@
         }
 
         body {
-            background-color: #f5f7fa;
+            background-color: #eef1f6;
         }
 
+        /* SIDEBAR */
         .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
             height: 100vh;
             background-color: var(--polban-blue);
-            padding-top: 20px;
-            position: fixed;
+            padding-top: 25px;
+            overflow-y: auto;
+        }
+
+        .sidebar h4 {
+            color: white;
+            letter-spacing: 1.5px;
+            margin-bottom: 25px;
         }
 
         .sidebar a {
-            color: #f0f0f0;
+            color: #e9e9e9;
             padding: 12px 20px;
             display: block;
             font-size: 15px;
             text-decoration: none;
+            transition: 0.2s;
         }
 
         .sidebar a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.12);
             color: var(--polban-orange);
+            padding-left: 25px;
         }
 
         .sidebar .active {
             background-color: var(--polban-orange);
-            color: white;
+            color: white !important;
+            border-radius: 6px;
         }
 
+        /* CONTENT AREA */
         .content {
-            margin-left: 250px;
+            margin-left: 260px;
             padding: 35px;
         }
 
+        /* TOPBAR */
         .topbar {
             background-color: white;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 15px 22px;
+            border-radius: 10px;
             margin-bottom: 25px;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, .05);
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
-        .card-stat {
+        /* STAT CARDS */
+        .stat-card {
+            background-color: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, .08);
             border-left: 6px solid var(--polban-orange);
-            border-radius: 10px;
+            transition: 0.2s;
         }
 
-        .logout-btn {
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, .12);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--polban-blue);
+        }
+
+        .btn-polban {
             background-color: var(--polban-orange);
             color: white;
         }
 
-        .logout-btn:hover {
-            background-color: #c7671e;
+        .btn-polban:hover {
+            background-color: #c4661b;
+            color: white;
         }
+
+        /* FOOTER */
+        .footer {
+            margin-top: 40px;
+            font-size: 14px;
+            color: gray;
+            text-align: center;
+        }
+
     </style>
 </head>
 
@@ -77,57 +121,68 @@
 
     <!-- SIDEBAR -->
     <div class="sidebar">
-        <h4 class="text-center text-white mb-4">KINETRACK</h4>
+        <h4 class="text-center fw-bold">KINETRACK</h4>
 
         <a href="<?= base_url('admin'); ?>" class="active">📊 Dashboard</a>
         <a href="<?= base_url('admin/users'); ?>">👤 Manajemen User</a>
         <a href="<?= base_url('admin/jabatan'); ?>">🏅 Manajemen Jabatan</a>
         <a href="<?= base_url('admin/bidang'); ?>">📁 Manajemen Bidang</a>
+        <a href="<?= base_url('admin/bidang-select'); ?>">📊 Analisis Bidang</a>
+
 
         <hr class="text-white mx-3">
 
-        <a href="<?= base_url('/logout'); ?>" class="logout-btn text-center mx-3 mt-3">Logout</a>
+        <a href="<?= base_url('/logout'); ?>" class="text-center mt-3">🚪 Logout</a>
     </div>
 
     <!-- CONTENT -->
     <div class="content">
 
         <!-- TOPBAR -->
-        <div class="topbar shadow-sm">
+        <div class="topbar">
             <h5 class="fw-bold">Dashboard Admin</h5>
             <div>Halo, <strong><?= session('nama'); ?></strong></div>
         </div>
 
-        <!-- STAT CARDS -->
-        <div class="row">
-
+        <!-- STATS -->
+        <div class="row mb-4">
             <div class="col-md-4 mb-3">
-                <div class="card p-3 shadow card-stat">
-                    <h6>Total User</h6>
-                    <h3 class="fw-bold text-polban-orange">32</h3>
+                <div class="stat-card">
+                    <p class="mb-1">Total User</p>
+                    <div class="stat-number"><?= $total_user ?></div>
                 </div>
             </div>
 
             <div class="col-md-4 mb-3">
-                <div class="card p-3 shadow card-stat">
-                    <h6>Total Jabatan</h6>
-                    <h3 class="fw-bold">4</h3>
+                <div class="stat-card">
+                    <p class="mb-1">Total Jabatan</p>
+                    <div class="stat-number"><?= $total_jabatan ?></div>
                 </div>
             </div>
 
             <div class="col-md-4 mb-3">
-                <div class="card p-3 shadow card-stat">
-                    <h6>Total Bidang</h6>
-                    <h3 class="fw-bold">6</h3>
+                <div class="stat-card">
+                    <p class="mb-1">Total Bidang</p>
+                    <div class="stat-number"><?= $total_bidang ?></div>
                 </div>
             </div>
+        </div>
 
+        <!-- ANALYTICS BUTTON -->
+        <div class="card shadow p-4">
+            <h5 class="fw-bold mb-2">🚀 Modul Analisis Kinerja (Tahap 1–5)</h5>
+            <p class="text-muted">Tekan tombol berikut untuk membuka halaman analisis per bidang.</p>
+            <a href="<?= base_url('admin/bidang'); ?>" class="btn btn-polban mt-2">Buka Manajemen Bidang</a>
         </div>
 
         <!-- WELCOME -->
         <div class="card shadow p-4 mt-4">
-            <h5 class="fw-bold">Selamat datang di Admin Panel Kinetrack</h5>
-            <p class="mt-2">Gunakan menu di sebelah kiri untuk mengelola sistem.</p>
+            <h5 class="fw-bold">Selamat datang di Admin Panel Kinetrack 👋</h5>
+            <p class="mt-2 text-muted">Gunakan menu di sebelah kiri untuk mengelola sistem secara maksimal.</p>
+        </div>
+
+        <div class="footer mt-3">
+            © <?= date('Y') ?> KINETRACK — Politeknik Negeri Bandung
         </div>
 
     </div>
