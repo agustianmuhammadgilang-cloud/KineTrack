@@ -54,6 +54,11 @@ class Laporan extends BaseController
             'catatan_atasan' => null
         ]);
 
+        session()->setFlashdata('alert', [
+        'type' => 'success', 'title' => 'Disetujui!', 'message' => 'Laporan telah disetujui.'
+        ]);
+
+
         return redirect()->to('/atasan/laporan')->with('success', 'Laporan disetujui!');
     }
 
@@ -67,6 +72,11 @@ class Laporan extends BaseController
             'status' => 'rejected',
             'catatan_atasan' => $catatan
         ]);
+
+        session()->setFlashdata('alert', [
+        'type' => 'error', 'title' => 'Ditolak', 'message' => 'Laporan ditolak dan dikirim kembali ke staff.'
+        ]);
+
 
         return redirect()->to('/atasan/laporan')->with('success', 'Laporan ditolak.');
     }

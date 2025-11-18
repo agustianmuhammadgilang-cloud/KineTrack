@@ -56,6 +56,11 @@ class Laporan extends BaseController
             'status'    => 'pending'
         ]);
 
+        session()->setFlashdata('alert', [
+        'type' => 'success', 'title' => 'Berhasil', 'message' => 'Laporan berhasil dikirim.'
+        ]);
+
+
         return redirect()->to('/staff/laporan')->with('success', 'Laporan berhasil dikirim!');
     }
 
