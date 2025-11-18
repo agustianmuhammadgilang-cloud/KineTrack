@@ -1,40 +1,157 @@
 <?= $this->extend('layout/admin_template') ?>
 <?= $this->section('content') ?>
 
-<h3 class="fw-bold mb-4">Dashboard Admin</h3>
+<div class="p-6 transition-all duration-300 dark:bg-gray-900">
 
-<!-- STAT CARDS -->
-<div class="row mb-4">
-    <div class="col-md-4 mb-3">
-        <div class="stat-card">
-            <p class="mb-1">Total User</p>
-            <div class="stat-number"><?= $total_user ?></div>
-        </div>
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+        <h2 class="text-3xl font-extrabold text-blue-900 dark:text-blue-300 flex items-center gap-2">
+            Dashboard Admin
+            <span class="text-xl">✨</span>
+        </h2>
+
+
     </div>
 
-    <div class="col-md-4 mb-3">
-        <div class="stat-card">
-            <p class="mb-1">Total Jabatan</p>
-            <div class="stat-number"><?= $total_jabatan ?></div>
+    <!-- Stat Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+
+        <!-- CARD TEMPLATE -->
+        <div class="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md hover:shadow-2xl 
+                    transition-all duration-300 border border-gray-100 dark:border-gray-700
+                    transform hover:-translate-y-1 cursor-pointer relative overflow-hidden">
+            
+            <div class="absolute right-5 top-5 opacity-20 group-hover:opacity-50 transition-all">
+                <svg class="w-12 h-12 text-blue-600 dark:text-blue-300" 
+                     viewBox="0 0 24 24" fill="none">
+                    <?= heroicons_outline('users') ?>
+                </svg>
+            </div>
+
+            <p class="text-gray-500 dark:text-gray-400 font-semibold">Total User</p>
+            <h1 class="text-4xl font-bold text-blue-800 dark:text-blue-300 mt-2">
+                <?= $total_user ?>
+            </h1>
         </div>
+
+        <div class="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md hover:shadow-2xl 
+                    transition-all duration-300 border border-gray-100 dark:border-gray-700
+                    transform hover:-translate-y-1 cursor-pointer relative overflow-hidden">
+
+            <div class="absolute right-5 top-5 opacity-20 group-hover:opacity-50 transition-all">
+                <svg class="w-12 h-12 text-yellow-500 dark:text-yellow-300" fill="none">
+                    <?= heroicons_outline('trophy') ?>
+                </svg>
+            </div>
+
+            <p class="text-gray-500 dark:text-gray-400 font-semibold">Total Jabatan</p>
+            <h1 class="text-4xl font-bold text-blue-800 dark:text-blue-300 mt-2">
+                <?= $total_jabatan ?>
+            </h1>
+        </div>
+
+        <div class="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md hover:shadow-2xl 
+                    transition-all duration-300 border border-gray-100 dark:border-gray-700
+                    transform hover:-translate-y-1 cursor-pointer relative overflow-hidden">
+
+            <div class="absolute right-5 top-5 opacity-20 group-hover:opacity-50 transition-all">
+                <svg class="w-12 h-12 text-orange-500 dark:text-orange-300" fill="none">
+                    <?= heroicons_outline('folder') ?>
+                </svg>
+            </div>
+
+            <p class="text-gray-500 dark:text-gray-400 font-semibold">Total Bidang</p>
+            <h1 class="text-4xl font-bold text-blue-800 dark:text-blue-300 mt-2">
+                <?= $total_bidang ?>
+            </h1>
+        </div>
+
     </div>
 
-    <div class="col-md-4 mb-3">
-        <div class="stat-card">
-            <p class="mb-1">Total Bidang</p>
-            <div class="stat-number"><?= $total_bidang ?></div>
+    <!-- Main Row -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Welcome Box -->
+        <div class="md:col-span-2">
+            <div class="bg-white/80 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl 
+                        p-8 shadow-md border border-gray-100 dark:border-gray-700 
+                        transition-all duration-300">
+                
+                <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                    👋 Halo, <?= session('nama') ?>!
+                </h3>
+                <p class="text-gray-600 dark:text-gray-400 mt-2 leading-relaxed">
+                    Selamat bekerja, tetap jaga kualitas data sesuai standar  
+                    <b>Politeknik Negeri Bandung</b>.
+                </p>
+
+                <a href="<?= base_url('admin/bidang-select') ?>"
+                    class="inline-flex mt-6 px-6 py-3 bg-orange-500 hover:bg-orange-600 
+                           text-white font-semibold rounded-xl transition shadow-md">
+                    🚀 Analisis Kinerja Bidang
+                </a>
+            </div>
         </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 
+                    border border-gray-100 dark:border-gray-700 transition-all duration-300">
+            <h4 class="font-bold mb-4 text-lg text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                ⚡ Quick Actions
+            </h4>
+
+            <div class="flex flex-col gap-3">
+
+                <a href="<?= base_url('admin/users') ?>"
+                    class="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 
+                           dark:border-gray-700 hover:bg-blue-900 hover:text-white 
+                           dark:hover:bg-blue-600 transition-all font-semibold">
+                    <svg class="w-5 h-5" fill="none">
+                        <?= heroicons_outline('user') ?>
+                    </svg>
+                    Kelola User
+                </a>
+
+                <a href="<?= base_url('admin/bidang') ?>"
+                    class="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 
+                           dark:border-gray-700 hover:bg-blue-900 hover:text-white 
+                           dark:hover:bg-blue-600 transition-all font-semibold">
+                    <svg class="w-5 h-5" fill="none">
+                        <?= heroicons_outline('folder') ?>
+                    </svg>
+                    Kelola Bidang
+                </a>
+
+                <a href="<?= base_url('admin/jabatan') ?>"
+                    class="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 
+                           dark:border-gray-700 hover:bg-blue-900 hover:text-white 
+                           dark:hover:bg-blue-600 transition-all font-semibold">
+                    <svg class="w-5 h-5" fill="none">
+                        <?= heroicons_outline('trophy') ?>
+                    </svg>
+                    Kelola Jabatan
+                </a>
+
+                <a href="<?= base_url('admin/bidang-select') ?>"
+                    class="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 
+                           dark:border-gray-700 hover:bg-blue-900 hover:text-white 
+                           dark:hover:bg-blue-600 transition-all font-semibold">
+                    <svg class="w-5 h-5" fill="none">
+                        <?= heroicons_outline('chart-bar') ?>
+                    </svg>
+                    Analisis Bidang
+                </a>
+
+            </div>
+        </div>
+
     </div>
-</div>
 
-<!-- WELCOME BOX -->
-<div class="card shadow p-4 mt-4">
-    <h5 class="fw-bold">Selamat datang di Admin Panel Kinetrack 👋</h5>
-    <p class="mt-2 text-muted">Gunakan menu di sebelah kiri untuk mengelola sistem secara maksimal.</p>
-</div>
+    <!-- Footer -->
+    <p class="text-center text-gray-500 dark:text-gray-400 mt-8 text-sm">
+        © <?= date('Y') ?> KINETRACK — Politeknik Negeri Bandung.
+    </p>
 
-<div class="footer mt-3">
-    © <?= date('Y') ?> KINETRACK — Politeknik Negeri Bandung
 </div>
 
 <?= $this->endSection() ?>
