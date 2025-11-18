@@ -48,7 +48,7 @@ class Login extends BaseController
         } elseif ($user['role'] == 'atasan') {
             return redirect()->to('/atasan');
         } else {
-            return redirect()->to('/staff');
+            return redirect()->to('/staff/dashboard');
         }
     }
 

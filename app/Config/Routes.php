@@ -53,18 +53,20 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
 // ==========================
 $routes->group('staff', ['filter' => 'auth'], function($routes) {
 
-    // dashboard staff
-    $routes->get('/', 'Staff\Laporan::index');
+    // Dashboard Staff (NEW)
+    $routes->get('/', 'Staff\Dashboard::index');  
+    $routes->get('dashboard', 'Staff\Dashboard::index');
 
-    // laporan staff
+    // Laporan Staff
     $routes->get('laporan', 'Staff\Laporan::index');
     $routes->get('laporan/create', 'Staff\Laporan::create');
     $routes->post('laporan/store', 'Staff\Laporan::store');
 
-    // fitur baru (rejected)
+    // Laporan ditolak / rejected
     $routes->get('laporan/rejected/(:num)', 'Staff\Laporan::rejected/$1');
     $routes->post('laporan/resubmit/(:num)', 'Staff\Laporan::resubmit/$1');
 
+    // Profile Staff
     $routes->get('profile', 'Staff\Profile::index');
     $routes->post('profile/update', 'Staff\Profile::update');
 });
