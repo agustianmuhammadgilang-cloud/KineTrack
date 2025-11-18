@@ -1,48 +1,23 @@
 <?= $this->extend('layout/admin_template') ?>
 <?= $this->section('content') ?>
 
-<style>
-    .bidang-card {
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0px 3px 6px rgba(0,0,0,0.1);
-        transition: .2s;
-        cursor: pointer;
-        border-left: 6px solid var(--polban-orange);
-    }
-
-    .bidang-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0px 6px 12px rgba(0,0,0,0.15);
-    }
-
-    .bidang-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: var(--polban-blue);
-    }
-</style>
-
-<div class="mb-4">
-    <h3 class="fw-bold">📊 Pilih Bidang untuk Analisis</h3>
-    <p class="text-muted">Silakan pilih bidang berikut untuk melihat detail kinerja pegawai.</p>
+<div class="mb-6">
+    <h3 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">📊 Pilih Bidang untuk Analisis</h3>
+    <p class="text-gray-500 dark:text-gray-400">Silakan pilih bidang berikut untuk melihat detail kinerja pegawai.</p>
 </div>
 
-<div class="row">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <?php foreach ($bidang as $b): ?>
-    <div class="col-md-4 mb-3">
-        <a href="<?= base_url('admin/bidang/detail/'.$b['id']) ?>" style="text-decoration: none;">
-            <div class="bidang-card">
-                <div class="bidang-title"><?= $b['nama_bidang'] ?></div>
-                <p class="text-muted mt-1">Klik untuk melihat analisis lengkap bidang ini</p>
-            </div>
-        </a>
-    </div>
-    <?php endforeach ?>
+    <a href="<?= base_url('admin/bidang/detail/'.$b['id']) ?>" class="block">
+        <div class="bg-white dark:bg-gray-800 border-l-4 border-orange-500 shadow-md rounded-lg p-5 hover:shadow-xl hover:-translate-y-1 transition cursor-pointer">
+            <h4 class="text-lg font-semibold text-blue-900 dark:text-blue-400"><?= esc($b['nama_bidang']) ?></h4>
+            <p class="text-gray-500 dark:text-gray-400 mt-1 text-sm">Klik untuk melihat analisis lengkap bidang ini</p>
+        </div>
+    </a>
+    <?php endforeach; ?>
 
     <?php if (count($bidang) == 0): ?>
-        <p class="text-muted">Belum ada bidang ditambahkan.</p>
+        <div class="col-span-full text-gray-500 dark:text-gray-400">Belum ada bidang ditambahkan.</div>
     <?php endif ?>
 </div>
 
