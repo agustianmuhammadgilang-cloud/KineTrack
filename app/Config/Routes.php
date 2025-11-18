@@ -74,10 +74,17 @@ $routes->get('atasan', 'Atasan\Dashboard::index', ['filter' => 'auth']);
 
 $routes->group('atasan', ['filter' => 'auth'], function($routes){
 
+    $routes->get('profile', 'Atasan\Profile::index');
+    $routes->post('profile/update', 'Atasan\Profile::update');
+
     $routes->get('laporan', 'Atasan\Laporan::index');
     $routes->get('laporan/detail/(:num)', 'Atasan\Laporan::detail/$1');
 
     // approval
     $routes->get('laporan/approve/(:num)', 'Atasan\Laporan::approve/$1');
     $routes->post('laporan/reject/(:num)', 'Atasan\Laporan::reject/$1');
+
+    
 });
+
+
