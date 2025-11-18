@@ -48,5 +48,16 @@
     <?= $this->renderSection('content') ?>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<?php if (session()->getFlashdata('alert')): 
+    $a = session()->getFlashdata('alert'); ?>
+<script>
+  Swal.fire({
+    toast: true, position: 'top-end', showConfirmButton:false, timer:4000,
+    icon: '<?= esc($a['type']) ?>', title: '<?= esc($a['title']) ?>', text: '<?= esc($a['message']) ?>'
+  });
+</script>
+<?php endif; ?>
+
 </body>
 </html>
