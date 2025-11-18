@@ -64,6 +64,9 @@ $routes->group('staff', ['filter' => 'auth'], function($routes) {
     // fitur baru (rejected)
     $routes->get('laporan/rejected/(:num)', 'Staff\Laporan::rejected/$1');
     $routes->post('laporan/resubmit/(:num)', 'Staff\Laporan::resubmit/$1');
+
+    $routes->get('profile', 'Staff\Profile::index');
+    $routes->post('profile/update', 'Staff\Profile::update');
 });
 
 
