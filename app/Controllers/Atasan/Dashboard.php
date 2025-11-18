@@ -8,31 +8,39 @@ use App\Models\UserModel;
 
 class Dashboard extends BaseController
 {
-    public function index()
-    {
-        $laporanModel = new LaporanModel();
-        $userModel = new UserModel();
+   public function index()
+{
+    $laporanModel = new LaporanModel();
+    $userModel = new UserModel();
 
-        // id bidang atasan
-        $bidangAtasan = session('bidang_id');
+    $atasan = $userModel
+        ->select('users.*, jabatan.nama_jabatan, bidang.nama_bidang')
+        ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
+        ->join('bidang', 'bidang.id = users.bidang_id', 'left')
+        ->find(session('user_id'));
 
-        // ambil semua staff dalam bidang tersebut
-        $staff = $userModel->where('bidang_id', $bidangAtasan)->findAll();
-        $staffIds = array_column($staff, 'id');
+    // bidang atasan
+    $bidangAtasan = session('bidang_id');
+    $staff = $userModel->where('bidang_id', $bidangAtasan)->findAll();
+    $staffIds = array_column($staff, 'id');
 
-        if (empty($staffIds)) {
-            $data = [
-                'pending' => 0,
-                'approved' => 0,
-                'rejected' => 0,
-            ];
-        } else {
-            // hitung status laporan
-            $data['pending'] = $laporanModel->whereIn('user_id', $staffIds)->where('status', 'pending')->countAllResults();
-            $data['approved'] = $laporanModel->whereIn('user_id', $staffIds)->where('status', 'approved')->countAllResults();
-            $data['rejected'] = $laporanModel->whereIn('user_id', $staffIds)->where('status', 'rejected')->countAllResults();
-        }
-
-        return view('atasan/dashboard', $data);
+    if (empty($staffIds)) {
+        $data = [
+            'atasan' => $atasan,
+            'pending' => 0,
+            'approved' => 0,
+            'rejected' => 0,
+        ];
+    } else {
+        $data = [
+            'atasan' => $atasan,
+            'pending'  => $laporanModel->whereIn('user_id', $staffIds)->where('status', 'pending')->countAllResults(),
+            'approved' => $laporanModel->whereIn('user_id', $staffIds)->where('status', 'approved')->countAllResults(),
+            'rejected' => $laporanModel->whereIn('user_id', $staffIds)->where('status', 'rejected')->countAllResults(),
+        ];
     }
+
+    return view('atasan/dashboard', $data);
+}
+
 }
