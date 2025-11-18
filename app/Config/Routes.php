@@ -52,22 +52,19 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
 // ==========================
 $routes->group('admin/bidang', ['filter' => 'auth'], function($routes) {
 
-    // Tahap 1 → Halaman Detail Bidang (List Pegawai + Card Level 1)
-    $routes->get('detail/(:num)', 'Admin\BidangDetail::index/$1');
-
-    // Tahap 2 → Detail Pegawai (Card Level 2)
-    $routes->get('pegawai/(:num)', 'Admin\BidangDetail::pegawaiDetail/$1');
+    // Tahap 4 → Export Bidang (lebih spesifik → TARUH PALING ATAS)
+    $routes->get('detail/export/bidang/(:num)', 'Admin\BidangDetail::exportBidang/$1');
 
     // Tahap 3 → Export Pegawai
     $routes->get('detail/export/(:num)', 'Admin\BidangDetail::exportPegawai/$1');
 
-    // Tahap 4 → Export Bidang
-    $routes->get('detail/export/bidang/(:num)', 'Admin\BidangDetail::exportBidang/$1');
+    // Tahap 2 → Detail Pegawai (Card Level 2)
+    $routes->get('pegawai/(:num)', 'Admin\BidangDetail::pegawaiDetail/$1');
 
-    
-
-
+    // Tahap 1 → Halaman Detail Bidang (List Pegawai + Card Level 1)
+    $routes->get('detail/(:num)', 'Admin\BidangDetail::index/$1');
 });
+
 
 $routes->get('admin/bidang-select', 'Admin\BidangDetail::select', ['filter' => 'auth']);
 
@@ -122,6 +119,3 @@ $routes->group('atasan', ['filter' => 'auth'], function($routes){
 $routes->get('atasan/notifications/pending-count', 'Atasan\Notifications::pendingCount', ['filter' => 'auth']);
 $routes->get('atasan/notifications/list', 'Atasan\Notifications::list', ['filter' => 'auth']); // optional - untuk detail
 
-$routes->group('admin/bidang', ['filter' => 'auth'], function($routes) {
-    $routes->get('detail/(:num)', 'Admin\BidangDetail::index/$1');
-});

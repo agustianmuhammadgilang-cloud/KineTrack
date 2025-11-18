@@ -14,7 +14,10 @@
 <body>
     <h2 class="center">Rekap Kinerja Pegawai</h2>
     <p><b>Nama:</b> <?= esc($pegawai['nama']) ?></p>
-    <p><b>Jabatan:</b> <?= esc($pegawai['jabatan_id'] ?? $pegawai['jabatan']) ?></p>
+    <p><b>Jabatan:</b>
+    <?= esc($pegawai['nama_jabatan'] ?? $pegawai['jabatan'] ?? $pegawai['jabatan_id'] ?? '-') ?>
+</p>
+
 
     <hr>
 

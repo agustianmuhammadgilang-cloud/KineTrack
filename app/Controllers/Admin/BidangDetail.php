@@ -173,90 +173,128 @@ class BidangDetail extends BaseController
      * Export PDF per pegawai
      */
     public function exportPegawai($pegawaiId)
-    {
-        // require dompdf installed
-        $user = $this->userModel->find($pegawaiId);
-        if (!$user) return redirect()->back()->with('error', 'Pegawai tidak ditemukan');
+{
+    // ambil data user lengkap dengan jabatan & bidang
+    $user = $this->userModel
+        ->select('users.*, jabatan.nama_jabatan, bidang.nama_bidang')
+        ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
+        ->join('bidang', 'bidang.id = users.bidang_id', 'left')
+        ->find($pegawaiId);
 
-        $laporan = $this->lapModel
-            ->where('user_id', $pegawaiId)
-            ->orderBy('tanggal', 'DESC')
-            ->findAll();
+    if (!$user) return redirect()->back()->with('error', 'Pegawai tidak ditemukan');
 
-        $html = view('admin/bidang/export_pegawai', [
-            'pegawai' => $user,
-            'laporan' => $laporan
-        ]);
+    $laporan = $this->lapModel
+        ->where('user_id', $pegawaiId)
+        ->orderBy('tanggal', 'DESC')
+        ->findAll();
 
-        // generate pdf
+    $html = view('admin/bidang/export_pegawai', [
+        'pegawai' => $user,
+        'laporan' => $laporan
+    ]);
+
+    // generate pdf (pastikan dompdf sudah terpasang)
+    $dompdf = new \Dompdf\Dompdf();
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->loadHtml($html);
+    $dompdf->render();
+
+    return $dompdf->stream("Kinerja-".$user['nama'].".pdf", ["Attachment" => false]);
+}
+
+    public function exportBidang($bidangId)
+{
+    $bidangModel = new \App\Models\BidangModel();
+    $userModel = new \App\Models\UserModel();
+    $laporanModel = new \App\Models\LaporanModel();
+    $jabatanModel = new \App\Models\JabatanModel();
+
+    // Ambil data bidang
+    $bidang = $bidangModel->find($bidangId);
+    if (!$bidang) {
+        return redirect()->back()->with('error', 'Bidang tidak ditemukan.');
+    }
+
+    // Ambil semua pegawai role=staff di bidang (safe)
+    $pegawaiRecords = $userModel
+        ->where('bidang_id', $bidangId)
+        ->where('role', 'staff')
+        ->findAll();
+
+    // Kalau tidak ada pegawai, buat PDF minimal
+    if (empty($pegawaiRecords)) {
+        $data = [
+            'bidang' => $bidang,
+            'pegawai' => []
+        ];
+
+        $html = view('admin/bidang/export_bidang', $data);
         $dompdf = new \Dompdf\Dompdf();
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->loadHtml($html);
         $dompdf->render();
-
-        // stream
-        return $dompdf->stream("Kinerja-".$user['nama'].".pdf", ["Attachment" => false]);
+        return $dompdf->stream("Rekap-Bidang-{$bidang['nama_bidang']}.pdf", ["Attachment" => true]);
     }
 
-    /**
-     * Export PDF bidang
-     */
-    public function exportBidang($bidangId)
-    {
-        $bidang = $this->bidangModel->find($bidangId);
-        if (!$bidang) return redirect()->back()->with('error', 'Bidang tidak ditemukan');
-
-        // reuse index() logic to get pegawai stats
-        $thisData = $this->index($bidangId); // but index returns view — we need data, so re-run logic here quickly
-
-        // easier: re-collect items
-        $pegawaiRecords = $this->userModel
-            ->select('users.*, jabatan.nama_jabatan')
-            ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
-            ->where('users.bidang_id', $bidangId)
-            ->where('users.role', 'staff')
-            ->findAll();
-
-        $items = [];
-        $thisMonth = date('m'); $thisYear = date('Y');
-        foreach ($pegawaiRecords as $p) {
-            $laps = $this->lapModel
-                ->where('user_id', $p['id'])
-                ->where('MONTH(tanggal)', $thisMonth)
-                ->where('YEAR(tanggal)', $thisYear)
-                ->findAll();
-
-            $approved = $rejected = 0;
-            foreach ($laps as $l) {
-                if (isset($l['status']) && $l['status'] === 'approved') $approved++;
-                if (isset($l['status']) && $l['status'] === 'rejected') $rejected++;
-            }
-            $progress = (count($laps) > 0) ? round(($approved / count($laps)) * 100, 1) : 0;
-
-            $items[] = [
-                'nama' => $p['nama'],
-                'jabatan' => $p['nama_jabatan'],
-                'approved' => $approved,
-                'rejected' => $rejected,
-                'progress' => $progress
-            ];
+    // Siapkan array pegawai yang diisi statistik aman
+    $items = [];
+    foreach ($pegawaiRecords as $p) {
+        // aman ambil nama jabatan
+        $jab = null;
+        if (!empty($p['jabatan_id'])) {
+            $j = $jabatanModel->find($p['jabatan_id']);
+            $jab = $j['nama_jabatan'] ?? '-';
+        } else {
+            $jab = '-';
         }
 
-        // sort by progress desc
-        usort($items, function($a,$b){ return $b['progress'] <=> $a['progress']; });
+        $total = (int) $laporanModel->where('user_id', $p['id'])->countAllResults();
+        $approved = (int) $laporanModel->where('user_id', $p['id'])->where('status', 'approved')->countAllResults();
+        $rejected = (int) $laporanModel->where('user_id', $p['id'])->where('status', 'rejected')->countAllResults();
 
-        $html = view('admin/bidang/export_bidang', [
-            'bidang' => $bidang,
-            'items' => $items
-        ]);
+        $progress = $total > 0 ? round(($approved / $total) * 100, 1) : 0;
 
-        $dompdf = new \Dompdf\Dompdf();
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->loadHtml($html);
-        $dompdf->render();
-
-        return $dompdf->stream("Rekap-Bidang-".$bidang['nama_bidang'].".pdf", ["Attachment" => false]);
+        $items[] = [
+            'id' => $p['id'],
+            'nama' => $p['nama'],
+            'jabatan' => $jab,
+            'laporan_total' => $total,
+            'approved' => $approved,
+            'rejected' => $rejected,
+            'progress' => $progress
+        ];
     }
+
+    // sort by progress desc then approved desc
+    usort($items, function($a, $b){
+        if ($b['progress'] == $a['progress']) {
+            return $b['approved'] <=> $a['approved'];
+        }
+        return $b['progress'] <=> $a['progress'];
+    });
+
+    $data = [
+        'bidang' => $bidang,
+        'pegawai' => $items,
+        // ringkasan bidang
+        'total_pegawai' => count($items),
+        'total_laporan' => array_sum(array_column($items, 'laporan_total')),
+        'total_approved' => array_sum(array_column($items, 'approved')),
+        'total_rejected' => array_sum(array_column($items, 'rejected')),
+    ];
+
+
+    
+    // render view -> pdf
+    $html = view('admin/bidang/export_bidang', $data);
+    
+    $dompdf = new \Dompdf\Dompdf();
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->loadHtml($html);
+    $dompdf->render();
+    return $dompdf->stream("Rekap-Bidang-{$bidang['nama_bidang']}.pdf", ["Attachment" => true]);
+}
+
 
     public function select()
 {

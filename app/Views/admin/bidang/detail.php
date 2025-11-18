@@ -6,7 +6,11 @@
 <?php if(isset($atasan) && $atasan): ?>
 <div class="mb-3">
     <strong>Atasan:</strong> <?= esc($atasan['nama']) ?> (<?= esc($atasan['email'] ?? '') ?>)
-    <a href="<?= base_url('admin/bidang/detail/export/'.$bidang['id']) ?>" class="btn btn-sm btn-outline-secondary ms-3">Export Bidang (PDF)</a>
+    <a href="<?= base_url('admin/bidang/detail/export/bidang/'.$bidang['id']) ?>" 
+   class="btn btn-sm btn-outline-secondary ms-3">
+   Export Bidang (PDF)
+</a>
+
 </div>
 <?php endif; ?>
 
