@@ -56,7 +56,16 @@ class Laporan extends BaseController
             'status'    => 'pending'
         ]);
 
+        session()->setFlashdata('alert', [
+        'type' => 'success',
+        'title' => 'Berhasil!',
+        'message' => 'Laporan berhasil dikirim.'
+    ]);
+
+
         return redirect()->to('/staff/laporan')->with('success', 'Laporan berhasil dikirim!');
+
+        
     }
 
     public function rejected($id)
@@ -68,7 +77,16 @@ class Laporan extends BaseController
         ->join('users', 'users.id = laporan.user_id')
         ->find($id);
 
+        session()->setFlashdata('alert', [
+        'type' => 'warning',
+        'title' => 'Laporan Ditolak',
+        'message' => 'Silakan perbaiki laporan Anda sesuai catatan atasan.'
+    ]);
+
+
     return view('staff/laporan/rejected_detail', $data);
+
+    
 }
 
 public function resubmit($id)
@@ -92,6 +110,13 @@ public function resubmit($id)
         'status'    => 'pending',
         'catatan_atasan' => null
     ]);
+
+    session()->setFlashdata('alert', [
+    'type' => 'success',
+    'title' => 'Berhasil Dikirim Ulang',
+    'message' => 'Laporan berhasil diperbaiki dan dikirim ulang.'
+    ]);
+
 
     return redirect()->to('/staff/laporan')->with('success', 'Laporan berhasil dikirim ulang!');
 }
