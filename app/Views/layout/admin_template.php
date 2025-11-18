@@ -1,121 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Kinetrack</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Kinetrack</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
 
-    <style>
-        :root {
-            --polban-blue: #1D2F83;
-            --polban-orange: #F58025;
-        }
+<!-- Heroicons -->
+<script src="https://unpkg.com/heroicons@2.1.1/dist/umd/outline.js"></script>
 
-        body {
-            background: #f5f7fa;
-            font-family: 'Poppins', sans-serif;
-        }
+<style>
+  :root {
+    --polban-blue: #1D2F83;
+    --polban-orange: #F58025;
+  }
 
-        .btn-polban {
-            background: var(--polban-orange);
-            color: white;
-        }
-
-        .btn-polban:hover {
-            background: #c7671e;
-            color: white;
-        }
-
-        /* SIDEBAR */
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            position: fixed;
-            background: var(--polban-blue);
-            padding-top: 20px;
-        }
-
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            padding: 12px 20px;
-            display: block;
-            font-size: 15px;
-        }
-
-        .sidebar a:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        /* CONTENT */
-        .content {
-            margin-left: 260px;
-            padding: 30px;
-        }
-
-        /* STAT CARDS */
-        .stat-card {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.3rem;
-            font-weight: 700;
-            color: var(--polban-blue);
-        }
-
-        .footer {
-            margin-top: 40px;
-            text-align: center;
-            color: #777;
-            font-size: 14px;
-        }
-    </style>
+  /* Scrollbar style for sidebar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 3px;
+  }
+</style>
 </head>
+<body class="bg-gray-100">
 
-<body>
+<!-- Sidebar -->
+<div class="fixed top-0 left-0 h-full w-64 bg-[var(--polban-blue)] text-white flex flex-col transition-all duration-300 shadow-lg">
+    <div class="px-6 py-4 text-center border-b border-white/20">
+        <img src="<?= base_url('img/Logo No Name.png') ?>" alt="Polban Logo" class="mx-auto w-16 mb-2">
+    </div>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-    <h4 class="text-center text-white mb-4">KINETRACK</h4>
+    <nav class="flex-1 overflow-y-auto mt-4">
+        <a href="<?= base_url('admin') ?>" class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#chart-bar" /></svg>
+            Dashboard
+        </a>
+        <a href="<?= base_url('admin/users') ?>" class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#user" /></svg>
+            Users
+        </a>
+        <a href="<?= base_url('admin/jabatan') ?>" class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#badge-check" /></svg>
+            Jabatan
+        </a>
+        <a href="<?= base_url('admin/bidang') ?>" class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#folder" /></svg>
+            Bidang
+        </a>
+        <a href="<?= base_url('admin/bidang-select') ?>" class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#chart-pie" /></svg>
+            Analisis Bidang
+        </a>
+    </nav>
 
-    <a href="<?= base_url('admin') ?>">📊 Dashboard</a>
-    <a href="<?= base_url('admin/users') ?>">👤 User</a>
-    <a href="<?= base_url('admin/jabatan') ?>">🏅 Jabatan</a>
-    <a href="<?= base_url('admin/bidang') ?>">📁 Bidang</a>
-    <a href="<?= base_url('admin/bidang-select') ?>">📊 Analisis Bidang</a>
-
-    <hr class="text-white">
-    <a href="<?= base_url('logout') ?>">Logout</a>
+    <div class="px-6 py-4 border-t border-white/20">
+        <button onclick="window.location.href='<?= base_url('logout') ?>'" class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium bg-[var(--polban-orange)] rounded hover:bg-orange-600 transition-colors">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#arrow-left-on-rectangle" /></svg>
+            Logout
+        </button>
+    </div>
 </div>
 
-<!-- CONTENT WRAPPER -->
-<div class="content">
+<!-- Main Content -->
+<div class="ml-64 p-8">
     <?= $this->renderSection('content') ?>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<?php if (session()->getFlashdata('alert')): 
-    $a = session()->getFlashdata('alert'); ?>
-<script>
-Swal.fire({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 4000,
-    icon: '<?= esc($a['type']) ?>',
-    title: '<?= esc($a['title']) ?>',
-    text: '<?= esc($a['message']) ?>'
-});
-</script>
-<?php endif; ?>
+<!-- Heroicons -->
+<svg style="display:none;">
+  <symbol id="chart-bar" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18"/></symbol>
+  <symbol id="user" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 12a5 5 0 100-10 5 5 0 000 10zM3 21a9 9 0 1118 0H3z"/></symbol>
+  <symbol id="badge-check" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="folder" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7h4l2 3h10v11H3V7z"/></symbol>
+  <symbol id="chart-pie" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 2v20M2 11h20"/></symbol>
+  <symbol id="arrow-left-on-rectangle" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 17l-5-5 5-5M21 12H9"/></symbol>
+</svg>
 
 </body>
 </html>
