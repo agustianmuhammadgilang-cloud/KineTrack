@@ -84,5 +84,17 @@
   <symbol id="arrow-left-on-rectangle" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 17l-5-5 5-5M21 12H9"/></symbol>
 </svg>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<?php if (session()->getFlashdata('alert')): 
+    $a = session()->getFlashdata('alert'); ?>
+<script>
+  Swal.fire({
+    toast: true, position: 'top-end', showConfirmButton:false, timer:4000,
+    icon: '<?= esc($a['type']) ?>', title: '<?= esc($a['title']) ?>', text: '<?= esc($a['message']) ?>'
+  });
+</script>
+<?php endif; ?>
+
+
 </body>
 </html>
