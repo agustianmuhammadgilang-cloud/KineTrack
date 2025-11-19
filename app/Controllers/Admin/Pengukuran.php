@@ -38,12 +38,13 @@ class Pengukuran extends BaseController
         if (!$tahunId || !$tw) return $this->response->setJSON(['status'=>false,'message'=>'Missing params']);
 
         // ambil semua sasaran -> indikator (join)
-        $indikator = $this->indikatorModel
-            ->select('indikator_kinerja.*, sasaran_strategis.kode_sasaran, sasaran_strategis.nama_sasaran')
-            ->join('sasaran_strategis','sasaran_strategis.id = indikator_kinerja.sasaran_id','left')
-            ->where('sasaran_strategis.tahun_id', $tahunId)
-            ->orderBy('sasaran_strategis.id, indikator_kinerja.id')
-            ->findAll();
+        $indikator = $indikatorModel
+        ->select('indikator.*, sasaran_strategis.nama_sasaran')
+        ->join('sasaran_strategis', 'sasaran_strategis.id = indikator.sasaran_id')
+        ->where('sasaran_strategis.tahun_id', $tahun_id)
+        ->where('sasaran_strategis.triwulan', $triwulan)   // FILTER TW
+        ->findAll();
+
 
         // ambil pengukuran existing (map by indikator_id)
         $existing = $this->pengukuranModel
