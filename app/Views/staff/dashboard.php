@@ -1,70 +1,54 @@
 <?= $this->extend('layout/staff_template') ?>
 <?= $this->section('content') ?>
 
-<h3 class="fw-bold mb-4">Dashboard Kinerja Saya</h3>
+<h3 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100">Dashboard Kinerja Saya</h3>
 
-<div class="row mb-4">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
 
     <!-- Approved -->
-    <div class="col-md-4">
-        <div class="card shadow p-3 text-center">
-            <h5 class="fw-bold text-success">Diterima</h5>
-            <h2 class="fw-bold"><?= $approved ?></h2>
-        </div>
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6 text-center transition-colors">
+        <h5 class="text-green-500 font-semibold mb-2">Diterima</h5>
+        <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-100"><?= $approved ?></h2>
     </div>
 
     <!-- Rejected -->
-    <div class="col-md-4">
-        <div class="card shadow p-3 text-center">
-            <h5 class="fw-bold text-danger">Ditolak</h5>
-            <h2 class="fw-bold"><?= $rejected ?></h2>
-        </div>
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6 text-center transition-colors">
+        <h5 class="text-red-500 font-semibold mb-2">Ditolak</h5>
+        <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-100"><?= $rejected ?></h2>
     </div>
 
     <!-- Progress -->
-    <div class="col-md-4">
-        <div class="card shadow p-3 text-center">
-            <h5 class="fw-bold text-primary">Progress</h5>
-            <h2 class="fw-bold"><?= $progress ?>%</h2>
-
-            <div class="progress mt-2">
-                <div class="progress-bar bg-primary" 
-                     style="width: <?= $progress ?>%"></div>
-            </div>
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6 text-center transition-colors">
+        <h5 class="text-blue-500 font-semibold mb-2">Progress</h5>
+        <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-100"><?= $progress ?>%</h2>
+        <div class="w-full bg-gray-200 rounded-full h-4 mt-3 overflow-hidden">
+            <div class="h-4 bg-blue-500" style="width: <?= $progress ?>%"></div>
         </div>
     </div>
 </div>
 
 <!-- GRAFIK -->
-<div class="row">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-    <div class="col-md-6 mb-4">
-        <div class="card shadow p-3">
-            <h6 class="fw-bold">Grafik Harian</h6>
-            <canvas id="dailyChart"></canvas>
-        </div>
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        <h6 class="font-semibold mb-4 text-gray-700 dark:text-gray-200">Grafik Harian</h6>
+        <canvas id="dailyChart"></canvas>
     </div>
 
-    <div class="col-md-6 mb-4">
-        <div class="card shadow p-3">
-            <h6 class="fw-bold">Grafik Mingguan</h6>
-            <canvas id="weeklyChart"></canvas>
-        </div>
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        <h6 class="font-semibold mb-4 text-gray-700 dark:text-gray-200">Grafik Mingguan</h6>
+        <canvas id="weeklyChart"></canvas>
     </div>
 
-    <div class="col-md-12 mb-4">
-        <div class="card shadow p-3">
-            <h6 class="fw-bold">Grafik Bulanan</h6>
-            <canvas id="monthlyChart"></canvas>
-        </div>
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6 lg:col-span-2">
+        <h6 class="font-semibold mb-4 text-gray-700 dark:text-gray-200">Grafik Bulanan</h6>
+        <canvas id="monthlyChart"></canvas>
     </div>
 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
-    // Convert PHP to JS
     const dailyLabels = <?= json_encode(array_column($daily, 'tgl')) ?>;
     const dailyData = <?= json_encode(array_column($daily, 'total')) ?>;
 
@@ -74,43 +58,27 @@
     const monthlyLabels = <?= json_encode(array_column($monthly, 'bulan')) ?>;
     const monthlyData = <?= json_encode(array_column($monthly, 'total')) ?>;
 
-    // Daily Chart
+    const chartOptions = {
+        responsive: true,
+        plugins: { legend: { display: false } }
+    };
+
     new Chart(document.getElementById('dailyChart'), {
         type: 'line',
-        data: {
-            labels: dailyLabels,
-            datasets: [{
-                label: 'Laporan per Hari',
-                data: dailyData,
-                borderColor: '#007bff'
-            }]
-        }
+        data: { labels: dailyLabels, datasets: [{ label: 'Laporan per Hari', data: dailyData, borderColor: '#3B82F6', backgroundColor: '#3B82F6AA' }] },
+        options: chartOptions
     });
 
-    // Weekly Chart
     new Chart(document.getElementById('weeklyChart'), {
         type: 'bar',
-        data: {
-            labels: weeklyLabels,
-            datasets: [{
-                label: 'Laporan per Minggu',
-                data: weeklyData,
-                backgroundColor: '#28a745'
-            }]
-        }
+        data: { labels: weeklyLabels, datasets: [{ label: 'Laporan per Minggu', data: weeklyData, backgroundColor: '#10B981' }] },
+        options: chartOptions
     });
 
-    // Monthly Chart
     new Chart(document.getElementById('monthlyChart'), {
         type: 'bar',
-        data: {
-            labels: monthlyLabels,
-            datasets: [{
-                label: 'Laporan per Bulan',
-                data: monthlyData,
-                backgroundColor: '#ffc107'
-            }]
-        }
+        data: { labels: monthlyLabels, datasets: [{ label: 'Laporan per Bulan', data: monthlyData, backgroundColor: '#F59E0B' }] },
+        options: chartOptions
     });
 </script>
 
