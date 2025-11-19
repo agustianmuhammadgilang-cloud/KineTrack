@@ -1,10 +1,10 @@
 <?= $this->extend('layout/admin_template') ?>
 <?= $this->section('content') ?>
 
-<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-    <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3 md:mb-0">Manajemen User</h4>
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-3">
+    <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Manajemen User</h4>
     <a href="<?= base_url('admin/users/create'); ?>" 
-       class="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg shadow-md transition">
+       class="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg shadow-md transition w-full md:w-auto text-center">
        + Tambah User
     </a>
 </div>
@@ -38,12 +38,16 @@
                 <td class="px-4 py-2 text-sm"><?= esc($u['nama_jabatan']) ?></td>
                 <td class="px-4 py-2 text-sm"><?= esc($u['nama_bidang']) ?></td>
                 <td class="px-4 py-2 text-sm"><?= esc($u['role']) ?></td>
-                <td class="px-4 py-2 text-sm flex gap-2">
+                <td class="px-4 py-2 text-sm flex flex-wrap gap-2">
                     <a href="<?= base_url('admin/users/edit/'.$u['id']) ?>" 
-                       class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-md text-sm transition">Edit</a>
+                       class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-md text-sm transition flex-1 text-center md:flex-none">
+                       Edit
+                    </a>
                     <a href="<?= base_url('admin/users/delete/'.$u['id']) ?>" 
                        onclick="return confirm('Hapus user ini?')" 
-                       class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm transition">Hapus</a>
+                       class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm transition flex-1 text-center md:flex-none">
+                       Hapus
+                    </a>
                 </td>
             </tr>
             <?php endforeach ?>

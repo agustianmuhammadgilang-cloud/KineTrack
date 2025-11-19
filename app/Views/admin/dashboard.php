@@ -1,67 +1,64 @@
 <?= $this->extend('layout/admin_template') ?>
 <?= $this->section('content') ?>
 
-<div class="p-6 transition-all duration-300 dark:bg-gray-900">
+<div class="p-4 sm:p-6 md:p-8 transition-all duration-300 dark:bg-gray-900">
 
     <!-- Header -->
-    <div class="flex items-center justify-between mb-8">
-        <h2 class="text-3xl font-extrabold text-blue-900 dark:text-blue-300 flex items-center gap-2">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-blue-900 dark:text-blue-300 flex items-center gap-2">
             Dashboard Admin
             <span class="text-xl">✨</span>
         </h2>
-
-
     </div>
 
     <!-- Stat Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8">
 
         <!-- CARD TEMPLATE -->
-        <div class="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md hover:shadow-2xl 
+        <div class="group bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 shadow-md hover:shadow-2xl 
                     transition-all duration-300 border border-gray-100 dark:border-gray-700
                     transform hover:-translate-y-1 cursor-pointer relative overflow-hidden">
             
-            <div class="absolute right-5 top-5 opacity-20 group-hover:opacity-50 transition-all">
-                <svg class="w-12 h-12 text-blue-600 dark:text-blue-300" 
-                     viewBox="0 0 24 24" fill="none">
+            <div class="absolute right-3 top-3 opacity-20 group-hover:opacity-50 transition-all">
+                <svg class="w-10 h-10 sm:w-12 sm:h-12 text-blue-600 dark:text-blue-300" viewBox="0 0 24 24" fill="none">
                     <?= heroicons_outline('users') ?>
                 </svg>
             </div>
 
-            <p class="text-gray-500 dark:text-gray-400 font-semibold">Total User</p>
-            <h1 class="text-4xl font-bold text-blue-800 dark:text-blue-300 mt-2">
+            <p class="text-gray-500 dark:text-gray-400 font-semibold text-sm sm:text-base">Total User</p>
+            <h1 class="text-3xl sm:text-4xl font-bold text-blue-800 dark:text-blue-300 mt-1 sm:mt-2">
                 <?= $total_user ?>
             </h1>
         </div>
 
-        <div class="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md hover:shadow-2xl 
+        <div class="group bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 shadow-md hover:shadow-2xl 
                     transition-all duration-300 border border-gray-100 dark:border-gray-700
                     transform hover:-translate-y-1 cursor-pointer relative overflow-hidden">
 
-            <div class="absolute right-5 top-5 opacity-20 group-hover:opacity-50 transition-all">
-                <svg class="w-12 h-12 text-yellow-500 dark:text-yellow-300" fill="none">
+            <div class="absolute right-3 top-3 opacity-20 group-hover:opacity-50 transition-all">
+                <svg class="w-10 h-10 sm:w-12 sm:h-12 text-yellow-500 dark:text-yellow-300" fill="none">
                     <?= heroicons_outline('trophy') ?>
                 </svg>
             </div>
 
-            <p class="text-gray-500 dark:text-gray-400 font-semibold">Total Jabatan</p>
-            <h1 class="text-4xl font-bold text-blue-800 dark:text-blue-300 mt-2">
+            <p class="text-gray-500 dark:text-gray-400 font-semibold text-sm sm:text-base">Total Jabatan</p>
+            <h1 class="text-3xl sm:text-4xl font-bold text-blue-800 dark:text-blue-300 mt-1 sm:mt-2">
                 <?= $total_jabatan ?>
             </h1>
         </div>
 
-        <div class="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md hover:shadow-2xl 
+        <div class="group bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 shadow-md hover:shadow-2xl 
                     transition-all duration-300 border border-gray-100 dark:border-gray-700
                     transform hover:-translate-y-1 cursor-pointer relative overflow-hidden">
 
-            <div class="absolute right-5 top-5 opacity-20 group-hover:opacity-50 transition-all">
-                <svg class="w-12 h-12 text-orange-500 dark:text-orange-300" fill="none">
+            <div class="absolute right-3 top-3 opacity-20 group-hover:opacity-50 transition-all">
+                <svg class="w-10 h-10 sm:w-12 sm:h-12 text-orange-500 dark:text-orange-300" fill="none">
                     <?= heroicons_outline('folder') ?>
                 </svg>
             </div>
 
-            <p class="text-gray-500 dark:text-gray-400 font-semibold">Total Bidang</p>
-            <h1 class="text-4xl font-bold text-blue-800 dark:text-blue-300 mt-2">
+            <p class="text-gray-500 dark:text-gray-400 font-semibold text-sm sm:text-base">Total Bidang</p>
+            <h1 class="text-3xl sm:text-4xl font-bold text-blue-800 dark:text-blue-300 mt-1 sm:mt-2">
                 <?= $total_bidang ?>
             </h1>
         </div>
@@ -69,74 +66,74 @@
     </div>
 
     <!-- Main Row -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         <!-- Welcome Box -->
-        <div class="md:col-span-2">
+        <div class="lg:col-span-2">
             <div class="bg-white/80 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl 
-                        p-8 shadow-md border border-gray-100 dark:border-gray-700 
+                        p-6 sm:p-8 shadow-md border border-gray-100 dark:border-gray-700 
                         transition-all duration-300">
                 
-                <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                <h3 class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
                     👋 Halo, <?= session('nama') ?>!
                 </h3>
-                <p class="text-gray-600 dark:text-gray-400 mt-2 leading-relaxed">
+                <p class="text-gray-600 dark:text-gray-400 mt-2 leading-relaxed text-sm sm:text-base">
                     Selamat bekerja, tetap jaga kualitas data sesuai standar  
                     <b>Politeknik Negeri Bandung</b>.
                 </p>
 
                 <a href="<?= base_url('admin/bidang-select') ?>"
-                    class="inline-flex mt-6 px-6 py-3 bg-orange-500 hover:bg-orange-600 
-                           text-white font-semibold rounded-xl transition shadow-md">
+                    class="inline-flex w-full sm:w-auto mt-4 sm:mt-6 px-4 sm:px-6 py-3 bg-orange-500 hover:bg-orange-600 
+                           text-white font-semibold rounded-xl transition shadow-md justify-center">
                     🚀 Analisis Kinerja Bidang
                 </a>
             </div>
         </div>
 
         <!-- Quick Actions -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 sm:p-6 
                     border border-gray-100 dark:border-gray-700 transition-all duration-300">
-            <h4 class="font-bold mb-4 text-lg text-gray-800 dark:text-gray-200 flex items-center gap-2">
+            <h4 class="font-bold mb-4 text-lg sm:text-xl text-gray-800 dark:text-gray-200 flex items-center gap-2">
                 ⚡ Quick Actions
             </h4>
 
             <div class="flex flex-col gap-3">
 
                 <a href="<?= base_url('admin/users') ?>"
-                    class="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 
+                    class="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 rounded-xl border border-gray-200 
                            dark:border-gray-700 hover:bg-blue-900 hover:text-white 
-                           dark:hover:bg-blue-600 transition-all font-semibold">
-                    <svg class="w-5 h-5" fill="none">
+                           dark:hover:bg-blue-600 transition-all font-semibold text-sm sm:text-base w-full">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none">
                         <?= heroicons_outline('user') ?>
                     </svg>
                     Kelola User
                 </a>
 
                 <a href="<?= base_url('admin/bidang') ?>"
-                    class="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 
+                    class="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 rounded-xl border border-gray-200 
                            dark:border-gray-700 hover:bg-blue-900 hover:text-white 
-                           dark:hover:bg-blue-600 transition-all font-semibold">
-                    <svg class="w-5 h-5" fill="none">
+                           dark:hover:bg-blue-600 transition-all font-semibold text-sm sm:text-base w-full">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none">
                         <?= heroicons_outline('folder') ?>
                     </svg>
                     Kelola Bidang
                 </a>
 
                 <a href="<?= base_url('admin/jabatan') ?>"
-                    class="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 
+                    class="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 rounded-xl border border-gray-200 
                            dark:border-gray-700 hover:bg-blue-900 hover:text-white 
-                           dark:hover:bg-blue-600 transition-all font-semibold">
-                    <svg class="w-5 h-5" fill="none">
+                           dark:hover:bg-blue-600 transition-all font-semibold text-sm sm:text-base w-full">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none">
                         <?= heroicons_outline('trophy') ?>
                     </svg>
                     Kelola Jabatan
                 </a>
 
                 <a href="<?= base_url('admin/bidang-select') ?>"
-                    class="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 
+                    class="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 rounded-xl border border-gray-200 
                            dark:border-gray-700 hover:bg-blue-900 hover:text-white 
-                           dark:hover:bg-blue-600 transition-all font-semibold">
-                    <svg class="w-5 h-5" fill="none">
+                           dark:hover:bg-blue-600 transition-all font-semibold text-sm sm:text-base w-full">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none">
                         <?= heroicons_outline('chart-bar') ?>
                     </svg>
                     Analisis Bidang
@@ -148,10 +145,11 @@
     </div>
 
     <!-- Footer -->
-    <p class="text-center text-gray-500 dark:text-gray-400 mt-8 text-sm">
+    <p class="text-center text-gray-500 dark:text-gray-400 mt-6 sm:mt-8 text-xs sm:text-sm">
         © <?= date('Y') ?> KINETRACK — Politeknik Negeri Bandung.
     </p>
 
 </div>
+
 
 <?= $this->endSection() ?>

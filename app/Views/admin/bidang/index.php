@@ -1,10 +1,10 @@
 <?= $this->extend('layout/admin_template') ?>
 <?= $this->section('content') ?>
 
-<div class="flex justify-between items-center mb-6">
+<div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
     <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Manajemen Bidang</h4>
     <a href="<?= base_url('admin/bidang/create'); ?>" 
-       class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md font-medium shadow transition">
+       class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md font-medium shadow transition w-full sm:w-auto text-center">
        + Tambah Bidang
     </a>
 </div>
@@ -29,14 +29,14 @@
             <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
                 <td class="px-4 py-2"><?= $no++ ?></td>
                 <td class="px-4 py-2"><?= esc($b['nama_bidang']) ?></td>
-                <td class="px-4 py-2 flex justify-center gap-2">
+                <td class="px-4 py-2 flex flex-col sm:flex-row justify-center gap-2">
                     <a href="<?= base_url('admin/bidang/edit/'.$b['id']) ?>" 
-                       class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-md text-sm font-medium transition">
+                       class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-md text-sm font-medium text-center transition">
                        Edit
                     </a>
                     <a href="<?= base_url('admin/bidang/delete/'.$b['id']) ?>" 
                        onclick="return confirm('Hapus bidang ini?')" 
-                       class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm font-medium transition">
+                       class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm font-medium text-center transition">
                        Hapus
                     </a>
                 </td>

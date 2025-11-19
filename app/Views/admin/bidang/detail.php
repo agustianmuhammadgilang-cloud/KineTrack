@@ -1,13 +1,13 @@
 <?= $this->extend('layout/admin_template') ?>
 <?= $this->section('content') ?>
 
-<div class="max-w-6xl mx-auto">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <h3 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6">
         Detail Bidang: <?= esc($bidang['nama_bidang']) ?>
     </h3>
 
     <?php if(isset($atasan) && $atasan): ?>
-        <div class="mb-4 flex items-center justify-between">
+        <div class="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
             <div>
                 <strong>Atasan:</strong> <?= esc($atasan['nama']) ?> (<?= esc($atasan['email'] ?? '') ?>)
             </div>
@@ -18,9 +18,9 @@
         </div>
     <?php endif; ?>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         <?php if(empty($pegawai)): ?>
-            <div class="col-span-1 md:col-span-3">
+            <div class="col-span-1 sm:col-span-2 md:col-span-3">
                 <div class="p-4 bg-blue-50 dark:bg-gray-700 text-blue-800 rounded-md">
                     Tidak ada pegawai di bidang ini.
                 </div>
@@ -28,7 +28,7 @@
         <?php endif; ?>
 
         <?php foreach($pegawai as $p): ?>
-            <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4 flex flex-col">
+            <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-4 flex flex-col hover:shadow-lg transition-all">
                 <h5 class="text-lg font-semibold text-gray-800 dark:text-gray-100"><?= esc($p['nama']) ?></h5>
                 <small class="text-gray-500 dark:text-gray-400"><?= esc($p['jabatan']) ?></small>
 
@@ -49,8 +49,9 @@
                 </p>
 
                 <div class="w-full bg-gray-200 dark:bg-gray-600 h-2 rounded-full mb-2">
-                    <div class="bg-orange-500 h-2 rounded-full" style="width: <?= min($p['progress'],100) ?>%"></div>
+                    <div class="bg-orange-500 h-2 rounded-full transition-all" style="width: <?= min($p['progress'],100) ?>%"></div>
                 </div>
+
                 <small class="text-gray-600 dark:text-gray-300">
                     Status: 
                     <?php if($p['status']=='Naik'): ?>
@@ -63,7 +64,7 @@
                 </small>
 
                 <a href="<?= base_url('admin/bidang/pegawai/'.$p['id']) ?>" 
-                   class="mt-3 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium py-2 rounded transition text-center">
+                   class="mt-3 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium py-2 rounded transition text-center w-full sm:w-auto">
                    Lihat Detail
                 </a>
             </div>
