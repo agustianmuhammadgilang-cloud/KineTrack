@@ -41,6 +41,18 @@ class Sasaran extends BaseController
             'kode_sasaran' => $this->request->getPost('kode_sasaran'),
             'nama_sasaran' => $this->request->getPost('nama_sasaran'),
         ]);
+
+        $data = [
+            'tahun_id'      => $this->request->getPost('tahun_id'),
+            'kode_sasaran'  => $this->request->getPost('kode_sasaran'),
+            'nama_sasaran'  => $this->request->getPost('nama_sasaran'),
+            'triwulan'      => $this->request->getPost('triwulan'),
+        ];
+
+        $model->insert($data);
+
+
+
         return redirect()->to('/admin/sasaran')->with('success', 'Sasaran ditambahkan');
     }
 
