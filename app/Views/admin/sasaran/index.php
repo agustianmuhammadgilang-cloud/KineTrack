@@ -2,59 +2,74 @@
 <?= $this->section('content') ?>
 
 <h3 class="text-2xl font-bold text-[var(--polban-blue)] mb-6">
-    Sasaran Strategis
+    Tambah Sasaran Strategis
 </h3>
 
-<!-- Button Back to Input Pengukuran -->
-<a href="<?= base_url('admin/pengukuran') ?>"
-   class="inline-block mb-4 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg shadow 
-          hover:bg-gray-300 transition">
-    ← Kembali ke Input Pengukuran
-</a>
+<div class="bg-white p-6 rounded-xl shadow border border-gray-200">
 
-<!-- Button Tambah -->
-<a href="<?= base_url('admin/sasaran/create') ?>"
-   class="inline-block mb-4 ml-2 bg-[var(--polban-orange)] text-white px-4 py-2 rounded-lg shadow hover:bg-orange-600 transition">
-    + Tambah Sasaran
-</a>
+    <form action="<?= base_url('admin/sasaran/store') ?>" method="post" class="space-y-5">
 
-<!-- Card Table -->
-<div class="overflow-x-auto bg-white shadow-md rounded-xl border border-gray-200">
-    <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-[var(--polban-blue)] text-white">
-            <tr>
-                <th class="px-4 py-3 text-left text-sm font-semibold">Kode</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold">Nama Sasaran</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold">Tahun</th>
-                <th class="px-4 py-3 text-center text-sm font-semibold w-40">Aksi</th>
-            </tr>
-        </thead>
+        <!-- Tahun Anggaran -->
+        <div>
+            <label class="block font-semibold text-gray-700 mb-1">Tahun Anggaran</label>
+            <select name="tahun_id" 
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 
+                       focus:ring-[var(--polban-blue)] focus:outline-none"
+                required>
+                
+                <?php foreach($tahun as $t): ?>
+                    <option value="<?= $t['id'] ?>"><?= $t['tahun'] ?></option>
+                <?php endforeach ?>
+            </select>
+        </div>
 
-        <tbody class="divide-y divide-gray-200">
-            <?php foreach($sasaran as $s): ?>
-            <tr class="hover:bg-gray-50">
-                <td class="px-4 py-3 text-gray-700"><?= $s['kode_sasaran'] ?></td>
-                <td class="px-4 py-3 text-gray-700"><?= $s['nama_sasaran'] ?></td>
-                <td class="px-4 py-3 text-gray-700"><?= $s['tahun'] ?></td>
+        <!-- Triwulan -->
+        <div>
+            <label class="block font-semibold text-gray-700 mb-1">Triwulan Sasaran</label>
+            <select name="triwulan"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 
+                       focus:ring-[var(--polban-blue)] focus:outline-none"
+                required>
+                
+                <option value="1">Triwulan 1</option>
+                <option value="2">Triwulan 2</option>
+                <option value="3">Triwulan 3</option>
+                <option value="4">Triwulan 4</option>
+            </select>
+        </div>
 
-                <td class="px-4 py-3 flex justify-center gap-2">
+        <!-- Kode Sasaran -->
+        <div>
+            <label class="block font-semibold text-gray-700 mb-1">Kode Sasaran</label>
+            <input type="text" name="kode_sasaran" required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 
+                       focus:ring-[var(--polban-blue)] focus:outline-none">
+        </div>
 
-                    <a href="<?= base_url('admin/sasaran/edit/'.$s['id']) ?>"
-                       class="px-3 py-1 bg-yellow-500 text-white rounded-lg text-xs hover:bg-yellow-600 transition">
-                        Edit
-                    </a>
+        <!-- Nama Sasaran -->
+        <div>
+            <label class="block font-semibold text-gray-700 mb-1">Nama Sasaran</label>
+            <textarea name="nama_sasaran" required
+                class="w-full h-28 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 
+                       focus:ring-[var(--polban-blue)] focus:outline-none"></textarea>
+        </div>
 
-                    <a href="<?= base_url('admin/sasaran/delete/'.$s['id']) ?>"
-                       onclick="return confirm('Hapus sasaran?')"
-                       class="px-3 py-1 bg-red-600 text-white rounded-lg text-xs hover:bg-red-700 transition">
-                        Hapus
-                    </a>
+        <!-- Buttons -->
+        <div class="flex gap-3 pt-3">
+            <button class="bg-[var(--polban-blue)] text-white px-5 py-2 rounded-lg 
+                           font-semibold shadow hover:bg-blue-900 transition">
+                Simpan
+            </button>
 
-                </td>
-            </tr>
-            <?php endforeach ?>
-        </tbody>
-    </table>
+            <a href="<?= base_url('admin/sasaran') ?>"
+                class="bg-gray-300 text-gray-700 px-5 py-2 rounded-lg font-semibold 
+                       shadow hover:bg-gray-400 transition">
+                Kembali
+            </a>
+        </div>
+
+    </form>
+
 </div>
 
 <?= $this->endSection() ?>
