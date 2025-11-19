@@ -3,11 +3,21 @@
 
 <h3 class="text-2xl font-bold text-[var(--polban-blue)] mb-6">Tahun Anggaran</h3>
 
-<!-- Tombol Tambah -->
-<a href="<?= base_url('admin/tahun/create') ?>"
-   class="inline-block bg-[var(--polban-blue)] text-white px-4 py-2 rounded-lg shadow hover:bg-blue-900 transition mb-4">
-   + Tambah Tahun
-</a>
+<!-- Tombol Navigasi -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
+
+    <!-- Kembali ke Pengukuran -->
+    <a href="<?= base_url('admin/pengukuran') ?>"
+       class="inline-block bg-gray-500 text-white px-4 py-2 rounded-lg shadow hover:bg-gray-600 transition">
+        ← Kembali ke Input Pengukuran
+    </a>
+
+    <!-- Tambah Tahun -->
+    <a href="<?= base_url('admin/tahun/create') ?>"
+       class="inline-block bg-[var(--polban-blue)] text-white px-4 py-2 rounded-lg shadow hover:bg-blue-900 transition">
+       + Tambah Tahun
+    </a>
+</div>
 
 <!-- Card Wrapper -->
 <div class="bg-white shadow border border-gray-200 rounded-xl overflow-hidden">
