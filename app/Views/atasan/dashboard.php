@@ -1,40 +1,37 @@
 <?= $this->extend('layout/atasan_template') ?>
 <?= $this->section('content') ?>
 
-<h3 class="fw-bold mb-4">Dashboard Atasan</h3>
+<h3 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100">Dashboard Atasan</h3>
 
 <!-- Informasi Profil -->
-<div class="card shadow p-4 mb-4">
-    <h5 class="fw-bold mb-3">Informasi Atasan</h5>
-    <p><b>Nama:</b> <?= $atasan['nama'] ?></p>
-    <p><b>Jabatan:</b> <?= $atasan['nama_jabatan'] ?></p>
-    <p><b>Bidang:</b> <?= $atasan['nama_bidang'] ?></p>
+<div class="bg-white shadow rounded-lg p-6 mb-6 transition-colors">
+    <h5 class="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-200">Informasi Atasan</h5>
+    <p><span class="font-medium">Nama:</span> <?= esc($atasan['nama']) ?></p>
+    <p><span class="font-medium">Jabatan:</span> <?= esc($atasan['nama_jabatan']) ?></p>
+    <p><span class="font-medium">Bidang:</span> <?= esc($atasan['nama_bidang']) ?></p>
 
-    <a href="<?= base_url('atasan/profile') ?>" class="btn btn-polban mt-2">Pengaturan Profil</a>
+    <a href="<?= base_url('atasan/profile') ?>" 
+       class="mt-4 inline-block bg-[var(--polban-orange)] hover:bg-orange-600 text-white font-semibold px-4 py-2 rounded shadow transition-all">
+       Pengaturan Profil
+    </a>
 </div>
 
 <!-- Statistik Laporan -->
-<div class="row">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
 
-    <div class="col-md-4 mb-3">
-        <div class="card shadow p-4 text-center">
-            <h4 class="fw-bold text-secondary">Pending</h4>
-            <h2 class="fw-bold"><?= $pending ?></h2>
-        </div>
+    <div class="bg-white shadow rounded-lg p-6 text-center transition-colors">
+        <h4 class="text-gray-500 font-semibold mb-2">Pending</h4>
+        <h2 class="text-3xl font-bold text-gray-800"><?= esc($pending) ?></h2>
     </div>
 
-    <div class="col-md-4 mb-3">
-        <div class="card shadow p-4 text-center">
-            <h4 class="fw-bold text-success">Diterima</h4>
-            <h2 class="fw-bold"><?= $approved ?></h2>
-        </div>
+    <div class="bg-white shadow rounded-lg p-6 text-center transition-colors">
+        <h4 class="text-green-500 font-semibold mb-2">Diterima</h4>
+        <h2 class="text-3xl font-bold text-gray-800"><?= esc($approved) ?></h2>
     </div>
 
-    <div class="col-md-4 mb-3">
-        <div class="card shadow p-4 text-center">
-            <h4 class="fw-bold text-danger">Ditolak</h4>
-            <h2 class="fw-bold"><?= $rejected ?></h2>
-        </div>
+    <div class="bg-white shadow rounded-lg p-6 text-center transition-colors">
+        <h4 class="text-red-500 font-semibold mb-2">Ditolak</h4>
+        <h2 class="text-3xl font-bold text-gray-800"><?= esc($rejected) ?></h2>
     </div>
 
 </div>
