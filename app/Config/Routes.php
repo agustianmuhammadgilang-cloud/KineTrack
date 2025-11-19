@@ -45,6 +45,22 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     $routes->post('users/update/(:num)', 'Admin\User::update/$1');
     $routes->get('users/delete/(:num)', 'Admin\User::delete/$1');
 
+    //tambahan Routes sama Repan
+    $routes->group('admin', ['filter'=>'auth'], function($routes) {
+    // master
+    $routes->resource('tahun', ['controller' => 'Admin\TahunAnggaran', 'only' => ['index','create','store','edit','update','delete']]);
+    $routes->resource('sasaran', ['controller' => 'Admin\Sasaran', 'only' => ['index','create','store','edit','update','delete']]);
+    $routes->resource('indikator', ['controller' => 'Admin\Indikator', 'only' => ['index','create','store','edit','update','delete']]);
+
+    // pengukuran (input)
+    $routes->get('pengukuran', 'Admin\Pengukuran::index');         // form input selector
+    $routes->post('pengukuran/load', 'Admin\Pengukuran::load');   // ajax load indikator per tahun+tw
+    $routes->post('pengukuran/store', 'Admin\Pengukuran::store'); // save input
+    $routes->get('pengukuran/output', 'Admin\Pengukuran::output'); // view output table
+    $routes->get('pengukuran/export/(:num)/(:num)', 'Admin\Pengukuran::export/$1/$2'); // export (tahunId,tw)
+});
+//akhir tambahan Routes sama Repan
+
 });
 
 // ==========================
@@ -118,4 +134,5 @@ $routes->group('atasan', ['filter' => 'auth'], function($routes){
 // polling / API sederhana untuk notifikasi atasan
 $routes->get('atasan/notifications/pending-count', 'Atasan\Notifications::pendingCount', ['filter' => 'auth']);
 $routes->get('atasan/notifications/list', 'Atasan\Notifications::list', ['filter' => 'auth']); // optional - untuk detail
+
 
