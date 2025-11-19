@@ -1,12 +1,12 @@
 <?= $this->extend('layout/admin_template') ?>
 <?= $this->section('content') ?>
 
-<div class="max-w-6xl mx-auto">
+<div class="max-w-6xl mx-auto px-4">
     <h3 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6">
         <?= esc($pegawai['nama']) ?> — Detail Kinerja
     </h3>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
 
         <!-- Profil Pegawai -->
         <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 flex flex-col">
@@ -30,13 +30,13 @@
             </p>
 
             <a href="<?= base_url('admin/bidang/detail/export/'.$pegawai['id']) ?>" 
-               class="mt-3 bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 rounded text-center transition">
+               class="mt-3 w-full text-center bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 rounded transition">
                Export PDF Pegawai
             </a>
         </div>
 
         <!-- Riwayat Laporan -->
-        <div class="md:col-span-2 bg-white dark:bg-gray-800 shadow-md rounded-lg p-5">
+        <div class="sm:col-span-1 md:col-span-2 bg-white dark:bg-gray-800 shadow-md rounded-lg p-5">
             <h5 class="text-lg font-semibold mb-3">Riwayat Laporan Bulan Ini</h5>
 
             <div class="overflow-x-auto">

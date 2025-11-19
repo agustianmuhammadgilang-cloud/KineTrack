@@ -3,7 +3,7 @@
 
 <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-6">Tambah User</h4>
 
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-lg">
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-full md:max-w-lg mx-auto">
     <form action="<?= base_url('admin/users/store'); ?>" method="POST" class="space-y-4">
 
         <div>
@@ -52,12 +52,12 @@
 
         <p class="text-sm text-gray-500 dark:text-gray-400">Password default: <b>123456</b></p>
 
-        <div class="flex gap-3 mt-4">
-            <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md font-medium shadow-md transition">
+        <div class="flex flex-col md:flex-row gap-3 mt-4">
+            <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md font-medium shadow-md w-full md:w-auto text-center">
                 Simpan
             </button>
             <a href="<?= base_url('admin/users'); ?>" 
-               class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-md font-medium transition">
+               class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-md font-medium w-full md:w-auto text-center">
                Kembali
             </a>
         </div>

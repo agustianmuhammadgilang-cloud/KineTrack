@@ -1,7 +1,7 @@
 <?= $this->extend('layout/admin_template') ?>
 <?= $this->section('content') ?>
 
-<div class="max-w-lg mx-auto">
+<div class="max-w-lg mx-auto px-4 sm:px-6 lg:px-8">
     <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-6">Edit Bidang</h4>
 
     <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
@@ -14,9 +14,9 @@
                               focus:outline-none focus:ring-2 focus:ring-orange-400 dark:bg-gray-700 dark:text-white">
             </div>
 
-            <div class="flex justify-end gap-2">
+            <div class="flex flex-col sm:flex-row justify-end gap-2">
                 <a href="<?= base_url('admin/bidang'); ?>" 
-                   class="px-4 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded-md font-medium transition">
+                   class="px-4 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded-md font-medium text-center transition">
                    Kembali
                 </a>
                 <button type="submit" 
