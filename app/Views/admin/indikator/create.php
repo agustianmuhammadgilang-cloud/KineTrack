@@ -1,65 +1,97 @@
 <?= $this->extend('layout/admin_template') ?>
 <?= $this->section('content') ?>
 
-<h3 class="fw-bold mb-4">Tambah Indikator Kinerja</h3>
+<h3 class="text-2xl font-bold text-[var(--polban-blue)] mb-6">
+    Tambah Indikator Kinerja
+</h3>
 
-<form action="<?= base_url('admin/indikator/store') ?>" method="post">
+<div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 max-w-3xl">
+    <form action="<?= base_url('admin/indikator/store') ?>" method="post" class="space-y-5">
 
-    <div class="mb-3">
-        <label class="form-label">Sasaran Strategis</label>
-        <select name="sasaran_id" class="form-control" required>
-            <?php foreach($sasaran as $s): ?>
-            <option value="<?= $s['id'] ?>">
-                <?= $s['kode_sasaran'] ?> — <?= $s['nama_sasaran'] ?> (<?= $s['tahun'] ?>)
-            </option>
-            <?php endforeach ?>
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Kode Indikator</label>
-        <input type="text" name="kode_indikator" class="form-control" required>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Nama Indikator</label>
-        <textarea name="nama_indikator" class="form-control" required></textarea>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Satuan</label>
-        <input type="text" name="satuan" class="form-control" placeholder="% / Unit / Dokumen / dll">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Target PK</label>
-        <input type="number" name="target_pk" class="form-control">
-    </div>
-
-    <hr>
-
-    <div class="row mb-3">
-        <div class="col">
-            <label class="form-label">Target TW1</label>
-            <input type="number" name="target_tw1" class="form-control">
+        <!-- SASARAN -->
+        <div>
+            <label class="block font-semibold text-gray-700 mb-1">Sasaran Strategis</label>
+            <select name="sasaran_id" required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
+                <?php foreach($sasaran as $s): ?>
+                <option value="<?= $s['id'] ?>">
+                    <?= $s['kode_sasaran'] ?> — <?= $s['nama_sasaran'] ?> (<?= $s['tahun'] ?>)
+                </option>
+                <?php endforeach ?>
+            </select>
         </div>
-        <div class="col">
-            <label class="form-label">Target TW2</label>
-            <input type="number" name="target_tw2" class="form-control">
-        </div>
-        <div class="col">
-            <label class="form-label">Target TW3</label>
-            <input type="number" name="target_tw3" class="form-control">
-        </div>
-        <div class="col">
-            <label class="form-label">Target TW4</label>
-            <input type="number" name="target_tw4" class="form-control">
-        </div>
-    </div>
 
-    <button class="btn btn-primary">Simpan</button>
-    <a href="<?= base_url('admin/indikator') ?>" class="btn btn-secondary">Kembali</a>
+        <!-- KODE INDIKATOR -->
+        <div>
+            <label class="block font-semibold text-gray-700 mb-1">Kode Indikator</label>
+            <input type="text" name="kode_indikator" required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
+        </div>
 
-</form>
+        <!-- NAMA INDIKATOR -->
+        <div>
+            <label class="block font-semibold text-gray-700 mb-1">Nama Indikator</label>
+            <textarea name="nama_indikator" required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)] h-28"></textarea>
+        </div>
+
+        <!-- SATUAN -->
+        <div>
+            <label class="block font-semibold text-gray-700 mb-1">Satuan</label>
+            <input type="text" name="satuan" placeholder="% / Unit / Dokumen / dll"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
+        </div>
+
+        <!-- TARGET PK -->
+        <div>
+            <label class="block font-semibold text-gray-700 mb-1">Target PK</label>
+            <input type="number" name="target_pk"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
+        </div>
+
+        <hr class="my-4">
+
+        <!-- TARGET TW -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+                <label class="block font-semibold text-gray-700 mb-1">TW1</label>
+                <input type="number" name="target_tw1"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
+            </div>
+
+            <div>
+                <label class="block font-semibold text-gray-700 mb-1">TW2</label>
+                <input type="number" name="target_tw2"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
+            </div>
+
+            <div>
+                <label class="block font-semibold text-gray-700 mb-1">TW3</label>
+                <input type="number" name="target_tw3"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
+            </div>
+
+            <div>
+                <label class="block font-semibold text-gray-700 mb-1">TW4</label>
+                <input type="number" name="target_tw4"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
+            </div>
+        </div>
+
+        <!-- BUTTON -->
+        <div class="flex gap-3 pt-3">
+            <button
+                class="bg-[var(--polban-blue)] text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-900 shadow">
+                Simpan
+            </button>
+
+            <a href="<?= base_url('admin/indikator') ?>"
+                class="px-6 py-2 rounded-lg font-semibold border border-gray-400 text-gray-700 hover:bg-gray-100">
+                Kembali
+            </a>
+        </div>
+
+    </form>
+</div>
 
 <?= $this->endSection() ?>

@@ -45,23 +45,52 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     $routes->post('users/update/(:num)', 'Admin\User::update/$1');
     $routes->get('users/delete/(:num)', 'Admin\User::delete/$1');
 
-    //tambahan Routes sama Repan
-    $routes->group('admin', ['filter'=>'auth'], function($routes) {
-    // master
-    $routes->resource('tahun', ['controller' => 'Admin\TahunAnggaran', 'only' => ['index','create','store','edit','update','delete']]);
-    $routes->resource('sasaran', ['controller' => 'Admin\Sasaran', 'only' => ['index','create','store','edit','update','delete']]);
-    $routes->resource('indikator', ['controller' => 'Admin\Indikator', 'only' => ['index','create','store','edit','update','delete']]);
-
-    // pengukuran (input)
-    $routes->get('pengukuran', 'Admin\Pengukuran::index');         // form input selector
-    $routes->post('pengukuran/load', 'Admin\Pengukuran::load');   // ajax load indikator per tahun+tw
-    $routes->post('pengukuran/store', 'Admin\Pengukuran::store'); // save input
-    $routes->get('pengukuran/output', 'Admin\Pengukuran::output'); // view output table
-    $routes->get('pengukuran/export/(:num)/(:num)', 'Admin\Pengukuran::export/$1/$2'); // export (tahunId,tw)
-});
-//akhir tambahan Routes sama Repan
 
 });
+
+
+// ------------------------
+// Tambahan Routes dari Repan
+// ------------------------
+$routes->group('admin', ['filter' => 'auth'], function($routes) {
+
+    // ====== MASTER: TAHUN ======
+    $routes->get('tahun', 'Admin\TahunAnggaran::index');
+    $routes->get('tahun/create', 'Admin\TahunAnggaran::create');
+    $routes->post('tahun/store', 'Admin\TahunAnggaran::store');
+    $routes->get('tahun/edit/(:num)', 'Admin\TahunAnggaran::edit/$1');
+    $routes->post('tahun/update/(:num)', 'Admin\TahunAnggaran::update/$1');
+    $routes->get('tahun/delete/(:num)', 'Admin\TahunAnggaran::delete/$1');
+
+
+    // ====== MASTER: SASARAN ======
+    $routes->get('sasaran', 'Admin\Sasaran::index');
+    $routes->get('sasaran/create', 'Admin\Sasaran::create');
+    $routes->post('sasaran/store', 'Admin\Sasaran::store');
+    $routes->get('sasaran/edit/(:num)', 'Admin\Sasaran::edit/$1');
+    $routes->post('sasaran/update/(:num)', 'Admin\Sasaran::update/$1');
+    $routes->get('sasaran/delete/(:num)', 'Admin\Sasaran::delete/$1');
+
+    // ====== MASTER: INDIKATOR ======
+    $routes->get('indikator', 'Admin\Indikator::index');
+    $routes->get('indikator/create', 'Admin\Indikator::create');
+    $routes->post('indikator/store', 'Admin\Indikator::store');
+    $routes->get('indikator/edit/(:num)', 'Admin\Indikator::edit/$1');
+    $routes->post('indikator/update/(:num)', 'Admin\Indikator::update/$1');
+    $routes->get('indikator/delete/(:num)', 'Admin\Indikator::delete/$1');
+
+    // ====== INPUT PENGUKURAN ======
+    $routes->get('pengukuran', 'Admin\Pengukuran::index'); // pilih tahun & TW
+    $routes->post('pengukuran/load', 'Admin\Pengukuran::load'); // ajax ambil indikator
+    $routes->post('pengukuran/store', 'Admin\Pengukuran::store'); // simpan bulk
+
+    // ====== OUTPUT PENGUKURAN ======
+    $routes->get('pengukuran/output', 'Admin\Pengukuran::output'); // tampil tabel output
+    $routes->get('pengukuran/export/(:num)/(:num)', 'Admin\Pengukuran::export/$1/$2'); // export
+});
+
+
+
 
 // ==========================
 // ADMIN - DETAIL BIDANG

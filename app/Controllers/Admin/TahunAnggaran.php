@@ -28,7 +28,7 @@ class TahunAnggaran extends BaseController
     public function store()
     {
         $this->model->insert([
-            'tahun' => $this->request->getPost('tahun'),
+            'tahun'  => $this->request->getPost('tahun'),
             'status' => $this->request->getPost('status')
         ]);
 

@@ -1,39 +1,67 @@
 <?= $this->extend('layout/admin_template') ?>
 <?= $this->section('content') ?>
 
-<h3 class="fw-bold mb-4">Tahun Anggaran</h3>
+<h3 class="text-2xl font-bold text-[var(--polban-blue)] mb-6">Tahun Anggaran</h3>
 
-<a href="<?= base_url('admin/tahun/create') ?>" class="btn btn-primary mb-3">+ Tambah Tahun</a>
+<!-- Tombol Tambah -->
+<a href="<?= base_url('admin/tahun/create') ?>"
+   class="inline-block bg-[var(--polban-blue)] text-white px-4 py-2 rounded-lg shadow hover:bg-blue-900 transition mb-4">
+   + Tambah Tahun
+</a>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th width="10%">ID</th>
-            <th>Tahun</th>
-            <th>Status</th>
-            <th width="20%">Aksi</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach($tahun as $t): ?>
-        <tr>
-            <td><?= $t['id'] ?></td>
-            <td><?= $t['tahun'] ?></td>
-            <td>
-                <?php if($t['status'] == 'aktif'): ?>
-                    <span class="badge bg-success">Aktif</span>
-                <?php else: ?>
-                    <span class="badge bg-secondary">Tidak Aktif</span>
-                <?php endif; ?>
-            </td>
-            <td>
-                <a href="<?= base_url('admin/tahun/edit/'.$t['id']) ?>" class="btn btn-warning btn-sm">Edit</a>
-                <a href="<?= base_url('admin/tahun/delete/'.$t['id']) ?>" class="btn btn-danger btn-sm"
-                   onclick="return confirm('Hapus tahun?')">Hapus</a>
-            </td>
-        </tr>
-        <?php endforeach ?>
-    </tbody>
-</table>
+<!-- Card Wrapper -->
+<div class="bg-white shadow border border-gray-200 rounded-xl overflow-hidden">
+
+    <!-- Table Wrapper -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+            <thead class="bg-[var(--polban-blue)] text-white">
+                <tr>
+                    <th class="px-4 py-3 text-left w-16">ID</th>
+                    <th class="px-4 py-3 text-left">Tahun</th>
+                    <th class="px-4 py-3 text-left">Status</th>
+                    <th class="px-4 py-3 text-center w-40">Aksi</th>
+                </tr>
+            </thead>
+
+            <tbody class="divide-y divide-gray-200">
+                <?php foreach($tahun as $t): ?>
+                <tr class="hover:bg-gray-50">
+                    <td class="px-4 py-3"><?= $t['id'] ?></td>
+                    <td class="px-4 py-3"><?= $t['tahun'] ?></td>
+
+                    <td class="px-4 py-3">
+                        <?php if($t['status'] == 'active'): ?>
+                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
+                                Aktif
+                            </span>
+                        <?php else: ?>
+                            <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs font-semibold">
+                                Tidak Aktif
+                            </span>
+                        <?php endif; ?>
+                    </td>
+
+                    <td class="px-4 py-3 text-center flex gap-2 justify-center">
+
+                        <a href="<?= base_url('admin/tahun/edit/'.$t['id']) ?>"
+                           class="px-3 py-1 bg-yellow-500 text-white rounded-lg text-xs hover:bg-yellow-600 transition">
+                           Edit
+                        </a>
+
+                        <a href="<?= base_url('admin/tahun/delete/'.$t['id']) ?>"
+                           onclick="return confirm('Hapus tahun?')"
+                           class="px-3 py-1 bg-red-600 text-white rounded-lg text-xs hover:bg-red-700 transition">
+                           Hapus
+                        </a>
+
+                    </td>
+                </tr>
+                <?php endforeach ?>
+            </tbody>
+
+        </table>
+    </div>
+</div>
 
 <?= $this->endSection() ?>
