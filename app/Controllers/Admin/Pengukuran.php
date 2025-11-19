@@ -59,61 +59,57 @@ class Pengukuran extends BaseController
 
     // Simpan (bulk atau per row). Kita terima array data
     public function store()
-    {
-        $post = $this->request->getPost();
-        $userId = session('user_id');
-        $createdBy = session('user_id');
+{
+    $tahunId = $this->request->getPost('tahun_id');
+    $tw = $this->request->getPost('triwulan');
+    $indikator = $this->indikatorModel
+        ->where('sasaran_id IN (SELECT id FROM sasaran_strategis WHERE tahun_id='.$tahunId.')', null, false)
+        ->findAll();
 
-        $saved = 0;
-        if (!isset($post['rows'])) {
-            return redirect()->back()->with('error','Tidak ada data');
+    $saveCount = 0;
+
+    foreach ($indikator as $ind) {
+
+        $id = $ind['id'];
+
+        $dataSave = [
+            'indikator_id' => $id,
+            'tahun_id'     => $tahunId,
+            'triwulan'     => $tw,
+            'realisasi'    => $this->request->getPost("realisasi_$id"),
+            'kendala'      => $this->request->getPost("kendala_$id"),
+            'strategi'     => $this->request->getPost("strategi_$id"),
+            'data_dukung'  => $this->request->getPost("data_dukung_$id"),
+            'created_by'   => session('user_id')
+        ];
+
+        /** HANDLE FILE */
+        $file = $this->request->getFile("file_$id");
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newName = $file->getRandomName();
+            $file->move(FCPATH.'uploads/pengukuran/', $newName);
+            $dataSave['file_dukung'] = $newName;
         }
 
-        $rows = json_decode($post['rows'], true);
-        foreach ($rows as $r) {
-            if (!isset($r['indikator_id'])) continue;
+        /** SAVE / UPDATE */
+        $existing = $this->pengukuranModel
+            ->where('indikator_id', $id)
+            ->where('tahun_id', $tahunId)
+            ->where('triwulan', $tw)
+            ->first();
 
-            $indikatorId = (int)$r['indikator_id'];
-            $tahunId = (int)$r['tahun_id'];
-            $tw = (int)$r['triwulan'];
-            $realisasi = ($r['realisasi'] === '' ? null : (float)$r['realisasi']);
-            $target = (float) ($r['target'] ?? 0);
-
-            // hitung progress (simple)
-            $progress = null;
-            if ($target > 0 && $realisasi !== null) {
-                $progress = round((($realisasi / $target) * 100), 2);
-            }
-
-            // cek existing
-            $exist = $this->pengukuranModel->where('indikator_id',$indikatorId)
-                ->where('tahun_id',$tahunId)
-                ->where('triwulan',$tw)
-                ->first();
-
-            $dataSave = [
-                'indikator_id'=>$indikatorId,
-                'tahun_id'=>$tahunId,
-                'triwulan'=>$tw,
-                'user_id'=> $r['user_id'] ?? null,
-                'realisasi'=>$realisasi,
-                'progress'=>$progress,
-                'kendala'=>$r['kendala'] ?? null,
-                'strategi'=>$r['strategi'] ?? null,
-                'data_dukung'=>$r['data_dukung'] ?? null,
-                'created_by'=>$createdBy
-            ];
-
-            if ($exist) {
-                $this->pengukuranModel->update($exist['id'],$dataSave);
-            } else {
-                $this->pengukuranModel->insert($dataSave);
-            }
-            $saved++;
+        if ($existing) {
+            $this->pengukuranModel->update($existing['id'], $dataSave);
+        } else {
+            $this->pengukuranModel->insert($dataSave);
         }
 
-        return redirect()->back()->with('success', "$saved baris tersimpan.");
+        $saveCount++;
     }
+
+    return redirect()->back()->with('success', "$saveCount data berhasil disimpan");
+}
+
 
     // Output view (read-only) untuk tahun+triwulan
     public function output()
