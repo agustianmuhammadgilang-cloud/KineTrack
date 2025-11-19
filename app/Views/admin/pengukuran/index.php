@@ -37,7 +37,7 @@
                 <option value="">-- Pilih Tahun --</option>
                 <?php foreach($tahun as $t): ?>
                 <option value="<?= $t['id'] ?>">
-                    <?= $t['tahun'] ?> <?= $t['status']=='active' ? '(active)' : '' ?>
+                    <?= $t['tahun'] ?> <?= $t['status']=='aktif' ? '(active)' : '' ?>
                 </option>
                 <?php endforeach; ?>
             </select>
@@ -70,6 +70,7 @@
 
 <script>
 document.querySelector('#loadBtn').addEventListener('click', async function(){
+
     const tahunId = document.querySelector('#tahun_id').value;
     const activeBtn = document.querySelector('.tw-btn.active');
     const tw = activeBtn ? activeBtn.dataset.tw : null;
@@ -81,6 +82,7 @@ document.querySelector('#loadBtn').addEventListener('click', async function(){
         headers:{ 'Content-Type':'application/x-www-form-urlencoded' },
         body: new URLSearchParams({ tahun_id: tahunId, triwulan: tw }).toString()
     });
+
     const json = await res.json();
     if (!json.status) return alert(json.message);
 
@@ -107,6 +109,7 @@ document.querySelector('#loadBtn').addEventListener('click', async function(){
     `;
 
     json.indikator.forEach(ind => {
+
         const ex = json.existing[ind.id] ?? null;
 
         html += `
@@ -160,6 +163,7 @@ document.querySelector('#loadBtn').addEventListener('click', async function(){
 
     document.querySelector('#saveBulk').addEventListener('click', async function(e){
         e.preventDefault();
+
         const form = document.querySelector('#bulkSaveForm');
         const formData = new FormData(form);
 
@@ -173,12 +177,11 @@ document.querySelector('#loadBtn').addEventListener('click', async function(){
     });
 });
 
-// TW button active state
+// TW button active
 document.querySelectorAll('.tw-btn').forEach(btn => {
     btn.addEventListener('click', function(){
         document.querySelectorAll('.tw-btn').forEach(x => x.classList.remove('bg-[var(--polban-blue)]','text-white'));
-        this.classList.add('bg-[var(--polban-blue)]','text-white');
-        this.classList.add('active');
+        this.classList.add('bg-[var(--polban-blue)]','text-white','active');
     });
 });
 </script>

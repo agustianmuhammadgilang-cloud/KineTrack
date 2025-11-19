@@ -16,125 +16,161 @@ class Pengukuran extends BaseController
 
     public function __construct()
     {
-        $this->tahunModel = new TahunAnggaranModel();
-        $this->sasaranModel = new SasaranModel();
-        $this->indikatorModel = new IndikatorModel();
-        $this->pengukuranModel = new PengukuranModel();
+        $this->tahunModel       = new TahunAnggaranModel();
+        $this->sasaranModel     = new SasaranModel();
+        $this->indikatorModel   = new IndikatorModel();
+        $this->pengukuranModel  = new PengukuranModel();
     }
 
-    // Page: selector (pilih tahun + triwulan)
+    // ===========================
+    // PAGE: INPUT PENGUKURAN
+    // ===========================
     public function index()
     {
         $data['tahun'] = $this->tahunModel->orderBy('tahun','DESC')->findAll();
         return view('admin/pengukuran/index', $data);
     }
 
-    // Ajax: load indikator & existing pengukuran untuk tahun+triwulan
+
+    // ===========================
+    // AJAX LOAD INDIKATOR
+    // ===========================
     public function load()
     {
         $tahunId = $this->request->getPost('tahun_id');
-        $tw = (int)$this->request->getPost('triwulan');
+        $tw      = (int)$this->request->getPost('triwulan');
 
-        if (!$tahunId || !$tw) return $this->response->setJSON(['status'=>false,'message'=>'Missing params']);
+        if (!$tahunId || !$tw) {
+            return $this->response->setJSON([
+                'status'  => false,
+                'message' => 'Parameter tidak lengkap'
+            ]);
+        }
 
-        // ambil semua sasaran -> indikator (join)
-        $indikator = $indikatorModel
-        ->select('indikator.*, sasaran_strategis.nama_sasaran')
-        ->join('sasaran_strategis', 'sasaran_strategis.id = indikator.sasaran_id')
-        ->where('sasaran_strategis.tahun_id', $tahun_id)
-        ->where('sasaran_strategis.triwulan', $triwulan)   // FILTER TW
-        ->findAll();
+        // 🔥 Ambil indikator berdasarkan tahun + triwulan SASARAN
+        $indikator = $this->indikatorModel
+            ->select('indikator_kinerja.*, sasaran_strategis.nama_sasaran')
+            ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
+            ->where('sasaran_strategis.tahun_id', $tahunId)
+            ->where('sasaran_strategis.triwulan', $tw)
+            ->orderBy('sasaran_strategis.id', 'ASC')
+            ->orderBy('indikator_kinerja.id', 'ASC')
+            ->findAll();
 
-
-        // ambil pengukuran existing (map by indikator_id)
+        // 🔥 Ambil data pengukuran existing
         $existing = $this->pengukuranModel
-            ->where('tahun_id',$tahunId)
-            ->where('triwulan',$tw)
+            ->where('tahun_id', $tahunId)
+            ->where('triwulan', $tw)
             ->findAll();
 
         $map = [];
-        foreach($existing as $e) $map[$e['indikator_id']] = $e;
+        foreach ($existing as $e) {
+            $map[$e['indikator_id']] = $e;
+        }
 
-        return $this->response->setJSON(['status'=>true,'indikator'=>$indikator,'existing'=>$map]);
+        return $this->response->setJSON([
+            'status'    => true,
+            'indikator' => $indikator,
+            'existing'  => $map
+        ]);
     }
 
-    // Simpan (bulk atau per row). Kita terima array data
+
+    // ===========================
+    // SIMPAN BULK INPUT
+    // ===========================
     public function store()
-{
-    $tahunId = $this->request->getPost('tahun_id');
-    $tw = $this->request->getPost('triwulan');
-    $indikator = $this->indikatorModel
-        ->where('sasaran_id IN (SELECT id FROM sasaran_strategis WHERE tahun_id='.$tahunId.')', null, false)
-        ->findAll();
+    {
+        $tahunId = $this->request->getPost('tahun_id');
+        $tw      = $this->request->getPost('triwulan');
 
-    $saveCount = 0;
+        // Ambil indikator berdasarkan tahun saja (triwulan bukan indikator)
+        $indikator = $this->indikatorModel
+            ->select('indikator_kinerja.id')
+            ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
+            ->where('sasaran_strategis.tahun_id', $tahunId)
+            ->findAll();
 
-    foreach ($indikator as $ind) {
+        $saveCount = 0;
 
-        $id = $ind['id'];
+        foreach ($indikator as $ind) {
 
-        $dataSave = [
-            'indikator_id' => $id,
-            'tahun_id'     => $tahunId,
-            'triwulan'     => $tw,
-            'realisasi'    => $this->request->getPost("realisasi_$id"),
-            'kendala'      => $this->request->getPost("kendala_$id"),
-            'strategi'     => $this->request->getPost("strategi_$id"),
-            'data_dukung'  => $this->request->getPost("data_dukung_$id"),
-            'created_by'   => session('user_id')
-        ];
+            $id = $ind['id'];
 
-        /** HANDLE FILE */
-        $file = $this->request->getFile("file_$id");
-        if ($file && $file->isValid() && !$file->hasMoved()) {
-            $newName = $file->getRandomName();
-            $file->move(FCPATH.'uploads/pengukuran/', $newName);
-            $dataSave['file_dukung'] = $newName;
+            $dataSave = [
+                'indikator_id' => $id,
+                'tahun_id'     => $tahunId,
+                'triwulan'     => $tw,
+                'realisasi'    => $this->request->getPost("realisasi_$id"),
+                'kendala'      => $this->request->getPost("kendala_$id"),
+                'strategi'     => $this->request->getPost("strategi_$id"),
+                'data_dukung'  => $this->request->getPost("data_dukung_$id"),
+                'created_by'   => session('user_id')
+            ];
+
+            // FILE UPLOAD
+            $file = $this->request->getFile("file_$id");
+            if ($file && $file->isValid() && !$file->hasMoved()) {
+                $newName = $file->getRandomName();
+                $file->move(FCPATH.'uploads/pengukuran/', $newName);
+                $dataSave['file_dukung'] = $newName;
+            }
+
+            // UPDATE / INSERT
+            $existing = $this->pengukuranModel
+                ->where('indikator_id', $id)
+                ->where('tahun_id', $tahunId)
+                ->where('triwulan', $tw)
+                ->first();
+
+            if ($existing) {
+                $this->pengukuranModel->update($existing['id'], $dataSave);
+            } else {
+                $this->pengukuranModel->insert($dataSave);
+            }
+
+            $saveCount++;
         }
 
-        /** SAVE / UPDATE */
-        $existing = $this->pengukuranModel
-            ->where('indikator_id', $id)
-            ->where('tahun_id', $tahunId)
-            ->where('triwulan', $tw)
-            ->first();
-
-        if ($existing) {
-            $this->pengukuranModel->update($existing['id'], $dataSave);
-        } else {
-            $this->pengukuranModel->insert($dataSave);
-        }
-
-        $saveCount++;
+        return redirect()->back()->with('success', "$saveCount data berhasil disimpan");
     }
 
-    return redirect()->back()->with('success', "$saveCount data berhasil disimpan");
-}
 
-
-    // Output view (read-only) untuk tahun+triwulan
+    // ===========================
+    // OUTPUT / READ ONLY
+    // ===========================
     public function output()
     {
-        $tahunId = $this->request->getGet('tahun_id') ?? null;
-        $triwulan = $this->request->getGet('triwulan') ?? null;
+        $tahunId  = $this->request->getGet('tahun_id');
+        $tw       = $this->request->getGet('triwulan');
 
         $data['tahun'] = $this->tahunModel->orderBy('tahun','DESC')->findAll();
         $data['selected_tahun'] = $tahunId;
-        $data['selected_tw'] = $triwulan;
+        $data['selected_tw']    = $tw;
 
-        if ($tahunId && $triwulan) {
-            // load indikator (same as load())
+        if ($tahunId && $tw) {
+
             $data['indikator'] = $this->indikatorModel
                 ->select('indikator_kinerja.*, sasaran_strategis.kode_sasaran, sasaran_strategis.nama_sasaran')
-                ->join('sasaran_strategis','sasaran_strategis.id = indikator_kinerja.sasaran_id','left')
-                ->where('sasaran_strategis.tahun_id', $tahunId)
-                ->orderBy('sasaran_strategis.id, indikator_kinerja.id')
+                ->join('sasaran_strategis','sasaran_strategis.id = indikator_kinerja.sasaran_id')
+                ->where('sasaran_strategis.tahun_id',$tahunId)
+                ->orderBy('sasaran_strategis.id')
+                ->orderBy('indikator_kinerja.id')
                 ->findAll();
 
-            $data['pengukuran_map'] = [];
-            $existing = $this->pengukuranModel->where('tahun_id',$tahunId)->where('triwulan',$triwulan)->findAll();
-            foreach($existing as $e) $data['pengukuran_map'][$e['indikator_id']] = $e;
-        } else {
+            $map = [];
+            $existing = $this->pengukuranModel
+                ->where('tahun_id',$tahunId)
+                ->where('triwulan',$tw)
+                ->findAll();
+
+            foreach ($existing as $e) {
+                $map[$e['indikator_id']] = $e;
+            }
+
+            $data['pengukuran_map'] = $map;
+        } 
+        else {
             $data['indikator'] = [];
             $data['pengukuran_map'] = [];
         }
@@ -142,10 +178,15 @@ class Pengukuran extends BaseController
         return view('admin/pengukuran/output', $data);
     }
 
-    // Export stub (could generate PDF/Excel)
+
+    // ===========================
+    // EXPORT PLACEHOLDER
+    // ===========================
     public function export($tahunId, $tw)
     {
-        // implement export (dompdf/PhpSpreadsheet) — stub:
-        return $this->response->setJSON(['status'=>true,'message'=>"export for tahun:$tahunId tw:$tw"]);
+        return $this->response->setJSON([
+            'status'  => true,
+            'message' => "export tahun:$tahunId tw:$tw"
+        ]);
     }
 }
