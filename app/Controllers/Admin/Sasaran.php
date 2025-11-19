@@ -17,65 +17,84 @@ class Sasaran extends BaseController
         $this->tahun = new TahunAnggaranModel();
     }
 
+    /* =============================
+       INDEX (LIST SASARAN)
+    ============================== */
     public function index()
     {
         $data['sasaran'] = $this->model
             ->select('sasaran_strategis.*, tahun_anggaran.tahun')
-            ->join('tahun_anggaran','tahun_anggaran.id=sasaran_strategis.tahun_id')
-            ->orderBy('tahun_anggaran.tahun','DESC')
+            ->join('tahun_anggaran', 'tahun_anggaran.id = sasaran_strategis.tahun_id')
+            ->orderBy('tahun_anggaran.tahun', 'DESC')
             ->findAll();
 
         return view('admin/sasaran/index', $data);
     }
 
+    /* =============================
+       CREATE FORM
+    ============================== */
     public function create()
     {
         $data['tahun'] = $this->tahun->findAll();
         return view('admin/sasaran/create', $data);
     }
 
+    /* =============================
+       STORE DATA SASARAN
+    ============================== */
     public function store()
     {
-        $this->model->insert([
-            'tahun_id' => $this->request->getPost('tahun_id'),
+        $data = [
+            'tahun_id'     => $this->request->getPost('tahun_id'),
             'kode_sasaran' => $this->request->getPost('kode_sasaran'),
             'nama_sasaran' => $this->request->getPost('nama_sasaran'),
-        ]);
-
-        $data = [
-            'tahun_id'      => $this->request->getPost('tahun_id'),
-            'kode_sasaran'  => $this->request->getPost('kode_sasaran'),
-            'nama_sasaran'  => $this->request->getPost('nama_sasaran'),
-            'triwulan'      => $this->request->getPost('triwulan'),
+            'triwulan'     => $this->request->getPost('triwulan'),  // NEW FIELD
         ];
 
-        $model->insert($data);
+        $this->model->insert($data);
 
-
-
-        return redirect()->to('/admin/sasaran')->with('success', 'Sasaran ditambahkan');
+        return redirect()->to('/admin/sasaran')
+            ->with('success', 'Sasaran Strategis berhasil ditambahkan');
     }
 
+    /* =============================
+       EDIT FORM
+    ============================== */
     public function edit($id)
     {
         $data['sasaran'] = $this->model->find($id);
         $data['tahun'] = $this->tahun->findAll();
+
         return view('admin/sasaran/edit', $data);
     }
 
+    /* =============================
+       UPDATE DATA SASARAN
+    ============================== */
     public function update($id)
     {
-        $this->model->update($id, [
-            'tahun_id' => $this->request->getPost('tahun_id'),
+        $data = [
+            'tahun_id'     => $this->request->getPost('tahun_id'),
             'kode_sasaran' => $this->request->getPost('kode_sasaran'),
             'nama_sasaran' => $this->request->getPost('nama_sasaran'),
-        ]);
-        return redirect()->to('/admin/sasaran')->with('success','Diupdate');
+            'triwulan'     => $this->request->getPost('triwulan'),  // NEW FIELD
+        ];
+
+        $this->model->update($id, $data);
+
+        return redirect()->to('/admin/sasaran')
+            ->with('success', 'Sasaran Strategis berhasil diperbarui');
     }
 
+    /* =============================
+       DELETE
+    ============================== */
     public function delete($id)
     {
         $this->model->delete($id);
-        return redirect()->to('/admin/sasaran')->with('success','Dihapus');
+
+        return redirect()->to('/admin/sasaran')
+            ->with('success', 'Sasaran Strategis berhasil dihapus');
     }
 }
