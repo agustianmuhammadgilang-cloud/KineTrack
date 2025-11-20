@@ -59,6 +59,21 @@
             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#chart-pie" /></svg>
             Analisis Bidang
         </a>
+        <a href="<?= base_url('admin/pengukuran') ?>" 
+          class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2">
+                <use href="#chart-bar" />
+            </svg>
+            Input Pengukuran
+        </a>
+        <a href="<?= base_url('admin/pengukuran/output') ?>" 
+          class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2">
+                <use href="#folder" />
+            </svg>
+            Output Pengukuran
+        </a>
+
     </nav>
 
     <div class="px-6 py-4 border-t border-white/20">
@@ -83,6 +98,18 @@
   <symbol id="chart-pie" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 2v20M2 11h20"/></symbol>
   <symbol id="arrow-left-on-rectangle" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 17l-5-5 5-5M21 12H9"/></symbol>
 </svg>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<?php if (session()->getFlashdata('alert')): 
+    $a = session()->getFlashdata('alert'); ?>
+<script>
+  Swal.fire({
+    toast: true, position: 'top-end', showConfirmButton:false, timer:4000,
+    icon: '<?= esc($a['type']) ?>', title: '<?= esc($a['title']) ?>', text: '<?= esc($a['message']) ?>'
+  });
+</script>
+<?php endif; ?>
+
 
 </body>
 </html>
