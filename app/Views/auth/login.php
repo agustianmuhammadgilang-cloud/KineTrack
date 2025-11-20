@@ -8,7 +8,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- GSAP -->
+    <!-- GSAP for animation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <style>
@@ -43,7 +43,7 @@
             opacity: 1;
         }
 
-        /* Frosted Card */
+        /* Frosted Glass Card */
         .glass-card {
             backdrop-filter: blur(14px);
             background: rgba(255, 255, 255, 0.55);
@@ -67,14 +67,14 @@
 
 <body class="min-h-screen flex justify-center items-center relative">
 
-    <!-- BACKGROUND SLIDES -->
+    <!-- BACKGROUND SLIDESHOW -->
     <div class="bg-slide">
         <img src="<?= base_url('img/Gedung1.jpg') ?>" class="active">
         <img src="<?= base_url('img/Gedung2.jpg') ?>">
         <img src="<?= base_url('img/Gedung3.jpg') ?>">
     </div>
 
-    <!-- CARD -->
+    <!-- LOGIN CARD -->
     <div id="card" class="glass-card p-10 w-full max-w-md opacity-0 scale-90">
 
         <!-- LOGO -->
@@ -89,14 +89,12 @@
         </h1>
 
         <?php if (session()->getFlashdata('error')): ?>
-            <div class="bg-red-100 text-red-700 px-3 py-2 rounded mb-3">
+            <div class="bg-red-100 text-red-700 px-3 py-2 rounded mb-3 animate__animated animate__shakeX">
                 <?= session()->getFlashdata('error') ?>
             </div>
         <?php endif; ?>
 
-        <!-- FORM -->
         <form action="<?= base_url('/login/process'); ?>" method="POST" class="space-y-4">
-
             <div>
                 <label class="font-semibold">Email</label>
                 <input type="email" name="email" required 
@@ -109,30 +107,12 @@
                        class="w-full mt-1 px-3 py-2 rounded border focus:outline-none focus:ring-2 focus:ring-orange-400">
             </div>
 
-            <!-- TAHUN ANGGARAN DIPINDAH KE DALAM FORM -->
-            <div>
-                <label class="font-semibold">Tahun Anggaran</label>
-                <select name="tahun" required
-                        class="w-full mt-1 px-3 py-2 rounded border bg-white focus:outline-none focus:ring-2 focus:ring-orange-400">
-                    <option value="">-- Pilih Tahun --</option>
-
-                    <?php foreach($tahun as $t): ?>
-                        <option value="<?= $t['id'] ?>">
-                            <?= $t['tahun'] ?> <?= $t['status'] == 'active' ? '(Aktif)' : '' ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <button class="btn-polban text-white w-full py-2 rounded-lg font-bold shadow-md">
-                Login
-            </button>
+            <button class="btn-polban text-white w-full py-2 rounded-lg font-bold shadow-md">Login</button>
         </form>
     </div>
 
-    <!-- GSAP ANIMATION -->
     <script>
-
+        // Card fade-in animation
         gsap.to('#card', {
             opacity: 1,
             scale: 1,
@@ -140,17 +120,19 @@
             ease: 'power3.out'
         });
 
+        // Logo fade-in
         gsap.fromTo('#logo', 
             { opacity: 0, y: -20 }, 
             { opacity: 1, y: 0, delay: 0.4, duration: 1, ease: "power3.out" }
         );
 
+        // Title fade-in
         gsap.fromTo('#title',
             { opacity: 0, y: -15 },
             { opacity: 1, y: 0, delay: 0.7, duration: 1, ease: "power3.out" }
         );
 
-        // Background slideshow
+        // Background slideshow logic
         const slides = document.querySelectorAll(".bg-slide img");
         let index = 0;
 
@@ -158,8 +140,7 @@
             slides[index].classList.remove("active");
             index = (index + 1) % slides.length;
             slides[index].classList.add("active");
-        }, 6000);
-
+        }, 6000); // change slide every 6 seconds
     </script>
 
 </body>

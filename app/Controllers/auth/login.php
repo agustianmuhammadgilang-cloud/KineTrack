@@ -4,23 +4,16 @@ namespace App\Controllers\Auth;
 
 use App\Controllers\BaseController;
 use App\Models\UserModel;
-use App\Models\TahunAnggaranModel;
 
 class Login extends BaseController
 {
     public function index()
     {
-         $tahunModel = new TahunAnggaranModel();
-    $data['tahun'] = $tahunModel->findAll();
-
-    return view('auth/login', $data);
+        return view('auth/login');
     }
 
     public function process()
     {
-        $tahun = $this->request->getPost('tahun');
-        session()->set('tahun_id', $tahun);
-
         $session = session();
         $model = new UserModel();
 
