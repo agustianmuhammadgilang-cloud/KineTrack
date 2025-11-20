@@ -12,13 +12,12 @@
         <!-- Tahun -->
         <div>
             <label class="font-semibold text-gray-700">Pilih Tahun</label>
-            <select name="tahun_id"
-                class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
+            <select name="tahun_id" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
                 <option value="">-- Pilih Tahun --</option>
                 <?php foreach($tahun as $t): ?>
-                <option value="<?= $t['id'] ?>" <?= ($selected_tahun == $t['id']) ? 'selected':'' ?>>
-                    <?= $t['tahun'] ?>
-                </option>
+                    <option value="<?= $t['id'] ?>" <?= ($selected_tahun == $t['id']) ? 'selected':'' ?>>
+                        <?= $t['tahun'] ?>
+                    </option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -26,13 +25,10 @@
         <!-- Triwulan -->
         <div>
             <label class="font-semibold text-gray-700">Triwulan</label>
-            <select name="triwulan"
-                class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
+            <select name="triwulan" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
                 <option value="">-- Pilih Triwulan --</option>
                 <?php for($i=1;$i<=4;$i++): ?>
-                <option value="<?= $i ?>" <?= ($selected_tw == $i) ? 'selected':'' ?>>
-                    TW <?= $i ?>
-                </option>
+                    <option value="<?= $i ?>" <?= ($selected_tw == $i) ? 'selected':'' ?>>TW <?= $i ?></option>
                 <?php endfor; ?>
             </select>
         </div>
@@ -47,7 +43,6 @@
     </form>
 </div>
 
-
 <?php if(!empty($indikator)): ?>
 
 <!-- TABLE -->
@@ -57,86 +52,119 @@
             <tr>
                 <th class="px-4 py-3 text-left text-sm font-semibold">Sasaran</th>
                 <th class="px-4 py-3 text-left text-sm font-semibold">Indikator</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold">Satuan</th>
                 <th class="px-4 py-3 text-left text-sm font-semibold">Target</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold">Realisasi</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold">Progress</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold">Kendala</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold">Strategi</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold">Data Dukung</th>
-                <th class="px-4 py-3 text-left text-sm font-semibold">File</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold">Aksi</th>
             </tr>
         </thead>
-
         <tbody class="divide-y divide-gray-200">
-            <?php foreach($indikator as $ind): ?>
-
             <?php
-                $p = $pengukuran_map[$ind['id']] ?? null;
-                $tw = $selected_tw;
+            // Kelompokkan indikator berdasarkan sasaran
+            $grouped = [];
+            foreach($indikator as $ind) {
+                $grouped[$ind['nama_sasaran']][] = $ind;
+            }
 
-                $target = ($ind["target_tw$tw"] !== null && $ind["target_tw$tw"] !== '')
-                    ? $ind["target_tw$tw"]
-                    : $ind["target_pk"];
+            foreach($grouped as $sasaran => $inds):
+                $rowspan = count($inds);
+                foreach($inds as $idx => $ind):
+
+                    $p = $pengukuran_map[$ind['id']] ?? null;
+                    $tw = $selected_tw;
+
+                    $target = (!empty($ind["target_tw$tw"])) 
+                                ? $ind["target_tw$tw"] 
+                                : $ind["target_pk"];
             ?>
-
             <tr class="hover:bg-gray-50">
-                <td class="px-4 py-3"><?= esc($ind['nama_sasaran']) ?></td>
+                <?php if($idx == 0): ?>
+                    <td class="px-4 py-3" rowspan="<?= $rowspan ?>"><?= esc($sasaran) ?></td>
+                <?php endif; ?>
 
                 <td class="px-4 py-3">
                     <?= $ind['kode_indikator'] ? '['.$ind['kode_indikator'].'] ' : '' ?>
                     <?= esc($ind['nama_indikator']) ?>
                 </td>
 
-                <td class="px-4 py-3"><?= esc($ind['satuan'] ?? '-') ?></td>
-
                 <td class="px-4 py-3"><?= esc($target) ?></td>
 
-                <td class="px-4 py-3"><?= esc($p['realisasi'] ?? '-') ?></td>
-
                 <td class="px-4 py-3">
-                    <?= isset($p['progress']) ? esc($p['progress']).'%' : '-' ?>
-                </td>
-
-                <td class="px-4 py-3"><?= esc($p['kendala'] ?? '-') ?></td>
-
-                <td class="px-4 py-3"><?= esc($p['strategi'] ?? '-') ?></td>
-
-                <td class="px-4 py-3"><?= esc($p['data_dukung'] ?? '-') ?></td>
-
-                <td class="px-4 py-3">
-                    <?php if (!empty($p['file_dukung'])): ?>
-                    <a href="<?= base_url('uploads/pengukuran/'.$p['file_dukung']) ?>"
-                       target="_blank"
-                       class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm shadow transition">
-                       Lihat File
-                    </a>
-                    <?php else: ?>
-                    <span class="text-gray-500">-</span>
-                    <?php endif; ?>
+    <a href="<?= base_url('admin/pengukuran/output/detail/'.$ind['id'].'/'.$selected_tahun.'/'.$selected_tw) ?>"
+   class="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-700 transition">
+   Detail
+</a>
                 </td>
             </tr>
-
-            <?php endforeach; ?>
+            <?php
+                endforeach;
+            endforeach;
+            ?>
         </tbody>
     </table>
 </div>
 
-<!-- EXPORT -->
-<div class="mt-5">
-    <a href="<?= base_url('admin/pengukuran/export/'.$selected_tahun.'/'.$selected_tw) ?>"
-       class="px-5 py-2 border border-gray-400 rounded-lg hover:bg-gray-100 transition">
-       Export
-    </a>
+<!-- DETAIL MODAL -->
+<div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-lg w-11/12 md:w-1/2 p-6 relative">
+        <button id="closeModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800">&times;</button>
+        <h3 class="text-xl font-semibold mb-4">Detail Pengukuran</h3>
+
+        <table class="min-w-full divide-y divide-gray-200">
+            <tr>
+                <td class="font-semibold px-4 py-2">Realisasi</td>
+                <td id="modalRealisasi" class="px-4 py-2"></td>
+            </tr>
+            <tr>
+                <td class="font-semibold px-4 py-2">Progress</td>
+                <td id="modalProgress" class="px-4 py-2"></td>
+            </tr>
+            <tr>
+                <td class="font-semibold px-4 py-2">Kendala</td>
+                <td id="modalKendala" class="px-4 py-2"></td>
+            </tr>
+            <tr>
+                <td class="font-semibold px-4 py-2">Strategi</td>
+                <td id="modalStrategi" class="px-4 py-2"></td>
+            </tr>
+            <tr>
+                <td class="font-semibold px-4 py-2">Data Dukung</td>
+                <td id="modalDataDukung" class="px-4 py-2"></td>
+            </tr>
+            <tr>
+                <td class="font-semibold px-4 py-2">File</td>
+                <td id="modalFile" class="px-4 py-2"></td>
+            </tr>
+        </table>
+    </div>
 </div>
 
-<?php else: ?>
+<script>
+document.querySelectorAll('.detail-btn').forEach(btn => {
+    btn.addEventListener('click', function(){
+        document.getElementById('modalRealisasi').textContent = this.dataset.realisasi;
+        document.getElementById('modalProgress').textContent = this.dataset.progress;
+        document.getElementById('modalKendala').textContent = this.dataset.kendala;
+        document.getElementById('modalStrategi').textContent = this.dataset.strategi;
+        document.getElementById('modalDataDukung').textContent = this.dataset.dataDukung;
 
-<!-- EMPTY STATE -->
-<div class="bg-white border border-gray-300 rounded-xl p-6 text-center text-gray-600 shadow">
-    Pilih Tahun & Triwulan terlebih dahulu untuk menampilkan data.
-</div>
+        const fileLink = this.dataset.file;
+        if(fileLink) {
+            document.getElementById('modalFile').innerHTML =
+                <a href="${fileLink}" target="_blank" class="text-blue-600 hover:underline">Lihat File</a>;
+        } else {
+            document.getElementById('modalFile').textContent = '-';
+        }
 
-<?php endif; ?>
+        document.getElementById('detailModal').classList.remove('hidden');
+        document.getElementById('detailModal').classList.add('flex');
+    });
+});
+
+document.getElementById('closeModal').addEventListener('click', function(){
+    document.getElementById('detailModal').classList.add('hidden');
+    document.getElementById('detailModal').classList.remove('flex');
+});
+</script>
+
+<?php endif; ?> <!-- ⭐ WAJIB ADA, TANPA INI ERROR -->
 
 <?= $this->endSection() ?>

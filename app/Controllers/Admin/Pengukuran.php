@@ -194,4 +194,36 @@ class Pengukuran extends BaseController
             'message' => "export tahun:$tahunId tw:$tw"
         ]);
     }
+
+ public function detail($indikator_id, $tahun_id, $tw)
+{
+    $indikatorModel = new \App\Models\IndikatorModel();
+    $pengukuranModel = new \App\Models\PengukuranModel();
+
+    // Ambil indikator + sasaran
+    $indikator = $indikatorModel
+        ->select('indikator_kinerja.*, sasaran_strategis.nama_sasaran')
+        ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
+        ->where('indikator_kinerja.id', $indikator_id)
+        ->first();
+
+    if (!$indikator) {
+        throw new \CodeIgniter\Exceptions\PageNotFoundException("Indikator tidak ditemukan");
+    }
+
+    // Ambil data pengukuran
+    $pengukuran = $pengukuranModel
+        ->where('indikator_id', $indikator_id)
+        ->where('tahun_id', $tahun_id)
+        ->where('triwulan', $tw)
+        ->first();
+
+    return view('admin/pengukuran/detail_output', [
+        'indikator'  => $indikator,
+        'pengukuran' => $pengukuran,
+        'tahun_id'   => $tahun_id,
+        'tw'         => $tw
+    ]);
+}
+    
 }
