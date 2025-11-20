@@ -8,18 +8,18 @@
 <!-- BUTTON WRAPPER -->
 <div class="flex flex-wrap gap-3 mb-4">
 
-    <!-- Tambah -->
-    <a href="<?= base_url('admin/indikator/create') ?>"
-       class="bg-[var(--polban-orange)] text-white px-4 py-2 rounded-lg shadow hover:bg-orange-600 transition">
-        + Tambah Indikator
-    </a>
+   <!-- Button Back to Input Pengukuran -->
+<a href="<?= base_url('admin/pengukuran') ?>"
+   class="inline-block mb-4 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg shadow 
+          hover:bg-gray-300 transition">
+    ← Kembali ke Input Pengukuran
+</a>
 
-    <!-- Back ke Input Pengukuran -->
-    <a href="<?= base_url('admin/pengukuran') ?>"
-       class="bg-gray-600 text-white px-4 py-2 rounded-lg shadow hover:bg-gray-700 transition">
-        ← Kembali ke Input Pengukuran
-    </a>
-
+<!-- Button Tambah -->
+<a href="<?= base_url('admin/indikator/create') ?>"
+   class="inline-block mb-4 ml-2 bg-[var(--polban-orange)] text-white px-4 py-2 rounded-lg shadow hover:bg-orange-600 transition">
+    + Tambah Indikator
+</a>
 </div>
 
 <!-- TABLE WRAPPER -->
