@@ -206,23 +206,12 @@ class Pengukuran extends BaseController
             ->where('triwulan', $tw)
             ->first();
 
-        return view('admin/pengukuran/detail_output', [
-            'indikator'  => $indikator,
-            'pengukuran' => $pengukuran,
-            'tahun_id'   => $tahun_id,
-            'tw'         => $tw
-        ]);
-    }
-
-
-    // ================================================================
-    // EXPORT
-    // ================================================================
-    public function export($tahunId, $tw)
-    {
-        return $this->response->setJSON([
-            'status'  => true,
-            'message' => "export tahun:$tahunId tw:$tw"
-        ]);
-    }
+    return view('admin/pengukuran/detail_output', [
+        'indikator'  => $indikator,
+        'pengukuran' => $pengukuran,
+        'tahun_id'   => $tahun_id,
+        'tw'         => $tw
+    ]);
+}
+    
 }
