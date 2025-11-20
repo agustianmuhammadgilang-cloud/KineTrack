@@ -226,4 +226,4 @@ class Pengukuran extends BaseController
     ]);
 }
     
-}
+}   
