@@ -77,6 +77,7 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     // OUTPUT PENGUKURAN
     $routes->get('pengukuran/output', 'Admin\Pengukuran::output'); // tampil tabel output
     $routes->get('pengukuran/export/(:num)/(:num)', 'Admin\Pengukuran::export/$1/$2'); // export
+    $routes->get('pengukuran/output/detail/(:num)/(:num)/(:num)', 'Admin\Pengukuran::detail/$1/$2/$3');
 });
 
 // ADMIN - DETAIL BIDANG
