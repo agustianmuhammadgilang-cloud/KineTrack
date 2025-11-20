@@ -97,4 +97,22 @@ class Sasaran extends BaseController
         return redirect()->to('/admin/sasaran')
             ->with('success', 'Sasaran Strategis berhasil dihapus');
     }
+
+    public function getTriwulan()
+{
+    $tahunId = $this->request->getGet('tahun_id');
+
+    $triwulanList = $this->model
+        ->select('DISTINCT triwulan')
+        ->where('tahun_id', $tahunId)
+        ->findAll();
+
+    $result = array_map(fn($r) => (int)$r['triwulan'], $triwulanList);
+
+    return $this->response->setJSON($result);
+}
+
+
+
+
 }
