@@ -73,6 +73,22 @@
         </tr>
     </table>
 
+
+
+        <?php
+        use App\Models\PicModel;
+        $pic = (new PicModel())->getPicByIndikator($indikator['id']);
+        ?>
+
+        <h4>PIC Terkait</h4>
+        <ul>
+        <?php foreach($pic as $p): ?>
+            <li><?= esc($p['nama']) ?> (<?= esc($p['email']) ?>) - <?= esc($p['nama_bidang']) ?> / <?= esc($p['nama_jabatan']) ?></li>
+        <?php endforeach; ?>
+
+
+</ul>
+
 </div>
 
 <!-- BUTTON -->
