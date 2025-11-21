@@ -61,10 +61,11 @@
         <tbody class="divide-y divide-gray-200">
 
             <?php
-            // Group by sasaran
+            // Group by sasaran (Gunakan kode + nama)
             $grouped = [];
             foreach ($indikator as $ind) {
-                $grouped[$ind['nama_sasaran']][] = $ind;
+                $key = '[' . $ind['kode_sasaran'] . '] ' . $ind['nama_sasaran'];
+                $grouped[$key][] = $ind;
             }
 
             foreach ($grouped as $sasaran => $inds):
@@ -97,6 +98,7 @@
                 </td>
 
             </tr>
+
             <?php endforeach; endforeach; ?>
 
         </tbody>

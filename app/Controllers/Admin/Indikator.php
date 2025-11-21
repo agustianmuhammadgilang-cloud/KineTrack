@@ -33,14 +33,36 @@ class Indikator extends BaseController
     }
 
     public function create()
-    {
-        $data['sasaran'] = $this->sasaran
-            ->select('sasaran_strategis.*, tahun_anggaran.tahun')
-            ->join('tahun_anggaran','tahun_anggaran.id=sasaran_strategis.tahun_id')
-            ->findAll();
+{
+    // Ambil semua data sasaran
+    $data['sasaran'] = $this->sasaran
+        ->select('sasaran_strategis.*, tahun_anggaran.tahun')
+        ->join('tahun_anggaran','tahun_anggaran.id=sasaran_strategis.tahun_id')
+        ->findAll();
 
-        return view('admin/indikator/create', $data);
+    // ====== AUTO-GENERATE KODE INDIKATOR ======
+
+    // Ambil kode indikator terakhir
+    $last = $this->model
+        ->select('kode_indikator')
+        ->orderBy('id', 'DESC')
+        ->first();
+
+    if ($last) {
+        // Ambil angka dari IK-XX
+        $num = intval(substr($last['kode_indikator'], 3));
+        $nextNum = $num + 1;
+    } else {
+        $nextNum = 1;
     }
+
+    // Format IK-01, IK-02, IK-03 ...
+    $data['nextKode'] = 'IK-' . str_pad($nextNum, 2, '0', STR_PAD_LEFT);
+
+    return view('admin/indikator/create', $data);
+}
+
+
 
     public function store()
     {
@@ -88,4 +110,47 @@ class Indikator extends BaseController
         $this->model->delete($id);
         return redirect()->to('/admin/indikator')->with('success','Dihapus');
     }
+
+    public function getNextKode()
+{
+    $sasaranId = $this->request->getGet('sasaran_id');
+
+    // Hitung berapa indikator pada sasaran tersebut
+    $last = $this->model
+        ->where('sasaran_id', $sasaranId)
+        ->orderBy('id', 'DESC')
+        ->first();
+
+    if ($last) {
+        // Ambil nomor IK-XX
+        $num = intval(substr($last['kode_indikator'], 3));
+        $nextNum = $num + 1;
+    } else {
+        $nextNum = 1;
+    }
+
+    return $this->response->setJSON([
+        'nextKode' => 'IK-' . str_pad($nextNum, 2, '0', STR_PAD_LEFT)
+    ]);
+}
+
+    public function getKode($sasaran_id)
+{
+    $last = $this->model
+        ->where('sasaran_id', $sasaran_id)
+        ->orderBy('id', 'DESC')
+        ->first();
+
+    if ($last) {
+        $num = intval(substr($last['kode_indikator'], 3));
+        $nextNum = $num + 1;
+    } else {
+        $nextNum = 1;
+    }
+
+    $nextKode = 'IK-' . str_pad($nextNum, 2, '0', STR_PAD_LEFT);
+
+    return $this->response->setJSON(['kode' => $nextKode]);
+}
+
 }

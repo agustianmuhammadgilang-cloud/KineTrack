@@ -10,26 +10,35 @@
 <form action="<?= base_url('admin/indikator/update/'.$indikator['id']) ?>" method="post" class="space-y-5">
 
     <!-- SASARAN -->
-    <div>
-        <label class="block font-semibold text-gray-700 mb-1">Sasaran Strategis</label>
-        <select name="sasaran_id"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[var(--polban-blue)]">
-            <?php foreach($sasaran as $s): ?>
-            <option value="<?= $s['id'] ?>"
-                <?= $indikator['sasaran_id']==$s['id']?'selected':'' ?>>
+    <label class="block font-semibold text-gray-700 mb-1">Sasaran Strategis</label>
+
+<select 
+    disabled
+    class="w-full border border-gray-300 bg-gray-100 rounded-lg px-3 py-2 pointer-events-none select-locked">
+    <?php foreach($sasaran as $s): ?>
+        <?php if ($s['id'] == $indikator['sasaran_id']): ?>
+            <option value="<?= $s['id'] ?>" selected>
                 <?= $s['kode_sasaran'] ?> — <?= $s['nama_sasaran'] ?> (<?= $s['tahun'] ?>)
             </option>
-            <?php endforeach ?>
-        </select>
-    </div>
+        <?php endif ?>
+    <?php endforeach ?>
+</select>
+
+<!-- tetap dikirim ke server -->
+<input type="hidden" name="sasaran_id" value="<?= $indikator['sasaran_id'] ?>">
+
 
     <!-- KODE -->
-    <div>
-        <label class="block font-semibold text-gray-700 mb-1">Kode Indikator</label>
-        <input type="text" name="kode_indikator"
-            value="<?= $indikator['kode_indikator'] ?>"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[var(--polban-blue)]">
-    </div>
+    <label class="block font-semibold text-gray-700 mb-1">Kode Indikator</label>
+
+<input 
+    type="text" 
+    value="<?= $indikator['kode_indikator'] ?>" 
+    disabled
+    class="w-full border border-gray-300 bg-gray-100 rounded-lg px-3 py-2 pointer-events-none select-locked">
+
+<input type="hidden" name="kode_indikator" value="<?= $indikator['kode_indikator'] ?>">
+
 
     <!-- NAMA INDIKATOR -->
     <div>

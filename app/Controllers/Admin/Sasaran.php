@@ -112,6 +112,25 @@ class Sasaran extends BaseController
     return $this->response->setJSON($result);
 }
 
+public function getKode($tahun_id, $triwulan)
+{
+    $last = $this->model
+        ->where('tahun_id', $tahun_id)
+        ->where('triwulan', $triwulan)
+        ->orderBy('id', 'DESC')
+        ->first();
+
+    if ($last) {
+        $num = intval(substr($last['kode_sasaran'], 3));
+        $nextNum = $num + 1;
+    } else {
+        $nextNum = 1;
+    }
+
+    $kode = 'SS-' . str_pad($nextNum, 2, '0', STR_PAD_LEFT);
+
+    return $this->response->setJSON(['kode' => $kode]);
+}
 
 
 
