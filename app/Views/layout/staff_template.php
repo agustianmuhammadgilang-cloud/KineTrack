@@ -47,6 +47,11 @@
             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#user" /></svg>
             Laporan
         </a>
+        <!-- MENU TASK BARU -->
+    <a href="<?= base_url('staff/task') ?>" class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+        <svg class="w-5 h-5 mr-3"><use href="#check-badge" /></svg>
+        Task
+    </a>
     </nav>
 
     <div class="px-6 py-4 border-t border-white/20">
@@ -70,6 +75,17 @@
   <symbol id="folder" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7h4l2 3h10v11H3V7z"/></symbol>
   <symbol id="chart-pie" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 2v20M2 11h20"/></symbol>
   <symbol id="arrow-left-on-rectangle" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 17l-5-5 5-5M21 12H9"/></symbol>
+  <symbol id="check-badge" viewBox="0 0 24 24">
+    <path 
+        stroke="#ffffff"
+        fill="none"
+        stroke-width="2"
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        d="M9 12l2 2 4-4M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z" 
+    />
+</symbol>
+
 </svg>
 
 
