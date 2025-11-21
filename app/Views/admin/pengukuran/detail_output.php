@@ -7,55 +7,49 @@
 
 <!-- CARD -->
 <div class="bg-white shadow-md rounded-xl p-6 border border-gray-200">
-    
+
+    <!-- NAMA & SASARAN -->
     <h4 class="text-xl font-semibold mb-2">
         <?= esc($indikator['nama_indikator']) ?>
     </h4>
+
     <p class="text-gray-600 mb-4">
         <strong>Sasaran:</strong> <?= esc($indikator['nama_sasaran']) ?>
     </p>
 
+    <!-- TABEL DETAIL -->
     <table class="min-w-full divide-y divide-gray-200">
+
         <tr>
             <td class="font-semibold px-4 py-2 w-40">Target</td>
-            <td class="px-4 py-2">
-                <?= esc($indikator['target_pk']) ?>
-            </td>
+            <td class="px-4 py-2"><?= esc($indikator['target_pk']) ?></td>
         </tr>
 
         <tr>
             <td class="font-semibold px-4 py-2">Realisasi</td>
-            <td class="px-4 py-2">
-                <?= esc($pengukuran['realisasi'] ?? '-') ?>
-            </td>
+            <td class="px-4 py-2"><?= esc($pengukuran['realisasi'] ?? '-') ?></td>
         </tr>
 
         <tr>
             <td class="font-semibold px-4 py-2">Progress</td>
             <td class="px-4 py-2">
-                <?= isset($pengukuran['progress']) ? $pengukuran['progress'].'%' : '-' ?>
+                <?= isset($pengukuran['progress']) ? esc($pengukuran['progress']).'%' : '-' ?>
             </td>
         </tr>
 
         <tr>
             <td class="font-semibold px-4 py-2">Kendala</td>
-            <td class="px-4 py-2">
-                <?= esc($pengukuran['kendala'] ?? '-') ?>
-            </td>
+            <td class="px-4 py-2"><?= esc($pengukuran['kendala'] ?? '-') ?></td>
         </tr>
 
         <tr>
             <td class="font-semibold px-4 py-2">Strategi</td>
-            <td class="px-4 py-2">
-                <?= esc($pengukuran['strategi'] ?? '-') ?>
-            </td>
+            <td class="px-4 py-2"><?= esc($pengukuran['strategi'] ?? '-') ?></td>
         </tr>
 
         <tr>
             <td class="font-semibold px-4 py-2">Data Dukung</td>
-            <td class="px-4 py-2">
-                <?= esc($pengukuran['data_dukung'] ?? '-') ?>
-            </td>
+            <td class="px-4 py-2"><?= esc($pengukuran['data_dukung'] ?? '-') ?></td>
         </tr>
 
         <tr>
@@ -63,8 +57,8 @@
             <td class="px-4 py-2">
                 <?php if (!empty($pengukuran['file_dukung'])): ?>
                     <a href="<?= base_url('uploads/pengukuran/'.$pengukuran['file_dukung']) ?>"
-                       class="text-blue-600 hover:underline" target="_blank">
-                       Lihat File
+                    class="text-blue-600 hover:underline" target="_blank">
+                        Lihat File
                     </a>
                 <?php else: ?>
                     -
@@ -74,24 +68,35 @@
     </table>
 
 
+    <!-- ====================== -->
+    <!--      BAGIAN PIC        -->
+    <!-- ====================== -->
 
-        <?php
-        use App\Models\PicModel;
-        $pic = (new PicModel())->getPicByIndikator($indikator['id']);
-        ?>
+    <?php 
+    use App\Models\PicModel; 
+    $pic = (new PicModel())->getPicByIndikator($indikator['id']); 
+    ?>
 
-        <h4>PIC Terkait</h4>
-        <ul>
-        <?php foreach($pic as $p): ?>
-            <li><?= esc($p['nama']) ?> (<?= esc($p['email']) ?>) - <?= esc($p['nama_bidang']) ?> / <?= esc($p['nama_jabatan']) ?></li>
-        <?php endforeach; ?>
+    <h4 class="text-lg font-semibold mt-6 mb-2">PIC Terkait</h4>
 
-
-</ul>
+    <?php if (!empty($pic)): ?>
+        <ul class="list-disc ml-6">
+            <?php foreach ($pic as $p): ?>
+                <li class="mb-1">
+                    <strong><?= esc($p['nama']) ?></strong>
+                    (<?= esc($p['email']) ?>)
+                    — <?= esc($p['nama_jabatan']) ?> / <?= esc($p['nama_bidang']) ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php else: ?>
+        <p class="text-gray-600 italic">Belum ada PIC yang ditetapkan.</p>
+    <?php endif; ?>
 
 </div>
 
-<!-- BUTTON -->
+
+<!-- BUTTON KEMBALI -->
 <div class="mt-5">
     <a href="<?= base_url('admin/pengukuran/output?tahun_id='.$tahun_id.'&triwulan='.$tw) ?>"
         class="bg-gray-500 text-white px-4 py-2 rounded-lg shadow hover:bg-gray-600 transition">
