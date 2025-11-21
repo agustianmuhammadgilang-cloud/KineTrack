@@ -1,81 +1,105 @@
-// 4️⃣ View: admin/pic/create.php (simplified + repeatable block)
 <?= $this->extend('layout/admin_template') ?>
 <?= $this->section('content') ?>
 
-<h3>Tambah PIC</h3>
-<form action="<?= base_url('admin/pic/store') ?>" method="post" id="picForm">
-    <div>
-        <label>Tahun Anggaran</label>
-        <select name="tahun_id" id="tahun_id">
-            <option value="">--Pilih Tahun--</option>
-            <?php foreach($tahun as $t): ?>
-                <option value="<?= $t['id'] ?>"><?= $t['tahun'] ?></option>
-            <?php endforeach; ?>
-        </select>
-    </div>
-    <div>
-        <label>Sasaran Strategis</label>
-        <select name="sasaran_id" id="sasaran_id"><option>--Pilih Sasaran--</option></select>
-    </div>
-    <div>
-        <label>Indikator</label>
-        <select name="indikator_id" id="indikator_id"><option>--Pilih Indikator--</option></select>
-    </div>
+<h3 class="text-2xl font-bold text-[var(--polban-blue)] mb-6">Tambah PIC</h3>
 
-    <div id="picBlockContainer">
-        <div class="pic-block">
-            <select name="bidang[]" class="bidang"><option>--Pilih Bidang--</option><?php foreach($bidang as $b): ?><option value="<?= $b['id'] ?>"><?= $b['nama_bidang'] ?></option><?php endforeach; ?></select>
-            <select name="jabatan[]" class="jabatan"><option>--Pilih Jabatan--</option></select>
-            <select name="pegawai[]" class="pegawai"><option>--Pilih Pegawai--</option></select>
+<form action="<?= base_url('admin/pic/store') ?>" method="post" class="space-y-6">
+
+    <!-- Tahun / Sasaran / Indikator -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+            <label class="block font-medium mb-1">Tahun Anggaran</label>
+            <select name="tahun_id" id="tahun_id" 
+                class="w-full border rounded px-3 py-2 focus:ring focus:ring-orange-300">
+                <option value="">--Pilih Tahun--</option>
+                <?php foreach($tahun as $t): ?>
+                    <option value="<?= $t['id'] ?>"><?= $t['tahun'] ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <div>
+            <label class="block font-medium mb-1">Sasaran Strategis</label>
+            <select name="sasaran_id" id="sasaran_id" 
+                class="w-full border rounded px-3 py-2 focus:ring focus:ring-orange-300">
+                <option value="">--Pilih Sasaran--</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block font-medium mb-1">Indikator</label>
+            <select name="indikator_id" id="indikator_id" 
+                class="w-full border rounded px-3 py-2 focus:ring focus:ring-orange-300">
+                <option value="">--Pilih Indikator--</option>
+            </select>
         </div>
     </div>
-    <button type="button" id="addPicBlock">+ Tambah PIC</button>
-    <button type="submit">Simpan</button>
+
+    <!-- PEMILIHAN USER -->
+    <div class="bg-white border p-4 rounded-lg shadow">
+        <h4 class="font-semibold mb-3">Pilih PIC</h4>
+
+        <div id="pegawaiList" class="space-y-2 max-h-72 overflow-y-auto">
+            <!-- AJAX load list user -->
+            <p class="text-gray-500">Pilih indikator terlebih dahulu...</p>
+        </div>
+    </div>
+
+    <button type="submit"
+        class="bg-[var(--polban-orange)] hover:bg-orange-600 text-white font-semibold px-4 py-2 rounded shadow">
+        Simpan
+    </button>
+
 </form>
 
 <script>
+const baseUrl = "<?= base_url() ?>";
+
+// Tahun → Sasaran
 document.querySelector('#tahun_id').addEventListener('change', async function(){
-    const res = await fetch(<?= base_url('admin/pic/getSasaran') ?>?tahun_id=${this.value});
+    const res = await fetch(`${baseUrl}/admin/pic/getSasaran?tahun_id=${this.value}`);
     const data = await res.json();
-    let sasaranSelect = document.querySelector('#sasaran_id');
-    sasaranSelect.innerHTML = '<option>--Pilih Sasaran--</option>';
-    data.forEach(s => { sasaranSelect.innerHTML += <option value="${s.id}">${s.nama_sasaran}</option> });
+
+    let sasaran = document.querySelector('#sasaran_id');
+    sasaran.innerHTML = '<option value="">--Pilih Sasaran--</option>';
+    data.forEach(row => {
+        sasaran.innerHTML += `<option value="${row.id}">${row.nama_sasaran}</option>`;
+    });
 });
 
+// Sasaran → Indikator
 document.querySelector('#sasaran_id').addEventListener('change', async function(){
-    const res = await fetch(<?= base_url('admin/pic/getIndikator') ?>?sasaran_id=${this.value});
+    const res = await fetch(`${baseUrl}/admin/pic/getIndikator?sasaran_id=${this.value}`);
     const data = await res.json();
-    let indSelect = document.querySelector('#indikator_id');
-    indSelect.innerHTML = '<option>--Pilih Indikator--</option>';
-    data.forEach(i => { indSelect.innerHTML += <option value="${i.id}">${i.nama_indikator}</option> });
+
+    let indikator = document.querySelector('#indikator_id');
+    indikator.innerHTML = '<option value="">--Pilih Indikator--</option>';
+    data.forEach(row => {
+        indikator.innerHTML += `<option value="${row.id}">${row.nama_indikator}</option>`;
+    });
 });
 
-// repeatable PIC block
-document.querySelector('#addPicBlock').addEventListener('click', function(){
-    let container = document.querySelector('#picBlockContainer');
-    let block = document.querySelector('.pic-block').cloneNode(true);
-    block.querySelectorAll('select').forEach(s => s.value = '');
-    container.appendChild(block);
-});
+// Load User setelah indikator dipilih
+document.querySelector('#indikator_id').addEventListener('change', async function(){
 
-// cascading bidang -> jabatan -> pegawai
-document.querySelector('#picBlockContainer').addEventListener('change', async function(e){
-    if(e.target.classList.contains('bidang')){
-        let block = e.target.closest('.pic-block');
-        let res = await fetch(<?= base_url('admin/pic/getJabatan') ?>?bidang_id=${e.target.value});
-        let data = await res.json();
-        let jabatanSelect = block.querySelector('.jabatan');
-        jabatanSelect.innerHTML = '<option>--Pilih Jabatan--</option>';
-        data.forEach(j => { jabatanSelect.innerHTML += <option value="${j.id}">${j.nama_jabatan}</option> });
-    }
-    if(e.target.classList.contains('jabatan')){
-        let block = e.target.closest('.pic-block');
-        let res = await fetch(<?= base_url('admin/pic/getPegawai') ?>?jabatan_id=${e.target.value});
-        let data = await res.json();
-        let pegawaiSelect = block.querySelector('.pegawai');
-        pegawaiSelect.innerHTML = '<option>--Pilih Pegawai--</option>';
-        data.forEach(u => { pegawaiSelect.innerHTML += <option value="${u.id}">${u.nama} (${u.email})</option> });
-    }
+    const res = await fetch(`${baseUrl}/admin/pic/getPegawai`);
+    const data = await res.json();
+
+    let container = document.querySelector('#pegawaiList');
+    container.innerHTML = '';
+
+    data.forEach(u => {
+        container.innerHTML += `
+            <label class="flex items-center gap-3 border p-2 rounded hover:bg-gray-50 cursor-pointer">
+                <input type="checkbox" name="pegawai[]" value="${u.id}">
+                <div>
+                    <p class="font-semibold">${u.nama}</p>
+                    <p class="text-sm text-gray-600">${u.nama_jabatan} — ${u.nama_bidang}</p>
+                </div>
+            </label>
+        `;
+    });
 });
 </script>
+
 <?= $this->endSection() ?>

@@ -120,3 +120,22 @@ $routes->group('atasan', ['filter' => 'auth'], function($routes){
 
 $routes->get('admin/indikator/getKode/(:num)', 'Admin\Indikator::getKode/$1');
 $routes->get('admin/sasaran/getKode/(:num)/(:num)', 'Admin\Sasaran::getKode/$1/$2');
+
+$routes->get('admin/pic/getSasaran', 'Admin\PicController::getSasaran');
+$routes->get('admin/pic/getIndikator', 'Admin\PicController::getIndikator');
+$routes->get('admin/pic/getJabatan', 'Admin\PicController::getJabatan');
+$routes->get('admin/pic/getPegawai', 'Admin\PicController::getPegawai');
+
+// Admin PIC
+$routes->get('admin/pic', 'Admin\PicController::index');
+$routes->get('admin/pic/create', 'Admin\PicController::create');
+$routes->post('admin/pic/store', 'Admin\PicController::store');
+$routes->get('admin/pic/edit/(:num)', 'Admin\PicController::edit/$1');
+$routes->post('admin/pic/update/(:num)', 'Admin\PicController::update/$1');
+$routes->get('admin/pic/delete/(:num)', 'Admin\PicController::delete/$1');
+
+
+// Staff Task
+$routes->get('staff/task', 'Staff\TaskController::index');
+$routes->get('staff/task/input/(:num)', 'Staff\TaskController::input/$1');
+$routes->post('staff/task/store', 'Staff\TaskController::store');
