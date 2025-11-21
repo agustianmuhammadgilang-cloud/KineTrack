@@ -27,7 +27,6 @@
         <table class="min-w-full text-sm">
             <thead class="bg-[var(--polban-blue)] text-white">
                 <tr>
-                    <th class="px-4 py-3 text-left w-16">ID</th>
                     <th class="px-4 py-3 text-left">Tahun</th>
                     <th class="px-4 py-3 text-left">Status</th>
                     <th class="px-4 py-3 text-center w-40">Aksi</th>
@@ -37,7 +36,6 @@
             <tbody class="divide-y divide-gray-200">
                 <?php foreach($tahun as $t): ?>
                 <tr class="hover:bg-gray-50">
-                    <td class="px-4 py-3"><?= $t['id'] ?></td>
                     <td class="px-4 py-3"><?= $t['tahun'] ?></td>
 
                     <td class="px-4 py-3">

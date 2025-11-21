@@ -117,3 +117,6 @@ $routes->group('atasan', ['filter' => 'auth'], function($routes){
     $routes->get('notifications/pending-count', 'Atasan\Notifications::pendingCount');
     $routes->get('notifications/list', 'Atasan\Notifications::list');
 });
+
+$routes->get('admin/indikator/getKode/(:num)', 'Admin\Indikator::getKode/$1');
+$routes->get('admin/sasaran/getKode/(:num)/(:num)', 'Admin\Sasaran::getKode/$1/$2');
