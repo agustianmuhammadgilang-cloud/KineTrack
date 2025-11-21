@@ -30,25 +30,40 @@ class TaskController extends BaseController
     $post = $this->request->getPost();
     $file = $this->request->getFile('file_dukung');
 
+    // ambil data PIC (tahun_id dan sasaran_id)
+    $pic = $this->picModel
+        ->where('indikator_id', $post['indikator_id'])
+        ->where('user_id', session('user_id'))
+        ->first();
+
+    if (!$pic) {
+        return redirect()->back()->with('error', 'PIC tidak ditemukan untuk indikator ini');
+    }
+
     $data = [
         'indikator_id' => $post['indikator_id'],
-        'realisasi' => $post['realisasi'],
-        'progress' => $post['progress'],
-        'kendala' => $post['kendala'],
-        'strategi' => $post['strategi'],
-        'data_dukung' => $post['data_dukung'],
-        'created_by' => session('user_id')
+        'tahun_id'     => $pic['tahun_id'],    // FIX!
+        'sasaran_id'   => $pic['sasaran_id'],   // FIX!
+        'realisasi'    => $post['realisasi'],
+        'progress'     => $post['progress'],
+        'kendala'      => $post['kendala'],
+        'strategi'     => $post['strategi'],
+        'data_dukung'  => $post['data_dukung'],
+        'created_by'   => session('user_id')
     ];
 
-    if($file && $file->isValid() && !$file->hasMoved()){
+    // upload file
+    if ($file && $file->isValid() && !$file->hasMoved()) {
         $newName = $file->getRandomName();
-        $file->move(FCPATH.'uploads/pengukuran/',$newName);
+        $file->move(FCPATH . 'uploads/pengukuran/', $newName);
         $data['file_dukung'] = $newName;
     }
 
+    // simpan
     $pengukuranModel = new \App\Models\PengukuranModel();
     $pengukuranModel->insert($data);
 
     return redirect()->to('/staff/task')->with('success','Data pengukuran berhasil disimpan');
 }
+
 }
