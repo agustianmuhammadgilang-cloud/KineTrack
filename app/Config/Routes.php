@@ -139,3 +139,8 @@ $routes->get('admin/pic/delete/(:num)', 'Admin\PicController::delete/$1');
 $routes->get('staff/task', 'Staff\TaskController::index');
 $routes->get('staff/task/input/(:num)', 'Staff\TaskController::input/$1');
 $routes->post('staff/task/store', 'Staff\TaskController::store');
+
+// Admin Profile
+$routes->get('admin/profile', 'Admin\ProfileController::index');
+$routes->post('admin/profile/update', 'Admin\ProfileController::update');
+

@@ -87,14 +87,15 @@ class PicController extends BaseController
         return $this->response->setJSON($indikator);
     }
 
-    public function getPegawai()
-    {
-        return $this->response->setJSON(
-            $this->userModel
-                ->select('users.*, jabatan.nama_jabatan, bidang.nama_bidang')
-                ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
-                ->join('bidang', 'bidang.id = users.bidang_id', 'left')
-                ->findAll()
-        );
-    }
+   public function getPegawai()
+{
+    return $this->response->setJSON(
+        $this->userModel
+            ->select('users.*, jabatan.nama_jabatan, bidang.nama_bidang')
+            ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
+            ->join('bidang', 'bidang.id = users.bidang_id', 'left')
+            ->where('users.role', 'staff') // ⬅ hanya role staff
+            ->findAll()
+    );
+}
 }

@@ -6,6 +6,11 @@ use App\Models\TahunAnggaranModel;
 use App\Models\SasaranModel;
 use App\Models\IndikatorModel;
 use App\Models\PengukuranModel;
+use XLSXWriter;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class Pengukuran extends BaseController
 {
@@ -212,6 +217,105 @@ class Pengukuran extends BaseController
         'tahun_id'   => $tahun_id,
         'tw'         => $tw
     ]);
+}
+
+public function export($tahunId, $tw)
+{
+    // =============== 1. AMBIL DATA (TIDAK BERUBAH) ===============
+    $indikator = $this->indikatorModel
+        ->select('
+            indikator_kinerja.*, 
+            sasaran_strategis.kode_sasaran, 
+            sasaran_strategis.nama_sasaran,
+            pic_indikator.user_id as pic_user_id,
+            users.nama as pic_nama
+        ')
+        ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
+        ->join('pic_indikator', 'pic_indikator.indikator_id = indikator_kinerja.id', 'left')
+        ->join('users', 'users.id = pic_indikator.user_id', 'left')
+        ->where('sasaran_strategis.tahun_id', $tahunId)
+        ->where('sasaran_strategis.triwulan', $tw)
+        ->orderBy('sasaran_strategis.id')
+        ->orderBy('indikator_kinerja.id')
+        ->findAll();
+
+    $pengukuran = $this->pengukuranModel
+        ->where('tahun_id', $tahunId)
+        ->where('triwulan', $tw)
+        ->findAll();
+
+    // mapping nilai
+    $map = [];
+    foreach ($pengukuran as $p) {
+        $map[$p['indikator_id']] = $p;
+    }
+
+    // =============== 2. INISIALISASI WRITER ===============
+    $writer = new XLSXWriter();
+    $sheetName = "TW $tw";
+
+    // Definisi Header & Tipe Data (Ini menggantikan setCellValue A1..I1)
+    // Format: 'Nama Kolom' => 'Tipe Data'
+    $header = [
+        'Kode Sasaran'      => 'string',
+        'Nama Sasaran'      => 'string',
+        'Kode Indikator'    => 'string',
+        'Nama Indikator'    => 'string',
+        'PIC'               => 'string',
+        'Target'            => 'string', // Gunakan string agar format angka/persen aman
+        'Capaian'           => 'string',
+        'Kendala Strategis' => 'string',
+        'Data Dukung'       => 'string',
+    ];
+
+    // Style Header (Bold, Center, dan Estimasi Lebar Kolom)
+    // Library ini tidak punya "Auto Size" otomatis, jadi kita set widths manual agar rapi
+    $headerStyle = [
+        'font-style' => 'bold', 
+        'halign' => 'center',
+        'widths' => [15, 30, 15, 35, 20, 15, 15, 30, 30] 
+    ];
+
+    // Tulis Header ke Sheet
+    $writer->writeSheetHeader($sheetName, $header, $headerStyle);
+
+    // =============== 3. ISI DATA (LOOPING) ===============
+    foreach ($indikator as $ind) {
+
+        $nilai = $map[$ind['id']]['nilai'] ?? '-';
+        $kendala = $map[$ind['id']]['kendala'] ?? '-';
+        $dataDukung = $map[$ind['id']]['data_dukung'] ?? '-';
+
+        // Buat array sederhana untuk baris ini
+        $row = [
+            $ind['kode_sasaran'],
+            $ind['nama_sasaran'],
+            $ind['kode_indikator'],
+            $ind['nama_indikator'],
+            $ind['pic_nama'] ?? '-',
+            $ind['target_pk'],
+            $nilai,
+            $kendala,
+            $dataDukung
+        ];
+
+        // Tulis baris ke dalam sheet
+        $writer->writeSheetRow($sheetName, $row);
+    }
+
+    // =============== 4. OUTPUT FILE ===============
+    $fileName = "Output_Pengukuran_Tahun{$tahunId}_TW{$tw}.xlsx";
+
+    // Header HTTP standar untuk download file
+    header('Content-disposition: attachment; filename="'.XLSXWriter::sanitize_filename($fileName).'"');
+    header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    header('Content-Transfer-Encoding: binary');
+    header('Cache-Control: must-revalidate');
+    header('Pragma: public');
+
+    // Tulis langsung ke output (php://output)
+    $writer->writeToStdOut();
+    exit; // Penting untuk stop script
 }
     
 }
