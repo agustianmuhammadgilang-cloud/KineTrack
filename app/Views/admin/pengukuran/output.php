@@ -5,6 +5,23 @@
     Pengukuran Kinerja (Output)
 </h3>
 
+<?php if (!empty($selected_tahun) && !empty($selected_tw)) : ?>
+<div class="flex justify-end mb-4">
+    <a href="<?= base_url('admin/pengukuran/export/'.$selected_tahun.'/'.$selected_tw) ?>"
+       class="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg shadow 
+              hover:bg-green-700 transition font-semibold">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M19 2H8c-1.1 0-2 .9-2 2v3H5c-1.1 0-2 .9-2 2v8c0 
+    1.1.9 2 2 2h1v3c0 1.1.9 2 2 2h11c1.1 0 2-.9 
+    2-2V4c0-1.1-.9-2-2-2zm0 19H8v-3h8c1.1 0 2-.9 
+    2-2V5h1v16zM7 9v8H5V9h2zm10 8H8V5h9v12z"/>
+</svg>
+        Export Excel
+    </a>
+</div>
+<?php endif; ?>
+
+
 <!-- FILTER CARD -->
 <div class="bg-white shadow-md rounded-xl p-6 mb-6 border border-gray-200">
     <form method="get" action="<?= base_url('admin/pengukuran/output') ?>" 
@@ -105,5 +122,6 @@
     </table>
 </div>
 <?php endif; ?>
+
 
 <?= $this->endSection() ?>
