@@ -221,9 +221,12 @@ class Pengukuran extends BaseController
 
 public function export($tahunId, $tw)
 {
-    // =============== 1. AMBIL DATA INDIKATOR (tanpa join PIC supaya tidak duplikat) ===============
+    // =============== 1. AMBIL DATA INDIKATOR ===============
     $indikator = $this->indikatorModel
-        ->select('indikator_kinerja.*, sasaran_strategis.kode_sasaran, sasaran_strategis.nama_sasaran')
+        ->select('indikator_kinerja.*, 
+                  sasaran_strategis.id as sasaran_id,
+                  sasaran_strategis.kode_sasaran, 
+                  sasaran_strategis.nama_sasaran')
         ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
         ->where('sasaran_strategis.tahun_id', $tahunId)
         ->where('sasaran_strategis.triwulan', $tw)
@@ -231,15 +234,13 @@ public function export($tahunId, $tw)
         ->orderBy('indikator_kinerja.id')
         ->findAll();
 
-    // jika kosong, keluar cepat
     if (empty($indikator)) {
         return $this->response->setJSON(['status'=>false,'message'=>'Tidak ada indikator untuk tahun/triwulan ini.']);
     }
 
-    // kumpulkan semua id indikator untuk query PIC selanjutnya
     $indikatorIds = array_column($indikator, 'id');
 
-    // =============== 2. AMBIL PENGUKURAN (nilai) ===============
+    // =============== 2. DATA PENGUKURAN ===============
     $pengukuran = $this->pengukuranModel
         ->where('tahun_id', $tahunId)
         ->where('triwulan', $tw)
@@ -250,7 +251,7 @@ public function export($tahunId, $tw)
         $mapPengukuran[$p['indikator_id']] = $p;
     }
 
-    // =============== 3. AMBIL PIC (nama + jabatan) PER INDIKATOR ===============
+    // =============== 3. DATA PIC (nama + jabatan) ===============
     $db = \Config\Database::connect();
     $builder = $db->table('pic_indikator');
     $picRows = $builder
@@ -261,35 +262,33 @@ public function export($tahunId, $tw)
         ->get()
         ->getResultArray();
 
-    // buat map: indikator_id => [ "Nama — Jabatan", ... ]
     $picMap = [];
     foreach ($picRows as $r) {
-        $label = trim(($r['pic_nama'] ?? '-'));
-        $jab = trim(($r['pic_jabatan'] ?? '-'));
-        $combined = $label;
-        if (!empty($jab) && $jab !== '-') $combined .= ' — ' . $jab;
-        $picMap[$r['indikator_id']][] = $combined;
+        $label = $r['pic_nama'];
+        if (!empty($r['pic_jabatan'])) {
+            $label .= " — " . $r['pic_jabatan'];
+        }
+        $picMap[$r['indikator_id']][] = $label;
     }
 
-    // untuk setiap indikator gabungkan PIC array jadi string tunggal (dipisah ; )
     foreach ($picMap as $k => $arr) {
-        $picMap[$k] = implode('; ', array_unique($arr));
+        $picMap[$k] = implode("; ", array_unique($arr));
     }
 
-    // =============== 4. INISIALISASI XLSX WRITER ===============
+    // =============== 4. MULAI XLSX ===============
     $writer = new XLSXWriter();
     $sheetName = "TW $tw";
 
     $header = [
-        'Kode Sasaran'      => 'string',
-        'Nama Sasaran'      => 'string',
-        'Kode Indikator'    => 'string',
-        'Nama Indikator'    => 'string',
-        'PIC (Nama — Jabatan)' => 'string',
-        'Target'            => 'string',
-        'Capaian'           => 'string',
-        'Kendala Strategis' => 'string',
-        'Data Dukung'       => 'string',
+        'Kode Sasaran'          => 'string',
+        'Nama Sasaran'          => 'string',
+        'Kode Indikator'        => 'string',
+        'Nama Indikator'        => 'string',
+        'PIC (Nama — Jabatan)'  => 'string',
+        'Target'                => 'string',
+        'Capaian'               => 'string',
+        'Kendala Strategis'     => 'string',
+        'Data Dukung'           => 'string',
     ];
 
     $headerStyle = [
@@ -300,19 +299,33 @@ public function export($tahunId, $tw)
 
     $writer->writeSheetHeader($sheetName, $header, $headerStyle);
 
-    // =============== 5. LOOPING ISI ROWS ===============
+    // =============== 5. LOOPING DENGAN GROUPING SASARAN ===============
+    $lastSasaranId = null;
+
     foreach ($indikator as $ind) {
+
         $indId = $ind['id'];
+        $sasId = $ind['sasaran_id'];
 
-        $nilai = $mapPengukuran[$indId]['realisasi'] ?? ($mapPengukuran[$indId]['nilai'] ?? '-');
-        $kendala = $mapPengukuran[$indId]['kendala'] ?? '-';
+        // Ambil nilai pengukuran
+        $nilai      = $mapPengukuran[$indId]['realisasi'] ?? ($mapPengukuran[$indId]['nilai'] ?? '-');
+        $kendala    = $mapPengukuran[$indId]['kendala'] ?? '-';
         $dataDukung = $mapPengukuran[$indId]['data_dukung'] ?? '-';
+        $picLabel   = $picMap[$indId] ?? '-';
 
-        $picLabel = $picMap[$indId] ?? '-';
+        // Jika masih sasaran yang sama = kolom kosong
+        if ($sasId === $lastSasaranId) {
+            $kodeSasaran = '';
+            $namaSasaran = '';
+        } else {
+            $kodeSasaran = $ind['kode_sasaran'];
+            $namaSasaran = $ind['nama_sasaran'];
+            $lastSasaranId = $sasId;
+        }
 
         $row = [
-            $ind['kode_sasaran'] ?? '-',
-            $ind['nama_sasaran'] ?? '-',
+            $kodeSasaran,
+            $namaSasaran,
             $ind['kode_indikator'] ?? '-',
             $ind['nama_indikator'] ?? '-',
             $picLabel,
@@ -330,7 +343,6 @@ public function export($tahunId, $tw)
 
     header('Content-disposition: attachment; filename="'.XLSXWriter::sanitize_filename($fileName).'"');
     header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-    header('Content-Transfer-Encoding: binary');
     header('Cache-Control: must-revalidate');
     header('Pragma: public');
 
