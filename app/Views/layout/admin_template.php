@@ -48,14 +48,15 @@
 
     <nav class="flex-1 overflow-y-auto mt-4 text-sm">
 
-        <!-- Dashboard -->
-        <a href="<?= base_url('admin') ?>"
-            class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition">
-            <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
-                <use href="#chart-bar" />
-            </svg>
-            Dashboard
-        </a>
+<!-- Dashboard -->
+<a href="<?= base_url('admin') ?>"
+    class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition">
+    <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
+        <use href="#dashboard-home" />
+    </svg>
+    Dashboard
+</a>
+
 
         <!-- Manajemen Users -->
         <div 
@@ -122,9 +123,9 @@
             <button @click="toggle()"
             class="w-full flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition">
             <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
-              <use href="#chart-bar" />
-            </svg>
-            <span class="flex-1">Input Pengukuran</span>
+    <use href="#document-check" />
+</svg>
+<span class="flex-1">Perjanjian Kinerja</span>
             
             <svg :class="open ? 'rotate-90' : ''"
             class="w-4 h-4 transition-transform text-white" fill="none" stroke="currentColor">
@@ -157,13 +158,13 @@
                 <a href="<?= base_url('admin/pic') ?>"
                     class="px-4 py-2 rounded hover:bg-white/10 transition
                     <?= (service('uri')->getSegment(2) == 'pic') ? 'bg-white/20 font-semibold' : '' ?>">
-                    Kelola PIC
+                    Kelola PIC (Person In Charge)
                 </a>
 
                 <a href="<?= base_url('admin/pengukuran') ?>"
                     class="px-4 py-2 rounded hover:bg-white/10 transition
                     <?= (service('uri')->getSegment(2) == 'testing-pk') ? 'bg-white/20 font-semibold' : '' ?>">
-                    Testing PK
+                    Testing PK (Perjanjian Kinerja)
                 </a>
             </div>
         </div>
@@ -171,29 +172,31 @@
          <!-- Analisis Bidang -->
         <a href="<?= base_url('admin/bidang-select') ?>"
             class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition">
-            <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
-                <use href="#chart-pie" />
-            </svg>
-            Analisis Bidang
+<svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
+    <use href="#document-chart" />
+</svg>
+LHE
         </a>
         
         <!-- Output Pengukuran -->
-        <a href="<?= base_url('admin/pengukuran/output') ?>"
-            class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition">
-            <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
-                <use href="#folder" />
-            </svg>
-            Output Pengukuran
-        </a>
+<a href="<?= base_url('admin/pengukuran/output') ?>"
+    class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition">
+    <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
+        <use href="#chart-analytics" />
+    </svg>
+    Pengukuran Kinerja
+</a>
 
-        <!-- Profil -->
-        <a href="<?= base_url('admin/profile') ?>"
-            class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition">
-            <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
-                <use href="#cog-6-tooth" />
-            </svg>
-            Pengaturan Profil
-        </a>
+
+<!-- Profil -->
+<a href="<?= base_url('admin/profile') ?>"
+    class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition">
+    <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
+        <use href="#user-cog" />
+    </svg>
+    Pengaturan Profil
+</a>
+
 
     </nav>
 
@@ -239,6 +242,99 @@
   <symbol id="cog-6-tooth" viewBox="0 0 24 24">
     <path stroke="currentColor" fill="none" stroke-width="2" d="M10 3l1 6 5 1-3 4 1 6-5-2-5 2 1-6-3-4 5-1 1-6z"/>
   </symbol>
+
+<symbol id="document-check" viewBox="0 0 24 24">
+    <path 
+        stroke="currentColor" 
+        fill="none" 
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M9 12l2 2 4-4M7 2h7l5 5v13a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2z"
+    />
+</symbol>
+
+
+
+<symbol id="document-chart" viewBox="0 0 24 24">
+    <path 
+        stroke="currentColor" 
+        fill="none" 
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        d="M7 2h7l5 5v13a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2z"
+    />
+    <path 
+        stroke="currentColor" 
+        stroke-width="2" 
+        stroke-linecap="round"
+        d="M9 14v3M12 12v5M15 10v7"
+    />
+</symbol>
+
+<symbol id="chart-analytics" viewBox="0 0 24 24">
+    <polyline 
+        points="4 14 8 10 12 13 20 6"
+        stroke="currentColor"
+        stroke-width="2"
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    />
+    <circle cx="4" cy="14" r="1.5" fill="currentColor"/>
+    <circle cx="8" cy="10" r="1.5" fill="currentColor"/>
+    <circle cx="12" cy="13" r="1.5" fill="currentColor"/>
+    <circle cx="20" cy="6" r="1.5" fill="currentColor"/>
+</symbol>
+
+
+
+
+
+
+<symbol id="user-cog" viewBox="0 0 24 24">
+    <!-- Kepala -->
+    <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+
+    <!-- Badan -->
+    <path d="M6 21c0-4 3-7 6-7s6 3 6 7" 
+          stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+    <!-- Gear -->
+    <circle cx="18" cy="14" r="2" stroke="currentColor" stroke-width="2" fill="none"/>
+
+    <path stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        d="M18 10v1.2
+           M18 16.8V18
+           M15.6 11.2l.8.8
+           M20.4 16l-.8-.8
+           M14 14h1.2
+           M20.8 14H22
+           M15.6 16.8l.8-.8
+           M20.4 11.2l-.8.8" />
+</symbol>
+
+
+
+
+<symbol id="dashboard-home" viewBox="0 0 24 24">
+    <!-- Rumah -->
+    <path d="M3 10l9-7 9 7" 
+        stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Kotak Dashboard -->
+    <rect x="6" y="12" width="12" height="9" 
+        stroke="currentColor" stroke-width="2" fill="none" rx="2" ry="2"/>
+
+    <!-- Pembagi dashboard -->
+    <path d="M12 12v9M6 16h12" 
+        stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+</symbol>
+
+
+
+
 </svg>
 
 <!-- SweetAlert -->
