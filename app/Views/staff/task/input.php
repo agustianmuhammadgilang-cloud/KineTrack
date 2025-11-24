@@ -8,12 +8,16 @@
 <?php
 use App\Models\PicModel;
 use App\Models\IndikatorModel;
+use App\Models\SasaranModel;
 
 $picModel = new PicModel();
 $pic = $picModel->getPicByIndikator($indikator_id);
 
 $indikatorModel = new IndikatorModel();
 $indikator = $indikatorModel->find($indikator_id);
+
+$sasaranModel = new SasaranModel();
+$sasaran = $sasaranModel->find($indikator['sasaran_id'] ?? null);
 ?>
 
 <!-- PIC Info -->
@@ -34,6 +38,22 @@ $indikator = $indikatorModel->find($indikator_id);
                 </li>
             <?php endforeach; ?>
         </ul>
+    <?php endif; ?>
+</div>
+
+<!-- SASARAN STRATEGIS & INDIKATOR -->
+<div class="bg-white shadow-md rounded-xl p-5 mb-6 border border-gray-200">
+    <h4 class="text-lg font-semibold text-gray-800 mb-3">Sasaran Strategis & Indikator</h4>
+
+    <?php if ($sasaran): ?>
+        <p class="text-gray-700 mb-1">
+            <span class="font-semibold">Sasaran Strategis:</span> <?= esc($sasaran['nama_sasaran']) ?>
+        </p>
+        <p class="text-gray-700 mb-1">
+            <span class="font-semibold">Indikator Kinerja:</span> <?= esc($indikator['nama_indikator'] ?? '-') ?>
+        </p>
+    <?php else: ?>
+        <p class="text-gray-600 text-sm">Sasaran strategis tidak ditemukan.</p>
     <?php endif; ?>
 </div>
 
@@ -70,7 +90,6 @@ $indikator = $indikatorModel->find($indikator_id);
                           focus:ring-2 focus:ring-[var(--polban-blue)] focus:outline-none">
         </div>
 
-
         <!-- Kendala -->
         <div>
             <label class="block font-medium mb-1 text-gray-700">Kendala/Permasalahan</label>
@@ -86,7 +105,6 @@ $indikator = $indikatorModel->find($indikator_id);
                 class="w-full rounded-lg border border-gray-300 px-3 py-2
                        focus:ring-2 focus:ring-[var(--polban-blue)] focus:outline-none"></textarea>
         </div>
-
 
         <!-- File Dukung -->
         <div>

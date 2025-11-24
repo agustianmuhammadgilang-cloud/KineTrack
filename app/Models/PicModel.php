@@ -20,14 +20,16 @@ class PicModel extends Model
     protected $useTimestamps = true;
 
     public function getTasksForUser($userId)
-    {
-        return $this->select('pic_indikator.*, indikator_kinerja.nama_indikator, tahun_anggaran.tahun')
-                    ->join('indikator_kinerja', 'indikator_kinerja.id = pic_indikator.indikator_id')
-                    ->join('tahun_anggaran', 'tahun_anggaran.id = pic_indikator.tahun_id')
-                    ->where('pic_indikator.user_id', $userId)
-                    ->orderBy('tahun_anggaran.tahun', 'DESC')
-                    ->findAll();
-    }
+{
+    return $this->select('pic_indikator.*, indikator_kinerja.nama_indikator, tahun_anggaran.tahun, sasaran_strategis.nama_sasaran')
+                ->join('indikator_kinerja', 'indikator_kinerja.id = pic_indikator.indikator_id')
+                ->join('tahun_anggaran', 'tahun_anggaran.id = pic_indikator.tahun_id')
+                ->join('sasaran_strategis', 'sasaran_strategis.id = pic_indikator.sasaran_id') // <-- tabel benar
+                ->where('pic_indikator.user_id', $userId)
+                ->orderBy('tahun_anggaran.tahun', 'DESC')
+                ->findAll();
+}
+
 
     public function getPicByIndikator($indikatorId)
     {
