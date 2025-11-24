@@ -9,7 +9,7 @@ class ProfileController extends BaseController
 {
     public function index()
     {
-        $userId = session()->get('user_id');   // ← USER LOGIN, bukan admin tetap!
+        $userId = session()->get('user_id');
 
         $userModel = new UserModel();
         $data['admin'] = $userModel->find($userId);
@@ -19,7 +19,7 @@ class ProfileController extends BaseController
 
     public function update()
     {
-        $userId = session()->get('user_id');   // ← Yang login
+        $userId = session()->get('user_id');
         $userModel = new UserModel();
 
         $admin = $userModel->find($userId);
@@ -54,19 +54,27 @@ class ProfileController extends BaseController
         $foto = $this->request->getFile('foto');
         if ($foto && $foto->isValid() && !$foto->hasMoved()) {
 
-            // delete foto lama
-            if (!empty($admin['foto']) && file_exists('uploads/user/'.$admin['foto'])) {
-                unlink('uploads/user/'.$admin['foto']);
+            // Delete foto lama
+            if (!empty($admin['foto']) && file_exists('uploads/profile/' . $admin['foto'])) {
+                unlink('uploads/profile/' . $admin['foto']);
             }
 
+            // Upload foto baru
             $namaBaru = $foto->getRandomName();
-            $foto->move('uploads/user/', $namaBaru);
+            $foto->move('uploads/profile/', $namaBaru);
 
             $updateData['foto'] = $namaBaru;
+
+            // UPDATE SESSION FOTO
+            session()->set('foto', $namaBaru);
         }
 
-        // UPDATE dengan WHERE id = user yg login
+        // UPDATE DATA USER
         $userModel->update($userId, $updateData);
+
+        // UPDATE SESSION LAINNYA
+        session()->set('nama', $updateData['nama']);
+        session()->set('email', $updateData['email']);
 
         return redirect()->back()->with('alert', [
             'type' => 'success',
