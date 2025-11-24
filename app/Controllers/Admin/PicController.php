@@ -8,16 +8,19 @@ use App\Models\TahunAnggaranModel;
 use App\Models\SasaranModel;
 use App\Models\IndikatorModel;
 use App\Models\UserModel;
+use App\Models\NotificationModel;
 
 class PicController extends BaseController
 {
     protected $picModel;
     protected $userModel;
+    protected $notifModel;
 
     public function __construct()
     {
         $this->picModel = new PicModel();
         $this->userModel = new UserModel();
+        $this->notifModel = new NotificationModel();
     }
 
     public function index()
@@ -38,6 +41,7 @@ class PicController extends BaseController
         $data['tahun'] = (new TahunAnggaranModel())
                     ->where('status', 'active')
                     ->findAll();
+
         return view('admin/pic/create', $data);
     }
 
@@ -46,12 +50,13 @@ class PicController extends BaseController
         $indikatorId = $this->request->getPost('indikator_id');
         $tahunId     = $this->request->getPost('tahun_id');
         $sasaranId   = $this->request->getPost('sasaran_id');
-        $userList    = $this->request->getPost('pegawai');
+        $userList    = $this->request->getPost('pegawai'); // array pegawai staff
 
         foreach ($userList as $userId) {
 
             $user = $this->userModel->find($userId);
 
+            // simpan data PIC
             $this->picModel->insert([
                 'indikator_id' => $indikatorId,
                 'user_id'      => $userId,
@@ -60,11 +65,25 @@ class PicController extends BaseController
                 'bidang_id'    => $user['bidang_id'],
                 'jabatan_id'   => $user['jabatan_id']
             ]);
+
+            // ===========================
+            // NOTIFIKASI UNTUK STAFF
+            // ===========================
+            $this->notifModel->insert([
+                'user_id' => $userId,
+                'message' => 'Anda telah ditugaskan sebagai PIC baru. Silakan cek Task Anda.',
+            ]);
         }
 
-        return redirect()
-            ->to('/admin/pic')
-            ->with('success', 'PIC berhasil ditambahkan');
+        // ===========================
+        // NOTIFIKASI UNTUK ADMIN
+        // ===========================
+        return redirect()->to('/admin/pic')
+            ->with('alert', [
+                'type' => 'success',
+                'title' => 'Berhasil',
+                'message' => 'PIC disimpan.'
+            ]);
     }
 
     // ====================== AJAX ======================
@@ -89,15 +108,15 @@ class PicController extends BaseController
         return $this->response->setJSON($indikator);
     }
 
-   public function getPegawai()
-{
-    return $this->response->setJSON(
-        $this->userModel
-            ->select('users.*, jabatan.nama_jabatan, bidang.nama_bidang')
-            ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
-            ->join('bidang', 'bidang.id = users.bidang_id', 'left')
-            ->where('users.role !=', 'admin') // ⬅ semua user kecuali admin
-            ->findAll()
-    );
-}
+    public function getPegawai()
+    {
+        return $this->response->setJSON(
+            $this->userModel
+                ->select('users.*, jabatan.nama_jabatan, bidang.nama_bidang')
+                ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
+                ->join('bidang', 'bidang.id = users.bidang_id', 'left')
+                ->where('users.role !=', 'admin') // hanya staff dan atasan
+                ->findAll()
+        );
+    }
 }
