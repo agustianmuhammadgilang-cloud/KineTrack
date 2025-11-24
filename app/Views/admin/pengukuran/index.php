@@ -5,28 +5,6 @@
     Input Pengukuran Kinerja
 </h3>
 
-<div class="flex flex-wrap gap-3 mb-6">
-    <a href="<?= base_url('admin/tahun') ?>"
-        class="px-4 py-2 bg-[var(--polban-blue)] text-white rounded-lg shadow hover:bg-blue-900 transition">
-        Kelola Tahun Anggaran
-    </a>
-
-    <a href="<?= base_url('admin/sasaran') ?>"
-        class="px-4 py-2 bg-[var(--polban-orange)] text-white rounded-lg shadow hover:bg-orange-600 transition">
-        Kelola Sasaran Strategis
-    </a>
-
-    <a href="<?= base_url('admin/indikator') ?>"
-        class="px-4 py-2 bg-gray-700 text-white rounded-lg shadow hover:bg-gray-900 transition">
-        Kelola Indikator Kinerja
-    </a>
-
-    <a href="<?= base_url('admin/pic') ?>"
-        class="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition">
-        Kelola PIC
-    </a>
-</div>
-
 <!-- FILTER -->
 <div class="bg-white shadow-md rounded-xl p-6 mb-6 border border-gray-200">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
