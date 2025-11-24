@@ -48,10 +48,19 @@
             Laporan
         </a>
         <!-- MENU TASK BARU -->
-    <a href="<?= base_url('staff/task') ?>" class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
-        <svg class="w-5 h-5 mr-3"><use href="#check-badge" /></svg>
-        Task
-    </a>
+<a href="<?= base_url('staff/task') ?>" class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors relative">
+    <svg class="w-5 h-5 mr-3"><use href="#check-badge" /></svg>
+    Task
+
+    <!-- BADGE ANKA NOTIF -->
+    <?php if (!empty($pending_count) && $pending_count > 0): ?>
+        <span class="absolute right-6 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+            <?= $pending_count ?>
+        </span>
+    <?php endif; ?>
+</a>
+
+</a>
     </nav>
 
     <div class="px-6 py-4 border-t border-white/20">
