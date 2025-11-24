@@ -206,10 +206,11 @@ class Pengukuran extends BaseController
         }
 
         $pengukuran = $this->pengukuranModel
-            ->where('indikator_id', $indikator_id)
-            ->where('tahun_id', $tahun_id)
-            ->where('triwulan', $tw)
-            ->first();
+    ->where('indikator_id', $indikator_id)
+    ->where('tahun_id', $tahun_id)
+    ->where('triwulan', $tw)
+    ->findAll();
+
 
     return view('admin/pengukuran/detail_output', [
         'indikator'  => $indikator,

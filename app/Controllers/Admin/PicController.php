@@ -35,7 +35,9 @@ class PicController extends BaseController
 
     public function create()
     {
-        $data['tahun'] = (new TahunAnggaranModel())->findAll();
+        $data['tahun'] = (new TahunAnggaranModel())
+                    ->where('status', 'active')
+                    ->findAll();
         return view('admin/pic/create', $data);
     }
 

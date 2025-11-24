@@ -37,8 +37,10 @@ class Indikator extends BaseController
     // Ambil semua data sasaran
     $data['sasaran'] = $this->sasaran
         ->select('sasaran_strategis.*, tahun_anggaran.tahun')
-        ->join('tahun_anggaran','tahun_anggaran.id=sasaran_strategis.tahun_id')
+        ->join('tahun_anggaran', 'tahun_anggaran.id = sasaran_strategis.tahun_id')
+        ->where('tahun_anggaran.status', 'active')
         ->findAll();
+
 
     // ====== AUTO-GENERATE KODE INDIKATOR ======
 

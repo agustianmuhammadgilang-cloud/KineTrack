@@ -42,8 +42,9 @@ class TaskController extends BaseController
 
     $data = [
         'indikator_id' => $post['indikator_id'],
-        'tahun_id'     => $pic['tahun_id'],    // FIX!
-        'sasaran_id'   => $pic['sasaran_id'],   // FIX!
+        'tahun_id'     => $pic['tahun_id'],
+        'sasaran_id'   => $pic['sasaran_id'],
+        'user_id'      => session('user_id'),   // ⬅⬅⬅ FIX PALING PENTING
         'realisasi'    => $post['realisasi'],
         'progress'     => $post['progress'],
         'kendala'      => $post['kendala'],
@@ -65,5 +66,6 @@ class TaskController extends BaseController
 
     return redirect()->to('/staff/task')->with('success','Data pengukuran berhasil disimpan');
 }
+
 
 }

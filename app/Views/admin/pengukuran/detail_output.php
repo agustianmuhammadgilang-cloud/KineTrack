@@ -5,10 +5,9 @@
     Detail Pengukuran Indikator
 </h3>
 
-<!-- CARD -->
 <div class="bg-white shadow-md rounded-xl p-6 border border-gray-200">
 
-    <!-- NAMA & SASARAN -->
+    <!-- HEADER INDIKATOR -->
     <h4 class="text-xl font-semibold mb-2">
         <?= esc($indikator['nama_indikator']) ?>
     </h4>
@@ -17,60 +16,79 @@
         <strong>Sasaran:</strong> <?= esc($indikator['nama_sasaran']) ?>
     </p>
 
-    <!-- TABEL DETAIL -->
-    <table class="min-w-full divide-y divide-gray-200">
 
-        <tr>
-            <td class="font-semibold px-4 py-2 w-40">Target</td>
-            <td class="px-4 py-2"><?= esc($indikator['target_pk']) ?></td>
-        </tr>
+    <!-- ==================================== -->
+    <!--        DATA PENGUKURAN PER PIC        -->
+    <!-- ==================================== -->
 
-        <tr>
-            <td class="font-semibold px-4 py-2">Realisasi</td>
-            <td class="px-4 py-2"><?= esc($pengukuran['realisasi'] ?? '-') ?></td>
-        </tr>
+    <?php if (!empty($pengukuran)): ?>
 
-        <tr>
-            <td class="font-semibold px-4 py-2">Progress</td>
-            <td class="px-4 py-2">
-                <?= isset($pengukuran['progress']) ? esc($pengukuran['progress']).'%' : '-' ?>
-            </td>
-        </tr>
+        <?php foreach ($pengukuran as $pk): ?>
+            <div class="border border-gray-300 rounded-lg p-4 bg-gray-50 mb-4">
 
-        <tr>
-            <td class="font-semibold px-4 py-2">Kendala</td>
-            <td class="px-4 py-2"><?= esc($pengukuran['kendala'] ?? '-') ?></td>
-        </tr>
+                <table class="min-w-full">
 
-        <tr>
-            <td class="font-semibold px-4 py-2">Strategi</td>
-            <td class="px-4 py-2"><?= esc($pengukuran['strategi'] ?? '-') ?></td>
-        </tr>
+                    <tr>
+                        <td class="font-semibold px-4 py-1 w-40">Target</td>
+                        <td class="px-4 py-1"><?= esc($indikator['target_pk']) ?></td>
+                    </tr>
 
-        <tr>
-            <td class="font-semibold px-4 py-2">Data Dukung</td>
-            <td class="px-4 py-2"><?= esc($pengukuran['data_dukung'] ?? '-') ?></td>
-        </tr>
+                    <tr>
+                        <td class="font-semibold px-4 py-1">Realisasi</td>
+                        <td class="px-4 py-1"><?= esc($pk['realisasi'] ?? '-') ?></td>
+                    </tr>
 
-        <tr>
-            <td class="font-semibold px-4 py-2">File Dukung</td>
-            <td class="px-4 py-2">
-                <?php if (!empty($pengukuran['file_dukung'])): ?>
-                    <a href="<?= base_url('uploads/pengukuran/'.$pengukuran['file_dukung']) ?>"
-                    class="text-blue-600 hover:underline" target="_blank">
-                        Lihat File
-                    </a>
-                <?php else: ?>
-                    -
-                <?php endif; ?>
-            </td>
-        </tr>
-    </table>
+                    <tr>
+                        <td class="font-semibold px-4 py-1">Progress</td>
+                        <td class="px-4 py-1">
+                            <?= isset($pk['progress']) ? esc($pk['progress']).'%' : '-' ?>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="font-semibold px-4 py-1">Kendala</td>
+                        <td class="px-4 py-1"><?= esc($pk['kendala'] ?? '-') ?></td>
+                    </tr>
+
+                    <tr>
+                        <td class="font-semibold px-4 py-1">Strategi</td>
+                        <td class="px-4 py-1"><?= esc($pk['strategi'] ?? '-') ?></td>
+                    </tr>
+
+                    <tr>
+                        <td class="font-semibold px-4 py-1">Data Dukung</td>
+                        <td class="px-4 py-1"><?= esc($pk['data_dukung'] ?? '-') ?></td>
+                    </tr>
+
+                    <tr>
+                        <td class="font-semibold px-4 py-1">File Dukung</td>
+                        <td class="px-4 py-1">
+                            <?php if (!empty($pk['file_dukung'])): ?>
+                                <a href="<?= base_url('uploads/pengukuran/'.$pk['file_dukung']) ?>"
+                                   class="text-blue-600 hover:underline" target="_blank">
+                                   Lihat File
+                                </a>
+                            <?php else: ?>
+                                -
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </div>
+        <?php endforeach; ?>
+
+    <?php else: ?>
+
+        <p class="text-gray-600 italic mt-4">Belum ada data pengukuran dari PIC manapun.</p>
+
+    <?php endif; ?>
 
 
-    <!-- ====================== -->
-    <!--      BAGIAN PIC        -->
-    <!-- ====================== -->
+    <!-- ==================================== -->
+    <!--          DAFTAR SELURUH PIC          -->
+    <!-- ==================================== -->
 
     <?php 
     use App\Models\PicModel; 
