@@ -36,7 +36,7 @@ class Sasaran extends BaseController
     ============================== */
     public function create()
     {
-        $data['tahun'] = $this->tahun->findAll();
+        $data['tahun'] = $this->tahun->where('status', 'active')->findAll();
         return view('admin/sasaran/create', $data);
     }
 
