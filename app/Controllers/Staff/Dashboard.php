@@ -44,6 +44,17 @@ class Dashboard extends BaseController
             'monthly'  => $monthly,
         ];
 
+        $notifModel = new \App\Models\NotificationModel();
+        $data['notifikasi'] = $notifModel
+        ->where('user_id', session()->get('user_id'))
+        ->where('status', 'unread')
+        ->orderBy('created_at', 'DESC')
+        ->findAll();
+
+        foreach ($data['notifikasi'] as $n) {
+    $notifModel->update($n['id'], ['status' => 'read']);
+}
+
         return view('staff/dashboard', $data);
     }
 }
