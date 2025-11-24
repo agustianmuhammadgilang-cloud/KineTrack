@@ -96,7 +96,7 @@ class PicController extends BaseController
             ->select('users.*, jabatan.nama_jabatan, bidang.nama_bidang')
             ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
             ->join('bidang', 'bidang.id = users.bidang_id', 'left')
-            ->where('users.role', 'staff') // ⬅ hanya role staff
+            ->where('users.role !=', 'admin') // ⬅ semua user kecuali admin
             ->findAll()
     );
 }

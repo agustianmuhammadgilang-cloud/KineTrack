@@ -15,7 +15,8 @@ class UserModel extends Model
         'password',
         'jabatan_id',
         'bidang_id',
-        'role'
+        'role',
+        'foto'
     ];
 
     protected $returnType = 'array';

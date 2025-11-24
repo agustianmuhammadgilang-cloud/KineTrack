@@ -35,6 +35,7 @@
     border-radius: 3px;
   }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 
 <body class="bg-gray-100">
@@ -47,6 +48,8 @@
     </div>
 
     <nav class="flex-1 overflow-y-auto mt-4 text-sm">
+
+    
 
 <!-- Dashboard -->
 <a href="<?= base_url('admin') ?>"

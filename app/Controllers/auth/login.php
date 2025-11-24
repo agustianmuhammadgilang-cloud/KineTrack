@@ -32,14 +32,15 @@ class Login extends BaseController
 
         // SET SESSION
         $session->set([
-            'user_id'    => $user['id'],
-            'nama'       => $user['nama'],
-            'email'      => $user['email'],
-            'role'       => $user['role'],
-            'bidang_id'  => $user['bidang_id'],   // WAJIB
-            'jabatan_id' => $user['jabatan_id'],  // (opsional, tapi bagus ditambah)
-            'logged_in'  => true
-        ]);
+    'user_id'    => $user['id'],
+    'nama'       => $user['nama'],
+    'email'      => $user['email'],
+    'role'       => $user['role'],
+    'bidang_id'  => $user['bidang_id'],
+    'jabatan_id' => $user['jabatan_id'],
+    'foto'       => $user['foto'],   // ← WAJIB DITAMBAHKAN
+    'logged_in'  => true
+    ]);
 
 
         // Redirect based on role

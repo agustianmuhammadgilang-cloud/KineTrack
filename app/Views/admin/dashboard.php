@@ -7,9 +7,55 @@
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8">
         <h2 class="text-2xl sm:text-3xl font-extrabold text-blue-900 dark:text-blue-300 flex items-center gap-2">
             Dashboard Admin
-            <span class="text-xl">✨</span>
+            <span class="text-xl"></span>
         </h2>
+
+        <!-- TOPBAR DASHBOARD (Polban Theme Hover) -->
+<div class="w-full flex items-center justify-end mb-6">
+
+    <div x-data="{ open: false }" class="relative">
+        <button @click="open = !open"
+            class="flex items-center gap-2 p-2 rounded-xl transition-all
+                   hover:bg-blue-100 dark:hover:bg-gray-700">
+
+            <!-- Foto Profile -->
+            <img src="<?= base_url('uploads/profile/' . (session('foto') ?? 'default.png')) ?>"
+                 class="w-10 h-10 rounded-full object-cover border-2 border-blue-900">
+
+            <!-- Nama -->
+            <span class="hidden sm:block font-semibold text-gray-800 dark:text-gray-200 tracking-wide">
+                <?= session('nama') ?>
+            </span>
+
+            <!-- Icon -->
+            <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none">
+                <?= heroicons_outline('chevron-down') ?>
+            </svg>
+        </button>
+
+        <!-- DROPDOWN -->
+        <div x-show="open" x-transition @click.away="open = false"
+             class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 shadow-xl rounded-xl 
+                    border border-gray-200 dark:border-gray-700 py-2 z-50">
+
+            <a href="<?= base_url('admin/profile') ?>"
+               class="block px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 
+                      hover:bg-[var(--polban-blue)] hover:text-white transition-all">
+                Profil Saya
+            </a>
+
+            <a href="<?= base_url('logout') ?>"
+               class="block px-4 py-2 rounded-lg text-red-600 dark:text-red-400 
+                      hover:bg-red-100 dark:hover:bg-red-700 transition-all">
+                Logout
+            </a>
+        </div>
     </div>
+
+</div>
+    </div>
+
+
 
     <!-- Stat Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8">
