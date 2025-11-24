@@ -54,12 +54,7 @@
                         <td class="font-semibold px-4 py-1">Strategi</td>
                         <td class="px-4 py-1"><?= esc($pk['strategi'] ?? '-') ?></td>
                     </tr>
-
-                    <tr>
-                        <td class="font-semibold px-4 py-1">Data Dukung</td>
-                        <td class="px-4 py-1"><?= esc($pk['data_dukung'] ?? '-') ?></td>
-                    </tr>
-
+                    
                     <tr>
                         <td class="font-semibold px-4 py-1">File Dukung</td>
                         <td class="px-4 py-1">
