@@ -11,13 +11,18 @@ class TaskController extends BaseController
     {
         $this->picModel = new PicModel();
     }
+public function index()
+{
+    $userId = session('user_id');
 
-    public function index()
-    {
-        $userId = session('user_id');
-        $data['tasks'] = $this->picModel->getTasksForUser($userId);
-        return view('staff/task/index', $data);
-    }
+    $data['tasks'] = $this->picModel->getTasksForUser($userId);
+
+    // Hitung task yang belum dikerjakan
+    $data['pending_count'] = $this->picModel->countPendingTasks($userId);
+
+    return view('staff/task/index', $data);
+}
+
 
     public function input($indikatorId)
     {

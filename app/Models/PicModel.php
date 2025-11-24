@@ -41,4 +41,14 @@ class PicModel extends Model
                     ->orderBy('pic_indikator.created_at','ASC')
                     ->findAll();
     }
+
+    public function countPendingTasks($userId)
+{
+    return $this->select('pic_indikator.id')
+        ->join('pengukuran_kinerja', 'pengukuran_kinerja.indikator_id = pic_indikator.indikator_id AND pengukuran_kinerja.user_id = pic_indikator.user_id', 'left')
+        ->where('pic_indikator.user_id', $userId)
+        ->where('pengukuran_kinerja.id IS NULL') // artinya belum diisi
+        ->countAllResults();
+}
+
 }
