@@ -49,7 +49,6 @@ class TaskController extends BaseController
         'progress'     => $post['progress'],
         'kendala'      => $post['kendala'],
         'strategi'     => $post['strategi'],
-        'data_dukung'  => $post['data_dukung'],
         'created_by'   => session('user_id')
     ];
 

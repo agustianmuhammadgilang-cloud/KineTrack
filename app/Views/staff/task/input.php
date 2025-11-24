@@ -7,8 +7,13 @@
 
 <?php
 use App\Models\PicModel;
+use App\Models\IndikatorModel;
+
 $picModel = new PicModel();
 $pic = $picModel->getPicByIndikator($indikator_id);
+
+$indikatorModel = new IndikatorModel();
+$indikator = $indikatorModel->find($indikator_id);
 ?>
 
 <!-- PIC Info -->
@@ -41,12 +46,12 @@ $pic = $picModel->getPicByIndikator($indikator_id);
 
         <input type="hidden" name="indikator_id" value="<?= $indikator_id ?>">
 
-        <!-- Realisasi -->
-        <div>
-            <label class="block font-medium mb-1 text-gray-700">Realisasi</label>
-            <input type="text" name="realisasi" required
-                   class="w-full rounded-lg border border-gray-300 px-3 py-2 
-                          focus:ring-2 focus:ring-[var(--polban-blue)] focus:outline-none">
+        <!-- TARGET PK -->
+        <label class="block font-medium mb-1 text-gray-700">Target PK</label>
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p class="text-lg font-bold text-blue-900">
+                <?= esc($indikator['target_pk'] ?? '-') ?>
+            </p>
         </div>
 
         <!-- Progress -->
@@ -57,9 +62,18 @@ $pic = $picModel->getPicByIndikator($indikator_id);
                           focus:ring-2 focus:ring-[var(--polban-blue)] focus:outline-none">
         </div>
 
+        <!-- Realisasi -->
+        <div>
+            <label class="block font-medium mb-1 text-gray-700">Realisasi</label>
+            <input type="text" name="realisasi" required
+                   class="w-full rounded-lg border border-gray-300 px-3 py-2 
+                          focus:ring-2 focus:ring-[var(--polban-blue)] focus:outline-none">
+        </div>
+
+
         <!-- Kendala -->
         <div>
-            <label class="block font-medium mb-1 text-gray-700">Kendala</label>
+            <label class="block font-medium mb-1 text-gray-700">Kendala/Permasalahan</label>
             <textarea name="kendala" rows="3"
                 class="w-full rounded-lg border border-gray-300 px-3 py-2
                        focus:ring-2 focus:ring-[var(--polban-blue)] focus:outline-none"></textarea>
@@ -67,19 +81,12 @@ $pic = $picModel->getPicByIndikator($indikator_id);
 
         <!-- Strategi -->
         <div>
-            <label class="block font-medium mb-1 text-gray-700">Strategi</label>
+            <label class="block font-medium mb-1 text-gray-700">Strategi/Tindak Lanjut</label>
             <textarea name="strategi" rows="3"
                 class="w-full rounded-lg border border-gray-300 px-3 py-2
                        focus:ring-2 focus:ring-[var(--polban-blue)] focus:outline-none"></textarea>
         </div>
 
-        <!-- Data Dukung -->
-        <div>
-            <label class="block font-medium mb-1 text-gray-700">Data Dukung</label>
-            <textarea name="data_dukung" rows="3"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2
-                       focus:ring-2 focus:ring-[var(--polban-blue)] focus:outline-none"></textarea>
-        </div>
 
         <!-- File Dukung -->
         <div>
