@@ -221,101 +221,122 @@ class Pengukuran extends BaseController
 
 public function export($tahunId, $tw)
 {
-    // =============== 1. AMBIL DATA (TIDAK BERUBAH) ===============
+    // =============== 1. AMBIL DATA INDIKATOR (tanpa join PIC supaya tidak duplikat) ===============
     $indikator = $this->indikatorModel
-        ->select('
-            indikator_kinerja.*, 
-            sasaran_strategis.kode_sasaran, 
-            sasaran_strategis.nama_sasaran,
-            pic_indikator.user_id as pic_user_id,
-            users.nama as pic_nama
-        ')
+        ->select('indikator_kinerja.*, sasaran_strategis.kode_sasaran, sasaran_strategis.nama_sasaran')
         ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
-        ->join('pic_indikator', 'pic_indikator.indikator_id = indikator_kinerja.id', 'left')
-        ->join('users', 'users.id = pic_indikator.user_id', 'left')
         ->where('sasaran_strategis.tahun_id', $tahunId)
         ->where('sasaran_strategis.triwulan', $tw)
         ->orderBy('sasaran_strategis.id')
         ->orderBy('indikator_kinerja.id')
         ->findAll();
 
+    // jika kosong, keluar cepat
+    if (empty($indikator)) {
+        return $this->response->setJSON(['status'=>false,'message'=>'Tidak ada indikator untuk tahun/triwulan ini.']);
+    }
+
+    // kumpulkan semua id indikator untuk query PIC selanjutnya
+    $indikatorIds = array_column($indikator, 'id');
+
+    // =============== 2. AMBIL PENGUKURAN (nilai) ===============
     $pengukuran = $this->pengukuranModel
         ->where('tahun_id', $tahunId)
         ->where('triwulan', $tw)
         ->findAll();
 
-    // mapping nilai
-    $map = [];
+    $mapPengukuran = [];
     foreach ($pengukuran as $p) {
-        $map[$p['indikator_id']] = $p;
+        $mapPengukuran[$p['indikator_id']] = $p;
     }
 
-    // =============== 2. INISIALISASI WRITER ===============
+    // =============== 3. AMBIL PIC (nama + jabatan) PER INDIKATOR ===============
+    $db = \Config\Database::connect();
+    $builder = $db->table('pic_indikator');
+    $picRows = $builder
+        ->select('pic_indikator.indikator_id, users.nama as pic_nama, jabatan.nama_jabatan as pic_jabatan')
+        ->join('users','users.id = pic_indikator.user_id','left')
+        ->join('jabatan','jabatan.id = pic_indikator.jabatan_id','left')
+        ->whereIn('pic_indikator.indikator_id', $indikatorIds)
+        ->get()
+        ->getResultArray();
+
+    // buat map: indikator_id => [ "Nama — Jabatan", ... ]
+    $picMap = [];
+    foreach ($picRows as $r) {
+        $label = trim(($r['pic_nama'] ?? '-'));
+        $jab = trim(($r['pic_jabatan'] ?? '-'));
+        $combined = $label;
+        if (!empty($jab) && $jab !== '-') $combined .= ' — ' . $jab;
+        $picMap[$r['indikator_id']][] = $combined;
+    }
+
+    // untuk setiap indikator gabungkan PIC array jadi string tunggal (dipisah ; )
+    foreach ($picMap as $k => $arr) {
+        $picMap[$k] = implode('; ', array_unique($arr));
+    }
+
+    // =============== 4. INISIALISASI XLSX WRITER ===============
     $writer = new XLSXWriter();
     $sheetName = "TW $tw";
 
-    // Definisi Header & Tipe Data (Ini menggantikan setCellValue A1..I1)
-    // Format: 'Nama Kolom' => 'Tipe Data'
     $header = [
         'Kode Sasaran'      => 'string',
         'Nama Sasaran'      => 'string',
         'Kode Indikator'    => 'string',
         'Nama Indikator'    => 'string',
-        'PIC'               => 'string',
-        'Target'            => 'string', // Gunakan string agar format angka/persen aman
+        'PIC (Nama — Jabatan)' => 'string',
+        'Target'            => 'string',
         'Capaian'           => 'string',
         'Kendala Strategis' => 'string',
         'Data Dukung'       => 'string',
     ];
 
-    // Style Header (Bold, Center, dan Estimasi Lebar Kolom)
-    // Library ini tidak punya "Auto Size" otomatis, jadi kita set widths manual agar rapi
     $headerStyle = [
-        'font-style' => 'bold', 
+        'font-style' => 'bold',
         'halign' => 'center',
-        'widths' => [15, 30, 15, 35, 20, 15, 15, 30, 30] 
+        'widths' => [15, 30, 15, 35, 30, 15, 15, 30, 30]
     ];
 
-    // Tulis Header ke Sheet
     $writer->writeSheetHeader($sheetName, $header, $headerStyle);
 
-    // =============== 3. ISI DATA (LOOPING) ===============
+    // =============== 5. LOOPING ISI ROWS ===============
     foreach ($indikator as $ind) {
+        $indId = $ind['id'];
 
-        $nilai = $map[$ind['id']]['nilai'] ?? '-';
-        $kendala = $map[$ind['id']]['kendala'] ?? '-';
-        $dataDukung = $map[$ind['id']]['data_dukung'] ?? '-';
+        $nilai = $mapPengukuran[$indId]['realisasi'] ?? ($mapPengukuran[$indId]['nilai'] ?? '-');
+        $kendala = $mapPengukuran[$indId]['kendala'] ?? '-';
+        $dataDukung = $mapPengukuran[$indId]['data_dukung'] ?? '-';
 
-        // Buat array sederhana untuk baris ini
+        $picLabel = $picMap[$indId] ?? '-';
+
         $row = [
-            $ind['kode_sasaran'],
-            $ind['nama_sasaran'],
-            $ind['kode_indikator'],
-            $ind['nama_indikator'],
-            $ind['pic_nama'] ?? '-',
-            $ind['target_pk'],
-            $nilai,
+            $ind['kode_sasaran'] ?? '-',
+            $ind['nama_sasaran'] ?? '-',
+            $ind['kode_indikator'] ?? '-',
+            $ind['nama_indikator'] ?? '-',
+            $picLabel,
+            (string)($ind['target_pk'] ?? '-'),
+            (string)$nilai,
             $kendala,
             $dataDukung
         ];
 
-        // Tulis baris ke dalam sheet
         $writer->writeSheetRow($sheetName, $row);
     }
 
-    // =============== 4. OUTPUT FILE ===============
+    // =============== 6. OUTPUT FILE ===============
     $fileName = "Output_Pengukuran_Tahun{$tahunId}_TW{$tw}.xlsx";
 
-    // Header HTTP standar untuk download file
     header('Content-disposition: attachment; filename="'.XLSXWriter::sanitize_filename($fileName).'"');
     header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     header('Content-Transfer-Encoding: binary');
     header('Cache-Control: must-revalidate');
     header('Pragma: public');
 
-    // Tulis langsung ke output (php://output)
     $writer->writeToStdOut();
-    exit; // Penting untuk stop script
+    exit;
 }
+
     
 }
