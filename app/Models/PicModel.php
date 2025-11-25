@@ -33,15 +33,16 @@ class PicModel extends Model
 
 
     public function getPicByIndikator($indikatorId)
-    {
-        return $this->select('pic_indikator.*, users.nama, users.email, bidang.nama_bidang, jabatan.nama_jabatan')
-                    ->join('users','users.id = pic_indikator.user_id')
-                    ->join('bidang','bidang.id = pic_indikator.bidang_id')
-                    ->join('jabatan','jabatan.id = pic_indikator.jabatan_id')
-                    ->where('pic_indikator.indikator_id', $indikatorId)
-                    ->orderBy('pic_indikator.created_at','ASC')
-                    ->findAll();
-    }
+{
+    return $this->select('pic_indikator.*, users.nama, users.email, bidang.nama_bidang, jabatan.nama_jabatan')
+                ->join('users','users.id = pic_indikator.user_id')
+                ->join('bidang','bidang.id = pic_indikator.bidang_id')
+                ->join('jabatan','jabatan.id = pic_indikator.jabatan_id')
+                ->where('pic_indikator.indikator_id', $indikatorId)
+                ->orderBy('pic_indikator.created_at','ASC')
+                ->findAll();
+}
+
 
     public function countPendingTasks($userId)
 {
