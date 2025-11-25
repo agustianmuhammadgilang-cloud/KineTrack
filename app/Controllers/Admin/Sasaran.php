@@ -44,19 +44,20 @@ class Sasaran extends BaseController
        STORE DATA SASARAN
     ============================== */
     public function store()
-    {
-        $data = [
-            'tahun_id'     => $this->request->getPost('tahun_id'),
-            'kode_sasaran' => $this->request->getPost('kode_sasaran'),
-            'nama_sasaran' => $this->request->getPost('nama_sasaran'),
-            'triwulan'     => $this->request->getPost('triwulan'),  // NEW FIELD
-        ];
+{
+    $data = [
+        'tahun_id'     => $this->request->getPost('tahun_id'),
+        'kode_sasaran' => $this->request->getPost('kode_sasaran'),
+        'nama_sasaran' => $this->request->getPost('nama_sasaran'),
+    ];
 
-        $this->model->insert($data);
+    $this->model->insert($data);
 
-        return redirect()->to('/admin/sasaran')
-            ->with('success', 'Sasaran Strategis berhasil ditambahkan');
-    }
+    return redirect()->to('/admin/sasaran')
+        ->with('success', 'Sasaran Strategis berhasil ditambahkan');
+}
+
+
 
     /* =============================
        EDIT FORM
@@ -112,26 +113,24 @@ class Sasaran extends BaseController
     return $this->response->setJSON($result);
 }
 
-public function getKode($tahun_id, $triwulan)
+public function getKode($tahunId)
 {
-    $last = $this->model
-        ->where('tahun_id', $tahun_id)
-        ->where('triwulan', $triwulan)
-        ->orderBy('id', 'DESC')
-        ->first();
+    $model = new SasaranModel();
 
-    if ($last) {
-        $num = intval(substr($last['kode_sasaran'], 3));
-        $nextNum = $num + 1;
-    } else {
-        $nextNum = 1;
+    $last = $model->where('tahun_id', $tahunId)
+                  ->orderBy('id', 'DESC')
+                  ->first();
+
+    if (!$last) {
+        return $this->response->setJSON(['kode' => "SS-{$tahunId}-01"]);
     }
 
-    $kode = 'SS-' . str_pad($nextNum, 2, '0', STR_PAD_LEFT);
+    $lastNumber = (int)substr($last['kode_sasaran'], -2);
+    $newNumber  = str_pad($lastNumber + 1, 2, '0', STR_PAD_LEFT);
 
-    return $this->response->setJSON(['kode' => $kode]);
+    return $this->response->setJSON([
+        'kode' => "SS-{$tahunId}-{$newNumber}"
+    ]);
 }
-
-
 
 }

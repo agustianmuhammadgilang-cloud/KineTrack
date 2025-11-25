@@ -13,8 +13,8 @@
         <div>
             <label class="block font-semibold text-gray-700 mb-1">Tahun Anggaran</label>
             <select name="tahun_id" id="tahunSelect"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 
-                           focus:ring-[var(--polban-blue)] focus:outline-none" required>
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 
+                       focus:ring-[var(--polban-blue)] focus:outline-none" required>
                 <option value="">-- Pilih Tahun --</option>
                 <?php foreach($tahun as $t): ?>
                     <option value="<?= $t['id'] ?>"><?= $t['tahun'] ?></option>
@@ -22,36 +22,20 @@
             </select>
         </div>
 
-        <!-- Triwulan -->
-        <div>
-            <label class="block font-semibold text-gray-700 mb-1">Triwulan Sasaran</label>
-            <select name="triwulan" id="triwulanSelect"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 
-                       focus:ring-[var(--polban-blue)] focus:outline-none"
-                required>
-
-                <option value="">-- Pilih Triwulan --</option>
-                <option value="1">Triwulan 1</option>
-                <option value="2">Triwulan 2</option>
-                <option value="3">Triwulan 3</option>
-                <option value="4">Triwulan 4</option>
-            </select>
-        </div>
-
         <!-- Kode Sasaran -->
         <div>
             <label class="block font-semibold text-gray-700 mb-1">Kode Sasaran</label>
             <input type="text" name="kode_sasaran" id="kode_sasaran" readonly
-                class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg focus:ring-2 
-                       focus:ring-[var(--polban-blue)] focus:outline-none">
+                class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg 
+                       focus:ring-2 focus:ring-[var(--polban-blue)] focus:outline-none">
         </div>
 
         <!-- Nama Sasaran -->
         <div>
             <label class="block font-semibold text-gray-700 mb-1">Nama Sasaran</label>
             <textarea name="nama_sasaran" required
-                class="w-full h-28 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 
-                       focus:ring-[var(--polban-blue)] focus:outline-none"></textarea>
+                class="w-full h-28 px-3 py-2 border border-gray-300 rounded-lg 
+                       focus:ring-2 focus:ring-[var(--polban-blue)] focus:outline-none"></textarea>
         </div>
 
         <!-- Buttons -->
@@ -73,33 +57,25 @@
 </div>
 
 
-<!-- ========================= -->
-<!-- AUTO GENERATE KODE SCRIPT -->
-<!-- ========================= -->
-
+<!-- AUTO-GENERATE KODE SASARAN (HANYA BERDASARKAN TAHUN) -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const tahunSelect = document.getElementById("tahunSelect");
-    const triwulanSelect = document.getElementById("triwulanSelect");
-    const kodeInput = document.getElementById("kode_sasaran");
+    const kodeInput   = document.getElementById("kode_sasaran");
 
-    function updateKode() {
+    tahunSelect.addEventListener("change", function () {
         const tahun = tahunSelect.value;
-        const triwulan = triwulanSelect.value;
 
-        if (!tahun || !triwulan) {
+        if (!tahun) {
             kodeInput.value = "";
             return;
         }
 
-        fetch(`<?= base_url('admin/sasaran/getKode/') ?>${tahun}/${triwulan}`)
+        fetch(`<?= base_url('admin/sasaran/getKode/') ?>${tahun}`)
             .then(res => res.json())
             .then(data => kodeInput.value = data.kode)
             .catch(() => kodeInput.value = "");
-    }
-
-    tahunSelect.addEventListener("change", updateKode);
-    triwulanSelect.addEventListener("change", updateKode);
+    });
 });
 </script>
 
