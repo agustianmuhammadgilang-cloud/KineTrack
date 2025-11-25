@@ -4,6 +4,8 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\BidangModel;
+use App\Models\NotificationModel;
+use App\Models\UserModel;
 
 class Bidang extends BaseController
 {
@@ -22,9 +24,24 @@ class Bidang extends BaseController
     public function store()
     {
         $model = new BidangModel();
+        $nama = $this->request->getPost('nama_bidang');
+
         $model->insert([
-            'nama_bidang' => $this->request->getPost('nama_bidang')
+            'nama_bidang' => $nama
         ]);
+
+        // ======= NOTIFIKASI STAFF =======
+        $notificationModel = new NotificationModel();
+        $staffUsers = (new UserModel())->where('role','staff')->findAll();
+        foreach ($staffUsers as $staff) {
+            $notificationModel->insert([
+                'user_id' => $staff['id'],
+                'title'   => 'Bidang Baru Ditambahkan',
+                'message' => "Admin menambahkan bidang baru: $nama",
+                'type'    => 'success',
+                'is_read' => 0
+            ]);
+        }
 
         return redirect()->to('/admin/bidang')->with('success', 'Data berhasil ditambahkan');
     }

@@ -5,6 +5,8 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\SasaranModel;
 use App\Models\TahunAnggaranModel;
+use App\Models\NotificationModel;
+use App\Models\UserModel;
 
 class Sasaran extends BaseController
 {
@@ -17,9 +19,6 @@ class Sasaran extends BaseController
         $this->tahun = new TahunAnggaranModel();
     }
 
-    /* =============================
-       INDEX (LIST SASARAN)
-    ============================== */
     public function index()
     {
         $data['sasaran'] = $this->model
@@ -31,106 +30,70 @@ class Sasaran extends BaseController
         return view('admin/sasaran/index', $data);
     }
 
-    /* =============================
-       CREATE FORM
-    ============================== */
     public function create()
     {
         $data['tahun'] = $this->tahun->where('status', 'active')->findAll();
         return view('admin/sasaran/create', $data);
     }
 
-    /* =============================
-       STORE DATA SASARAN
-    ============================== */
     public function store()
-{
-    $data = [
-        'tahun_id'     => $this->request->getPost('tahun_id'),
-        'kode_sasaran' => $this->request->getPost('kode_sasaran'),
-        'nama_sasaran' => $this->request->getPost('nama_sasaran'),
-    ];
+    {
+        $kode = $this->request->getPost('kode_sasaran');
+        $nama = $this->request->getPost('nama_sasaran');
+        $tahunId = $this->request->getPost('tahun_id');
 
-    $this->model->insert($data);
+        $this->model->insert([
+            'tahun_id'     => $tahunId,
+            'kode_sasaran' => $kode,
+            'nama_sasaran' => $nama,
+        ]);
 
-    return redirect()->to('/admin/sasaran')
-        ->with('success', 'Sasaran Strategis berhasil ditambahkan');
-}
+        // ======= NOTIFIKASI STAFF =======
+        $notificationModel = new NotificationModel();
+        $staffUsers = (new UserModel())->where('role','staff')->findAll();
+        foreach ($staffUsers as $staff) {
+            $notificationModel->insert([
+                'user_id' => $staff['id'],
+                'title'   => 'Sasaran Strategis Ditambahkan',
+                'message' => "Admin menambahkan Sasaran Strategis: $nama",
+                'type'    => 'success',
+                'is_read' => 0
+            ]);
+        }
 
+        return redirect()->to('/admin/sasaran')
+            ->with('success', 'Sasaran Strategis berhasil ditambahkan');
+    }
 
-
-    /* =============================
-       EDIT FORM
-    ============================== */
     public function edit($id)
     {
         $data['sasaran'] = $this->model->find($id);
         $data['tahun'] = $this->tahun->findAll();
-
         return view('admin/sasaran/edit', $data);
     }
 
-    /* =============================
-       UPDATE DATA SASARAN
-    ============================== */
     public function update($id)
     {
-        $data = [
-            'tahun_id'     => $this->request->getPost('tahun_id'),
-            'kode_sasaran' => $this->request->getPost('kode_sasaran'),
-            'nama_sasaran' => $this->request->getPost('nama_sasaran'),
-            'triwulan'     => $this->request->getPost('triwulan'),  // NEW FIELD
-        ];
+        $kode = $this->request->getPost('kode_sasaran');
+        $nama = $this->request->getPost('nama_sasaran');
+        $triwulan = $this->request->getPost('triwulan');
+        $tahunId = $this->request->getPost('tahun_id');
 
-        $this->model->update($id, $data);
+        $this->model->update($id, [
+            'tahun_id'     => $tahunId,
+            'kode_sasaran' => $kode,
+            'nama_sasaran' => $nama,
+            'triwulan'     => $triwulan,
+        ]);
 
         return redirect()->to('/admin/sasaran')
             ->with('success', 'Sasaran Strategis berhasil diperbarui');
     }
 
-    /* =============================
-       DELETE
-    ============================== */
     public function delete($id)
     {
         $this->model->delete($id);
-
         return redirect()->to('/admin/sasaran')
             ->with('success', 'Sasaran Strategis berhasil dihapus');
     }
-
-    public function getTriwulan()
-{
-    $tahunId = $this->request->getGet('tahun_id');
-
-    $triwulanList = $this->model
-        ->select('DISTINCT triwulan')
-        ->where('tahun_id', $tahunId)
-        ->findAll();
-
-    $result = array_map(fn($r) => (int)$r['triwulan'], $triwulanList);
-
-    return $this->response->setJSON($result);
-}
-
-public function getKode($tahunId)
-{
-    $model = new SasaranModel();
-
-    $last = $model->where('tahun_id', $tahunId)
-                  ->orderBy('id', 'DESC')
-                  ->first();
-
-    if (!$last) {
-        return $this->response->setJSON(['kode' => "SS-{$tahunId}-01"]);
-    }
-
-    $lastNumber = (int)substr($last['kode_sasaran'], -2);
-    $newNumber  = str_pad($lastNumber + 1, 2, '0', STR_PAD_LEFT);
-
-    return $this->response->setJSON([
-        'kode' => "SS-{$tahunId}-{$newNumber}"
-    ]);
-}
-
 }

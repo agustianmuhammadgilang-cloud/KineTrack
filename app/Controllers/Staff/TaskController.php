@@ -26,6 +26,8 @@ class TaskController extends BaseController
     // index: menampilkan daftar task staff
     public function index()
     {
+        $data['pending_count'] = $this->pending_count;
+
         $userId = session()->get('user_id');
         $tasks  = $this->picModel->getTasksForUser($userId);
 
