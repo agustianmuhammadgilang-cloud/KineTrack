@@ -182,21 +182,24 @@ class Pengukuran extends BaseController
     // DETAIL
     // ================================================================
     public function detail($indikator_id, $tahun_id, $tw)
-    {
-        $indikator = $this->indikatorModel
-            ->select('indikator_kinerja.*, sasaran_strategis.nama_sasaran')
-            ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
-            ->where('indikator_kinerja.id', $indikator_id)
-            ->first();
+{
+    // Ambil indikator + nama sasaran
+    $indikator = $this->indikatorModel
+        ->select('indikator_kinerja.*, sasaran_strategis.nama_sasaran')
+        ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
+        ->where('indikator_kinerja.id', $indikator_id)
+        ->first();
 
-        if (!$indikator) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException("Indikator tidak ditemukan");
-        }
+    if (!$indikator) {
+        throw new \CodeIgniter\Exceptions\PageNotFoundException("Indikator tidak ditemukan");
+    }
 
-        $pengukuran = $this->pengukuranModel
+    // Ambil pengukuran yang sudah diinput staff
+$pengukuran = $this->pengukuranModel
+    ->select('pengukuran_kinerja.*, users.nama as user_nama')
+    ->join('users', 'users.id = pengukuran_kinerja.user_id', 'left')
     ->where('indikator_id', $indikator_id)
     ->where('tahun_id', $tahun_id)
-    ->where('triwulan', $tw)
     ->findAll();
 
 
@@ -207,6 +210,7 @@ class Pengukuran extends BaseController
         'tw'         => $tw
     ]);
 }
+
 
 public function export($tahunId, $tw)
 {

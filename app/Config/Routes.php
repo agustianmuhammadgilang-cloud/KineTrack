@@ -136,12 +136,10 @@ $routes->post('admin/pic/update/(:num)', 'Admin\PicController::update/$1');
 $routes->get('admin/pic/delete/(:num)', 'Admin\PicController::delete/$1');
 
 
-// Staff Task
-$routes->get('staff/task', 'Staff\TaskController::index');
-$routes->get('staff/task/input/(:num)', 'Staff\TaskController::input/$1');
-$routes->post('staff/task/store', 'Staff\TaskController::store');
-
-// Admin Profile
-$routes->get('admin/profile', 'Admin\ProfileController::index');
-$routes->post('admin/profile/update', 'Admin\ProfileController::update');
+/// Staff Task
+$routes->group('staff', ['filter' => 'auth'], function($routes) {
+    $routes->get('task', 'Staff\TaskController::index');             // daftar task PIC staff
+    $routes->get('task/input/(:num)', 'Staff\TaskController::input/$1'); // optional: detail input per indikator
+    $routes->post('task/store', 'Staff\TaskController::store');      // simpan input indikator
+});
 

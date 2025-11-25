@@ -30,7 +30,9 @@
                     <li class="flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:shadow-md transition">
                         <div>
                             <p class="text-gray-800 font-semibold"><?= $t['nama_indikator'] ?></p>
-                            <p class="text-sm text-gray-600">Tahun <?= $t['tahun'] ?></p>
+                            <p class="text-sm text-gray-600">
+                                Tahun <?= $t['tahun'] ?> — Triwulan <?= $t['tw'] ?>
+                            </p>
                         </div>
 
                         <a href="<?= base_url('staff/task/input/'.$t['indikator_id']) ?>"
