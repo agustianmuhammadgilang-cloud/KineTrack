@@ -119,7 +119,8 @@ $routes->group('atasan', ['filter' => 'auth'], function($routes){
 });
 
 $routes->get('admin/indikator/getKode/(:num)', 'Admin\Indikator::getKode/$1');
-$routes->get('admin/sasaran/getKode/(:num)/(:num)', 'Admin\Sasaran::getKode/$1/$2');
+$routes->get('admin/sasaran/getKode/(:num)', 'Admin\Sasaran::getKode/$1');
+
 
 $routes->get('admin/pic/getSasaran', 'Admin\PicController::getSasaran');
 $routes->get('admin/pic/getIndikator', 'Admin\PicController::getIndikator');

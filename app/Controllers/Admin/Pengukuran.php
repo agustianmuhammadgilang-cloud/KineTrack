@@ -42,44 +42,34 @@ class Pengukuran extends BaseController
     // AJAX LOAD INDIKATOR
     // ================================================================
     public function load()
-    {
-        $tahunId = $this->request->getPost('tahun_id');
-        $tw      = (int)$this->request->getPost('triwulan');
+{
+    $tahunId = $this->request->getPost('tahun_id');
+    $tw      = (int)$this->request->getPost('triwulan');
 
-        if (!$tahunId || !$tw) {
-            return $this->response->setJSON([
-                'status'  => false,
-                'message' => 'Parameter tidak lengkap'
-            ]);
-        }
-
-        // Ambil indikator berdasarkan tahun + triwulan sasaran
-        $indikator = $this->indikatorModel
-            ->select('indikator_kinerja.*, sasaran_strategis.nama_sasaran')
-            ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
-            ->where('sasaran_strategis.tahun_id', $tahunId)
-            ->where('sasaran_strategis.triwulan', $tw)
-            ->orderBy('sasaran_strategis.id', 'ASC')
-            ->orderBy('indikator_kinerja.id', 'ASC')
-            ->findAll();
-
-        // Data pengukuran existing
-        $existing = $this->pengukuranModel
-            ->where('tahun_id', $tahunId)
-            ->where('triwulan', $tw)
-            ->findAll();
-
-        $map = [];
-        foreach ($existing as $e) {
-            $map[$e['indikator_id']] = $e;
-        }
-
+    // Validasi dasar
+    if (!$tahunId || !$tw) {
         return $this->response->setJSON([
-            'status'    => true,
-            'indikator' => $indikator,
-            'existing'  => $map
+            'status'  => false,
+            'message' => 'Parameter tidak lengkap'
         ]);
     }
+
+    // Ambil semua indikator berdasarkan tahun (tanpa triwulan!)
+    $indikator = $this->indikatorModel
+        ->select('indikator_kinerja.*, sasaran_strategis.nama_sasaran')
+        ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
+        ->where('sasaran_strategis.tahun_id', $tahunId)
+        ->orderBy('sasaran_strategis.id', 'ASC')
+        ->orderBy('indikator_kinerja.id', 'ASC')
+        ->findAll();
+
+    return $this->response->setJSON([
+        'status'  => true,
+        'data'    => $indikator
+    ]);
+}
+
+
 
 
     // ================================================================
@@ -89,13 +79,11 @@ class Pengukuran extends BaseController
     {
         $tahunId = $this->request->getPost('tahun_id');
         $tw      = $this->request->getPost('triwulan');
-
-        $indikator = $this->indikatorModel
-            ->select('indikator_kinerja.id')
-            ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
-            ->where('sasaran_strategis.tahun_id', $tahunId)
-            ->where('sasaran_strategis.triwulan', $tw)
-            ->findAll();
+       $indikator = $this->indikatorModel
+    ->select('indikator_kinerja.id')
+    ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
+    ->where('sasaran_strategis.tahun_id', $tahunId)
+    ->findAll();   // HAPUS where triwulan
 
         $saveCount = 0;
 
@@ -162,13 +150,13 @@ class Pengukuran extends BaseController
         if ($tahunId && $tw) {
 
             $data['indikator'] = $this->indikatorModel
-                ->select('indikator_kinerja.*, sasaran_strategis.kode_sasaran, sasaran_strategis.nama_sasaran')
-                ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
-                ->where('sasaran_strategis.tahun_id', $tahunId)
-                ->where('sasaran_strategis.triwulan', $tw)
-                ->orderBy('sasaran_strategis.id')
-                ->orderBy('indikator_kinerja.id')
-                ->findAll();
+    ->select('indikator_kinerja.*, sasaran_strategis.kode_sasaran, sasaran_strategis.nama_sasaran')
+    ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
+    ->where('sasaran_strategis.tahun_id', $tahunId)
+    ->orderBy('sasaran_strategis.id')
+    ->orderBy('indikator_kinerja.id')
+    ->findAll();   // HAPUS where triwulan
+
 
             $existing = $this->pengukuranModel
                 ->where('tahun_id', $tahunId)
@@ -230,7 +218,6 @@ public function export($tahunId, $tw)
                   sasaran_strategis.nama_sasaran')
         ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
         ->where('sasaran_strategis.tahun_id', $tahunId)
-        ->where('sasaran_strategis.triwulan', $tw)
         ->orderBy('sasaran_strategis.id')
         ->orderBy('indikator_kinerja.id')
         ->findAll();

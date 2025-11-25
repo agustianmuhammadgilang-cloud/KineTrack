@@ -75,16 +75,14 @@ const styleTag = document.createElement('style'); styleTag.innerText = injectedS
 // ============================
 // UPDATE TRIWULAN
 // ============================
-document.querySelector('#tahun_id').addEventListener('change', async function(){
-    const tahunId = this.value;
-    const res = await fetch(`<?= base_url('admin/sasaran/getTriwulan') ?>?tahun_id=${tahunId}`);
-    const twList = await res.json();
+// Karena semua TW selalu aktif (sasaran berlaku 1 tahun semua TW)
+document.querySelector('#tahun_id').addEventListener('change', function(){
     document.querySelectorAll('.tw-btn').forEach(btn => {
-        const tw = parseInt(btn.dataset.tw);
-        btn.disabled = !twList.includes(tw);
+        btn.disabled = false;
         btn.classList.remove('active','bg-[var(--polban-blue)]','text-white');
     });
 });
+
 
 // ============================
 // ACTIVE BUTTON
@@ -140,7 +138,7 @@ document.querySelector('#loadBtn').addEventListener('click', async function(){
         <tbody class="divide-y divide-gray-200">
     `;
 
-    json.indikator.forEach(ind => {
+    json.data.forEach(ind => {
         const ex = json.existing[ind.id] ?? {};
         // escape values for safety in template insertion (simple)
         const esc = s => (s||'').toString().replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');

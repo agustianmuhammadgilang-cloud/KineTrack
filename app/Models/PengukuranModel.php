@@ -6,10 +6,18 @@ class PengukuranModel extends Model
 {
     protected $table = 'pengukuran_kinerja';
     protected $primaryKey = 'id';
+
     protected $allowedFields = [
-        'indikator_id','tahun_id','triwulan','user_id',
-        'realisasi','progress','kendala','strategi','data_dukung','file_dukung','created_by'
+        'indikator_id',
+        'tahun_id',
+        'triwulan',
+        'target',
+        'realisasi',
+        'persentase',
+        'catatan',
+        'created_by'
     ];
+
     protected $returnType = 'array';
     protected $useTimestamps = true;
 }
