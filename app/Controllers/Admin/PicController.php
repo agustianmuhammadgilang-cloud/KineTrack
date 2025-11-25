@@ -39,82 +39,84 @@ class PicController extends BaseController
     public function create()
     {
         $data['tahun'] = (new TahunAnggaranModel())
-                    ->where('status', 'active')
-                    ->findAll();
+            ->where('status', 'active')
+            ->findAll();
 
         return view('admin/pic/create', $data);
     }
 
-   public function store()
-{
-    $indikatorId = $this->request->getPost('indikator_id');
-    $tahunId     = $this->request->getPost('tahun_id');
-    $sasaranId   = $this->request->getPost('sasaran_id');
-    $tw          = $this->request->getPost('tw');
-    $userList    = $this->request->getPost('pegawai');
+    public function store()
+    {
+        $indikatorId = $this->request->getPost('indikator_id');
+        $tahunId     = $this->request->getPost('tahun_id');
+        $sasaranId   = $this->request->getPost('sasaran_id');
+        $tw          = $this->request->getPost('tw');
+        $userList    = $this->request->getPost('pegawai');
 
-    $successUsers = [];
-    $skippedUsers = [];
+        $successUsers = [];
+        $skippedUsers = [];
 
-    foreach ($userList as $userId) {
-        $user = $this->userModel->find($userId);
+        foreach ($userList as $userId) {
+            $user = $this->userModel->find($userId);
 
-        // CEK DUPLIKAT
-        $exists = $this->picModel
-            ->where('user_id', $userId)
-            ->where('indikator_id', $indikatorId)
-            ->where('tw', $tw)
-            ->first();
+            // CEK DUPLIKAT
+            $exists = $this->picModel
+                ->where('user_id', $userId)
+                ->where('indikator_id', $indikatorId)
+                ->where('tw', $tw)
+                ->first();
 
-        if ($exists) {
-            $skippedUsers[] = $user['nama']; // simpan nama user yang duplikat
-            continue;
+            if ($exists) {
+                $skippedUsers[] = $user['nama'];
+                continue;
+            }
+
+            // SIMPAN PIC
+            $this->picModel->insert([
+                'indikator_id' => $indikatorId,
+                'user_id'      => $userId,
+                'tahun_id'     => $tahunId,
+                'sasaran_id'   => $sasaranId,
+                'tw'           => $tw,
+                'bidang_id'    => $user['bidang_id'],
+                'jabatan_id'   => $user['jabatan_id']
+            ]);
+
+            // ================
+            // SIMPAN NOTIFIKASI UNTUK STAFF
+            // ================
+            $this->notifModel->insert([
+                'user_id' => $userId,
+                'title'   => 'Tugas Baru Ditambahkan',
+                'message' => "Anda ditugaskan mengisi indikator pada Triwulan $tw.",
+                'type'    => 'success',
+                'is_read' => 0
+            ]);
+
+            $successUsers[] = $user['nama'];
         }
 
-        // SIMPAN PIC
-        $this->picModel->insert([
-    'indikator_id' => $indikatorId,
-    'user_id'      => $userId,
-    'tahun_id'     => $tahunId,
-    'sasaran_id'   => $sasaranId,
-    'tw'           => $tw,
-    'bidang_id'    => $user['bidang_id'],
-    'jabatan_id'   => $user['jabatan_id']
-]);
+        // ======================
+        // Siapkan pesan flash untuk ADMIN
+        // ======================
+        $message = '';
+        $type    = 'success';
 
-$this->notifModel->insert([
-    'user_id' => $userId,
-    'message' => "Anda ditugaskan mengisi indikator pada Triwulan $tw."
-]);
+        if (!empty($successUsers)) {
+            $message .= 'PIC berhasil disimpan untuk: ' . implode(', ', $successUsers) . '. ';
+        }
 
+        if (!empty($skippedUsers)) {
+            $message .= 'PIC sudah terdaftar untuk: ' . implode(', ', $skippedUsers) . '.';
+            $type = 'warning';
+        }
 
-        $successUsers[] = $user['nama'];
+        return redirect()->to('/admin/pic')->with('alert', [
+            'type'    => $type,
+            'title'   => $type === 'success' ? 'Berhasil' : 'Perhatian',
+            'message' => $message
+        ]);
     }
-
-    // ======================
-    // Siapkan pesan flash sesuai kondisi
-    // ======================
-    $message = '';
-    $type    = 'success';
-
-    if (!empty($successUsers)) {
-        $message .= 'PIC berhasil disimpan untuk: ' . implode(', ', $successUsers) . '. ';
-    }
-
-    if (!empty($skippedUsers)) {
-        $message .= 'PIC sudah terdaftar untuk: ' . implode(', ', $skippedUsers) . '.';
-        $type = 'warning';
-    }
-
-    return redirect()->to('/admin/pic')->with('alert', [
-        'type'    => $type,
-        'title'   => $type === 'success' ? 'Berhasil' : 'Perhatian',
-        'message' => $message
-    ]);
-}
-
-
-
 
     // ====================== AJAX ======================
 
@@ -145,7 +147,7 @@ $this->notifModel->insert([
                 ->select('users.*, jabatan.nama_jabatan, bidang.nama_bidang')
                 ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
                 ->join('bidang', 'bidang.id = users.bidang_id', 'left')
-                ->where('users.role !=', 'admin') // hanya staff dan atasan
+                ->where('users.role !=', 'admin')
                 ->findAll()
         );
     }

@@ -5,11 +5,51 @@
     Dashboard Kinerja Saya
 </h3>
 
-<?php foreach ($notifikasi as $n): ?>
-<div class="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded mb-6 shadow">
-    <?= esc($n['message']) ?>
-</div>
-<?php endforeach; ?>
+<?php if (!empty($notifications)): ?>
+    <?php foreach ($notifications as $notif): ?>
+        <div class="bg-green-500 text-white px-4 py-2 rounded shadow mb-2">
+            <strong><?= $notif['title'] ?></strong><br>
+            <?= $notif['message'] ?>
+        </div>
+    <?php endforeach; ?>
+<?php endif; ?>
+
+<!-- Toast Notifications -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 space-y-2">
+        <?php if(!empty($notifications)): ?>
+            <?php foreach($notifications as $notif): ?>
+                <div class="toast bg-green-500 text-white px-4 py-3 rounded shadow-lg flex items-center justify-between"
+                     data-id="<?= $notif['id'] ?>">
+                    <div>
+                        <strong><?= $notif['title'] ?></strong><br>
+                        <?= $notif['message'] ?>
+                    </div>
+                    <button onclick="closeToast(this)" class="ml-4 font-bold">&times;</button>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+
+    <!-- Konten utama dashboard -->
+    <div class="main-content">
+        <!-- Statistik, laporan, dsb -->
+    </div>
+
+    <script>
+    function closeToast(btn) {
+        const toast = btn.parentElement;
+        toast.remove();
+
+        // optional: ajax untuk set is_read = 1
+        const notifId = toast.dataset.id;
+        fetch('/staff/notification/markRead/' + notifId, { method: 'POST' });
+    }
+
+    // auto-hide 5 detik
+    document.querySelectorAll('.toast').forEach(function(toast) {
+        setTimeout(() => toast.remove(), 5000);
+    });
+    </script>
 
 <!-- STATISTIC CARDS -->
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">

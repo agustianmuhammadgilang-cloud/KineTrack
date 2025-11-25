@@ -4,6 +4,8 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\JabatanModel;
+use App\Models\NotificationModel;
+use App\Models\UserModel;
 
 class Jabatan extends BaseController
 {
@@ -22,9 +24,24 @@ class Jabatan extends BaseController
     public function store()
     {
         $model = new JabatanModel();
+        $nama = $this->request->getPost('nama_jabatan');
+
         $model->insert([
-            'nama_jabatan' => $this->request->getPost('nama_jabatan')
+            'nama_jabatan' => $nama
         ]);
+
+        // ======= NOTIFIKASI STAFF =======
+        $notificationModel = new NotificationModel();
+        $staffUsers = (new UserModel())->where('role','staff')->findAll();
+        foreach ($staffUsers as $staff) {
+            $notificationModel->insert([
+                'user_id' => $staff['id'],
+                'title'   => 'Jabatan Baru Ditambahkan',
+                'message' => "Admin menambahkan jabatan baru: $nama",
+                'type'    => 'success',
+                'is_read' => 0
+            ]);
+        }
 
         return redirect()->to('/admin/jabatan')->with('success', 'Data berhasil ditambahkan');
     }
