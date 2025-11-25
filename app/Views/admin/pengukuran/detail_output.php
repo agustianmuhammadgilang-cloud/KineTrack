@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 
 <h3 class="text-2xl font-bold text-[var(--polban-blue)] mb-6">
-    Detail Pengukuran Indikator
+    Detail Pengukuran Indikator - TW <?= esc($tw) ?>
 </h3>
 
 <div class="bg-white shadow-md rounded-xl p-6 border border-gray-200">
@@ -15,34 +15,25 @@
     <p class="text-gray-600 mb-4">
         <strong>Sasaran:</strong> <?= esc($indikator['nama_sasaran']) ?>
     </p>
+    <p class="text-gray-600 mb-4">
+        <strong>Target PK:</strong> <?= esc($indikator['target_pk']) ?>
+    </p>
 
-
-    <!-- ==================================== -->
-    <!--        DATA PENGUKURAN PER PIC        -->
-    <!-- ==================================== -->
-
+    <!-- DATA PENGUKURAN PER PIC -->
     <?php if (!empty($pengukuran)): ?>
-
         <?php foreach ($pengukuran as $pk): ?>
             <div class="border border-gray-300 rounded-lg p-4 bg-gray-50 mb-4">
 
                 <table class="min-w-full">
 
                     <tr>
-                        <td class="font-semibold px-4 py-1 w-40">Target</td>
-                        <td class="px-4 py-1"><?= esc($indikator['target_pk']) ?></td>
+                        <td class="font-semibold px-4 py-1 w-40">Progress</td>
+                        <td class="px-4 py-1"><?= isset($pk['progress']) ? esc($pk['progress']).'%' : '-' ?></td>
                     </tr>
 
                     <tr>
                         <td class="font-semibold px-4 py-1">Realisasi</td>
                         <td class="px-4 py-1"><?= esc($pk['realisasi'] ?? '-') ?></td>
-                    </tr>
-
-                    <tr>
-                        <td class="font-semibold px-4 py-1">Progress</td>
-                        <td class="px-4 py-1">
-                            <?= isset($pk['progress']) ? esc($pk['progress']).'%' : '-' ?>
-                        </td>
                     </tr>
 
                     <tr>
@@ -69,22 +60,20 @@
                         </td>
                     </tr>
 
+                    <tr>
+                        <td class="font-semibold px-4 py-1">Triwulan</td>
+                        <td class="px-4 py-1"><?= esc($tw) ?></td>
+                    </tr>
+
                 </table>
 
             </div>
         <?php endforeach; ?>
-
     <?php else: ?>
-
         <p class="text-gray-600 italic mt-4">Belum ada data pengukuran dari PIC manapun.</p>
-
     <?php endif; ?>
 
-
-    <!-- ==================================== -->
-    <!--          DAFTAR SELURUH PIC          -->
-    <!-- ==================================== -->
-
+    <!-- DAFTAR PIC -->
     <?php 
     use App\Models\PicModel; 
     $pic = (new PicModel())->getPicByIndikator($indikator['id']); 
@@ -92,7 +81,7 @@
 
     <h4 class="text-lg font-semibold mt-6 mb-2">PIC Terkait</h4>
 
-    <?php if (!empty($pic)): ?>
+       <?php if (!empty($pic)): ?>
         <ul class="list-disc ml-6">
             <?php foreach ($pic as $p): ?>
                 <li class="mb-1">
@@ -105,9 +94,7 @@
     <?php else: ?>
         <p class="text-gray-600 italic">Belum ada PIC yang ditetapkan.</p>
     <?php endif; ?>
-
 </div>
-
 
 <!-- BUTTON KEMBALI -->
 <div class="mt-5">
