@@ -45,46 +45,76 @@ class PicController extends BaseController
         return view('admin/pic/create', $data);
     }
 
-    public function store()
-    {
-        $indikatorId = $this->request->getPost('indikator_id');
-        $tahunId     = $this->request->getPost('tahun_id');
-        $sasaranId   = $this->request->getPost('sasaran_id');
-        $userList    = $this->request->getPost('pegawai'); // array pegawai staff
+   public function store()
+{
+    $indikatorId = $this->request->getPost('indikator_id');
+    $tahunId     = $this->request->getPost('tahun_id');
+    $sasaranId   = $this->request->getPost('sasaran_id');
+    $tw          = $this->request->getPost('tw');
+    $userList    = $this->request->getPost('pegawai');
 
-        foreach ($userList as $userId) {
+    $successUsers = [];
+    $skippedUsers = [];
 
-            $user = $this->userModel->find($userId);
+    foreach ($userList as $userId) {
+        $user = $this->userModel->find($userId);
 
-            // simpan data PIC
-            $this->picModel->insert([
-                'indikator_id' => $indikatorId,
-                'user_id'      => $userId,
-                'tahun_id'     => $tahunId,
-                'sasaran_id'   => $sasaranId,
-                'bidang_id'    => $user['bidang_id'],
-                'jabatan_id'   => $user['jabatan_id']
-            ]);
+        // CEK DUPLIKAT
+        $exists = $this->picModel
+            ->where('user_id', $userId)
+            ->where('indikator_id', $indikatorId)
+            ->where('tw', $tw)
+            ->first();
 
-            // ===========================
-            // NOTIFIKASI UNTUK STAFF
-            // ===========================
-            $this->notifModel->insert([
-                'user_id' => $userId,
-                'message' => 'Anda telah ditugaskan sebagai PIC baru. Silakan cek Task Anda.',
-            ]);
+        if ($exists) {
+            $skippedUsers[] = $user['nama']; // simpan nama user yang duplikat
+            continue;
         }
 
-        // ===========================
-        // NOTIFIKASI UNTUK ADMIN
-        // ===========================
-        return redirect()->to('/admin/pic')
-            ->with('alert', [
-                'type' => 'success',
-                'title' => 'Berhasil',
-                'message' => 'PIC disimpan.'
-            ]);
+        // SIMPAN PIC
+        $this->picModel->insert([
+            'indikator_id' => $indikatorId,
+            'user_id'      => $userId,
+            'tahun_id'     => $tahunId,
+            'sasaran_id'   => $sasaranId,
+            'tw'           => $tw,
+            'bidang_id'    => $user['bidang_id'],
+            'jabatan_id'   => $user['jabatan_id']
+        ]);
+
+        // NOTIFIKASI UNTUK STAFF
+        $this->notifModel->insert([
+            'user_id' => $userId,
+            'message' => "Anda ditugaskan mengisi indikator pada Triwulan $tw."
+        ]);
+
+        $successUsers[] = $user['nama'];
     }
+
+    // ======================
+    // Siapkan pesan flash sesuai kondisi
+    // ======================
+    $message = '';
+    $type    = 'success';
+
+    if (!empty($successUsers)) {
+        $message .= 'PIC berhasil disimpan untuk: ' . implode(', ', $successUsers) . '. ';
+    }
+
+    if (!empty($skippedUsers)) {
+        $message .= 'PIC sudah terdaftar untuk: ' . implode(', ', $skippedUsers) . '.';
+        $type = 'warning';
+    }
+
+    return redirect()->to('/admin/pic')->with('alert', [
+        'type'    => $type,
+        'title'   => $type === 'success' ? 'Berhasil' : 'Perhatian',
+        'message' => $message
+    ]);
+}
+
+
+
 
     // ====================== AJAX ======================
 
