@@ -13,6 +13,7 @@ class PicModel extends Model
         'user_id',
         'tahun_id',
         'sasaran_id',
+        'tw',
         'bidang_id',
         'jabatan_id',
         'created_at'
