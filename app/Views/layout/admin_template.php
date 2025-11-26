@@ -357,5 +357,33 @@ Swal.fire({
 </script>
 <?php endif; ?>
 
+
+<script>
+function loadStaffNotif() {
+    fetch("<?= base_url('staff/notifications/list') ?>")
+        .then(res => res.json())
+        .then(data => {
+            const unread = data.filter(n => n.is_read == 0).length;
+
+            // Update badge task sidebar
+            const badge = document.querySelector('#task-badge');
+
+            if (badge) {
+                if (unread > 0) {
+                    badge.innerHTML = unread;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+        });
+}
+
+// polling setiap 5 detik
+setInterval(loadStaffNotif, 5000);
+loadStaffNotif();
+</script>
+
+
 </body>
 </html>

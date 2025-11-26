@@ -90,6 +90,17 @@ class TaskController extends BaseController
             'file_dukung'  => null
         ];
 
+        // Buat notifikasi ke admin
+$notifModel = new \App\Models\NotificationModel();
+
+$notifModel->insert([
+    'receiver_id' => 1, // ID ADMIN utama (bisa diganti dinamis)
+    'title'       => 'Input Pengukuran Baru',
+    'message'     => 'PIC telah mengisi indikator: ' . $indikator['nama_indikator'],
+    'is_read'     => 0
+]);
+
+
         $this->pengukuranModel->insert($data);
 
         return redirect()->to('/staff/task')->with('alert', [

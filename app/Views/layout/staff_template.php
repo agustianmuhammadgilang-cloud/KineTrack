@@ -53,11 +53,9 @@
     Task
 
     <!-- BADGE ANKA NOTIF -->
-    <?php if (!empty($pending_count) && $pending_count > 0): ?>
-        <span class="absolute right-6 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-            <?= $pending_count ?>
-        </span>
-    <?php endif; ?>
+   <span id="task-badge" 
+      class="absolute right-6 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full hidden">
+</span>
 </a>
 
 </a>
@@ -108,6 +106,33 @@
   });
 </script>
 <?php endif; ?>
+
+<script>
+function loadStaffNotif() {
+    fetch("<?= base_url('staff/notifications/list') ?>")
+        .then(res => res.json())
+        .then(data => {
+            const unread = data.filter(n => n.is_read == 0).length;
+
+            // Update badge task sidebar
+            const badge = document.querySelector('#task-badge');
+
+            if (badge) {
+                if (unread > 0) {
+                    badge.innerHTML = unread;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+        });
+}
+
+// polling setiap 5 detik
+setInterval(loadStaffNotif, 5000);
+loadStaffNotif();
+</script>
+
 
 </body>
 </html>
