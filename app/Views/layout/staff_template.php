@@ -255,6 +255,20 @@ setInterval(fetchPending, 12000);
 
 </script>
 
+<?php if (!empty($notifikasi)): ?>
+<script>
+<?php foreach($notifikasi as $n): ?>
+Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon: 'info',
+    title: <?= json_encode($n['message']) ?>,
+    showConfirmButton: false,
+    timer: 3500
+});
+<?php endforeach; ?>
+</script>
+<?php endif; ?>
 
 
 

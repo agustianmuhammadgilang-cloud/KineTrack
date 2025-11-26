@@ -21,6 +21,15 @@ class Dashboard extends BaseController
             'total_bidang'  => $bidang->countAllResults()
         ];
 
+        $notifModel = new \App\Models\NotificationModel();
+
+    $data['notif'] = $notifModel
+        ->where('user_id', session('user_id'))
+        ->where('status', 'unread')
+        ->orderBy('id', 'DESC')
+        ->findAll(5);
+
+
         return view('admin/dashboard', $data);
     }
 }

@@ -341,21 +341,20 @@ LHE
 </svg>
 
 <!-- SweetAlert -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<?php if (session()->getFlashdata('alert')): $a = session()->getFlashdata('alert'); ?>
+<?php if (!empty($notif)): ?>
 <script>
 Swal.fire({
+    icon: 'info',
+    title: 'Notifikasi baru',
+    text: '<?= esc($notif[0]['message']) ?>',
     toast: true,
     position: 'top-end',
-    showConfirmButton: false,
     timer: 4000,
-    icon: '<?= esc($a['type']) ?>',
-    title: '<?= esc($a['title']) ?>',
-    text: '<?= esc($a['message']) ?>'
+    showConfirmButton: false
 });
 </script>
 <?php endif; ?>
+
 
 
 <script>
