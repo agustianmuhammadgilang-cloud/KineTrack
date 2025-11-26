@@ -143,4 +143,3 @@ $routes->group('staff', ['filter' => 'auth'], function($routes) {
     $routes->get('task/input/(:num)', 'Staff\TaskController::input/$1'); // optional: detail input per indikator
     $routes->post('task/store', 'Staff\TaskController::store');      // simpan input indikator
 });
-
