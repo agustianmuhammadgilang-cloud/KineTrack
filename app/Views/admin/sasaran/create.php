@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        fetch(`<?= base_url('admin/sasaran/getKode/') ?>${tahun}`)
+        fetch(<?= base_url('admin/sasaran/getKode/') ?>${tahun})
             .then(res => res.json())
             .then(data => kodeInput.value = data.kode)
             .catch(() => kodeInput.value = "");
