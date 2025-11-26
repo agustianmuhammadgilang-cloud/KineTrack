@@ -78,7 +78,6 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     $routes->get('pengukuran/output', 'Admin\Pengukuran::output'); // tampil tabel output
     $routes->get('pengukuran/export/(:num)/(:num)', 'Admin\Pengukuran::export/$1/$2'); // export
     $routes->get('pengukuran/output/detail/(:num)/(:num)/(:num)', 'Admin\Pengukuran::detail/$1/$2/$3');
-
 });
 
 // ADMIN - DETAIL BIDANG
@@ -143,3 +142,4 @@ $routes->group('staff', ['filter' => 'auth'], function($routes) {
     $routes->get('task/input/(:num)', 'Staff\TaskController::input/$1'); // optional: detail input per indikator
     $routes->post('task/store', 'Staff\TaskController::store');      // simpan input indikator
 });
+
