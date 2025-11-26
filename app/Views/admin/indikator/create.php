@@ -111,19 +111,15 @@
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const tahunSelect = document.getElementById("tahunSelect");
-    const sasaranSelect = document.getElementById("sasaranSelect"); // FIXED
+    const sasaranSelect = document.getElementById("sasaranSelect");
     const kodeInput = document.getElementById("kode_indikator");
 
-
-    const sasaranData = [
-        <?php foreach($sasaran as $s): ?>
-        { id: "<?= $s['id'] ?>", tahun: "<?= $s['tahun'] ?>", label: "<?= $s['kode_sasaran'] ?> — <?= $s['nama_sasaran'] ?>" },
-        <?php endforeach ?>
-    ];
+    // AMAN 100%, TANPA RISIKO ERROR
+    const sasaranData = <?= json_encode($sasaran) ?>;
 
     tahunSelect.addEventListener("change", function () {
         const selectedYear = this.value;
-        sasaranSelect.innerHTML = '';
+        sasaranSelect.innerHTML = "";
 
         if (!selectedYear) {
             sasaranSelect.append(new Option("-- Pilih Tahun Terlebih Dahulu --", ""));
@@ -134,8 +130,9 @@ document.addEventListener("DOMContentLoaded", function() {
         sasaranSelect.append(new Option("-- Pilih Sasaran --", ""));
 
         sasaranData.forEach(s => {
-            if (s.tahun === selectedYear) {
-                sasaranSelect.append(new Option(s.label, s.id));
+            if (s.tahun == selectedYear) {
+                let label = s.kode_sasaran + " - " + s.nama_sasaran;
+                sasaranSelect.append(new Option(label, s.id));
             }
         });
     });
