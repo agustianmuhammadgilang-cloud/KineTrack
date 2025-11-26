@@ -8,6 +8,7 @@ use App\Models\UserModel;
 
 class Laporan extends BaseController
 {
+    
     public function index()
 {
     $laporanModel = new LaporanModel();
@@ -25,6 +26,10 @@ class Laporan extends BaseController
         'staff' => $staff,
         'laporan' => $laporanModel->where('user_id', session('user_id'))->findAll()
     ];
+
+    helper('globalcount');
+$data['pending_task_count'] = getPendingTaskCount(session('user_id'));
+
 
     return view('staff/laporan/index', $data);
 }
@@ -83,6 +88,8 @@ class Laporan extends BaseController
         'message' => 'Silakan perbaiki laporan Anda sesuai catatan atasan.'
     ]);
 
+
+    
 
     return view('staff/laporan/rejected_detail', $data);
 

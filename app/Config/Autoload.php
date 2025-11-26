@@ -88,5 +88,5 @@ class Autoload extends AutoloadConfig
      *
      * @var list<string>
      */
-    public $helpers = ['icon'];
+    public $helpers = ['icon','globalcount'];
 }
