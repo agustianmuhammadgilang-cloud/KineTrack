@@ -44,8 +44,7 @@ class PicController extends BaseController
 
         return view('admin/pic/create', $data);
     }
-
-   public function store()
+public function store()
 {
     $indikatorId = $this->request->getPost('indikator_id');
     $tahunId     = $this->request->getPost('tahun_id');
@@ -67,7 +66,7 @@ class PicController extends BaseController
             ->first();
 
         if ($exists) {
-            $skippedUsers[] = $user['nama']; // simpan nama user yang duplikat
+            $skippedUsers[] = $user['nama'];
             continue;
         }
 
@@ -82,17 +81,24 @@ class PicController extends BaseController
             'jabatan_id'   => $user['jabatan_id']
         ]);
 
-        // NOTIFIKASI UNTUK STAFF
+        // SIMPAN NOTIFIKASI KE STAFF
         $this->notifModel->insert([
             'user_id' => $userId,
-            'message' => "Anda ditugaskan mengisi indikator pada Triwulan $tw."
+            'message' => "Anda mendapatkan tugas baru pada Triwulan $tw.",
+            'meta'    => json_encode([
+                'indikator_id' => $indikatorId,
+                'tahun_id'     => $tahunId,
+                'sasaran_id'   => $sasaranId,
+                'tw'           => $tw
+            ]),
+            'status'   => 'unread'
         ]);
 
         $successUsers[] = $user['nama'];
     }
 
     // ======================
-    // Siapkan pesan flash sesuai kondisi
+    // SweetAlert untuk ADMIN
     // ======================
     $message = '';
     $type    = 'success';

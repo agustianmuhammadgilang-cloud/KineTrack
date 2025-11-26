@@ -181,7 +181,7 @@ class Pengukuran extends BaseController
     // ================================================================
     // DETAIL
     // ================================================================
-    public function detail($indikator_id, $tahun_id, $tw)
+   public function detail($indikator_id, $tahun_id, $tw)
 {
     // Ambil indikator + nama sasaran
     $indikator = $this->indikatorModel
@@ -195,13 +195,13 @@ class Pengukuran extends BaseController
     }
 
     // Ambil pengukuran yang sudah diinput staff
-$pengukuran = $this->pengukuranModel
-    ->select('pengukuran_kinerja.*, users.nama as user_nama')
-    ->join('users', 'users.id = pengukuran_kinerja.user_id', 'left')
-    ->where('indikator_id', $indikator_id)
-    ->where('tahun_id', $tahun_id)
-    ->findAll();
-
+    $pengukuran = $this->pengukuranModel
+        ->select('pengukuran_kinerja.*, users.nama as user_nama')
+        ->join('users', 'users.id = pengukuran_kinerja.user_id', 'left')
+        ->where('indikator_id', $indikator_id)
+        ->where('tahun_id', $tahun_id)
+        ->where('triwulan', $tw) // <-- pastikan nama kolom sesuai database
+        ->findAll();
 
     return view('admin/pengukuran/detail_output', [
         'indikator'  => $indikator,
@@ -210,6 +210,7 @@ $pengukuran = $this->pengukuranModel
         'tw'         => $tw
     ]);
 }
+
 
 
 public function export($tahunId, $tw)

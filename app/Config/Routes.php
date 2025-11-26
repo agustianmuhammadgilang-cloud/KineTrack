@@ -83,6 +83,8 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     $routes->get('profile', 'Admin\ProfileController::index');
     $routes->post('profile/update', 'Admin\ProfileController::update');
     $routes->post('profile/password', 'Admin\ProfileController::updatePassword');
+
+
     
 });
 
@@ -108,6 +110,7 @@ $routes->group('staff', ['filter' => 'auth'], function($routes) {
     $routes->post('laporan/resubmit/(:num)', 'Staff\Laporan::resubmit/$1');
     $routes->get('profile', 'Staff\Profile::index');
     $routes->post('profile/update', 'Staff\Profile::update');
+
 });
 
 // ATASAN
@@ -148,3 +151,12 @@ $routes->group('staff', ['filter' => 'auth'], function($routes) {
     $routes->get('task/input/(:num)', 'Staff\TaskController::input/$1'); // optional: detail input per indikator
     $routes->post('task/store', 'Staff\TaskController::store');      // simpan input indikator
 });
+
+
+// Notifications
+$routes->get('notifications/unread-count', 'Notifications::unreadCount');
+$routes->get('notifications/list', 'Notifications::list');
+$routes->post('notifications/mark/(:num)', 'Notifications::markRead/$1');
+$routes->post('notifications/mark-all', 'Notifications::markAllRead');
+$routes->get('notifications/pending-count', 'Notifications::pendingTaskCount');
+
