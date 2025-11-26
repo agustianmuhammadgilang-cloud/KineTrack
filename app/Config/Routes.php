@@ -78,6 +78,12 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     $routes->get('pengukuran/output', 'Admin\Pengukuran::output'); // tampil tabel output
     $routes->get('pengukuran/export/(:num)/(:num)', 'Admin\Pengukuran::export/$1/$2'); // export
     $routes->get('pengukuran/output/detail/(:num)/(:num)/(:num)', 'Admin\Pengukuran::detail/$1/$2/$3');
+    
+// Profile
+    $routes->get('profile', 'Admin\ProfileController::index');
+    $routes->post('profile/update', 'Admin\ProfileController::update');
+    $routes->post('profile/password', 'Admin\ProfileController::updatePassword');
+
 });
 
 // ADMIN - DETAIL BIDANG
@@ -95,10 +101,6 @@ $routes->get('admin/bidang-select', 'Admin\BidangDetail::select', ['filter' => '
 $routes->group('staff', ['filter' => 'auth'], function($routes) {
     $routes->get('/', 'Staff\Dashboard::index');  
     $routes->get('dashboard', 'Staff\Dashboard::index');
-
-    // Tambahkan route markRead untuk notifikasi
-    $routes->post('dashboard/markRead/(:num)', 'Staff\Dashboard::markRead/$1');
-
     $routes->get('laporan', 'Staff\Laporan::index');
     $routes->get('laporan/create', 'Staff\Laporan::create');
     $routes->post('laporan/store', 'Staff\Laporan::store');
@@ -106,11 +108,6 @@ $routes->group('staff', ['filter' => 'auth'], function($routes) {
     $routes->post('laporan/resubmit/(:num)', 'Staff\Laporan::resubmit/$1');
     $routes->get('profile', 'Staff\Profile::index');
     $routes->post('profile/update', 'Staff\Profile::update');
-
-    // Staff Task
-    $routes->get('task', 'Staff\TaskController::index');             
-    $routes->get('task/input/(:num)', 'Staff\TaskController::input/$1'); 
-    $routes->post('task/store', 'Staff\TaskController::store');      
 });
 
 // ATASAN
@@ -130,11 +127,13 @@ $routes->group('atasan', ['filter' => 'auth'], function($routes){
 $routes->get('admin/indikator/getKode/(:num)', 'Admin\Indikator::getKode/$1');
 $routes->get('admin/sasaran/getKode/(:num)', 'Admin\Sasaran::getKode/$1');
 
+
 $routes->get('admin/pic/getSasaran', 'Admin\PicController::getSasaran');
 $routes->get('admin/pic/getIndikator', 'Admin\PicController::getIndikator');
 $routes->get('admin/pic/getJabatan', 'Admin\PicController::getJabatan');
 $routes->get('admin/pic/getPegawai', 'Admin\PicController::getPegawai');
 
+// Admin PIC
 $routes->get('admin/pic', 'Admin\PicController::index');
 $routes->get('admin/pic/create', 'Admin\PicController::create');
 $routes->post('admin/pic/store', 'Admin\PicController::store');
@@ -142,5 +141,10 @@ $routes->get('admin/pic/edit/(:num)', 'Admin\PicController::edit/$1');
 $routes->post('admin/pic/update/(:num)', 'Admin\PicController::update/$1');
 $routes->get('admin/pic/delete/(:num)', 'Admin\PicController::delete/$1');
 
-$routes->get('admin/indikator/getKode/(:num)', 'Admin\Indikator::getKode/$1');
-$routes->get('admin/sasaran/getKode/(:num)', 'Admin\Sasaran::getKode/$1');
+
+/// Staff Task
+$routes->group('staff', ['filter' => 'auth'], function($routes) {
+    $routes->get('task', 'Staff\TaskController::index');             // daftar task PIC staff
+    $routes->get('task/input/(:num)', 'Staff\TaskController::input/$1'); // optional: detail input per indikator
+    $routes->post('task/store', 'Staff\TaskController::store');      // simpan input indikator
+});

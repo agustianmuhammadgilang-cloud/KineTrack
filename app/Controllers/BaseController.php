@@ -51,10 +51,8 @@ abstract class BaseController extends Controller
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
-         // Load helper globalcount
-    helper('globalcount');
+        // Preload any models, libraries, etc, here.
 
-    // Ambil pending task untuk user ini
-    $this->pending_count = getPendingTaskCount(session('user_id'));
+        // E.g.: $this->session = service('session');
     }
 }

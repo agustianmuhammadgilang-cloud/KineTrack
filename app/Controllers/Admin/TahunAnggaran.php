@@ -4,8 +4,6 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\TahunAnggaranModel;
-use App\Models\NotificationModel;
-use App\Models\UserModel;
 
 class TahunAnggaran extends BaseController
 {
@@ -29,26 +27,10 @@ class TahunAnggaran extends BaseController
 
     public function store()
     {
-        $tahun = $this->request->getPost('tahun');
-        $status = $this->request->getPost('status');
-
         $this->model->insert([
-            'tahun'  => $tahun,
-            'status' => $status
+            'tahun'  => $this->request->getPost('tahun'),
+            'status' => $this->request->getPost('status')
         ]);
-
-        // ======= NOTIFIKASI STAFF =======
-        $notificationModel = new NotificationModel();
-        $staffUsers = (new UserModel())->where('role','staff')->findAll();
-        foreach ($staffUsers as $staff) {
-            $notificationModel->insert([
-                'user_id' => $staff['id'],
-                'title'   => 'Tahun Anggaran Ditambahkan',
-                'message' => "Admin menambahkan Tahun Anggaran baru: $tahun",
-                'type'    => 'success',
-                'is_read' => 0
-            ]);
-        }
 
         return redirect()->to('/admin/tahun')->with('success', 'Tahun berhasil ditambahkan');
     }
@@ -61,12 +43,9 @@ class TahunAnggaran extends BaseController
 
     public function update($id)
     {
-        $tahun = $this->request->getPost('tahun');
-        $status = $this->request->getPost('status');
-
         $this->model->update($id, [
-            'tahun'  => $tahun,
-            'status' => $status,
+            'tahun'  => $this->request->getPost('tahun'),
+            'status' => $this->request->getPost('status'),
         ]);
 
         return redirect()->to('/admin/tahun')->with('success', 'Tahun berhasil diupdate');
