@@ -73,20 +73,20 @@ class PicController extends BaseController
 
         // SIMPAN PIC
         $this->picModel->insert([
-    'indikator_id' => $indikatorId,
-    'user_id'      => $userId,
-    'tahun_id'     => $tahunId,
-    'sasaran_id'   => $sasaranId,
-    'tw'           => $tw,
-    'bidang_id'    => $user['bidang_id'],
-    'jabatan_id'   => $user['jabatan_id']
-]);
+            'indikator_id' => $indikatorId,
+            'user_id'      => $userId,
+            'tahun_id'     => $tahunId,
+            'sasaran_id'   => $sasaranId,
+            'tw'           => $tw,
+            'bidang_id'    => $user['bidang_id'],
+            'jabatan_id'   => $user['jabatan_id']
+        ]);
 
-$this->notifModel->insert([
-    'user_id' => $userId,
-    'message' => "Anda ditugaskan mengisi indikator pada Triwulan $tw."
-]);
-
+        // NOTIFIKASI UNTUK STAFF
+        $this->notifModel->insert([
+            'user_id' => $userId,
+            'message' => "Anda ditugaskan mengisi indikator pada Triwulan $tw."
+        ]);
 
         $successUsers[] = $user['nama'];
     }

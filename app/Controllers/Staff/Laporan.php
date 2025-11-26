@@ -10,8 +10,6 @@ class Laporan extends BaseController
 {
     public function index()
 {
-    $data['pending_count'] = $this->pending_count;
-
     $laporanModel = new LaporanModel();
     $userModel = new UserModel();
 

@@ -8,17 +8,15 @@ class PengukuranModel extends Model
     protected $primaryKey = 'id';
 
     protected $allowedFields = [
-    'indikator_id',
-    'tahun_id',
-    'triwulan',
-    'progress',
-    'realisasi',
-    'kendala',
-    'strategi',
-    'file_dukung',
-    'created_by'
-];
-
+        'indikator_id',
+        'tahun_id',
+        'triwulan',
+        'target',
+        'realisasi',
+        'persentase',
+        'catatan',
+        'created_by'
+    ];
 
     protected $returnType = 'array';
     protected $useTimestamps = true;

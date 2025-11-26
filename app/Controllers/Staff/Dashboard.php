@@ -4,66 +4,57 @@ namespace App\Controllers\Staff;
 
 use App\Controllers\BaseController;
 use App\Models\LaporanModel;
-use App\Models\NotificationModel;
 
 class Dashboard extends BaseController
 {
     public function index()
     {
-        // ==================== PENDING TASK ====================
-        $data['pending_count'] = $this->pending_count;
-
+        $laporanModel = new LaporanModel();
         $userId = session('user_id');
 
-        // ==================== LAPORAN ====================
-        $laporanModel = new LaporanModel();
-
+        // Total laporan diterima
         $approved = $laporanModel->where('user_id', $userId)
                                  ->where('status', 'approved')
                                  ->countAllResults();
 
+        // Total laporan ditolak
         $rejected = $laporanModel->where('user_id', $userId)
                                  ->where('status', 'rejected')
                                  ->countAllResults();
 
+        // Progress
         $total = $approved + $rejected;
         $progress = ($total > 0) ? round(($approved / $total) * 100) : 0;
 
-        $daily   = $laporanModel->getDailyData($userId);
-        $weekly  = $laporanModel->getWeeklyData($userId);
+        // Ambil grafik harian bulan ini
+        $daily = $laporanModel->getDailyData($userId);
+
+        // Ambil grafik mingguan
+        $weekly = $laporanModel->getWeeklyData($userId);
+
+        // Ambil grafik bulanan
         $monthly = $laporanModel->getMonthlyData($userId);
 
-        $data['approved'] = $approved;
-        $data['rejected'] = $rejected;
-        $data['progress'] = $progress;
-        $data['daily']    = $daily;
-        $data['weekly']   = $weekly;
-        $data['monthly']  = $monthly;
+        $data = [
+            'approved' => $approved,
+            'rejected' => $rejected,
+            'progress' => $progress,
+            'daily'    => $daily,
+            'weekly'   => $weekly,
+            'monthly'  => $monthly,
+        ];
 
-        // ==================== NOTIFIKASI ====================
-        $notifModel = new NotificationModel();
+        $notifModel = new \App\Models\NotificationModel();
+        $data['notifikasi'] = $notifModel
+        ->where('user_id', session()->get('user_id'))
+        ->where('status', 'unread')
+        ->orderBy('created_at', 'DESC')
+        ->findAll();
 
-        // Ambil notifikasi belum dibaca
-        $data['notifications'] = $notifModel
-            ->where('user_id', $userId)
-            ->where('is_read', 0)
-            ->orderBy('created_at', 'DESC')
-            ->findAll();
-
-        // Tandai semua notifikasi sebagai sudah dibaca
-        foreach ($data['notifications'] as $n) {
-            $notifModel->update($n['id'], ['is_read' => 1]);
-        }
-
-        // ==================== RETURN VIEW ====================
-        return view('staff/dashboard', $data);
-    }
-
-    public function markRead($id)
-{
-    $notifModel = new \App\Models\NotificationModel();
-    $notifModel->update($id, ['is_read' => 1]);
-    return $this->response->setStatusCode(200);
+        foreach ($data['notifikasi'] as $n) {
+    $notifModel->update($n['id'], ['status' => 'read']);
 }
 
+        return view('staff/dashboard', $data);
+    }
 }
