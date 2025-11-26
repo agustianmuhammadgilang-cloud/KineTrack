@@ -5,11 +5,6 @@
     Dashboard Kinerja Saya
 </h3>
 
-<?php foreach ($notifikasi as $n): ?>
-<div class="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded mb-6 shadow">
-    <?= esc($n['message']) ?>
-</div>
-<?php endforeach; ?>
 
 <!-- STATISTIC CARDS -->
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
