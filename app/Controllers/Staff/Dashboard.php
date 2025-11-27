@@ -55,6 +55,10 @@ class Dashboard extends BaseController
     $notifModel->update($n['id'], ['status' => 'read']);
 }
 
+helper('globalcount');
+$data['pending_task_count'] = getPendingTaskCount(session('user_id'));
+
+
         return view('staff/dashboard', $data);
     }
 }

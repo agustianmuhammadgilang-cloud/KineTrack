@@ -24,13 +24,21 @@ class TaskController extends BaseController
     }
 
     // index: menampilkan daftar task staff
-    public function index()
-    {
-        $userId = session()->get('user_id');
-        $tasks  = $this->picModel->getTasksForUser($userId);
+   public function index()
+{
+    $userId = session()->get('user_id');
 
-        return view('staff/task/index', ['tasks' => $tasks]);
-    }
+    helper('globalcount');
+    $pending = getPendingTaskCount($userId);
+
+    $data = [
+        'tasks' => $this->picModel->getTasksForUser($userId),
+        'pending_task_count' => $pending
+    ];
+
+    return view('staff/task/index', $data);
+}
+
 
     // input: form pengukuran per indikator
     public function input($indikator_id)
@@ -63,50 +71,74 @@ class TaskController extends BaseController
 
     // store: simpan input pengukuran
     public function store()
-    {
-        $indikator_id = $this->request->getPost('indikator_id');
-        $user_id      = session()->get('user_id');
-        $tw           = $this->request->getPost('tw');
-        $tahun_id     = $this->request->getPost('tahun_id');
+{
+    $indikator_id = $this->request->getPost('indikator_id');
+    $user_id      = session()->get('user_id');
+    $tw           = $this->request->getPost('tw');
+    $tahun_id     = $this->request->getPost('tahun_id');
+    $sasaran_id   = $this->request->getPost('sasaran_id');
 
-        // Validasi minimal
-        if (!$indikator_id || !$user_id || !$tw || !$tahun_id) {
-            return redirect()->back()->with('alert', [
-                'type'    => 'warning',
-                'title'   => 'Gagal',
-                'message' => 'Data pengukuran tidak lengkap.'
-            ]);
-        }
-
-        $data = [
-            'indikator_id' => $indikator_id,
-            'user_id'      => $user_id,
-            'tw'           => $tw,
-            'tahun_id'     => $tahun_id,
-            'progress'     => $this->request->getPost('progress'),
-            'realisasi'    => $this->request->getPost('realisasi'),
-            'kendala'      => $this->request->getPost('kendala'),
-            'strategi'     => $this->request->getPost('strategi'),
-            'file_dukung'  => null
-        ];
-
-        // Buat notifikasi ke admin
-$notifModel = new \App\Models\NotificationModel();
-
-$notifModel->insert([
-    'receiver_id' => 1, // ID ADMIN utama (bisa diganti dinamis)
-    'title'       => 'Input Pengukuran Baru',
-    'message'     => 'PIC telah mengisi indikator: ' . $indikator['nama_indikator'],
-    'is_read'     => 0
-]);
-
-
-        $this->pengukuranModel->insert($data);
-
-        return redirect()->to('/staff/task')->with('alert', [
-            'type'    => 'success',
-            'title'   => 'Berhasil',
-            'message' => 'Pengukuran berhasil disimpan.'
+    // Validasi minimal
+    if (!$indikator_id || !$user_id || !$tw || !$tahun_id) {
+        return redirect()->back()->with('alert', [
+            'type'    => 'warning',
+            'title'   => 'Gagal',
+            'message' => 'Data pengukuran tidak lengkap.'
         ]);
     }
+
+    // Simpan pengukuran
+    $data = [
+        'indikator_id' => $indikator_id,
+        'user_id'      => $user_id,
+        'tw'           => $tw,
+        'tahun_id'     => $tahun_id,
+        'realisasi'    => $this->request->getPost('realisasi'),
+        'progress'     => $this->request->getPost('progress'),
+        'kendala'      => $this->request->getPost('kendala'),
+        'strategi'     => $this->request->getPost('strategi'),
+        'file_dukung'  => null
+    ];
+
+    // insert pengukuran
+    $this->pengukuranModel->insert($data);
+    $pengukuran_id = $this->pengukuranModel->getInsertID();
+
+    // ======================================================
+    // 🔔 KIRIM NOTIFIKASI KE SEMUA ADMIN (FITUR NO.4)
+    // ======================================================
+
+    $userModel  = new \App\Models\UserModel();
+    $notifModel = new \App\Models\NotificationModel();
+
+    $adminList = $userModel->where('role', 'admin')->findAll();
+
+    foreach ($adminList as $admin) {
+        $notifModel->insert([
+            'user_id' => $admin['id'],
+            'message' => "Staff " . session('nama') . " mengirim pengukuran baru.",
+            'meta'    => json_encode([
+                'indikator_id'   => $indikator_id,
+                'tahun_id'       => $tahun_id,
+                'sasaran_id'     => $sasaran_id,
+                'tw'             => $tw,
+                'submitted_by'   => $user_id,
+                'pengukuran_id'  => $pengukuran_id,
+                'type'           => 'pengukuran_submitted'
+            ]),
+            'status' => 'unread'
+        ]);
+    }
+
+    // ======================================================
+    // SweetAlert untuk STAFF
+    // ======================================================
+
+    return redirect()->to('/staff/task')->with('alert', [
+        'type'    => 'success',
+        'title'   => 'Berhasil',
+        'message' => 'Pengukuran berhasil disimpan & admin menerima notifikasi.'
+    ]);
+}
+
 }

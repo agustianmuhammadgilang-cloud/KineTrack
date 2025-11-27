@@ -355,34 +355,52 @@ Swal.fire({
     text: '<?= esc($a['message']) ?>'
 });
 </script>
+
+
 <?php endif; ?>
-
-
 <script>
-function loadStaffNotif() {
-    fetch("<?= base_url('staff/notifications/list') ?>")
-        .then(res => res.json())
-        .then(data => {
-            const unread = data.filter(n => n.is_read == 0).length;
+document.addEventListener("DOMContentLoaded", () => {
 
-            // Update badge task sidebar
-            const badge = document.querySelector('#task-badge');
+    let lastNotifId = 0;
 
-            if (badge) {
-                if (unread > 0) {
-                    badge.innerHTML = unread;
-                    badge.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
+    async function checkNewNotif() {
+        try {
+            const res = await fetch("<?= base_url('notifications/latest') ?>", {
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
                 }
-            }
-        });
-}
+            });
 
-// polling setiap 5 detik
-setInterval(loadStaffNotif, 5000);
-loadStaffNotif();
+            if (!res.ok) return;
+
+            const data = await res.json();
+            if (!data || !data.id) return;
+
+            // hanya tampilkan jika benar-benar notif baru
+            if (data.id !== lastNotifId) {
+                lastNotifId = data.id;
+
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    timer: 5000,
+                    showConfirmButton: false,
+                    icon: data.type ?? 'info',
+                    title: data.message
+                });
+            }
+
+        } catch (err) {
+            console.error("Error fetch notifikasi:", err);
+        }
+    }
+
+    // cek setiap 6 detik
+    setInterval(checkNewNotif, 6000);
+    checkNewNotif();
+});
 </script>
+
 
 
 </body>

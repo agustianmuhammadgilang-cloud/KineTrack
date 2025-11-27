@@ -47,16 +47,26 @@
             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#user" /></svg>
             Laporan
         </a>
-        <!-- MENU TASK BARU -->
-<a href="<?= base_url('staff/task') ?>" class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors relative">
-    <svg class="w-5 h-5 mr-3"><use href="#check-badge" /></svg>
+        <!-- MENU TASK -->
+<a href="<?= base_url('staff/task') ?>" 
+   class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors relative">
+
+    <svg class="w-5 h-5 mr-3">
+        <use href="#check-badge" />
+    </svg>
+
     Task
 
-    <!-- BADGE ANKA NOTIF -->
-   <span id="task-badge" 
-      class="absolute right-6 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full hidden">
-</span>
+    <!-- BADGE TAILWIND -->
+    <?php if (!empty($pending_task_count) && $pending_task_count > 0): ?>
+        <span 
+            class="absolute right-6 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow">
+            <?= $pending_task_count ?>
+        </span>
+    <?php endif; ?>
 </a>
+
+
 
 </a>
     </nav>
@@ -132,6 +142,134 @@ function loadStaffNotif() {
 setInterval(loadStaffNotif, 5000);
 loadStaffNotif();
 </script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const badge = document.getElementById('notif-badge');
+  const menu = document.getElementById('notif-menu');
+  const bell = document.getElementById('notif-bell');
+  const listEl = document.getElementById('notif-list');
+  const markAllBtn = document.getElementById('notif-mark-all');
+
+  async function fetchCount(){
+    try {
+      const res = await fetch('<?= base_url('notifications/unread-count') ?>');
+      if(!res.ok) throw 0;
+      const j = await res.json();
+      const c = j.count ?? 0;
+      if (c > 0) {
+        badge.textContent = c;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    } catch(e) {
+      // ignore
+    }
+  }
+
+  async function fetchList(){
+    try {
+      const res = await fetch('<?= base_url('notifications/list') ?>');
+      if(!res.ok) return;
+      const arr = await res.json();
+      listEl.innerHTML = '';
+      if (arr.length === 0) {
+        listEl.innerHTML = '<div class="p-3 text-sm text-gray-600">Tidak ada notifikasi</div>';
+        return;
+      }
+      for (const n of arr) {
+        const date = new Date(n.created_at);
+        const meta = n.meta ? JSON.parse(n.meta) : null;
+        const item = document.createElement('div');
+        item.className = 'p-3 border-b hover:bg-gray-50 flex justify-between items-start';
+        item.innerHTML = `
+            <div class="text-sm">
+              <div class="font-medium text-gray-800">${escapeHtml(n.message)}</div>
+              <div class="text-xs text-gray-500 mt-1">${date.toLocaleString()}</div>
+            </div>
+            <div class="ml-2">
+              <button data-id="${n.id}" class="notif-mark-read text-xs text-blue-600">Tandai</button>
+            </div>
+        `;
+        listEl.appendChild(item);
+      }
+
+      // attach mark buttons
+      document.querySelectorAll('.notif-mark-read').forEach(btn=>{
+        btn.addEventListener('click', async (e)=>{
+          const id = btn.getAttribute('data-id');
+          await fetch('<?= base_url('notifications/mark') ?>/' + id, { method:'POST' });
+          await fetchCount();
+          await fetchList();
+        });
+      });
+
+    } catch(e){}
+  }
+
+  // toggle menu
+  bell?.addEventListener('click', async (ev) => {
+    menu.classList.toggle('hidden');
+    if (!menu.classList.contains('hidden')) {
+      await fetchList();
+      // optional: mark all read on open? we keep manual
+    }
+  });
+
+  markAllBtn?.addEventListener('click', async ()=>{
+    await fetch('<?= base_url('notifications/mark-all') ?>', { method: 'POST' });
+    await fetchCount();
+    await fetchList();
+  });
+
+  // poll every 12s
+  fetchCount();
+  setInterval(fetchCount, 12000);
+
+  // safe escape function
+  function escapeHtml(str){
+    if(!str) return '';
+    return String(str).replace(/[&<>"'`=\/]/g, function(s){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;'}[s];
+    });
+  }
+});
+
+async function fetchPending(){
+  try {
+    const res = await fetch('<?= base_url('notifications/pending-count') ?>');
+    const j = await res.json();
+    const el = document.getElementById('task-badge');
+    if (j.count > 0) {
+      el.textContent = j.count;
+      el.classList.remove('hidden');
+    } else {
+      el.classList.add('hidden');
+    }
+  } catch(e){}
+}
+fetchPending();
+setInterval(fetchPending, 12000);
+
+</script>
+
+<?php if (!empty($notifikasi)): ?>
+<script>
+<?php foreach($notifikasi as $n): ?>
+Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon: 'info',
+    title: <?= json_encode($n['message']) ?>,
+    showConfirmButton: false,
+    timer: 3500
+});
+<?php endforeach; ?>
+</script>
+<?php endif; ?>
+
 
 
 </body>
