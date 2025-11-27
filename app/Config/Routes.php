@@ -159,4 +159,3 @@ $routes->get('notifications/list', 'Notifications::list');
 $routes->post('notifications/mark/(:num)', 'Notifications::markRead/$1');
 $routes->post('notifications/mark-all', 'Notifications::markAllRead');
 $routes->get('notifications/pending-count', 'Notifications::pendingTaskCount');
-
