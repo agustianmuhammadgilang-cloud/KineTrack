@@ -34,6 +34,23 @@
     background-color: rgba(255,255,255,0.2);
     border-radius: 3px;
   }
+
+
+
+
+@keyframes pulse {
+  0%   { transform: scale(1); opacity: 1; }
+  50%  { transform: scale(1.15); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.bell-pulse {
+  animation: pulse 1s infinite;
+}
+
+
+
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
@@ -452,20 +469,20 @@ document.addEventListener("DOMContentLoaded", () => {
         let parsed = {};
         try { parsed = JSON.parse(meta); } catch {}
 
-        // ===============================
-        //   REDIRECT KHUSUS ADMIN
-        // ===============================
-        if (parsed.pengukuran_id) {
-            window.location.href = "/admin/pengukuran/detail/" + parsed.pengukuran_id;
-            return;
-        }
+//         // ===============================
+//         //   REDIRECT KHUSUS ADMIN
+//         // ===============================
+//         if (parsed.pengukuran_id) {
+//             window.location.href = "/admin/pengukuran/detail/" + parsed.pengukuran_id;
+//             return;
+//         }
 
-      if (parsed.sasaran_id && parsed.indikator_id && parsed.tw) {
-    window.location.href = "/admin/pengukuran/output/detail/"
-        + parsed.sasaran_id + "/"
-        + parsed.indikator_id + "/"
-        + parsed.tw;
-}
+//       if (parsed.sasaran_id && parsed.indikator_id && parsed.tw) {
+//     window.location.href = "/admin/pengukuran/output/detail/"
+//         + parsed.sasaran_id + "/"
+//         + parsed.indikator_id + "/"
+//         + parsed.tw;
+// }
 
     }
 
