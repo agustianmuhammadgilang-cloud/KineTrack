@@ -152,10 +152,25 @@ $routes->group('staff', ['filter' => 'auth'], function($routes) {
     $routes->post('task/store', 'Staff\TaskController::store');      // simpan input indikator
 });
 
+// =============================
+// NOTIFICATIONS
+// =============================
 
-// Notifications
+// Jumlah unread
 $routes->get('notifications/unread-count', 'Notifications::unreadCount');
+
+// List notif (default 10 atau pakai parameter)
 $routes->get('notifications/list', 'Notifications::list');
+$routes->get('notifications/list/(:num)', 'Notifications::list/$1');
+
+// === PENTING: Notifikasi terbaru untuk toast popup ===
+$routes->get('notifications/latest', 'Notifications::latest'); // <-- FIX
+
+// Mark single read
 $routes->post('notifications/mark/(:num)', 'Notifications::markRead/$1');
+
+// Mark all read
 $routes->post('notifications/mark-all', 'Notifications::markAllRead');
+
+// Pending task count (jika dipakai staff)
 $routes->get('notifications/pending-count', 'Notifications::pendingTaskCount');
