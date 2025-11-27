@@ -361,47 +361,136 @@ Swal.fire({
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-    let lastNotifId = 0;
+  let lastNotifId = localStorage.getItem("lastNotifId") ?? 0;
 
+
+    // =========================================================
+    // 1. TOAST – Notifikasi Terbaru
+    // =========================================================
     async function checkNewNotif() {
         try {
-            const res = await fetch("<?= base_url('notifications/latest') ?>", {
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest"
-                }
-            });
+            const res = await fetch("<?= base_url('notifications/latest') ?>");
+            const notif = await res.json();
 
-            if (!res.ok) return;
+            if (!notif || !notif.id) return;
 
-            const data = await res.json();
-            if (!data || !data.id) return;
+         if (notif.id != lastNotifId) {
+    lastNotifId = notif.id;
+    localStorage.setItem("lastNotifId", notif.id);
 
-            // hanya tampilkan jika benar-benar notif baru
-            if (data.id !== lastNotifId) {
-                lastNotifId = data.id;
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        timer: 10000,  // bertahan 10 detik
+        timerProgressBar: true,
+        showConfirmButton: false,
+        icon: 'info',
+        title: notif.message
+    });
+}
 
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    timer: 5000,
-                    showConfirmButton: false,
-                    icon: data.type ?? 'info',
-                    title: data.message
-                });
-            }
 
-        } catch (err) {
-            console.error("Error fetch notifikasi:", err);
+        } catch (e) {}
+    }
+
+    // =========================================================
+    // 2. BADGE MERAH
+    // =========================================================
+    async function refreshBadge() {
+        const res = await fetch("<?= base_url('notifications/unread-count') ?>");
+        const data = await res.json();
+
+        const badge = document.getElementById('notifBadge');
+
+        if (data.count > 0) {
+            badge.innerText = data.count;
+            badge.classList.remove("hidden");
+        } else {
+            badge.classList.add("hidden");
         }
     }
 
-    // cek setiap 6 detik
-    setInterval(checkNewNotif, 6000);
+    // =========================================================
+    // 3. LIST DROPDOWN
+    // =========================================================
+    async function loadDropdown() {
+        const list = document.getElementById("notifList");
+        const res = await fetch("<?= base_url('notifications/list/10') ?>");
+        const data = await res.json();
+
+        list.innerHTML = "";
+
+        data.forEach(n => {
+            const li = document.createElement("li");
+            li.className = "px-4 py-2 hover:bg-gray-100 cursor-pointer";
+
+            li.innerHTML = `
+                <div class="font-semibold ${n.status === 'unread' ? 'text-blue-600' : ''}">
+                    ${n.message}
+                </div>
+                <div class="text-xs text-gray-600">${n.created_at}</div>
+            `;
+
+            li.addEventListener("click", () => {
+                markAsRead(n.id, n.meta);
+            });
+
+            list.appendChild(li);
+        });
+    }
+
+    // =========================================================
+    // 4. MARK AS READ & REDIRECT (KHUSUS ADMIN)
+    // =========================================================
+    async function markAsRead(id, meta) {
+
+        await fetch("<?= base_url('notifications/mark') ?>/" + id, { method: "POST" });
+
+        refreshBadge();
+        loadDropdown();
+
+        let parsed = {};
+        try { parsed = JSON.parse(meta); } catch {}
+
+        // ===============================
+        //   REDIRECT KHUSUS ADMIN
+        // ===============================
+        if (parsed.pengukuran_id) {
+            window.location.href = "/admin/pengukuran/detail/" + parsed.pengukuran_id;
+            return;
+        }
+
+      if (parsed.sasaran_id && parsed.indikator_id && parsed.tw) {
+    window.location.href = "/admin/pengukuran/output/detail/"
+        + parsed.sasaran_id + "/"
+        + parsed.indikator_id + "/"
+        + parsed.tw;
+}
+
+    }
+
+    // =========================================================
+    // 5. TANDAI SEMUA DIBACA
+    // =========================================================
+    window.markAllNotif = async function () {
+        await fetch("<?= base_url('notifications/mark-all') ?>", { method: "POST" });
+        refreshBadge();
+        loadDropdown();
+    };
+
+    // Auto-refresh tiap 6 detik
+    setInterval(() => {
+        checkNewNotif();
+        refreshBadge();
+        loadDropdown();
+    }, 6000);
+
+    // Load awal
     checkNewNotif();
+    refreshBadge();
+    loadDropdown();
 });
 </script>
-
-
 
 </body>
 </html>

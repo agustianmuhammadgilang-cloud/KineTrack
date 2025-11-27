@@ -1,28 +1,28 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\NotificationModel;
-use App\Models\UserModel;
 
 class Notifications extends BaseController
 {
-    protected $notifModel;
-    protected $userModel;
+    protected $notif;
 
     public function __construct()
     {
-        $this->notifModel = new NotificationModel();
-        $this->userModel  = new UserModel();
+        $this->notif = new NotificationModel();
     }
 
-    // GET json { count: n }
+    // ========================================================
+    // 1. Jumlah notifikasi BELUM dibaca
+    // ========================================================
     public function unreadCount()
     {
         $userId = session('user_id');
-        if (!$userId) return $this->response->setJSON(['count'=>0]);
+        if (!$userId) return $this->response->setJSON(['count' => 0]);
 
-        $count = $this->notifModel
+        $count = $this->notif
             ->where('user_id', $userId)
             ->where('status', 'unread')
             ->countAllResults();
@@ -30,64 +30,70 @@ class Notifications extends BaseController
         return $this->response->setJSON(['count' => (int)$count]);
     }
 
-    // GET list terbaru (default latest 10)
+    // ========================================================
+    // 2. List notifikasi terbaru
+    // ========================================================
     public function list($limit = 10)
     {
         $userId = session('user_id');
         if (!$userId) return $this->response->setJSON([]);
 
-        $list = $this->notifModel
+        $data = $this->notif
             ->where('user_id', $userId)
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('id', 'DESC')
             ->limit((int)$limit)
-            ->findAll();
+            ->find();
 
-        return $this->response->setJSON($list);
+        return $this->response->setJSON($data);
     }
 
-    // POST mark single read: /notifications/mark/(:num)
+    // ========================================================
+    // 3. Tandai satu notifikasi sebagai read
+    // ========================================================
     public function markRead($id)
     {
         $userId = session('user_id');
-        $n = $this->notifModel->find($id);
-        if (!$n || $n['user_id'] != $userId) {
+        if (!$userId) return $this->response->setStatusCode(401)->setBody('Unauthenticated');
+
+        $notif = $this->notif->find($id);
+        if (!$notif || $notif['user_id'] != $userId) {
             return $this->response->setStatusCode(404)->setBody('Not found');
         }
 
-        $this->notifModel->update($id, ['status' => 'read']);
+        $this->notif->update($id, ['status' => 'read']);
+
         return $this->response->setJSON(['ok' => true]);
     }
 
-    // POST mark all read
+    // ========================================================
+    // 4. Tandai semua sebagai read
+    // ========================================================
     public function markAllRead()
     {
         $userId = session('user_id');
-        $this->notifModel
+
+        $this->notif
             ->where('user_id', $userId)
             ->where('status', 'unread')
             ->set(['status' => 'read'])
             ->update();
+
         return $this->response->setJSON(['ok' => true]);
     }
 
+    // ========================================================
+    // 5. Notifikasi terbaru (1 item) — untuk toast
+    // ========================================================
+    public function latest()
+    {
+        $userId = session('user_id');
+        if (!$userId) return $this->response->setJSON([]);
 
-    public function pendingTaskCount()
-{
-    $userId = session('user_id');
-    if (!$userId) return $this->response->setJSON(['count'=>0]);
+        $n = $this->notif
+            ->where('user_id', $userId)
+            ->orderBy('id', 'DESC')
+            ->first();
 
-    $picModel = new \App\Models\PicModel();
-    $pengukuran = new \App\Models\PengukuranModel();
-
-    $tasks = $picModel->getTasksForUser($userId);
-    $pending = 0;
-    foreach ($tasks as $t) {
-        $cek = $pengukuran->where('indikator_id', $t['indikator_id'])
-                          ->where('user_id', $userId)
-                          ->first();
-        if (!$cek) $pending++;
+        return $this->response->setJSON($n ?? []);
     }
-    return $this->response->setJSON(['count' => (int)$pending]);
-}
-
 }
