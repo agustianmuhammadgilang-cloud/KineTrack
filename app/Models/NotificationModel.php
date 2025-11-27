@@ -8,5 +8,16 @@ class NotificationModel extends Model
 {
     protected $table = 'notifications';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['user_id', 'message', 'status', 'created_at'];
+
+    protected $allowedFields = [
+        'user_id',
+        'message',
+        'meta',
+        'status',
+        'created_at'
+    ];
+
+    protected $useTimestamps = false;
+    protected $createdField  = 'created_at';
+    protected $updatedField  = null;
 }
