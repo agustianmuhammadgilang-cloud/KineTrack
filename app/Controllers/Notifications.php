@@ -33,19 +33,33 @@ class Notifications extends BaseController
     // ========================================================
     // 2. List notifikasi terbaru
     // ========================================================
-    public function list($limit = 10)
-    {
-        $userId = session('user_id');
-        if (!$userId) return $this->response->setJSON([]);
+ public function list($limit = 10)
+{
+    $userId = session('user_id');
+    if (!$userId) return $this->response->setJSON([]);
 
-        $data = $this->notif
-            ->where('user_id', $userId)
-            ->orderBy('id', 'DESC')
-            ->limit((int)$limit)
-            ->find();
+    $data = $this->notif
+        ->where('user_id', $userId)
+        ->orderBy('id', 'DESC')
+        ->limit((int)$limit)
+        ->find();
 
-        return $this->response->setJSON($data);
+    foreach ($data as &$row) {
+        $row['url'] = '#'; // default
+
+        if (!empty($row['meta'])) {
+            $m = json_decode($row['meta'], true);
+
+            // --- FIX UTAMA ---
+            if (!empty($m['pengukuran_id'])) {
+                $row['url'] = base_url("admin/pengukuran/detail/" . $m['pengukuran_id']);
+            }
+        }
     }
+
+    return $this->response->setJSON($data);
+}
+
 
     // ========================================================
     // 3. Tandai satu notifikasi sebagai read
@@ -84,16 +98,30 @@ class Notifications extends BaseController
     // ========================================================
     // 5. Notifikasi terbaru (1 item) — untuk toast
     // ========================================================
-    public function latest()
-    {
-        $userId = session('user_id');
-        if (!$userId) return $this->response->setJSON([]);
+  public function latest()
+{
+    $userId = session('user_id');
+    if (!$userId) return $this->response->setJSON([]);
 
-        $n = $this->notif
-            ->where('user_id', $userId)
-            ->orderBy('id', 'DESC')
-            ->first();
+    $n = $this->notif
+        ->where('user_id', $userId)
+        ->orderBy('id', 'DESC')
+        ->first();
 
-        return $this->response->setJSON($n ?? []);
+    if ($n) {
+        $n['url'] = '#';
+
+        if (!empty($n['meta'])) {
+            $m = json_decode($n['meta'], true);
+
+            // --- FIX UTAMA ---
+            if (!empty($m['pengukuran_id'])) {
+                $n['url'] = base_url("admin/pengukuran/detail/" . $m['pengukuran_id']);
+            }
+        }
     }
+
+    return $this->response->setJSON($n ?? []);
+}
+
 }
