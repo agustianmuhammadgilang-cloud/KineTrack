@@ -10,6 +10,40 @@
             <span class="text-xl"></span>
         </h2>
 
+
+        <!-- NOTIFIKASI -->
+<div x-data="{ openNotif: false }" class="relative mr-4">
+    <button @click="openNotif = !openNotif" class="relative p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+        <svg class="w-6 h-6 text-gray-700 dark:text-gray-200" fill="none">
+            <?= heroicons_outline('bell') ?>
+        </svg>
+        <?php if($unreadCount > 0): ?>
+        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+            <?= $unreadCount ?>
+        </span>
+        <?php endif; ?>
+    </button>
+
+    <!-- Dropdown -->
+    <div x-show="openNotif" x-transition @click.away="openNotif = false"
+         class="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-xl rounded-xl z-50">
+        
+        <?php if(empty($notifications)): ?>
+            <div class="p-4 text-gray-500 dark:text-gray-300 text-sm">Belum ada notifikasi.</div>
+        <?php else: ?>
+            <?php foreach($notifications as $notif): ?>
+                <div @click="markAsRead(<?= $notif['id'] ?>)"
+                     class="cursor-pointer px-4 py-2 border-b border-gray-100 dark:border-gray-700
+                            <?= $notif['status'] == 'unread' ? 'bg-yellow-100 dark:bg-yellow-800' : 'bg-white dark:bg-gray-800' ?> hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                    <p class="text-gray-800 dark:text-gray-200 text-sm"><?= esc($notif['message']) ?></p>
+                    <small class="text-gray-500 dark:text-gray-400 text-xs"><?= date('d M Y H:i', strtotime($notif['created_at'])) ?></small>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+</div>
+
+
         <!-- TOPBAR DASHBOARD (Polban Theme Hover) -->
 <div class="w-full flex items-center justify-end mb-6">
 
@@ -194,6 +228,8 @@
     <p class="text-center text-gray-500 dark:text-gray-400 mt-6 sm:mt-8 text-xs sm:text-sm">
         © <?= date('Y') ?> KINETRACK — Politeknik Negeri Bandung.
     </p>
+
+    
 
 </div>
 
