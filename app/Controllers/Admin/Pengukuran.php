@@ -178,12 +178,17 @@ class Pengukuran extends BaseController
     }
 
 
-    // ================================================================
-    // DETAIL
-    // ================================================================
-   public function detail($indikator_id, $tahun_id, $tw)
+// ================================================================
+// DETAIL PENGUKURAN (ADMIN) FINAL
+// ================================================================
+public function detail($indikator_id, $tahun_id, $tw)
 {
-    // Ambil indikator + nama sasaran
+    // Load model lain yang diperlukan
+    $tahunModel = new \App\Models\TahunAnggaranModel();
+
+    // =============================
+    // 1. Ambil indikator + sasaran
+    // =============================
     $indikator = $this->indikatorModel
         ->select('indikator_kinerja.*, sasaran_strategis.nama_sasaran')
         ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
@@ -194,22 +199,37 @@ class Pengukuran extends BaseController
         throw new \CodeIgniter\Exceptions\PageNotFoundException("Indikator tidak ditemukan");
     }
 
-    // Ambil pengukuran yang sudah diinput staff
+    // =============================
+    // 2. Ambil tahun dari tabel tahun_anggaran
+    // =============================
+    $tahunData = $tahunModel->find($tahun_id);
+    $tahun = $tahunData ? $tahunData['tahun'] : '-';
+
+    // =============================
+    // 3. Ambil semua input pengukuran staff
+    // =============================
     $pengukuran = $this->pengukuranModel
         ->select('pengukuran_kinerja.*, users.nama as user_nama')
         ->join('users', 'users.id = pengukuran_kinerja.user_id', 'left')
-        ->where('indikator_id', $indikator_id)
-        ->where('tahun_id', $tahun_id)
-        ->where('triwulan', $tw) // <-- pastikan nama kolom sesuai database
+        ->where('pengukuran_kinerja.indikator_id', $indikator_id)
+        ->where('pengukuran_kinerja.tahun_id', $tahun_id)
+        ->where('pengukuran_kinerja.triwulan', $tw)  // pastikan kolom = triwulan
+        ->orderBy('pengukuran_kinerja.created_at', 'DESC')
         ->findAll();
 
+    // =============================
+    // 4. Kirim ke view
+    // =============================
     return view('admin/pengukuran/detail_output', [
         'indikator'  => $indikator,
         'pengukuran' => $pengukuran,
-        'tahun_id'   => $tahun_id,
+        'tahun'      => $tahun,
         'tw'         => $tw
     ]);
 }
+
+
+
 
 
 

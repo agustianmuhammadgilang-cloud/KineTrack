@@ -2,113 +2,102 @@
 <?= $this->section('content') ?>
 
 <h3 class="text-2xl font-bold text-[var(--polban-blue)] mb-6">
-    Detail Pengukuran Indikator
+    Detail Pengukuran - Indikator
 </h3>
 
-<div class="bg-white shadow-md rounded-xl p-6 border border-gray-200">
+<!-- Informasi Indikator -->
+<div class="bg-white shadow-md rounded-xl p-6 border border-gray-200 mb-6">
 
-    <!-- HEADER INDIKATOR -->
-    <h4 class="text-xl font-semibold mb-2">
-        <?= esc($indikator['nama_indikator']) ?>
+    <h4 class="text-xl font-semibold text-gray-800 mb-4">
+        Informasi Indikator
     </h4>
-    <p class="text-gray-600 mb-4">
-        <strong>Sasaran:</strong> 
-        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
-            <?= esc($indikator['nama_sasaran']) ?>
-        </span>
+
+    <p class="text-gray-600 mb-1">
+        <strong>Sasaran Strategis:</strong> <?= esc($indikator['nama_sasaran']) ?>
     </p>
 
-    <!-- ==================================== -->
-    <!--          DAFTAR SELURUH PIC          -->
-    <!-- ==================================== -->
-    <?php 
-        use App\Models\PicModel; 
-        $pic = (new PicModel())->getPicByIndikator($indikator['id']); 
-    ?>
+    <p class="text-gray-600 mb-1">
+        <strong>Nama Indikator:</strong> <?= esc($indikator['nama_indikator']) ?>
+    </p>
 
-    <h4 class="text-lg font-semibold mb-4">PIC Terkait</h4>
-    <?php if (!empty($pic)): ?>
-        <div class="flex flex-wrap gap-4 mb-6">
-            <?php foreach ($pic as $p): ?>
-                <div class="bg-gray-100 px-3 py-2 rounded-lg shadow-sm">
-                    <strong><?= esc($p['nama']) ?></strong> 
-                    <span class="text-sm text-gray-600">(<?= esc($p['email']) ?>)</span>
-                    <div class="text-xs text-gray-500"><?= esc($p['nama_jabatan']) ?> / <?= esc($p['nama_bidang']) ?></div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    <?php else: ?>
-        <p class="text-gray-600 italic mb-6">Belum ada PIC yang ditetapkan.</p>
-    <?php endif; ?>
+    <p class="text-gray-600 mb-1">
+        <strong>Satuan:</strong> <?= esc($indikator['satuan'] ?? '-') ?>
+    </p>
 
-    <!-- ==================================== -->
-    <!--        DATA PENGUKURAN PER PIC        -->
-    <!-- ==================================== -->
-    <?php if (!empty($pengukuran)): ?>
-        <?php foreach ($pengukuran as $pk): ?>
-            <div class="border border-gray-300 rounded-lg p-4 bg-gray-50 mb-4 hover:shadow-lg transition">
-                <div class="mb-3 pb-2 border-b border-gray-300">
-                    <h4 class="font-semibold text-lg text-gray-800">
-                        <?= esc($pk['pic_nama'] ?? 'PIC Tidak Ditemukan') ?>
-                    </h4>
-                    <?php if (!empty($pk['pic_email'])): ?>
-                        <p class="text-sm text-gray-600">
-                            <?= esc($pk['pic_email']) ?> — 
-                            <?= esc($pk['nama_jabatan'] ?? '-') ?> / 
-                            <?= esc($pk['nama_bidang'] ?? '-') ?>
-                        </p>
-                    <?php endif; ?>
-                </div>
+    <p class="text-gray-600 mb-1">
+        <strong>Target PK (<?= esc($tahun) ?>):</strong> <?= esc($indikator['target_pk'] ?? '-') ?>
+    </p>
 
-                <table class="min-w-full table-auto border-collapse border border-gray-200">
-                    <tr class="bg-gray-100">
-                        <td class="font-semibold px-4 py-2 w-40 border-b border-gray-200">Target</td>
-                        <td class="px-4 py-2 border-b border-gray-200"><?= esc($indikator['target_pk'] ?? '-') ?></td>
-                    </tr>
-                    <tr class="bg-white">
-                        <td class="font-semibold px-4 py-2 border-b border-gray-200">Realisasi</td>
-                        <td class="px-4 py-2 border-b border-gray-200"><?= esc($pk['realisasi'] ?? '-') ?></td>
-                    </tr>
-                    <tr class="bg-gray-100">
-                        <td class="font-semibold px-4 py-2 border-b border-gray-200">Progress</td>
-                        <td class="px-4 py-2 border-b border-gray-200"><?= isset($pk['progress']) ? esc($pk['progress']).'%' : '-' ?></td>
-                    </tr>
-                    <tr class="bg-white">
-                        <td class="font-semibold px-4 py-2 border-b border-gray-200">Kendala</td>
-                        <td class="px-4 py-2 border-b border-gray-200"><?= esc($pk['kendala'] ?? '-') ?></td>
-                    </tr>
-                    <tr class="bg-gray-100">
-                        <td class="font-semibold px-4 py-2 border-b border-gray-200">Strategi</td>
-                        <td class="px-4 py-2 border-b border-gray-200"><?= esc($pk['strategi'] ?? '-') ?></td>
-                    </tr>
-                    <tr class="bg-white">
-                        <td class="font-semibold px-4 py-2 border-b border-gray-200">File Dukung</td>
-                        <td class="px-4 py-2 border-b border-gray-200">
-                            <?php if (!empty($pk['file_dukung'])): ?>
-                                <a href="<?= base_url('uploads/pengukuran/'.$pk['file_dukung']) ?>"
-                                   class="text-blue-600 hover:underline flex items-center gap-1" target="_blank">
-                                    <i class="fas fa-file-alt"></i> Lihat File
-                                </a>
-                            <?php else: ?>
-                                -
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p class="text-gray-600 italic mt-4">Belum ada data pengukuran dari PIC manapun.</p>
-    <?php endif; ?>
+    <p class="text-gray-600 mb-4">
+        <strong>Target Per Triwulan:</strong><br>
+        • TW I : <?= esc($indikator['target_tw1'] ?? '-') ?><br>
+        • TW II : <?= esc($indikator['target_tw2'] ?? '-') ?><br>
+        • TW III : <?= esc($indikator['target_tw3'] ?? '-') ?><br>
+        • TW IV : <?= esc($indikator['target_tw4'] ?? '-') ?>
+    </p>
 
+    <p class="text-gray-700 text-sm italic">
+        <strong>Periode:</strong> Tahun <?= esc($tahun) ?> — Triwulan <?= esc($tw) ?>
+    </p>
 </div>
 
-<!-- BUTTON KEMBALI -->
-<div class="mt-5">
-    <a href="<?= base_url('admin/pengukuran/output?tahun_id='.$tahun_id.'&triwulan='.$tw) ?>"
-       class="bg-gray-500 text-white px-4 py-2 rounded-lg shadow hover:bg-gray-600 flex items-center gap-2 transition">
-        <i class="fas fa-arrow-left"></i> Kembali
-    </a>
+
+<!-- TABEL PENGUKURAN STAFF -->
+<div class="bg-white shadow-md rounded-xl p-6 border border-gray-200">
+
+    <h4 class="text-xl font-semibold text-gray-800 mb-4">
+        Input Pengukuran Staff
+    </h4>
+
+    <?php if (empty($pengukuran)): ?>
+        <p class="text-gray-600 text-sm">Belum ada pengukuran yang diinput staff.</p>
+
+    <?php else: ?>
+        <div class="overflow-x-auto">
+            <table class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+                <thead>
+                    <tr class="bg-gray-100 text-left">
+                        <th class="p-3 border">Staff</th>
+                        <th class="p-3 border">Realisasi</th>
+                        <th class="p-3 border">Progress</th>
+                        <th class="p-3 border">Kendala</th>
+                        <th class="p-3 border">Strategi</th>
+                        <th class="p-3 border">File Dukung</th>
+                        <th class="p-3 border">Tanggal Input</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php foreach ($pengukuran as $p): ?>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-3 border"><?= esc($p['user_nama']) ?></td>
+                            <td class="p-3 border"><?= esc($p['realisasi']) ?></td>
+                            <td class="p-3 border"><?= $p['progress'] ? esc($p['progress']) : '-' ?></td>
+                            <td class="p-3 border"><?= esc($p['kendala'] ?: '-') ?></td>
+                            <td class="p-3 border"><?= esc($p['strategi'] ?: '-') ?></td>
+
+                            <td class="p-3 border text-center">
+                                <?php if ($p['file_dukung']): ?>
+                                    <a href="<?= base_url('uploads/pengukuran/' . $p['file_dukung']) ?>"
+                                       target="_blank"
+                                       class="text-blue-600 hover:underline">
+                                        Lihat File
+                                    </a>
+                                <?php else: ?>
+                                    <span class="text-gray-500">-</span>
+                                <?php endif; ?>
+                            </td>
+
+                            <td class="p-3 border">
+                                <?= esc(date('d M Y H:i', strtotime($p['created_at']))) ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+    <?php endif; ?>
 </div>
 
 <?= $this->endSection() ?>
