@@ -7,6 +7,9 @@ use App\Models\PicModel;
 use App\Models\IndikatorModel;
 use App\Models\SasaranModel;
 use App\Models\PengukuranModel;
+use App\Models\TahunAnggaranModel;
+use App\Models\UserModel;
+use App\Models\NotificationModel;
 
 class TaskController extends BaseController
 {
@@ -14,6 +17,7 @@ class TaskController extends BaseController
     protected $indikatorModel;
     protected $sasaranModel;
     protected $pengukuranModel;
+    protected $tahunModel;
 
     public function __construct()
     {
@@ -21,124 +25,123 @@ class TaskController extends BaseController
         $this->indikatorModel  = new IndikatorModel();
         $this->sasaranModel    = new SasaranModel();
         $this->pengukuranModel = new PengukuranModel();
+        $this->tahunModel      = new TahunAnggaranModel();
     }
 
-    // index: menampilkan daftar task staff
-   public function index()
-{
-    $userId = session()->get('user_id');
-
-    helper('globalcount');
-    $pending = getPendingTaskCount($userId);
-
-    $data = [
-        'tasks' => $this->picModel->getTasksForUser($userId),
-        'pending_task_count' => $pending
-    ];
-
-    return view('staff/task/index', $data);
-}
-
-
-    // input: form pengukuran per indikator
-    public function input($indikator_id)
+    // ============================================================
+    // INDEX
+    // ============================================================
+    public function index()
     {
-        $pic       = $this->picModel->getPicByIndikator($indikator_id);
-        $indikator = $this->indikatorModel->find($indikator_id);
-        $sasaran   = $this->sasaranModel->find($indikator['sasaran_id'] ?? null);
+        $userId = session()->get('user_id');
 
-        if (empty($pic)) {
-            return redirect()->to('/staff/task')->with('alert', [
-                'type'    => 'warning',
-                'title'   => 'Tidak ada PIC',
-                'message' => 'Indikator ini belum memiliki PIC.'
-            ]);
-        }
+        helper('globalcount');
+        $pending = getPendingTaskCount($userId);
 
-        // Ambil tahun_id dan TW dari PIC pertama
-        $tahun_id = $pic[0]['tahun_id'];
-        $tw       = $pic[0]['tw'];
-
-        return view('staff/task/input', [
-            'indikator_id' => $indikator_id,
-            'pic'          => $pic,
-            'indikator'    => $indikator,
-            'sasaran'      => $sasaran,
-            'tw'           => $tw,
-            'tahun_id'     => $tahun_id
+        return view('staff/task/index', [
+            'tasks' => $this->picModel->getTasksForUser($userId),
+            'pending_task_count' => $pending
         ]);
     }
 
-    // store: simpan input pengukuran
+    // ============================================================
+    // INPUT FORM
+    // ============================================================
+    public function input($indikator_id)
+{
+    $pic = $this->picModel
+        ->where('indikator_id', $indikator_id)
+        ->where('user_id', session('user_id'))
+        ->first();
+
+    if (!$pic) {
+        return redirect()->to('/staff/task')->with('alert', [
+            'type' => 'warning',
+            'title' => 'Tidak ditemukan',
+            'message' => 'Anda bukan PIC indikator ini.'
+        ]);
+    }
+
+    // Ambil indikator
+    $indikator = $this->indikatorModel->find($indikator_id);
+
+    // FIX: cek dulu apakah ada sasaran_id
+    $sasaran = null;
+    if (!empty($indikator['sasaran_id'])) {
+        $sasaran = $this->sasaranModel->find($indikator['sasaran_id']);
+    }
+
+    // Tahun anggaran
+    $tahunData = $this->tahunModel->find($pic['tahun_id']);
+    $tahun = $tahunData['tahun'] 
+          ?? $tahunData['nama_tahun']
+          ?? $tahunData['tahun_anggaran']
+          ?? '-';
+
+    return view('staff/task/input', [
+        'indikator_id' => $indikator_id,
+        'pic'          => $pic,
+        'indikator'    => $indikator,
+        'sasaran'      => $sasaran,       // PASTIKAN DIKIRIM
+        'tw'           => $pic['tw'],
+        'tahun_id'     => $pic['tahun_id'],
+        'tahun'        => $tahun
+    ]);
+}
+
+    // ============================================================
+    // STORE
+    // ============================================================
     public function store()
 {
     $indikator_id = $this->request->getPost('indikator_id');
     $user_id      = session()->get('user_id');
-    $tw           = $this->request->getPost('tw');
-    $tahun_id     = $this->request->getPost('tahun_id');
-    $sasaran_id   = $this->request->getPost('sasaran_id');
 
-    // Validasi minimal
-    if (!$indikator_id || !$user_id || !$tw || !$tahun_id) {
+    // Ambil TW & Tahun berdasarkan PIC
+    $pic = $this->picModel
+        ->where('indikator_id', $indikator_id)
+        ->where('user_id', $user_id)
+        ->first();
+
+    if (!$pic) {
         return redirect()->back()->with('alert', [
-            'type'    => 'warning',
-            'title'   => 'Gagal',
-            'message' => 'Data pengukuran tidak lengkap.'
+            'type' => 'danger',
+            'title' => 'Gagal',
+            'message' => 'PIC tidak valid.'
         ]);
     }
 
-    // Simpan pengukuran
+    $tw       = $pic['tw'];         // <-- TW BENAR AMBIL DARI PIC
+    $tahun_id = $pic['tahun_id'];
+
+    // Upload file
+    $file = $this->request->getFile('file_dukung');
+    $fileName = null;
+
+    if ($file && $file->isValid() && !$file->hasMoved()) {
+        $fileName = $file->getRandomName();
+        $file->move('uploads/pengukuran/', $fileName);
+    }
+
+    // Insert pengukuran
     $data = [
         'indikator_id' => $indikator_id,
-        'user_id'      => $user_id,
-        'tw'           => $tw,
         'tahun_id'     => $tahun_id,
+        'triwulan'     => $tw,       // <-- INI YANG MASUK KE DATABASE
+        'user_id'      => $user_id,
         'realisasi'    => $this->request->getPost('realisasi'),
         'progress'     => $this->request->getPost('progress'),
         'kendala'      => $this->request->getPost('kendala'),
         'strategi'     => $this->request->getPost('strategi'),
-        'file_dukung'  => null
+        'file_dukung'  => $fileName
     ];
 
-    // insert pengukuran
     $this->pengukuranModel->insert($data);
-    $pengukuran_id = $this->pengukuranModel->getInsertID();
-
-    // ======================================================
-    // 🔔 KIRIM NOTIFIKASI KE SEMUA ADMIN (FITUR NO.4)
-    // ======================================================
-
-    $userModel  = new \App\Models\UserModel();
-    $notifModel = new \App\Models\NotificationModel();
-
-    $adminList = $userModel->where('role', 'admin')->findAll();
-
-    foreach ($adminList as $admin) {
-        $notifModel->insert([
-            'user_id' => $admin['id'],
-            'message' => "Staff " . session('nama') . " mengirim pengukuran baru.",
-            'meta'    => json_encode([
-                'indikator_id'   => $indikator_id,
-                'tahun_id'       => $tahun_id,
-                'sasaran_id'     => $sasaran_id,
-                'tw'             => $tw,
-                'submitted_by'   => $user_id,
-                'pengukuran_id'  => $pengukuran_id,
-                'type'           => 'pengukuran_submitted'
-            ]),
-            'status' => 'unread'
-        ]);
-    }
-
-    // ======================================================
-    // SweetAlert untuk STAFF
-    // ======================================================
 
     return redirect()->to('/staff/task')->with('alert', [
-        'type'    => 'success',
-        'title'   => 'Berhasil',
-        'message' => 'Pengukuran berhasil disimpan & admin menerima notifikasi.'
+        'type' => 'success',
+        'title' => 'Berhasil',
+        'message' => 'Pengukuran berhasil dikirim.'
     ]);
 }
-
 }

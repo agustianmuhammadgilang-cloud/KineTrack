@@ -11,11 +11,12 @@ class PengukuranModel extends Model
         'indikator_id',
         'tahun_id',
         'triwulan',
-        'target',
         'realisasi',
-        'persentase',
-        'catatan',
-        'created_by'
+        'progress',
+        'kendala',
+        'strategi',
+        'file_dukung',
+        'user_id'       // ← dipakai untuk relasi ke users
     ];
 
     protected $returnType = 'array';
