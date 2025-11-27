@@ -341,141 +341,66 @@ LHE
 </svg>
 
 <!-- SweetAlert -->
-<?php if (!empty($notif)): ?>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<?php if (session()->getFlashdata('alert')): $a = session()->getFlashdata('alert'); ?>
 <script>
 Swal.fire({
-    icon: 'info',
-    title: 'Notifikasi baru',
-    text: '<?= esc($notif[0]['message']) ?>',
     toast: true,
     position: 'top-end',
+    showConfirmButton: false,
     timer: 4000,
-    showConfirmButton: false
+    icon: '<?= esc($a['type']) ?>',
+    title: '<?= esc($a['title']) ?>',
+    text: '<?= esc($a['message']) ?>'
 });
 </script>
+
+
 <?php endif; ?>
-
-
-
 <script>
-function loadStaffNotif() {
-    fetch("<?= base_url('staff/notifications/list') ?>")
-        .then(res => res.json())
-        .then(data => {
-            const unread = data.filter(n => n.is_read == 0).length;
+document.addEventListener("DOMContentLoaded", () => {
 
-            // Update badge task sidebar
-            const badge = document.querySelector('#task-badge');
+    let lastNotifId = 0;
 
-            if (badge) {
-                if (unread > 0) {
-                    badge.innerHTML = unread;
-                    badge.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
+    async function checkNewNotif() {
+        try {
+            const res = await fetch("<?= base_url('notifications/latest') ?>", {
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
                 }
+            });
+
+            if (!res.ok) return;
+
+            const data = await res.json();
+            if (!data || !data.id) return;
+
+            // hanya tampilkan jika benar-benar notif baru
+            if (data.id !== lastNotifId) {
+                lastNotifId = data.id;
+
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    timer: 5000,
+                    showConfirmButton: false,
+                    icon: data.type ?? 'info',
+                    title: data.message
+                });
             }
-        });
-}
 
-// polling setiap 5 detik
-setInterval(loadStaffNotif, 5000);
-loadStaffNotif();
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  const badge = document.getElementById('notif-badge');
-  const menu = document.getElementById('notif-menu');
-  const bell = document.getElementById('notif-bell');
-  const listEl = document.getElementById('notif-list');
-  const markAllBtn = document.getElementById('notif-mark-all');
-
-  async function fetchCount(){
-    try {
-      const res = await fetch('<?= base_url('notifications/unread-count') ?>');
-      if(!res.ok) throw 0;
-      const j = await res.json();
-      const c = j.count ?? 0;
-      if (c > 0) {
-        badge.textContent = c;
-        badge.classList.remove('hidden');
-      } else {
-        badge.classList.add('hidden');
-      }
-    } catch(e) {
-      // ignore
+        } catch (err) {
+            console.error("Error fetch notifikasi:", err);
+        }
     }
-  }
 
-  async function fetchList(){
-    try {
-      const res = await fetch('<?= base_url('notifications/list') ?>');
-      if(!res.ok) return;
-      const arr = await res.json();
-      listEl.innerHTML = '';
-      if (arr.length === 0) {
-        listEl.innerHTML = '<div class="p-3 text-sm text-gray-600">Tidak ada notifikasi</div>';
-        return;
-      }
-      for (const n of arr) {
-        const date = new Date(n.created_at);
-        const meta = n.meta ? JSON.parse(n.meta) : null;
-        const item = document.createElement('div');
-        item.className = 'p-3 border-b hover:bg-gray-50 flex justify-between items-start';
-        item.innerHTML = `
-            <div class="text-sm">
-              <div class="font-medium text-gray-800">${escapeHtml(n.message)}</div>
-              <div class="text-xs text-gray-500 mt-1">${date.toLocaleString()}</div>
-            </div>
-            <div class="ml-2">
-              <button data-id="${n.id}" class="notif-mark-read text-xs text-blue-600">Tandai</button>
-            </div>
-        `;
-        listEl.appendChild(item);
-      }
-
-      // attach mark buttons
-      document.querySelectorAll('.notif-mark-read').forEach(btn=>{
-        btn.addEventListener('click', async (e)=>{
-          const id = btn.getAttribute('data-id');
-          await fetch('<?= base_url('notifications/mark') ?>/' + id, { method:'POST' });
-          await fetchCount();
-          await fetchList();
-        });
-      });
-
-    } catch(e){}
-  }
-
-  // toggle menu
-  bell?.addEventListener('click', async (ev) => {
-    menu.classList.toggle('hidden');
-    if (!menu.classList.contains('hidden')) {
-      await fetchList();
-      // optional: mark all read on open? we keep manual
-    }
-  });
-
-  markAllBtn?.addEventListener('click', async ()=>{
-    await fetch('<?= base_url('notifications/mark-all') ?>', { method: 'POST' });
-    await fetchCount();
-    await fetchList();
-  });
-
-  // poll every 12s
-  fetchCount();
-  setInterval(fetchCount, 12000);
-
-  // safe escape function
-  function escapeHtml(str){
-    if(!str) return '';
-    return String(str).replace(/[&<>"'`=\/]/g, function(s){
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;'}[s];
-    });
-  }
+    // cek setiap 6 detik
+    setInterval(checkNewNotif, 6000);
+    checkNewNotif();
 });
 </script>
+
 
 
 </body>

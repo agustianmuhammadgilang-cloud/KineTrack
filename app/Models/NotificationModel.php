@@ -14,10 +14,10 @@ class NotificationModel extends Model
         'message',
         'meta',
         'status',
+        'created_at'
     ];
 
-    // Karena tabel hanya punya created_at
     protected $useTimestamps = false;
     protected $createdField  = 'created_at';
-    protected $updatedField  = null; // <-- WAJIB
+    protected $updatedField  = null;
 }
