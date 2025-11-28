@@ -5,6 +5,7 @@
     Detail Pengukuran - Indikator
 </h3>
 
+
 <!-- Informasi Indikator -->
 <div class="bg-white shadow-md rounded-xl p-6 border border-gray-200 mb-6">
 
@@ -41,6 +42,13 @@
     </p>
 </div>
 
+<!-- Tombol Back -->
+<a href="javascript:history.back()"
+   class="inline-block mb-4 bg-[var(--polban-blue)] text-white px-4 py-2 rounded-lg shadow hover:bg-blue-800 transition">
+    Kembali
+</a>
+
+
 
 <!-- TABEL PENGUKURAN STAFF -->
 <div class="bg-white shadow-md rounded-xl p-6 border border-gray-200">
@@ -64,6 +72,7 @@
                         <th class="p-3 border">Strategi</th>
                         <th class="p-3 border">File Dukung</th>
                         <th class="p-3 border">Tanggal Input</th>
+                        <th class="p-3 border">Aksi</th>
                     </tr>
                 </thead>
 
@@ -91,6 +100,39 @@
                             <td class="p-3 border">
                                 <?= esc(date('d M Y H:i', strtotime($p['created_at']))) ?>
                             </td>
+                            <td class="p-3 border text-center">
+    <div class="flex items-center justify-center gap-3">
+
+        <!-- EDIT -->
+        <a href="<?= base_url('admin/pengukuran/edit/' . $p['id']) ?>"
+           class="p-2 bg-[var(--polban-blue)] text-white rounded-lg shadow hover:bg-blue-800 transition"
+           title="Edit">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 3.487a2.25 2.25 0 113.182 3.182L7.5 19.213 3 21l1.787-4.5L16.862 3.487z" />
+            </svg>
+        </a>
+
+        <!-- DELETE -->
+        <a href="<?= base_url('admin/pengukuran/delete/' . $p['id']) ?>"
+           onclick="return confirm('Yakin ingin menghapus data ini?')"
+           class="p-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 transition"
+           title="Hapus">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 7h12M9 7v10m6-10v10M4 7h16l-1 12a2 2 0 01-2 2H7a2 2 0 01-2-2L4 7zm5-3h6a1 1 0 011 1v1H8V5a1 1 0 011-1z" />
+            </svg>
+        </a>
+
+        <!-- PDF -->
+        <a href="<?= base_url('admin/pengukuran/pdf/' . $p['id']) ?>"
+           class="p-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
+           title="Export PDF">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5V6m0 0l-1.5 1.5M12 6l1.5 1.5m-6 4.5h9m-9 3h6m4.5-8.25V18a2.25 2.25 0 01-2.25 2.25H7.5A2.25 2.25 0 015.25 18V6.75A2.25 2.25 0 017.5 4.5h6.75L18 7.5z" />
+            </svg>
+        </a>
+
+    </div>
+</td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
