@@ -18,7 +18,8 @@ class TaskController extends BaseController
     protected $sasaranModel;
     protected $pengukuranModel;
     protected $tahunModel;
-
+    protected $notifModel;
+    
     public function __construct()
     {
         $this->picModel        = new PicModel();
@@ -26,6 +27,7 @@ class TaskController extends BaseController
         $this->sasaranModel    = new SasaranModel();
         $this->pengukuranModel = new PengukuranModel();
         $this->tahunModel      = new TahunAnggaranModel();
+        $this->notifModel      = new NotificationModel(); // <--- WAJIB
     }
 
     // ============================================================
@@ -111,7 +113,7 @@ class TaskController extends BaseController
         ]);
     }
 
-    $tw       = $pic['tw'];         // <-- TW BENAR AMBIL DARI PIC
+    $tw       = $pic['tw'];        
     $tahun_id = $pic['tahun_id'];
 
     // Upload file
@@ -124,19 +126,34 @@ class TaskController extends BaseController
     }
 
     // Insert pengukuran
-    $data = [
+    $this->pengukuranModel->insert([
         'indikator_id' => $indikator_id,
         'tahun_id'     => $tahun_id,
-        'triwulan'     => $tw,       // <-- INI YANG MASUK KE DATABASE
+        'triwulan'     => $tw,
         'user_id'      => $user_id,
         'realisasi'    => $this->request->getPost('realisasi'),
         'progress'     => $this->request->getPost('progress'),
         'kendala'      => $this->request->getPost('kendala'),
         'strategi'     => $this->request->getPost('strategi'),
         'file_dukung'  => $fileName
-    ];
+    ]);
 
-    $this->pengukuranModel->insert($data);
+    $pengukuranId = $this->pengukuranModel->getInsertID();
+
+    // ===========================
+    // INSERT NOTIF KE ADMIN
+    // ===========================
+    $this->notifModel->insert([
+        'user_id'    => 1, // ID admin (ubah sesuai real)
+        'message'    => "Pengukuran baru telah dikirim oleh staff.",
+        'meta'       => json_encode([
+            'pengukuran_id' => $pengukuranId,
+            'indikator_id'  => $indikator_id,
+            'tw'            => $tw
+        ]),
+        'status'     => 'unread',
+        'created_at' => date('Y-m-d H:i:s')
+    ]);
 
     return redirect()->to('/staff/task')->with('alert', [
         'type' => 'success',
