@@ -122,14 +122,14 @@ public function getKode($tahunId)
                   ->first();
 
     if (!$last) {
-        return $this->response->setJSON(['kode' => "SS-{$tahunId}-01"]);
+        return $this->response->setJSON(['kode' => "SS-01"]);
     }
 
     $lastNumber = (int)substr($last['kode_sasaran'], -2);
     $newNumber  = str_pad($lastNumber + 1, 2, '0', STR_PAD_LEFT);
 
     return $this->response->setJSON([
-        'kode' => "SS-{$tahunId}-{$newNumber}"
+        'kode' => "SS-{$newNumber}"
     ]);
 }
 

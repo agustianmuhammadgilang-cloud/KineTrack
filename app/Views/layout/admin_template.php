@@ -469,20 +469,20 @@ document.addEventListener("DOMContentLoaded", () => {
         let parsed = {};
         try { parsed = JSON.parse(meta); } catch {}
 
-//         // ===============================
-//         //   REDIRECT KHUSUS ADMIN
-//         // ===============================
-//         if (parsed.pengukuran_id) {
-//             window.location.href = "/admin/pengukuran/detail/" + parsed.pengukuran_id;
-//             return;
-//         }
+         // ===============================
+         //   REDIRECT KHUSUS ADMIN
+         // ===============================
+         if (parsed.pengukuran_id) {
+             window.location.href = "/admin/pengukuran/detail/" + parsed.pengukuran_id;
+             return;
+          }
 
-//       if (parsed.sasaran_id && parsed.indikator_id && parsed.tw) {
-//     window.location.href = "/admin/pengukuran/output/detail/"
-//         + parsed.sasaran_id + "/"
-//         + parsed.indikator_id + "/"
-//         + parsed.tw;
-// }
+         if (parsed.sasaran_id && parsed.indikator_id && parsed.tw) {
+         window.location.href = "/admin/pengukuran/output/detail/"
+         + parsed.sasaran_id + "/"
+         + parsed.indikator_id + "/"
+         + parsed.tw;
+ }
 
     }
 
