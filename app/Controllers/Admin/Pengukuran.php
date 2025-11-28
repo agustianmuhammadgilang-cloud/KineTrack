@@ -363,5 +363,113 @@ public function export($tahunId, $tw)
     exit;
 }
 
+
+
+// ================================================================
+// EDIT FORM
+// ================================================================
+public function edit($id)
+{
+    $data = $this->pengukuranModel
+        ->select('pengukuran_kinerja.*, indikator_kinerja.nama_indikator')
+        ->join('indikator_kinerja', 'indikator_kinerja.id = pengukuran_kinerja.indikator_id')
+        ->where('pengukuran_kinerja.id', $id)
+        ->first();
+
+    if (!$data) {
+        return redirect()->back()->with('error', 'Data tidak ditemukan');
+    }
+
+    return view('admin/pengukuran/pengukuran_edit', ['data' => $data]);
+}
+
+
+
+// ================================================================
+// UPDATE
+// ================================================================
+public function update($id)
+{
+    $row = $this->pengukuranModel->find($id);
+    if (!$row) {
+        return redirect()->back()->with('error', 'Data tidak ditemukan');
+    }
+
+    $save = [
+        'realisasi'    => $this->request->getPost('realisasi'),
+        'progress'     => $this->request->getPost('progress'),  // << ini penting
+        'kendala'      => $this->request->getPost('kendala'),
+        'strategi'     => $this->request->getPost('strategi'),
+        'updated_at'   => date('Y-m-d H:i:s'),                  // << auto update timestamp
+    ];
+
+    // File baru?
+    $file = $this->request->getFile('file_dukung');
+    if ($file && $file->isValid() && !$file->hasMoved()) {
+        // hapus file lama
+        if (!empty($row['file_dukung']) && file_exists(FCPATH . 'uploads/pengukuran/' . $row['file_dukung'])) {
+            unlink(FCPATH . 'uploads/pengukuran/' . $row['file_dukung']);
+        }
+        $newName = $file->getRandomName();
+        $file->move(FCPATH . 'uploads/pengukuran/', $newName);
+        $save['file_dukung'] = $newName;
+    }
+
+    $this->pengukuranModel->update($id, $save);
+
+    return redirect()->to(base_url('admin/pengukuran/output?tahun_id=' . $row['tahun_id'] . '&triwulan=' . $row['triwulan']))
+        ->with('success', 'Data berhasil diupdate');
+}
+
+
+
+// ================================================================
+// DELETE
+// ================================================================
+public function delete($id)
+{
+    $row = $this->pengukuranModel->find($id);
+    if (!$row) {
+        return redirect()->back()->with('error', 'Data tidak ditemukan');
+    }
+
+    // Hapus file
+    if (!empty($row['file_dukung']) && file_exists(FCPATH . 'uploads/pengukuran/' . $row['file_dukung'])) {
+        unlink(FCPATH . 'uploads/pengukuran/' . $row['file_dukung']);
+    }
+
+    $this->pengukuranModel->delete($id);
+
+    return redirect()->back()->with('success', 'Data berhasil dihapus');
+}
+
+
+
+// ================================================================
+// EXPORT PDF PER DATA
+// ================================================================
+public function exportPdf($id)
+{
+    $data = $this->pengukuranModel
+    ->select('pengukuran_kinerja.*, indikator_kinerja.nama_indikator, indikator_kinerja.kode_indikator, users.nama as user_nama')
+    ->join('indikator_kinerja', 'indikator_kinerja.id = pengukuran_kinerja.indikator_id')
+    ->join('users', 'users.id = pengukuran_kinerja.user_id', 'left')
+    ->where('pengukuran_kinerja.id', $id)
+    ->first();
+
+    if (!$data) {
+        return redirect()->back()->with('error', 'Data tidak ditemukan');
+    }
+
+    $html = view('admin/pengukuran/pengukuran_pdf', ['data' => $data]);
+
+    $dompdf = new \Dompdf\Dompdf();
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    $dompdf->stream("Pengukuran_{$data['id']}.pdf", ['Attachment' => true]);
+}
+
     
 }

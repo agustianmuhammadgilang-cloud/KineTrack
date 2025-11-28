@@ -174,3 +174,11 @@ $routes->post('notifications/mark-all', 'Notifications::markAllRead');
 
 // Pending task count (jika dipakai staff)
 $routes->get('notifications/pending-count', 'Notifications::pendingTaskCount');
+
+$routes->group('admin/pengukuran', function($routes) {
+    $routes->get('edit/(:num)', 'Admin\Pengukuran::edit/$1');
+    $routes->post('update/(:num)', 'Admin\Pengukuran::update/$1');
+    $routes->get('delete/(:num)', 'Admin\Pengukuran::delete/$1');
+    $routes->get('pdf/(:num)', 'Admin\Pengukuran::exportPdf/$1');
+});
+
