@@ -48,8 +48,17 @@
     </div>
 
     <!-- PEMILIHAN USER -->
-    <div class="bg-white border border-gray-200 p-4 rounded-lg shadow-md">
-        <h4 class="font-semibold mb-3 text-gray-700">Pilih PIC</h4>
+<div class="bg-white border border-gray-200 p-4 rounded-lg shadow-md">
+    <h4 class="font-semibold mb-3 text-gray-700">Pilih PIC</h4>
+
+    <!-- Search Box -->
+    <input type="text" id="searchUser" placeholder="Cari nama staff..."
+        class="w-full mb-3 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-300 focus:outline-none transition">
+
+    <div id="pegawaiList" class="space-y-2 max-h-72 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+        <p class="text-gray-400 italic">Pilih indikator terlebih dahulu...</p>
+    </div>
+</div>
 
         <div id="pegawaiList" class="space-y-2 max-h-72 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             <!-- AJAX load list user -->
@@ -112,6 +121,22 @@ document.querySelector('#indikator_id').addEventListener('change', async functio
         `;
     });
 });
+
+// FILTER USER BY SEARCH
+document.querySelector('#searchUser').addEventListener('input', function() {
+    const filter = this.value.toLowerCase();
+    const labels = document.querySelectorAll('#pegawaiList label');
+
+    labels.forEach(label => {
+        const name = label.querySelector('p.font-semibold').textContent.toLowerCase();
+        if(name.includes(filter)) {
+            label.style.display = 'flex';
+        } else {
+            label.style.display = 'none';
+        }
+    });
+});
+
 </script>
 
 <?= $this->endSection() ?>

@@ -253,15 +253,20 @@ public function export($tahunId, $tw)
 
     $indikatorIds = array_column($indikator, 'id');
 
-    // =============== 2. DATA PENGUKURAN ===============
+    // =============== 2. DATA PENGUKURAN PER STAFF ===============
     $pengukuran = $this->pengukuranModel
+        ->select('pengukuran_kinerja.*, users.nama as user_nama')
+        ->join('users', 'users.id = pengukuran_kinerja.user_id', 'left')
         ->where('tahun_id', $tahunId)
         ->where('triwulan', $tw)
+        ->whereIn('indikator_id', $indikatorIds)
+        ->orderBy('indikator_id')
+        ->orderBy('created_at')
         ->findAll();
 
     $mapPengukuran = [];
     foreach ($pengukuran as $p) {
-        $mapPengukuran[$p['indikator_id']] = $p;
+        $mapPengukuran[$p['indikator_id']][] = $p;
     }
 
     // =============== 3. DATA PIC (nama + jabatan) ===============
@@ -299,15 +304,19 @@ public function export($tahunId, $tw)
         'Nama Indikator'        => 'string',
         'PIC (Nama — Jabatan)'  => 'string',
         'Target'                => 'string',
-        'Capaian'               => 'string',
-        'Kendala Strategis'     => 'string',
-        'Data Dukung'           => 'string',
+        'Staff'                 => 'string',
+        'Realisasi'             => 'string',
+        'Progress / Kegiatan'   => 'string',
+        'Kendala / Permasalahan'=> 'string',
+        'Strategi / Tindak Lanjut'=> 'string',
+        'File Dukung / Data Pendukung'=> 'string',
+        'Tanggal Input'         => 'string'
     ];
 
     $headerStyle = [
         'font-style' => 'bold',
         'halign' => 'center',
-        'widths' => [15, 30, 15, 35, 30, 15, 15, 30, 30]
+        'widths' => [15,30,15,35,30,15,25,15,25,25,25,25,20]
     ];
 
     $writer->writeSheetHeader($sheetName, $header, $headerStyle);
@@ -320,35 +329,40 @@ public function export($tahunId, $tw)
         $indId = $ind['id'];
         $sasId = $ind['sasaran_id'];
 
-        // Ambil nilai pengukuran
-        $nilai      = $mapPengukuran[$indId]['realisasi'] ?? ($mapPengukuran[$indId]['nilai'] ?? '-');
-        $kendala    = $mapPengukuran[$indId]['kendala'] ?? '-';
-        $dataDukung = $mapPengukuran[$indId]['data_dukung'] ?? '-';
         $picLabel   = $picMap[$indId] ?? '-';
+        $target     = (string)($ind['target_pk'] ?? '-');
 
-        // Jika masih sasaran yang sama = kolom kosong
-        if ($sasId === $lastSasaranId) {
-            $kodeSasaran = '';
-            $namaSasaran = '';
-        } else {
-            $kodeSasaran = $ind['kode_sasaran'];
-            $namaSasaran = $ind['nama_sasaran'];
-            $lastSasaranId = $sasId;
+        $staffPengukuran = $mapPengukuran[$indId] ?? [['user_nama'=>'-','realisasi'=>'-','progress'=>'-','kendala'=>'-','strategi'=>'-','file_dukung'=>'-','created_at'=>'-']];
+
+        foreach ($staffPengukuran as $sp) {
+            // Jika masih sasaran yang sama = kolom kosong
+            if ($sasId === $lastSasaranId) {
+                $kodeSasaran = '';
+                $namaSasaran = '';
+            } else {
+                $kodeSasaran = $ind['kode_sasaran'];
+                $namaSasaran = $ind['nama_sasaran'];
+                $lastSasaranId = $sasId;
+            }
+
+            $row = [
+                $kodeSasaran,
+                $namaSasaran,
+                $ind['kode_indikator'] ?? '-',
+                $ind['nama_indikator'] ?? '-',
+                $picLabel,
+                $target,
+                $sp['user_nama'] ?? '-',
+                $sp['realisasi'] ?? '-',
+                $sp['progress'] ?? '-',
+                $sp['kendala'] ?? '-',
+                $sp['strategi'] ?? '-',
+                $sp['file_dukung'] ?? '-',
+                $sp['created_at'] ?? '-'
+            ];
+
+            $writer->writeSheetRow($sheetName, $row);
         }
-
-        $row = [
-            $kodeSasaran,
-            $namaSasaran,
-            $ind['kode_indikator'] ?? '-',
-            $ind['nama_indikator'] ?? '-',
-            $picLabel,
-            (string)($ind['target_pk'] ?? '-'),
-            (string)$nilai,
-            $kendala,
-            $dataDukung
-        ];
-
-        $writer->writeSheetRow($sheetName, $row);
     }
 
     // =============== 6. OUTPUT FILE ===============
