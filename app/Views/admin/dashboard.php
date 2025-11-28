@@ -39,11 +39,11 @@
             <!-- Diisi otomatis JS -->
         </ul>
 
-        <div class="text-center py-2 border-t">
-            <button onclick="markAllNotif()" class="text-sm text-blue-600 hover:underline">
-                Tandai semua dibaca
-            </button>
+        <div id="notifList"></div>
+        <div class="p-2 text-center text-blue-600 cursor-pointer" id="markAll">
+            Tandai semua dibaca
         </div>
+
     </div>
 </div>
 

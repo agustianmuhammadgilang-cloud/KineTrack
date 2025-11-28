@@ -167,10 +167,10 @@ $routes->get('notifications/list/(:num)', 'Notifications::list/$1');
 $routes->get('notifications/latest', 'Notifications::latest'); // <-- FIX
 
 // Mark single read
-$routes->post('notifications/mark/(:num)', 'Notifications::markRead/$1');
+$routes->post('notifications/mark/(:num)', 'Notifications::mark/$1');
 
 // Mark all read
-$routes->post('notifications/mark-all', 'Notifications::markAllRead');
+$routes->post('notifications/mark-all', 'Notifications::markAll');
 
 // Pending task count (jika dipakai staff)
 $routes->get('notifications/pending-count', 'Notifications::pendingTaskCount');

@@ -378,8 +378,7 @@ Swal.fire({
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  let lastNotifId = localStorage.getItem("lastNotifId") ?? 0;
-
+    let lastNotifId = localStorage.getItem("lastNotifId") ?? 0;
 
     // =========================================================
     // 1. TOAST – Notifikasi Terbaru
@@ -391,22 +390,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!notif || !notif.id) return;
 
-         if (notif.id != lastNotifId) {
-    lastNotifId = notif.id;
-    localStorage.setItem("lastNotifId", notif.id);
+            if (notif.id != lastNotifId) {
+                lastNotifId = notif.id;
+                localStorage.setItem("lastNotifId", notif.id);
 
-    Swal.fire({
-        toast: true,
-        position: 'top-end',
-        timer: 10000,  // bertahan 10 detik
-        timerProgressBar: true,
-        showConfirmButton: false,
-        icon: 'info',
-        title: notif.message
-    });
-}
-
-
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    timer: 10000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    icon: 'info',
+                    title: notif.message
+                });
+            }
         } catch (e) {}
     }
 
@@ -449,7 +446,7 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
 
             li.addEventListener("click", () => {
-                markAsRead(n.id, n.meta);
+                markAsRead(n.id, n);
             });
 
             list.appendChild(li);
@@ -457,33 +454,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // =========================================================
-    // 4. MARK AS READ & REDIRECT (KHUSUS ADMIN)
+    // 4. MARK AS READ TANPA REDIRECT
     // =========================================================
-    async function markAsRead(id, meta) {
+    async function markAsRead(id, notifData) {
 
         await fetch("<?= base_url('notifications/mark') ?>/" + id, { method: "POST" });
 
         refreshBadge();
         loadDropdown();
 
-        let parsed = {};
-        try { parsed = JSON.parse(meta); } catch {}
-
-         // ===============================
-         //   REDIRECT KHUSUS ADMIN
-         // ===============================
-         if (parsed.pengukuran_id) {
-             window.location.href = "/admin/pengukuran/detail/" + parsed.pengukuran_id;
-             return;
-          }
-
-         if (parsed.sasaran_id && parsed.indikator_id && parsed.tw) {
-         window.location.href = "/admin/pengukuran/output/detail/"
-         + parsed.sasaran_id + "/"
-         + parsed.indikator_id + "/"
-         + parsed.tw;
- }
-
+        Swal.fire({
+            title: "Detail Notifikasi",
+            html: `
+                <div class='text-left'>
+                    <p><b>Pesan:</b> ${notifData.message}</p>
+                    <p><b>Tanggal:</b> ${notifData.created_at}</p>
+                </div>
+            `,
+            icon: "info"
+        });
     }
 
     // =========================================================
@@ -495,7 +484,9 @@ document.addEventListener("DOMContentLoaded", () => {
         loadDropdown();
     };
 
-    // Auto-refresh tiap 6 detik
+    // =========================================================
+    // AUTO REFRESH TIAP 6 DETIK
+    // =========================================================
     setInterval(() => {
         checkNewNotif();
         refreshBadge();
