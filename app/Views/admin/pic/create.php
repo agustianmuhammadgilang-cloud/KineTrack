@@ -6,46 +6,37 @@
 <form action="<?= base_url('admin/pic/store') ?>" method="post" class="space-y-6">
 
     <!-- Tahun / Sasaran / Indikator -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div>
-            <label class="block font-medium mb-2">Tahun Anggaran</label>
-            <select name="tahun_id" id="tahun_id" 
-                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-300 focus:outline-none transition">
-                <option value="">--Pilih Tahun--</option>
-                <?php foreach($tahun as $t): ?>
-                    <option value="<?= $t['id'] ?>"><?= $t['tahun'] ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        <div>
-            <label class="block font-medium mb-2">Triwulan</label>
-            <select name="tw" id="tw"
-                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-300 focus:outline-none transition">
-                <option value="">--Pilih Triwulan--</option>
-                <option value="1">TW 1</option>
-                <option value="2">TW 2</option>
-                <option value="3">TW 3</option>
-                <option value="4">TW 4</option>
-            </select>
-        </div>
-
-        <div>
-            <label class="block font-medium mb-2">Sasaran Strategis</label>
-            <select name="sasaran_id" id="sasaran_id" 
-                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-300 focus:outline-none transition">
-                <option value="">--Pilih Sasaran--</option>
-            </select>
-        </div>
-
-        <div>
-            <label class="block font-medium mb-2">Indikator</label>
-            <select name="indikator_id" id="indikator_id" 
-                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-300 focus:outline-none transition">
-                <option value="">--Pilih Indikator--</option>
-            </select>
-        </div>
+    <div>
+        <label class="block font-medium mb-2">Tahun Anggaran</label>
+        <select name="tahun_id" id="tahun_id"
+            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-300 focus:outline-none transition">
+            <option value="">--Pilih Tahun--</option>
+            <?php foreach($tahun as $t): ?>
+                <option value="<?= $t['id'] ?>"><?= $t['tahun'] ?></option>
+            <?php endforeach; ?>
+        </select>
     </div>
+
+    <div>
+        <label class="block font-medium mb-2">Sasaran Strategis</label>
+        <select name="sasaran_id" id="sasaran_id" 
+            class="w-full border border-gray-300 rounded-lg px-4 py-2">
+            <option value="">--Pilih Sasaran--</option>
+        </select>
+    </div>
+
+    <div>
+        <label class="block font-medium mb-2">Indikator</label>
+        <select name="indikator_id" id="indikator_id" 
+            class="w-full border border-gray-300 rounded-lg px-4 py-2">
+            <option value="">--Pilih Indikator--</option>
+        </select>
+    </div>
+
+</div>
+
 
     <!-- PEMILIHAN USER -->
 <div class="bg-white border border-gray-200 p-4 rounded-lg shadow-md">

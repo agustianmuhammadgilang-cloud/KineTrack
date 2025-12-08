@@ -45,97 +45,95 @@ class PicController extends BaseController
         return view('admin/pic/create', $data);
     }
 
-    public function store()
-    {
-        $indikatorId = $this->request->getPost('indikator_id');
-        $tahunId     = $this->request->getPost('tahun_id');
-        $sasaranId   = $this->request->getPost('sasaran_id');
-        $tw          = $this->request->getPost('tw');
-        $userList    = $this->request->getPost('pegawai') ?? []; // aman jika null
+   public function store()
+{
+    $indikatorId = $this->request->getPost('indikator_id');
+    $tahunId     = $this->request->getPost('tahun_id');
+    $sasaranId   = $this->request->getPost('sasaran_id');
+    $userList    = $this->request->getPost('pegawai') ?? []; // tetap aman
 
-        $successUsers = [];
-        $skippedUsers = [];
+    $successUsers = [];
+    $skippedUsers = [];
 
-        if (empty($userList)) {
+    // Validasi minimal 1 PIC dipilih
+    if (empty($userList)) {
+        return redirect()->back()->with('alert', [
+            'type'    => 'error',
+            'title'   => 'Perhatian',
+            'message' => 'PIC / user belum dipilih atau tidak ada yang sesuai!'
+        ]);
+    }
+
+    foreach ($userList as $userId) {
+        $user = $this->userModel->find($userId);
+
+        if (!$user) {
+            // User tidak ditemukan → hentikan proses
             return redirect()->back()->with('alert', [
                 'type'    => 'error',
                 'title'   => 'Perhatian',
-                'message' => 'PIC / user belum dipilih atau tidak ada yang sesuai!'
+                'message' => "PIC / user dengan ID $userId tidak ditemukan!"
             ]);
         }
 
-        foreach ($userList as $userId) {
-            $user = $this->userModel->find($userId);
+        // CEK DUPLIKAT (Tanpa TW)
+        $exists = $this->picModel
+            ->where('user_id', $userId)
+            ->where('indikator_id', $indikatorId)
+            ->where('tahun_id', $tahunId)
+            ->first();
 
-            if (!$user) {
-                // User tidak ditemukan → hentikan dan kasih notifikasi
-                return redirect()->back()->with('alert', [
-                    'type'    => 'error',
-                    'title'   => 'Perhatian',
-                    'message' => "PIC / user dengan ID $userId tidak ditemukan!"
-                ]);
-            }
-
-            // CEK DUPLIKAT
-            $exists = $this->picModel
-                ->where('user_id', $userId)
-                ->where('indikator_id', $indikatorId)
-                ->where('tw', $tw)
-                ->first();
-
-            if ($exists) {
-                $skippedUsers[] = $user['nama'];
-                continue;
-            }
-
-            // SIMPAN PIC
-            $this->picModel->insert([
-                'indikator_id' => $indikatorId,
-                'user_id'      => $userId,
-                'tahun_id'     => $tahunId,
-                'sasaran_id'   => $sasaranId,
-                'tw'           => $tw,
-                'bidang_id'    => $user['bidang_id'],
-                'jabatan_id'   => $user['jabatan_id']
-            ]);
-
-            // SIMPAN NOTIFIKASI KE STAFF
-            $this->notifModel->insert([
-                'user_id' => $userId,
-                'message' => "Anda mendapatkan tugas baru pada Triwulan $tw.",
-                'meta'    => json_encode([
-                    'indikator_id' => $indikatorId,
-                    'tahun_id'     => $tahunId,
-                    'sasaran_id'   => $sasaranId,
-                    'tw'           => $tw
-                ]),
-                'status'   => 'unread'
-            ]);
-
-            $successUsers[] = $user['nama'];
+        if ($exists) {
+            $skippedUsers[] = $user['nama'];
+            continue;
         }
 
-        // ======================
-        // SweetAlert untuk ADMIN
-        // ======================
-        $message = '';
-        $type    = 'success';
-
-        if (!empty($successUsers)) {
-            $message .= 'PIC berhasil disimpan untuk: ' . implode(', ', $successUsers) . '. ';
-        }
-
-        if (!empty($skippedUsers)) {
-            $message .= 'PIC sudah terdaftar untuk: ' . implode(', ', $skippedUsers) . '.';
-            $type = 'warning';
-        }
-
-        return redirect()->to('/admin/pic')->with('alert', [
-            'type'    => $type,
-            'title'   => $type === 'success' ? 'Berhasil' : 'Perhatian',
-            'message' => $message
+        // SIMPAN PIC (Tanpa TW)
+        $this->picModel->insert([
+            'indikator_id' => $indikatorId,
+            'user_id'      => $userId,
+            'tahun_id'     => $tahunId,
+            'sasaran_id'   => $sasaranId,
+            'bidang_id'    => $user['bidang_id'],
+            'jabatan_id'   => $user['jabatan_id']
         ]);
+
+        // SIMPAN NOTIFIKASI KE STAFF
+        $this->notifModel->insert([
+            'user_id' => $userId,
+            'message' => "Anda mendapatkan tugas baru untuk indikator tahun $tahunId.",
+            'meta'    => json_encode([
+                'indikator_id' => $indikatorId,
+                'tahun_id'     => $tahunId,
+                'sasaran_id'   => $sasaranId
+            ]),
+            'status'   => 'unread'
+        ]);
+
+        $successUsers[] = $user['nama'];
     }
+
+    // ======================
+    // SweetAlert untuk ADMIN
+    // ======================
+    $message = '';
+    $type    = 'success';
+
+    if (!empty($successUsers)) {
+        $message .= 'PIC berhasil disimpan untuk: ' . implode(', ', $successUsers) . '. ';
+    }
+
+    if (!empty($skippedUsers)) {
+        $message .= 'PIC sudah terdaftar untuk: ' . implode(', ', $skippedUsers) . '.';
+        $type = 'warning';
+    }
+
+    return redirect()->to('/admin/pic')->with('alert', [
+        'type'    => $type,
+        'title'   => $type === 'success' ? 'Berhasil' : 'Perhatian',
+        'message' => $message
+    ]);
+}
 
     // ====================== AJAX ======================
 
