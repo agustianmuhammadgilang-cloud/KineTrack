@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\TwModel;
-use App\Models\TahunModel;
+use App\Models\TahunAnggaranModel;
 
 class TwController extends BaseController
 {
@@ -14,7 +14,28 @@ class TwController extends BaseController
     public function __construct()
     {
         $this->twModel    = new TwModel();
-        $this->tahunModel = new TahunModel();
+        $this->tahunModel = new TahunAnggaranModel();
+    }
+
+    /**
+     * Pastikan setiap tahun punya TW 1–4
+     */
+    private function ensureTWGenerated($tahunId)
+    {
+        $count = $this->twModel
+            ->where('tahun_id', $tahunId)
+            ->countAllResults();
+
+        if ($count == 0) {
+            for ($i = 1; $i <= 4; $i++) {
+                $this->twModel->insert([
+                    'tahun_id' => $tahunId,
+                    'tw'       => $i,
+                    'is_open'  => 0,
+                    'auto_mode'=> 0
+                ]);
+            }
+        }
     }
 
     public function index()
@@ -23,7 +44,14 @@ class TwController extends BaseController
 
         $data = [];
         foreach ($tahunList as $t) {
-            $tw = $this->twModel->where('tahun_id', $t['id'])->findAll();
+
+            // Penting! Generate 4 TW per tahun jika belum ada
+            $this->ensureTWGenerated($t['id']);
+
+            $tw = $this->twModel
+                ->where('tahun_id', $t['id'])
+                ->orderBy('tw', 'ASC')
+                ->findAll();
 
             $data[] = [
                 'tahun' => $t['tahun'],
@@ -48,17 +76,15 @@ class TwController extends BaseController
             ]);
         }
 
-        // Toggle status
-        $newStatus = $tw['is_open'] ? 0 : 1;
-
+        // Toggle buka / kunci
         $this->twModel->update($id, [
-            'is_open' => $newStatus
+            'is_open' => $tw['is_open'] ? 0 : 1
         ]);
 
         return redirect()->back()->with('alert', [
             'type' => 'success',
             'title' => 'Berhasil',
-            'message' => "Status TW berhasil diperbarui."
+            'message' => 'Status TW berhasil diperbarui.'
         ]);
     }
 }

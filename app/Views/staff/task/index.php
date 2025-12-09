@@ -2,49 +2,76 @@
 <?= $this->section('content') ?>
 
 <h3 class="text-2xl font-bold text-[var(--polban-blue)] mb-6">
-    Task Anda
+    Tugas Pengukuran Kinerja Anda
 </h3>
 
-<div class="bg-white shadow-md rounded-xl p-6 border border-gray-200">
+<?php if (empty($tasksGrouped)): ?>
+    <div class="bg-white p-6 rounded-lg shadow border border-gray-200 text-gray-600">
+        Tidak ada indikator yang ditugaskan kepada Anda.
+    </div>
+<?php else: ?>
 
-    <?php if(empty($tasks)): ?>
-        <p class="text-gray-600">Tidak ada task untuk Anda saat ini.</p>
-    <?php else: ?>
-        <?php 
-        // Kelompokkan tasks berdasarkan Sasaran Strategis
-        $tasksBySasaran = [];
-        foreach($tasks as $t) {
-            $ss = $t['nama_sasaran'] ?? 'Tanpa Sasaran';
-            $tasksBySasaran[$ss][] = $t;
-        }
-        ?>
+<?php foreach ($tasksGrouped as $sasaran => $indikatorList): ?>
+<div class="mb-6 bg-white shadow-md rounded-xl border border-gray-200 p-5">
 
-        <?php foreach($tasksBySasaran as $sasaran => $taskList): ?>
-            <!-- Header SS -->
-            <h4 class="text-lg font-bold text-[var(--polban-blue)] mb-2 border-b pb-1">
-                <?= $sasaran ?>
-            </h4>
+    <h4 class="text-lg font-bold text-[var(--polban-blue)] mb-4 border-b pb-2">
+        <?= esc($sasaran) ?>
+    </h4>
 
-            <ul class="mb-4 space-y-2">
-                <?php foreach($taskList as $t): ?>
-                    <li class="flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:shadow-md transition">
-                        <div>
-                            <p class="text-gray-800 font-semibold"><?= $t['nama_indikator'] ?></p>
-                            <p class="text-sm text-gray-600">
-                                Tahun <?= $t['tahun'] ?> — Triwulan <?= $t['tw'] ?>
-                            </p>
-                        </div>
+    <?php foreach ($indikatorList as $ind): ?>
+        <div class="mb-4 p-4 border rounded-lg hover:shadow transition bg-gray-50">
 
-                        <a href="<?= base_url('staff/task/input/'.$t['indikator_id']) ?>"
-                           class="px-3 py-1 bg-[var(--polban-blue)] text-white rounded font-medium hover:bg-blue-700 transition shadow">
+            <p class="font-semibold text-gray-800"><?= esc($ind['nama_indikator']) ?></p>
+            <p class="text-sm text-gray-600 mb-3">Tahun <?= $ind['tahun'] ?></p>
+
+            <!-- TW STATUS BAR -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+
+                <?php foreach ([1,2,3,4] as $tw): 
+                    $status = $ind['tw_status'][$tw];
+                    $tahunId = $ind['tahun_id'];
+
+                    // Warna badge
+                    $badge = $status 
+                        ? 'bg-green-600 text-white'
+                        : 'bg-red-500 text-white';
+
+                    // Jika TW aktif otomatis (tahun sama dan bulan sesuai)
+                    $currentMonth = date('n');
+                    $currentYear  = date('Y');
+                    $autoTw = ($currentMonth <= 3 ? 1 : ($currentMonth <= 6 ? 2 : ($currentMonth <= 9 ? 3 : 4)));
+
+                    if ($status && $currentYear == $ind['tahun'] && $autoTw == $tw) {
+                        $badge = "bg-blue-600 text-white";
+                    }
+                ?>
+
+                <div class="p-3 rounded-lg border bg-white text-center shadow-sm">
+                    <p class="font-semibold mb-1">TW <?= $tw ?></p>
+                    
+                    <span class="px-3 py-1 text-xs rounded-full <?= $badge ?>">
+                        <?= $status 
+                            ? ($badge == "bg-blue-600 text-white" ? "Aktif Otomatis" : "Dibuka Admin")
+                            : "Dikunci" ?>
+                    </span>
+
+                    <?php if ($status): ?>
+                        <a href="<?= base_url('staff/task/input/'.$ind['indikator_id'].'/'.$tw) ?>"
+                            class="block mt-2 bg-[var(--polban-blue)] text-white py-1 rounded hover:bg-blue-700 transition text-sm">
                             Isi Pengukuran
                         </a>
-                    </li>
+                    <?php endif; ?>
+                </div>
+
                 <?php endforeach; ?>
-            </ul>
-        <?php endforeach; ?>
-    <?php endif; ?>
+
+            </div>
+        </div>
+    <?php endforeach; ?>
 
 </div>
+<?php endforeach; ?>
+
+<?php endif; ?>
 
 <?= $this->endSection() ?>
