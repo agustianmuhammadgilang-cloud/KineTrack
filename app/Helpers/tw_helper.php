@@ -3,79 +3,80 @@
 use App\Models\TwModel;
 
 /**
- * Cek apakah TW boleh diinput oleh PIC.
- * Menggabungkan logika:
- * 1. Triwulan otomatis berdasarkan bulan sekarang
- * 2. Override admin dari tabel tw_settings
+ * Ambil status TW lengkap:
+ * - is_open (true/false)
+ * - source: admin / auto
  */
-function isTwOpen(int $tahunId, int $tw): bool
+function getTwStatus(int $tahunId, int $tw): array
 {
-    $currentMonth = (int) date('n'); // bulan 1–12
-    $currentYear  = (int) date('Y');
+    $model = new TwModel();
 
-    // ================================
-    // 1. Tentukan TW aktif otomatis
-    // ================================
-    $autoTw = 0;
-
-    if ($currentMonth >= 1  && $currentMonth <= 3)  $autoTw = 1;
-    if ($currentMonth >= 4  && $currentMonth <= 6)  $autoTw = 2;
-    if ($currentMonth >= 7  && $currentMonth <= 9)  $autoTw = 3;
-    if ($currentMonth >= 10 && $currentMonth <= 12) $autoTw = 4;
-
-    // Jika tahun cocok dan TW sedang aktif otomatis → langsung boleh
-    if ($tahunId == $currentYear && $autoTw == $tw) {
-        return true;
-    }
-
-    // ====================================
-    // 2. Cek override admin pada database
-    // ====================================
-    $twModel = new TwModel();
-    $row = $twModel
+    $row = $model
         ->where('tahun_id', $tahunId)
         ->where('tw', $tw)
         ->first();
 
-    if ($row && $row['is_open'] == 1) {
-        return true; // override admin
+    if (!$row) {
+        return ['is_open' => false, 'source' => 'unknown'];
     }
 
-    // default: tidak boleh
-    return false;
+    // =============== AUTO MODE ===============
+    if ((int)$row['auto_mode'] === 1) {
+
+        $currentMonth = (int) date('n');
+
+        $twMap = [
+            1 => [1, 2, 3],
+            2 => [4, 5, 6],
+            3 => [7, 8, 9],
+            4 => [10, 11, 12],
+        ];
+
+        // Jika bulan berada dalam rentang TW → terbuka otomatis
+        if (in_array($currentMonth, $twMap[$tw])) {
+            return ['is_open' => true, 'source' => 'auto'];
+        }
+    }
+
+    // =============== MANUAL MODE ===============
+    return [
+        'is_open' => (int)$row['is_open'] === 1,
+        'source'  => 'admin'
+    ];
 }
 
+
+/**
+ * Return true/false mudah untuk controller
+ */
+function isTwOpenEffective(int $tahunId, int $tw): bool
+{
+    $status = getTwStatus($tahunId, $tw);
+    return $status['is_open'];
+}
+
+
+/**
+ * Auto update tabel tw_settings berdasarkan bulan berjalan
+ * (hanya untuk auto_mode = 1)
+ */
 function autoUnlockTW()
 {
     $db = \Config\Database::connect();
-
     $currentMonth = (int) date('n');
-    $currentTw = ceil($currentMonth / 3); // 1–4
+    $currentTw = ceil($currentMonth / 3);
 
-    // Ambil semua tahun
-    $tahun = $db->table('tahun_anggaran')->get()->getResultArray();
+    $rows = $db->table('tw_settings')->get()->getResultArray();
 
-    foreach ($tahun as $t) {
-        // Ambil TW untuk tahun ini
-        $twList = $db->table('tw_settings')
-            ->where('tahun_id', $t['id'])
-            ->get()->getResultArray();
+    foreach ($rows as $row) {
 
-        foreach ($twList as $tw) {
+        if ((int)$row['auto_mode'] !== 1) continue;
 
-            // Hanya auto-update TW yang auto_mode = 1
-            if ($tw['auto_mode'] != 1) {
-                continue;
-            }
+        // TW cocok dengan TW berjalan → buka
+        $isOpen = ($row['tw'] == $currentTw) ? 1 : 0;
 
-            // Sistem: TW selain TW bulan ini → kunci
-            $isOpen = ($tw['tw'] == $currentTw) ? 1 : 0;
-
-            $db->table('tw_settings')
-                ->where('id', $tw['id'])
-                ->update([
-                    'is_open' => $isOpen
-                ]);
-        }
+        $db->table('tw_settings')
+            ->where('id', $row['id'])
+            ->update(['is_open' => $isOpen]);
     }
 }
