@@ -181,6 +181,13 @@
                     Kelola PIC (Person In Charge)
                 </a>
 
+                <a href="<?= base_url('admin/tw') ?>"
+                    class="px-4 py-2 rounded hover:bg-white/10 transition
+                    <?= (service('uri')->getSegment(2) == 'tw') ? 'bg-white/20 font-semibold' : '' ?>">
+                    Manajemen Triwulan
+                </a>
+
+
                 <a href="<?= base_url('admin/pengukuran') ?>"
                     class="px-4 py-2 rounded hover:bg-white/10 transition
                     <?= (service('uri')->getSegment(2) == 'testing-pk') ? 'bg-white/20 font-semibold' : '' ?>">

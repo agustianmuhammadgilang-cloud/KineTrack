@@ -150,6 +150,7 @@ $routes->group('staff', ['filter' => 'auth'], function($routes) {
     $routes->get('task', 'Staff\TaskController::index');             // daftar task PIC staff
     $routes->get('task/input/(:num)', 'Staff\TaskController::input/$1'); // optional: detail input per indikator
     $routes->post('task/store', 'Staff\TaskController::store');      // simpan input indikator
+    $routes->get('task/input/(:num)/(:num)', 'Staff\TaskController::input/$1/$2');
 });
 
 // =============================
@@ -182,3 +183,7 @@ $routes->group('admin/pengukuran', function($routes) {
     $routes->get('pdf/(:num)', 'Admin\Pengukuran::exportPdf/$1');
 });
 
+$routes->group('admin/tw', ['namespace' => 'App\Controllers\Admin'], function($routes){
+    $routes->get('/', 'TwController::index');
+    $routes->get('toggle/(:num)', 'TwController::toggle/$1');
+});

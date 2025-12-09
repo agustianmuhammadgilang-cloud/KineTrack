@@ -75,59 +75,68 @@ class Pengukuran extends BaseController
     // ================================================================
     // SIMPAN BULK INPUT
     // ================================================================
-    public function store()
-    {
-        $tahunId = $this->request->getPost('tahun_id');
-        $tw      = $this->request->getPost('triwulan');
-       $indikator = $this->indikatorModel
-    ->select('indikator_kinerja.id')
-    ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
-    ->where('sasaran_strategis.tahun_id', $tahunId)
-    ->findAll();   // HAPUS where triwulan
+    // ================================================================
+// SIMPAN BULK INPUT (ADMIN)
+// ================================================================
+public function store()
+{
+    $tahunId = $this->request->getPost('tahun_id');
+    $tw      = (int)$this->request->getPost('triwulan');
 
-        $saveCount = 0;
+    // Ambil semua indikator berdasarkan tahun
+    $indikatorList = $this->indikatorModel
+        ->select('indikator_kinerja.id')
+        ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
+        ->where('sasaran_strategis.tahun_id', $tahunId)
+        ->findAll();
 
-        foreach ($indikator as $ind) {
+    if (empty($indikatorList)) {
+        return redirect()->back()->with('error', 'Tidak ada indikator untuk tahun ini.');
+    }
 
-            $id = $ind['id'];
+    $saveCount = 0;
 
-            $dataSave = [
-                'indikator_id' => $id,
-                'tahun_id'     => $tahunId,
-                'triwulan'     => $tw,
-                'realisasi'    => $this->request->getPost("realisasi_$id"),
-                'kendala'      => $this->request->getPost("kendala_$id"),
-                'strategi'     => $this->request->getPost("strategi_$id"),
-                'data_dukung'  => $this->request->getPost("data_dukung_$id"),
-                'created_by'   => session('user_id')
-            ];
+    foreach ($indikatorList as $ind) {
+        $id = $ind['id'];
 
-            // Upload File
-            $file = $this->request->getFile("file_$id");
-            if ($file && $file->isValid() && !$file->hasMoved()) {
-                $newName = $file->getRandomName();
-                $file->move(FCPATH . 'uploads/pengukuran/', $newName);
-                $dataSave['file_dukung'] = $newName;
-            }
+        $dataSave = [
+            'indikator_id' => $id,
+            'tahun_id'     => $tahunId,
+            'triwulan'     => $tw,
+            'realisasi'    => (float)$this->request->getPost("realisasi_$id"),
+            'kendala'      => trim($this->request->getPost("kendala_$id")),
+            'strategi'     => trim($this->request->getPost("strategi_$id")),
+            'data_dukung'  => trim($this->request->getPost("data_dukung_$id")),
+            'created_by'   => session('user_id')
+        ];
 
-            // Insert / Update
-            $existing = $this->pengukuranModel
-                ->where('indikator_id', $id)
-                ->where('tahun_id', $tahunId)
-                ->where('triwulan', $tw)
-                ->first();
-
-            if ($existing) {
-                $this->pengukuranModel->update($existing['id'], $dataSave);
-            } else {
-                $this->pengukuranModel->insert($dataSave);
-            }
-
-            $saveCount++;
+        // Upload File
+        $file = $this->request->getFile("file_$id");
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newName = $file->getRandomName();
+            $file->move(WRITEPATH . 'uploads/pengukuran/', $newName);
+            $dataSave['file_dukung'] = $newName;
         }
 
-        return redirect()->back()->with('success', "$saveCount data berhasil disimpan");
+        // Insert / Update
+        $existing = $this->pengukuranModel
+            ->where('indikator_id', $id)
+            ->where('tahun_id', $tahunId)
+            ->where('triwulan', $tw)
+            ->first();
+
+        if ($existing) {
+            $this->pengukuranModel->update($existing['id'], $dataSave);
+        } else {
+            $this->pengukuranModel->insert($dataSave);
+        }
+
+        $saveCount++;
     }
+
+    return redirect()->back()->with('success', "$saveCount data berhasil disimpan");
+}
+
 
 
     // ================================================================

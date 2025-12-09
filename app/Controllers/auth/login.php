@@ -8,22 +8,18 @@ use App\Models\UserModel;
 class Login extends BaseController
 {
     public function index()
-    {
-        // Jika sudah login
-        if (session()->get('logged_in')) {
-            return redirect()->to('/dashboard');
-        }
+{
+    // Buat captcha
+    $a = rand(1, 9);
+    $b = rand(1, 9);
+    session()->set('math_captcha_answer', $a + $b);
 
-        // Buat captcha matematika
-        $a = rand(1, 9);
-        $b = rand(1, 9);
-        session()->set('math_captcha_answer', $a + $b);
+    return view('auth/login', [
+        'a' => $a,
+        'b' => $b
+    ]);
+}
 
-        return view('auth/login', [
-            'a' => $a,
-            'b' => $b
-        ]);
-    }
 
     public function process()
     {
