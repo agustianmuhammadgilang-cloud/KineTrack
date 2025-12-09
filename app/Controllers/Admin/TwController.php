@@ -18,7 +18,17 @@ class TwController extends BaseController
     }
 
     /**
-     * Pastikan setiap tahun punya TW 1–4
+     * Hitung TW otomatis berdasarkan bulan saat ini
+     * Jan–Mar = 1, Apr–Jun = 2, Jul–Sep = 3, Okt–Des = 4
+     */
+    private function getCurrentTW()
+    {
+        $bulan = (int) date('n'); 
+        return ceil($bulan / 3);
+    }
+
+    /**
+     * Pastikan setiap tahun punya 4 TW
      */
     private function ensureTWGenerated($tahunId)
     {
@@ -31,7 +41,7 @@ class TwController extends BaseController
                 $this->twModel->insert([
                     'tahun_id' => $tahunId,
                     'tw'       => $i,
-                    'is_open'  => 0,
+                    'is_open'  => 0, // default tertutup
                     'auto_mode'=> 0
                 ]);
             }
@@ -39,31 +49,50 @@ class TwController extends BaseController
     }
 
     public function index()
-    {
-        $tahunList = $this->tahunModel->findAll();
+{
+    $tahunList = $this->tahunModel->findAll();
+    $currentTw = $this->getCurrentTW();
 
-        $data = [];
-        foreach ($tahunList as $t) {
+    $data = [];
+    foreach ($tahunList as $t) {
 
-            // Penting! Generate 4 TW per tahun jika belum ada
-            $this->ensureTWGenerated($t['id']);
+        $this->ensureTWGenerated($t['id']);
 
-            $tw = $this->twModel
-                ->where('tahun_id', $t['id'])
-                ->orderBy('tw', 'ASC')
-                ->findAll();
+        $twList = $this->twModel
+            ->where('tahun_id', $t['id'])
+            ->orderBy('tw', 'ASC')
+            ->findAll();
 
-            $data[] = [
-                'tahun' => $t['tahun'],
-                'tw'    => $tw
-            ];
+        foreach ($twList as &$tw) {
+
+            // --- AUTO OPEN LOGIC ---
+            $tw['is_auto_open_now'] = (
+                $tw['auto_mode'] == 1 &&
+                $tw['tw'] == $currentTw
+            ) ? 1 : 0;
+
+            // --- FINAL OPEN STATE (AUTO + MANUAL) ---
+            $tw['is_open_effective'] = (
+                $tw['is_open'] == 1 ||
+                $tw['is_auto_open_now'] == 1
+            ) ? 1 : 0;
         }
 
-        return view('admin/tw/index', [
-            'data' => $data
-        ]);
+        $data[] = [
+            'tahun' => $t['tahun'],
+            'tw'    => $twList
+        ];
     }
 
+    return view('admin/tw/index', [
+        'data' => $data
+    ]);
+}
+
+
+    /**
+     * Admin membuka / mengunci TW (manual override)
+     */
     public function toggle($id)
     {
         $tw = $this->twModel->find($id);
@@ -76,7 +105,6 @@ class TwController extends BaseController
             ]);
         }
 
-        // Toggle buka / kunci
         $this->twModel->update($id, [
             'is_open' => $tw['is_open'] ? 0 : 1
         ]);

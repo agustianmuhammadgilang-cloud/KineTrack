@@ -27,41 +27,57 @@
             <!-- TW STATUS BAR -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
 
-                <?php foreach ([1,2,3,4] as $tw): 
-                    $status = $ind['tw_status'][$tw];
-                    $tahunId = $ind['tahun_id'];
+                <?php foreach ([1,2,3,4] as $tw): ?>
 
-                    // Warna badge
-                    $badge = $status 
-                        ? 'bg-green-600 text-white'
-                        : 'bg-red-500 text-white';
+                    <?php
+                        // Ambil dari controller
+                        $twInfo = $ind['tw_status'][$tw];
 
-                    // Jika TW aktif otomatis (tahun sama dan bulan sesuai)
-                    $currentMonth = date('n');
-                    $currentYear  = date('Y');
-                    $autoTw = ($currentMonth <= 3 ? 1 : ($currentMonth <= 6 ? 2 : ($currentMonth <= 9 ? 3 : 4)));
+                        // ================
+                        // Fallback Format
+                        // (jika data lama berupa boolean)
+                        // ================
+                        if (is_bool($twInfo)) {
+                            $isOpen = $twInfo;
+                            $source = $twInfo ? 'admin' : 'closed';
+                        } else {
+                            // Format baru
+                            $isOpen = $twInfo['is_open'];
+                            $source = $twInfo['source'];
+                        }
 
-                    if ($status && $currentYear == $ind['tahun'] && $autoTw == $tw) {
-                        $badge = "bg-blue-600 text-white";
-                    }
-                ?>
+                        // ====================
+                        // Badge warna
+                        // ====================
+                        if (!$isOpen) {
+                            $badge = "bg-red-500 text-white";
+                        } elseif ($source === 'auto') {
+                            $badge = "bg-blue-600 text-white";
+                        } else {
+                            $badge = "bg-green-600 text-white";
+                        }
+                    ?>
 
-                <div class="p-3 rounded-lg border bg-white text-center shadow-sm">
-                    <p class="font-semibold mb-1">TW <?= $tw ?></p>
-                    
-                    <span class="px-3 py-1 text-xs rounded-full <?= $badge ?>">
-                        <?= $status 
-                            ? ($badge == "bg-blue-600 text-white" ? "Aktif Otomatis" : "Dibuka Admin")
-                            : "Dikunci" ?>
-                    </span>
+                    <div class="p-3 rounded-lg border bg-white text-center shadow-sm">
+                        <p class="font-semibold mb-1">TW <?= $tw ?></p>
 
-                    <?php if ($status): ?>
-                        <a href="<?= base_url('staff/task/input/'.$ind['indikator_id'].'/'.$tw) ?>"
-                            class="block mt-2 bg-[var(--polban-blue)] text-white py-1 rounded hover:bg-blue-700 transition text-sm">
-                            Isi Pengukuran
-                        </a>
-                    <?php endif; ?>
-                </div>
+                        <span class="px-3 py-1 text-xs rounded-full <?= $badge ?>">
+                            <?php if (!$isOpen): ?>
+                                Dikunci
+                            <?php elseif ($source === 'auto'): ?>
+                                Aktif Otomatis
+                            <?php else: ?>
+                                Dibuka Admin
+                            <?php endif; ?>
+                        </span>
+
+                        <?php if ($isOpen): ?>
+                            <a href="<?= base_url('staff/task/input/'.$ind['indikator_id'].'/'.$tw) ?>"
+                                class="block mt-2 bg-[var(--polban-blue)] text-white py-1 rounded hover:bg-blue-700 transition text-sm">
+                                Isi Pengukuran
+                            </a>
+                        <?php endif; ?>
+                    </div>
 
                 <?php endforeach; ?>
 
