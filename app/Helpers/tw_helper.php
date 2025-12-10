@@ -10,40 +10,26 @@ use App\Models\TwModel;
 function getTwStatus(int $tahunId, int $tw): array
 {
     $model = new TwModel();
-
-    $row = $model
-        ->where('tahun_id', $tahunId)
-        ->where('tw', $tw)
-        ->first();
+    $row = $model->where('tahun_id', $tahunId)
+                 ->where('tw', $tw)
+                 ->first();
 
     if (!$row) {
         return ['is_open' => false, 'source' => 'unknown'];
     }
 
-    // =============== AUTO MODE ===============
-    if ((int)$row['auto_mode'] === 1) {
+    // Hanya ambil is_open dari database (manual admin)
+    $isOpen = (int)$row['is_open'] === 1;
 
-        $currentMonth = (int) date('n');
+    // Tentukan label source
+    $source = $row['auto_mode'] == 1 ? 'auto' : 'admin';
 
-        $twMap = [
-            1 => [1, 2, 3],
-            2 => [4, 5, 6],
-            3 => [7, 8, 9],
-            4 => [10, 11, 12],
-        ];
-
-        // Jika bulan berada dalam rentang TW → terbuka otomatis
-        if (in_array($currentMonth, $twMap[$tw])) {
-            return ['is_open' => true, 'source' => 'auto'];
-        }
-    }
-
-    // =============== MANUAL MODE ===============
     return [
-        'is_open' => (int)$row['is_open'] === 1,
-        'source'  => 'admin'
+        'is_open' => $isOpen,
+        'source'  => $source
     ];
 }
+
 
 
 /**

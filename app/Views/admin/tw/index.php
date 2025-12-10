@@ -22,27 +22,21 @@
                             <?= $t['is_open_effective'] ? 'Dibuka' : 'Dikunci' ?>
                         </span>
 
-                        <?php
-                            // aman meskipun key tidak ada
-                            $isAutoOpenNow = $t['is_auto_open_now'] ?? 0; 
-                            $autoOpen = ($t['auto_mode'] == 1 && $isAutoOpenNow == 1);
-                        ?>
-
-                        <?php if ($autoOpen): ?>
-                            <!-- AUTO MODE -->
-                            <div class="text-sm text-blue-600 font-medium">
-                                (Terbuka Otomatis)
+                        <!-- HIGHLIGHT TW AKTIF OTOMATIS -->
+                        <?php if ($t['is_auto_now']): ?>
+                            <div class="text-sm text-blue-600 font-medium mb-2">
+                                (TW Saat Ini)
                             </div>
-
-                        <?php else: ?>
-                            <!-- MANUAL TOGGLE -->
-                            <a href="<?= base_url('admin/tw/toggle/' . $t['id']) ?>"
-                                class="px-4 py-2 rounded-lg text-white font-semibold
-                                    <?= $t['is_open_effective'] ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600' ?>">
-                                
-                                <?= $t['is_open_effective'] ? 'Kunci' : 'Buka' ?>
-                            </a>
                         <?php endif; ?>
+
+
+                        <!-- TOMBOL MANUAL -->
+                        <a href="<?= base_url('admin/tw/toggle/' . $t['id']) ?>"
+                            class="px-4 py-2 rounded-lg text-white font-semibold
+                                <?= $t['is_open_effective'] ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600' ?>">
+                            <?= $t['is_open_effective'] ? 'Kunci' : 'Buka' ?>
+                        </a>
+
 
                     </div>
 

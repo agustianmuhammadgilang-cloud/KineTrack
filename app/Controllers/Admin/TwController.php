@@ -19,7 +19,6 @@ class TwController extends BaseController
 
     /**
      * Hitung TW otomatis berdasarkan bulan saat ini
-     * Jan–Mar = 1, Apr–Jun = 2, Jul–Sep = 3, Okt–Des = 4
      */
     private function getCurrentTW()
     {
@@ -31,73 +30,65 @@ class TwController extends BaseController
      * Pastikan setiap tahun punya 4 TW
      */
     private function ensureTWGenerated($tahunId)
-    {
-        $count = $this->twModel
-            ->where('tahun_id', $tahunId)
-            ->countAllResults();
-
-        if ($count == 0) {
-            for ($i = 1; $i <= 4; $i++) {
-                $this->twModel->insert([
-                    'tahun_id' => $tahunId,
-                    'tw'       => $i,
-                    'is_open'  => 0, // default tertutup
-                    'auto_mode'=> 0
-                ]);
-            }
-        }
-    }
-
-    public function index()
 {
-    // ==========================================
-    // HANYA TAHUN DENGAN STATUS = 'active'
-    // ==========================================
-    $tahunList = $this->tahunModel
-        ->where('status', 'active')
-        ->orderBy('tahun', 'DESC')
-        ->findAll();
+    $count = $this->twModel
+        ->where('tahun_id', $tahunId)
+        ->countAllResults();
 
-    $currentTw = $this->getCurrentTW();
+    if ($count == 0) {
+        $currentTw = $this->getCurrentTW(); // TW berdasarkan bulan saat ini
 
-    $data = [];
-    foreach ($tahunList as $t) {
-
-        // generate default 4 TW jika belum ada
-        $this->ensureTWGenerated($t['id']);
-
-        $twList = $this->twModel
-            ->where('tahun_id', $t['id'])
-            ->orderBy('tw', 'ASC')
-            ->findAll();
-
-        foreach ($twList as &$tw) {
-
-            // --- AUTO OPEN LOGIC ---
-            $tw['is_auto_open_now'] = (
-                $tw['auto_mode'] == 1 &&
-                $tw['tw'] == $currentTw
-            ) ? 1 : 0;
-
-            // --- FINAL OPEN STATE (AUTO + MANUAL) ---
-            $tw['is_open_effective'] = (
-                $tw['is_open'] == 1 ||
-                $tw['is_auto_open_now'] == 1
-            ) ? 1 : 0;
+        for ($i = 1; $i <= 4; $i++) {
+            $this->twModel->insert([
+                'tahun_id' => $tahunId,
+                'tw'       => $i,
+                'is_open'  => ($i == $currentTw) ? 1 : 0, // default terbuka untuk TW saat ini
+                'auto_mode'=> 1 // aktifkan auto_mode untuk penanda
+            ]);
         }
-
-        $data[] = [
-            'tahun' => $t['tahun'],
-            'tw'    => $twList
-        ];
     }
-
-    return view('admin/tw/index', [
-        'data' => $data
-    ]);
 }
 
 
+    public function index()
+    {
+        $tahunList = $this->tahunModel
+            ->where('status', 'active')
+            ->orderBy('tahun', 'DESC')
+            ->findAll();
+
+        $currentTw = $this->getCurrentTW();
+
+        $data = [];
+        foreach ($tahunList as $t) {
+
+            $this->ensureTWGenerated($t['id']);
+
+            $twList = $this->twModel
+                ->where('tahun_id', $t['id'])
+                ->orderBy('tw', 'ASC')
+                ->findAll();
+
+            foreach ($twList as &$tw) {
+
+                // --- Hanya penanda TW aktif otomatis (highlight) ---
+                $tw['is_auto_now'] = ($tw['tw'] == $currentTw) ? 1 : 0;
+
+                // --- Status terbuka/tertutup berdasarkan manual override ---
+                $tw['is_open_effective'] = ($tw['is_open'] == 1) ? 1 : 0;
+            }
+
+
+            $data[] = [
+                'tahun' => $t['tahun'],
+                'tw'    => $twList
+            ];
+        }
+
+        return view('admin/tw/index', [
+            'data' => $data
+        ]);
+    }
 
     /**
      * Admin membuka / mengunci TW (manual override)
