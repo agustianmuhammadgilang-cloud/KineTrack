@@ -127,6 +127,31 @@
             </div>
         </div>
 
+<a href="<?= base_url('admin/tahun') ?>"
+    class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition
+    <?= (service('uri')->getSegment(2) == 'tahun') ? 'bg-white/20 font-semibold' : '' ?>">
+    <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
+        <use href="#calendar" />
+    </svg>
+    Manajemen Tahun Anggaran
+</a>
+
+<!-- Tambahkan di bagian symbol SVG -->
+<svg style="display:none;">
+    <symbol id="calendar" viewBox="0 0 24 24">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" fill="none" stroke-width="2"/>
+        <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2"/>
+        <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2"/>
+        <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/>
+    </symbol>
+</svg>
+
+
+
+
+
+        
+
         
         <!-- Input Pengukuran (Dropdown Group) -->
         <div 
@@ -156,12 +181,6 @@
         <div x-show="open" x-transition
         class="ml-10 flex flex-col mt-1">
         
-        <a href="<?= base_url('admin/tahun') ?>"
-       
-                    class="px-4 py-2 rounded hover:bg-white/10 transition
-                    <?= (service('uri')->getSegment(2) == 'tahun') ? 'bg-white/20 font-semibold' : '' ?>">
-                    Kelola Tahun Anggaran
-                </a>
 
                 <a href="<?= base_url('admin/sasaran') ?>"
                     class="px-4 py-2 rounded hover:bg-white/10 transition
@@ -174,27 +193,46 @@
                     <?= (service('uri')->getSegment(2) == 'indikator') ? 'bg-white/20 font-semibold' : '' ?>">
                     Kelola Indikator Kinerja
                 </a>
-
-                <a href="<?= base_url('admin/pic') ?>"
-                    class="px-4 py-2 rounded hover:bg-white/10 transition
-                    <?= (service('uri')->getSegment(2) == 'pic') ? 'bg-white/20 font-semibold' : '' ?>">
-                    Kelola PIC (Person In Charge)
-                </a>
-
-                <a href="<?= base_url('admin/tw') ?>"
-                    class="px-4 py-2 rounded hover:bg-white/10 transition
-                    <?= (service('uri')->getSegment(2) == 'tw') ? 'bg-white/20 font-semibold' : '' ?>">
-                    Manajemen Triwulan
-                </a>
-
-
-                <a href="<?= base_url('admin/pengukuran') ?>"
-                    class="px-4 py-2 rounded hover:bg-white/10 transition
-                    <?= (service('uri')->getSegment(2) == 'testing-pk') ? 'bg-white/20 font-semibold' : '' ?>">
-                    Testing PK (Perjanjian Kinerja)
-                </a>
             </div>
         </div>
+
+
+        <a href="<?= base_url('admin/pic') ?>"
+    class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition
+    <?= (service('uri')->getSegment(2) == 'pic') ? 'bg-white/20 font-semibold' : '' ?>">
+    <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
+        <use href="#user-group" />
+    </svg>
+    Manajemen PIC
+</a>
+
+<!-- Tambahkan di bagian symbol SVG -->
+<svg style="display:none;">
+    <symbol id="user-group" viewBox="0 0 24 24">
+        <circle cx="9" cy="7" r="4" stroke="currentColor" fill="none" stroke-width="2"/>
+        <path d="M17 11c1.5 0 3 1 3 3v3H4v-3c0-2 1.5-3 3-3" stroke="currentColor" fill="none" stroke-width="2"/>
+        <circle cx="17" cy="7" r="4" stroke="currentColor" fill="none" stroke-width="2"/>
+    </symbol>
+</svg>
+
+<a href="<?= base_url('admin/tw') ?>"
+    class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition
+    <?= (service('uri')->getSegment(2) == 'tw') ? 'bg-white/20 font-semibold' : '' ?>">
+    <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
+        <use href="#clock" />
+    </svg>
+    Manajemen Triwulan
+</a>
+
+<!-- Tambahkan di bagian symbol SVG -->
+<svg style="display:none;">
+    <symbol id="clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" fill="none" stroke-width="2"/>
+        <line x1="12" y1="6" x2="12" y2="12" stroke="currentColor" stroke-width="2"/>
+        <line x1="12" y1="12" x2="16" y2="14" stroke="currentColor" stroke-width="2"/>
+    </symbol>
+</svg>
+
 
          <!-- Analisis Bidang -->
         <a href="<?= base_url('admin/bidang-select') ?>"
@@ -363,6 +401,7 @@ LHE
 
 
 </svg>
+
 
 <!-- SweetAlert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -50,12 +50,20 @@ class TwController extends BaseController
 
     public function index()
 {
-    $tahunList = $this->tahunModel->findAll();
+    // ==========================================
+    // HANYA TAHUN DENGAN STATUS = 'active'
+    // ==========================================
+    $tahunList = $this->tahunModel
+        ->where('status', 'active')
+        ->orderBy('tahun', 'DESC')
+        ->findAll();
+
     $currentTw = $this->getCurrentTW();
 
     $data = [];
     foreach ($tahunList as $t) {
 
+        // generate default 4 TW jika belum ada
         $this->ensureTWGenerated($t['id']);
 
         $twList = $this->twModel
@@ -88,6 +96,7 @@ class TwController extends BaseController
         'data' => $data
     ]);
 }
+
 
 
     /**
