@@ -18,17 +18,28 @@ function getTwStatus(int $tahunId, int $tw): array
         return ['is_open' => false, 'source' => 'unknown'];
     }
 
-    // Hanya ambil is_open dari database (manual admin)
-    $isOpen = (int)$row['is_open'] === 1;
+    $isOpenDB = (int)$row['is_open'] === 1;
+    $autoMode = (int)$row['auto_mode'] === 1;
 
-    // Tentukan label source
-    $source = $row['auto_mode'] == 1 ? 'auto' : 'admin';
+    // Hitung TW otomatis berdasarkan bulan
+    $currentMonth = (int) date('n');
+    $currentTw = ceil($currentMonth / 3);
+
+    // DETEKSI SUMBER PEMBUKAAN
+    if ($autoMode && $tw == $currentTw && $isOpenDB) {
+        $source = 'auto';
+    } elseif ($isOpenDB) {
+        $source = 'admin';
+    } else {
+        $source = 'closed';
+    }
 
     return [
-        'is_open' => $isOpen,
+        'is_open' => $isOpenDB,
         'source'  => $source
     ];
 }
+
 
 
 

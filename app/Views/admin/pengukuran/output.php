@@ -6,20 +6,41 @@
 </h3>
 
 <?php if (!empty($selected_tahun) && !empty($selected_tw)) : ?>
-<div class="flex justify-end mb-4">
+<div class="flex justify-end mb-4 gap-3">
+
+    <!-- Export Excel -->
     <a href="<?= base_url('admin/pengukuran/export/'.$selected_tahun.'/'.$selected_tw) ?>"
        class="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg shadow 
               hover:bg-green-700 transition font-semibold">
+        <!-- Excel Icon -->
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M19 2H8c-1.1 0-2 .9-2 2v3H5c-1.1 0-2 .9-2 2v8c0 
-    1.1.9 2 2 2h1v3c0 1.1.9 2 2 2h11c1.1 0 2-.9 
-    2-2V4c0-1.1-.9-2-2-2zm0 19H8v-3h8c1.1 0 2-.9 
-    2-2V5h1v16zM7 9v8H5V9h2zm10 8H8V5h9v12z"/>
-</svg>
+            <path d="M19 2H8c-1.1 0-2 .9-2 2v3H5c-1.1 0-2 .9-2 2v8c0 
+            1.1.9 2 2 2h1v3c0 1.1.9 2 2 2h11c1.1 0 2-.9 
+            2-2V4c0-1.1-.9-2-2-2zm0 19H8v-3h8c1.1 0 2-.9 
+            2-2V5h1v16zM7 9v8H5V9h2zm10 8H8V5h9v12z"/>
+        </svg>
         Export Excel
     </a>
+
+    <!-- Export PDF -->
+    <a href="<?= base_url('admin/pengukuran/output/report/'.$selected_tahun.'/'.$selected_tw) ?>"
+       class="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg shadow 
+              hover:bg-red-700 transition font-semibold">
+        <!-- PDF Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M6 2h9l5 5v12a3 3 0 0 1-3 3H6a3 
+            3 0 0 1-3-3V5a3 3 0 0 1 3-3zm8 1.5V8h4.5L14 3.5zM8 12h2.5a2.5 2.5 
+            0 0 1 0 5H8v-5zm1.5 2H10a1 1 0 0 1 0 2H9.5v-2zm5.5-2h2a1 1 0 0 1 
+            1 1v4h-1.5v-1h-1v1H14v-4a1 1 0 0 1 1-1zm1 2v-1h-.5v1H15zm-8 
+            1h1.5v1H7v-1zm0-3h1.5v1H7v-1z"/>
+        </svg>
+        Export PDF
+    </a>
+
 </div>
 <?php endif; ?>
+
+
 
 
 <!-- FILTER CARD -->
