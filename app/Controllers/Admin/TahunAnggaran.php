@@ -27,9 +27,18 @@ class TahunAnggaran extends BaseController
 
     public function store()
     {
+        $tahun  = $this->request->getPost('tahun');
+        $status = $this->request->getPost('status');
+
+        // 🔥 CEK TAHUN SUDAH ADA?
+        $existing = $this->model->where('tahun', $tahun)->first();
+        if ($existing) {
+            return redirect()->back()->withInput()->with('error', 'Tahun sudah ada!');
+        }
+
         $this->model->insert([
-            'tahun'  => $this->request->getPost('tahun'),
-            'status' => $this->request->getPost('status')
+            'tahun'  => $tahun,
+            'status' => $status
         ]);
 
         return redirect()->to('/admin/tahun')->with('success', 'Tahun berhasil ditambahkan');
@@ -42,14 +51,29 @@ class TahunAnggaran extends BaseController
     }
 
     public function update($id)
-    {
-        $this->model->update($id, [
-            'tahun'  => $this->request->getPost('tahun'),
-            'status' => $this->request->getPost('status'),
-        ]);
+{
+    $tahun  = $this->request->getPost('tahun');
+    $status = $this->request->getPost('status');
 
-        return redirect()->to('/admin/tahun')->with('success', 'Tahun berhasil diupdate');
+    // 🔥 Validasi: Cek apakah tahun sudah ada di data lain (selain yg sedang diedit)
+    $existing = $this->model
+        ->where('tahun', $tahun)
+        ->where('id !=', $id)
+        ->first();
+
+    if ($existing) {
+        return redirect()->back()->withInput()->with('error', 'Tahun sudah tersedia!');
     }
+
+    // Logika update asli (tidak diubah)
+    $this->model->update($id, [
+        'tahun'  => $tahun,
+        'status' => $status,
+    ]);
+
+    return redirect()->to('/admin/tahun')->with('success', 'Tahun berhasil diupdate');
+}
+
 
     public function delete($id)
     {
