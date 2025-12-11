@@ -40,7 +40,6 @@
                 readonly class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg">
         </div>
 
-
         <!-- ===================== NAMA INDIKATOR ===================== -->
         <div>
             <label class="block font-semibold text-gray-700 mb-1">Nama Indikator</label>
@@ -48,18 +47,24 @@
                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)] h-28"></textarea>
         </div>
 
-        <!-- ===================== SATUAN ===================== -->
+        <!-- ===================== SATUAN (SELECT DROPDOWN) ===================== -->
         <div>
             <label class="block font-semibold text-gray-700 mb-1">Satuan</label>
-            <input type="text" name="satuan" placeholder="% / Unit / Dokumen / dll"
+            <select id="satuanSelect" name="satuan" required
                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
+                <option value="">-- Pilih Satuan --</option>
+                <option value="%">%</option>
+                <option value="unit">Unit</option>
+                <option value="dokumentasi">Dokumen</option>
+            </select>
         </div>
 
         <!-- ===================== TARGET PK ===================== -->
         <div>
             <label class="block font-semibold text-gray-700 mb-1">Target PK</label>
-            <input type="number" name="target_pk"
+            <input type="number" id="target_pk" name="target_pk" min="0" step="0.01"
                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
+            <div id="hintPK" class="text-xs text-gray-500 mt-1"></div>
         </div>
 
         <hr class="my-4">
@@ -145,6 +150,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const errorDetailPanel = document.getElementById("errorDetailPanel");
     const form = document.getElementById("indikatorForm");
 
+    const satuanSelect = document.getElementById("satuanSelect");
+    const targetPkInput = document.getElementById("target_pk");
+    const hintPK = document.getElementById("hintPK");
+
     /* ---------- MODE ---------- */
     let mode = "non"; // default
 
@@ -168,15 +177,59 @@ document.addEventListener("DOMContentLoaded", function() {
             notifMode.innerText = "Mode: AKUMULATIF";
         }
         // revalidate on mode change
-        const errors = validateTW();
-        renderErrorState(errors);
+        revalidateAndRender();
     }
 
     btnNon.addEventListener("click", () => setMode("non"));
     btnAkm.addEventListener("click", () => setMode("akm"));
     setMode("non");
 
-    /* ---------- VALIDATION LOGIC (fixed for NON sum case) ---------- */
+    /* ---------- SATUAN & PK BEHAVIOR ---------- */
+    function applySatuanBehavior() {
+        const s = satuanSelect.value;
+        if (s === "%") {
+            targetPkInput.value = 100;
+            targetPkInput.readOnly = true;
+            targetPkInput.classList.add("bg-gray-100");
+            hintPK.innerText = "Satuan % — Target PK otomatis diisi 100.";
+            // restrict TW inputs max to 100 in attribute (for better UX)
+            twInputs.forEach(i => {
+                i.setAttribute("max", "100");
+                i.setAttribute("min", "0");
+                i.step = "0.01";
+            });
+        } else if (s === "unit" || s === "dokumentasi") {
+            // allow manual PK
+            if (targetPkInput.readOnly) {
+                targetPkInput.value = "";
+            }
+            targetPkInput.readOnly = false;
+            targetPkInput.classList.remove("bg-gray-100");
+            hintPK.innerText = "Satuan Unit/Dokumentasi — isi Target PK sesuai kebutuhan (mis: 6 dokumen).";
+            twInputs.forEach(i => {
+                i.removeAttribute("max");
+                i.setAttribute("min", "0");
+                i.step = "0.01";
+            });
+        } else {
+            // none selected
+            targetPkInput.readOnly = false;
+            hintPK.innerText = "";
+            twInputs.forEach(i => {
+                i.removeAttribute("max");
+                i.setAttribute("min", "0");
+                i.step = "0.01";
+            });
+        }
+
+        // after adjust, revalidate
+        revalidateAndRender();
+    }
+
+    satuanSelect.addEventListener("change", applySatuanBehavior);
+
+    /* ---------- VALIDATION LOGIC (NEW: sesuai permintaan) ---------- */
+
     function gatherValidation() {
         const vals = twInputs.map(i => {
             const raw = i.value;
@@ -185,65 +238,127 @@ document.addEventListener("DOMContentLoaded", function() {
             return isFinite(n) ? n : null;
         });
 
+        const satuan = satuanSelect.value;
+        const pkRaw = targetPkInput.value;
+        const pk = (pkRaw === "" || pkRaw === null) ? null : Number(pkRaw);
+
         const result = {
-            over100: [],      // per-TW >100 (akumulatif)
-            decreasing: [],   // pairs for akumulatif
-            sumOver100: null, // { sum: number, indices: [..] } for non
+            overLimit: [],      // per-TW >100 when satuan '%'
+            decreasing: [],     // pairs for akumulatif where cur < prev
+            sumMismatch: null,  // for NON mode: { sum, pk, indices }
+            finalMismatch: null // for AKM mode: { tw4, pk }
         };
 
-        // MODE NON: total TW must not exceed 100 (FIX)
+        // PER-ITEM checks for satuan '%'
+        if (satuan === "%") {
+            // treat PK as 100
+            const effectivePk = 100;
+            // per-item boundaries: 0..100
+            vals.forEach((v, idx) => { if (v !== null && v > 100) result.overLimit.push(idx); });
+
+            if (mode === "non") {
+                // NON: total must equal 100
+                const sum = vals.reduce((acc, v) => acc + (v ?? 0), 0);
+                if (Math.abs(sum - effectivePk) > 1e-9) {
+                    const indices = vals.map((v, idx) => v !== null ? idx : -1).filter(i => i >= 0);
+                    result.sumMismatch = { sum, pk: effectivePk, indices };
+                }
+            } else {
+                // AKUMULATIF: TW must be non-decreasing and TW4 must equal 100
+                for (let i = 1; i < vals.length; i++) {
+                    const prev = vals[i-1], cur = vals[i];
+                    if (prev !== null && cur !== null && cur < prev) {
+                        result.decreasing.push({from: i-1, to: i});
+                    }
+                }
+                // check TW4 equals PK if provided (we expect it to be provided for akm)
+                const tw4 = vals[3];
+                if (tw4 === null || Math.abs(tw4 - effectivePk) > 1e-9) {
+                    result.finalMismatch = { tw4: tw4 === null ? null : tw4, pk: effectivePk };
+                }
+            }
+
+            return { vals, result, satuan, pk: effectivePk };
+        }
+
+        // For Unit/Dokumentasi or not selected
+        // If PK not provided yet and we're in AKM mode, we cannot fully validate final equality
+        const sum = vals.reduce((acc, v) => acc + (v ?? 0), 0);
+
         if (mode === "non") {
-            const sum = vals.reduce((acc, v) => acc + (v ?? 0), 0);
-            if (sum > 100) {
-                // also capture which TWs contributed (>0) for detail
-                const indices = vals.map((v, idx) => v !== null && v > 0 ? idx : -1).filter(i => i >= 0);
-                result.sumOver100 = { sum, indices };
+            if (pk === null || isNaN(pk)) {
+                // cannot validate sum yet; just return collected data
+                // (no sumMismatch set)
+                return { vals, result, satuan, pk: null };
             }
-            return { vals, result };
-        }
-
-        // MODE AKUMULATIF (unchanged logic)
-        vals.forEach((v, idx) => {
-            if (v !== null && v > 100) result.over100.push(idx);
-        });
-
-        for (let i = 1; i < vals.length; i++) {
-            const prev = vals[i-1], cur = vals[i];
-            if (prev !== null && cur !== null && cur < prev) {
-                result.decreasing.push({from: i-1, to: i});
+            // PK provided: total must equal PK
+            if (Math.abs(sum - pk) > 1e-9) {
+                const indices = vals.map((v, idx) => v !== null ? idx : -1).filter(i => i >= 0);
+                result.sumMismatch = { sum, pk, indices };
             }
-        }
+            return { vals, result, satuan, pk };
+        } else {
+            // mode === "akm"
+            // check decreasing pairs (where both provided)
+            for (let i = 1; i < vals.length; i++) {
+                const prev = vals[i-1], cur = vals[i];
+                if (prev !== null && cur !== null && cur < prev) {
+                    result.decreasing.push({from: i-1, to: i});
+                }
+            }
 
-        return { vals, result };
+            // TW4 must equal PK (if PK provided)
+            const tw4 = vals[3];
+            if (pk === null || isNaN(pk)) {
+                // cannot validate final equality yet; return with tw4 info if any
+                // but still return decreasing issues if any
+                return { vals, result, satuan, pk: null };
+            }
+            if (tw4 === null || Math.abs(tw4 - pk) > 1e-9) {
+                result.finalMismatch = { tw4: tw4 === null ? null : tw4, pk };
+            }
+
+            return { vals, result, satuan, pk };
+        }
     }
 
     function validateTW() {
-        const { vals, result } = gatherValidation();
+        const { vals, result, satuan, pk } = gatherValidation();
         const messages = [];
 
-        // NON: sumOver100 message
-        if (mode === "non" && result.sumOver100) {
+        // NON: sumMismatch
+        if (result.sumMismatch) {
             messages.push({
-                type: 'sumOver100',
-                text: `Total TW (TW1+TW2+TW3+TW4) = ${result.sumOver100.sum} melebihi 100`,
-                payload: result.sumOver100
+                type: 'sumMismatch',
+                text: `Total TW (TW1+TW2+TW3+TW4) = ${result.sumMismatch.sum} harus sama dengan ${result.sumMismatch.pk}`,
+                payload: result.sumMismatch
             });
         }
 
-        // AKM: per-TW >100
-        result.over100.forEach(idx => {
-            messages.push({type: 'over100', text: `TW${idx+1} tidak boleh melebihi 100`, index: idx});
+        // AKM: finalMismatch (TW4 != PK)
+        if (result.finalMismatch) {
+            const t4 = result.finalMismatch.tw4 === null ? '—' : result.finalMismatch.tw4;
+            messages.push({
+                type: 'finalMismatch',
+                text: `Mode AKUMULATIF: TW4 = ${t4} harus sama dengan PK (${result.finalMismatch.pk})`,
+                payload: result.finalMismatch
+            });
+        }
+
+        // per-item overLimit when satuan '%'
+        result.overLimit && result.overLimit.forEach(idx => {
+            messages.push({type: 'overLimit', text: `TW${idx+1} tidak boleh melebihi 100`, index: idx});
         });
 
-        // AKM: decreasing
+        // decreasing (akumulatif)
         result.decreasing.forEach(obj => {
             messages.push({type: 'decreasing', text: `TW${obj.to+1} tidak boleh turun dari TW${obj.from+1}`, from: obj.from, to: obj.to});
         });
 
-        return { raw: result, messages, vals };
+        return { raw: result, messages, vals, satuan, pk };
     }
 
-    /* ---------- ERROR UI RENDER (includes sum detail) ---------- */
+    /* ---------- ERROR UI RENDER (includes sum/detail) ---------- */
     function renderErrorState(validation) {
         const { raw, messages, vals } = validation;
 
@@ -265,22 +380,32 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const categories = [];
 
-        // NEW: total/sum category (NON mode)
-        if (raw.sumOver100) {
+        // sumMismatch (non)
+        if (raw.sumMismatch) {
             categories.push({
                 id: 'cat-total',
-                title: 'Jumlah Total Melebihi 100',
-                summary: `Total = ${raw.sumOver100.sum} (maks 100)`,
-                payload: raw.sumOver100
+                title: 'Jumlah Total Tidak Sesuai PK',
+                summary: `Total = ${raw.sumMismatch.sum} (harus ${raw.sumMismatch.pk})`,
+                payload: raw.sumMismatch
             });
         }
 
-        if (raw.over100 && raw.over100.length > 0) {
+        // finalMismatch (akm)
+        if (raw.finalMismatch) {
+            categories.push({
+                id: 'cat-final',
+                title: 'Nilai Akumulatif Akhir Tidak Sama dengan PK',
+                summary: `TW4 = ${raw.finalMismatch.tw4 === null ? '—' : raw.finalMismatch.tw4} (harus ${raw.finalMismatch.pk})`,
+                payload: raw.finalMismatch
+            });
+        }
+
+        if (raw.overLimit && raw.overLimit.length > 0) {
             categories.push({
                 id: 'cat-over100',
                 title: 'Melebihi Batas 100 (per TW)',
-                summary: `${raw.over100.length} TW melebihi 100`,
-                payload: raw.over100.slice()
+                summary: `${raw.overLimit.length} TW melebihi 100`,
+                payload: raw.overLimit.slice()
             });
         }
 
@@ -316,27 +441,38 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 if (cat.id === 'cat-total') {
                     const sum = cat.payload.sum;
+                    const pk = cat.payload.pk;
                     const indices = cat.payload.indices;
-                    // detail lines: list each TW with its value
                     const lines = vals.map((v, idx) => `• TW${idx+1} = ${v === null ? '—' : v}`);
-                    const exceed = sum - 100;
+                    const diff = sum - pk;
                     errorDetailPanel.innerHTML =
-                        `<div class="font-semibold mb-1">Detail: Total Melebihi 100</div>
+                        `<div class="font-semibold mb-1">Detail: Total Tidak Sesuai PK</div>
                          <div class="text-sm text-gray-700 mb-2">${lines.join('<br>')}</div>
-                         <div class="text-sm font-medium text-red-600">Total = ${sum} (melebihi ${exceed})</div>`;
+                         <div class="text-sm font-medium text-red-600">Total = ${sum} (harus ${pk}) ${diff !== 0 ? '(selisih ' + diff + ')' : ''}</div>`;
                     errorDetailPanel.classList.remove("hidden");
 
-                    // highlight TW inputs that contribute (value > 0)
                     indices.forEach(i => {
                         const el = twInputs[i];
                         if (el) el.classList.add("border-red-500","ring-2","ring-red-200");
                     });
 
+                } else if (cat.id === 'cat-final') {
+                    const tw4 = cat.payload.tw4 === null ? '—' : cat.payload.tw4;
+                    const pk = cat.payload.pk;
+                    errorDetailPanel.innerHTML =
+                        `<div class="font-semibold mb-1">Detail: TW Akhir Tidak Sesuai PK</div>
+                         <div class="text-sm text-gray-700 mb-2">TW4 = ${tw4}</div>
+                         <div class="text-sm font-medium text-red-600">TW4 harus sama dengan PK (${pk})</div>`;
+                    errorDetailPanel.classList.remove("hidden");
+
+                    // highlight TW4
+                    const el4 = twInputs[3];
+                    if (el4) el4.classList.add("border-red-500","ring-2","ring-red-200");
+
                 } else if (cat.id === 'cat-over100') {
                     const lines = cat.payload.map(idx => `• TW${idx+1} = ${vals[idx]} (melebihi 100)`);
                     errorDetailPanel.innerHTML = `<div class="font-semibold mb-1">Detail: Melebihi 100 per TW</div>${lines.join('<br>')}`;
                     errorDetailPanel.classList.remove("hidden");
-                    // highlight offending TWs
                     cat.payload.forEach(idx => {
                         const el = twInputs[idx];
                         if (el) el.classList.add("border-red-500","ring-2","ring-red-200");
@@ -346,7 +482,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     const lines = cat.payload.map(pair => `• TW${pair.to+1} (${vals[pair.to] ?? '-'}) < TW${pair.from+1} (${vals[pair.from] ?? '-'})`);
                     errorDetailPanel.innerHTML = `<div class="font-semibold mb-1">Detail: Penurunan Nilai</div>${lines.join('<br>')}`;
                     errorDetailPanel.classList.remove("hidden");
-                    // highlight both sides of each pair
                     cat.payload.forEach(pair => {
                         const a = twInputs[pair.from], b = twInputs[pair.to];
                         if (a) a.classList.add("border-red-500","ring-2","ring-red-200");
@@ -385,13 +520,13 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // initial
+    applySatuanBehavior();
     revalidateAndRender();
 
-    // input listeners
+    // input listeners TW
     twInputs.forEach(i => {
         i.addEventListener("input", () => {
             revalidateAndRender();
-            // subtle inline notification
             const v = validateTW();
             if (v.messages.length > 0) {
                 notifMode.innerText = "Validasi: Terdapat pelanggaran";
@@ -400,15 +535,75 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
+    // PK change revalidate
+    targetPkInput.addEventListener("input", () => {
+        revalidateAndRender();
+    });
+
     /* ---------- FORM SUBMIT PREVENT ---------- */
     form.addEventListener("submit", function(e) {
         const v = validateTW();
+
+        // If there are validation messages, block submit
         if (v.messages.length > 0) {
             e.preventDefault();
             errorDropdown.classList.remove("hidden");
             alert("Validasi gagal! Klik ikon ⚠️ di samping mode untuk melihat detail.");
             return false;
         }
+
+        // Extra safety checks:
+        if (!satuanSelect.value) {
+            e.preventDefault();
+            alert("Pilih satuan terlebih dahulu.");
+            return false;
+        }
+
+        // For unit/dokumentasi we require PK to be filled
+        if ((satuanSelect.value === "unit" || satuanSelect.value === "dokumentasi")) {
+            if (targetPkInput.value === "" || isNaN(Number(targetPkInput.value))) {
+                e.preventDefault();
+                alert("Isi Target PK terlebih dahulu untuk satuan Unit/Dokumentasi.");
+                return false;
+            }
+        }
+
+        // For akumulatif, ensure PK is provided (for non-% cases) and TW4 equals PK
+        if (mode === "akm") {
+            const satuan = satuanSelect.value;
+            const pk = (satuan === "%" ? 100 : (targetPkInput.value === "" ? null : Number(targetPkInput.value)));
+            if (pk === null) {
+                e.preventDefault();
+                alert("Untuk mode Akumulatif, isi Target PK terlebih dahulu.");
+                return false;
+            }
+            const tw4Raw = twInputs[3].value;
+            const tw4 = (tw4Raw === "" ? null : Number(tw4Raw));
+            if (tw4 === null || Math.abs(tw4 - pk) > 1e-9) {
+                e.preventDefault();
+                alert("Mode Akumulatif: nilai TW4 harus sama dengan Target PK.");
+                return false;
+            }
+        }
+
+        // For non-akumulatif, ensure PK provided and sum equals PK
+        if (mode === "non") {
+            const satuan = satuanSelect.value;
+            const pk = (satuan === "%" ? 100 : (targetPkInput.value === "" ? null : Number(targetPkInput.value)));
+            if (pk === null) {
+                e.preventDefault();
+                alert("Untuk mode Non-Akumulatif, isi Target PK terlebih dahulu.");
+                return false;
+            }
+            const sum = twInputs.reduce((acc, el) => acc + (el.value === "" ? 0 : Number(el.value)), 0);
+            if (Math.abs(sum - pk) > 1e-9) {
+                e.preventDefault();
+                alert("Mode Non-Akum: total TW1..TW4 harus sama dengan Target PK.");
+                return false;
+            }
+        }
+
+        // allow submit
     });
 
     /* ===================== LOGIKA KODE (original) ===================== */
@@ -450,6 +645,9 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(res => res.json())
             .then(data => {
                 kodeInput.value = data.kode;
+            })
+            .catch(() => {
+                kodeInput.value = "";
             });
     });
 

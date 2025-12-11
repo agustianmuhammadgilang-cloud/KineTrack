@@ -77,6 +77,8 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     // OUTPUT PENGUKURAN
     $routes->get('pengukuran/output', 'Admin\Pengukuran::output'); // tampil tabel output
     $routes->get('pengukuran/export/(:num)/(:num)', 'Admin\Pengukuran::export/$1/$2'); // export
+    // ==== Tambahkan ini (REPORT PDF) ====
+    $routes->get('pengukuran/output/report/(:num)/(:num)', 'Admin\Pengukuran::report/$1/$2');
     $routes->get('pengukuran/output/detail/(:num)/(:num)/(:num)', 'Admin\Pengukuran::detail/$1/$2/$3');
 
     // Profile
@@ -106,6 +108,9 @@ $routes->group('staff', ['filter' => 'auth'], function($routes) {
     $routes->get('laporan', 'Staff\Laporan::index');
     $routes->get('laporan/create', 'Staff\Laporan::create');
     $routes->post('laporan/store', 'Staff\Laporan::store');
+    // Progress & Report
+$routes->get('task/progress/(:num)/(:num)', 'Staff\TaskController::progress/$1/$2');
+$routes->get('task/report/(:num)/(:num)', 'Staff\TaskController::report/$1/$2');
     $routes->get('laporan/rejected/(:num)', 'Staff\Laporan::rejected/$1');
     $routes->post('laporan/resubmit/(:num)', 'Staff\Laporan::resubmit/$1');
     $routes->get('profile', 'Staff\Profile::index');

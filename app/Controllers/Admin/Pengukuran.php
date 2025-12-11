@@ -494,5 +494,45 @@ public function exportPdf($id)
     $dompdf->stream("Pengukuran_{$data['id']}.pdf", ['Attachment' => true]);
 }
 
+public function report($tahunId, $tw)
+{
+    helper('dompdf');
+
+    $tahun = $this->tahunModel->find($tahunId);
+    if (!$tahun) {
+        return redirect()->back()->with('alert', [
+            'type' => 'error',
+            'title' => 'Data Tidak Ditemukan',
+            'message' => 'Tahun tidak valid.'
+        ]);
+    }
+
+    // QUERY FIX — gunakan tabel pengukuran_kinerja
+    $data = $this->pengukuranModel
+        ->select('
+            pengukuran_kinerja.*,
+            indikator_kinerja.nama_indikator, indikator_kinerja.satuan,
+            indikator_kinerja.target_tw1, indikator_kinerja.target_tw2,
+            indikator_kinerja.target_tw3, indikator_kinerja.target_tw4,
+            sasaran_strategis.nama_sasaran,
+            users.nama AS pic
+        ')
+        ->join('indikator_kinerja', 'indikator_kinerja.id = pengukuran_kinerja.indikator_id')
+        ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
+        ->join('users', 'users.id = pengukuran_kinerja.user_id')
+        ->where('pengukuran_kinerja.tahun_id', $tahunId)
+        ->where('pengukuran_kinerja.triwulan', $tw)
+        ->orderBy('sasaran_strategis.nama_sasaran')
+        ->findAll();
+
+    $html = view('admin/pengukuran/report_pdf', [
+        'tahun' => $tahun['tahun'],
+        'tw'    => $tw,
+        'data'  => $data
+    ]);
+
+    return pdf_create($html, "Laporan-Pengukuran-TW-$tw-{$tahun['tahun']}");
+}
+
     
 }

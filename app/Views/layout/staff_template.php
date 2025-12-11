@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Staff - Kinetrack</title>
 
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -29,6 +31,44 @@
     border-radius: 3px;
   }
 </style>
+
+<script>
+function fileUpload() {
+    return {
+        drag: false,
+        files: [],
+
+        updateInput() {
+            const dt = new DataTransfer();
+            this.files.forEach(f => dt.items.add(f));
+            this.$refs.input.files = dt.files;
+        },
+
+        handleFileSelect(event) {
+            for (let f of event.target.files) {
+                this.files.push(f);
+            }
+            this.updateInput();
+        },
+
+        handleDrop(e) {
+            this.drag = false;
+            const dropped = e.dataTransfer.files;
+
+            for (let f of dropped) {
+                this.files.push(f);
+            }
+            this.updateInput();
+        },
+
+        removeFile(index) {
+            this.files.splice(index, 1);
+            this.updateInput();
+        }
+    }
+}
+</script>
+
 </head>
 <body class="bg-gray-100">
 
