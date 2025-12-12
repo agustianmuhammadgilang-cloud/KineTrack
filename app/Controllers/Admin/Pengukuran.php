@@ -111,12 +111,24 @@ public function store()
         ];
 
         // Upload File
-        $file = $this->request->getFile("file_$id");
-        if ($file && $file->isValid() && !$file->hasMoved()) {
-            $newName = $file->getRandomName();
-            $file->move(WRITEPATH . 'uploads/pengukuran/', $newName);
-            $dataSave['file_dukung'] = $newName;
+        $files = $this->request->getFiles();
+        $fileArr = [];
+
+        if (!empty($files["file_$id"])) {
+            foreach ($files["file_$id"] as $file) {
+
+                if ($file->isValid() && !$file->hasMoved()) {
+                    $newName = $file->getRandomName();
+                    $file->move(WRITEPATH . 'uploads/pengukuran/', $newName);
+                    $fileArr[] = $newName;
+                }
+            }
         }
+
+        if (!empty($fileArr)) {
+            $dataSave['file_dukung'] = json_encode($fileArr);
+        }
+
 
         // Insert / Update
         $existing = $this->pengukuranModel
@@ -427,16 +439,25 @@ public function update($id)
     ];
 
     // File baru?
-    $file = $this->request->getFile('file_dukung');
-    if ($file && $file->isValid() && !$file->hasMoved()) {
-        // hapus file lama
-        if (!empty($row['file_dukung']) && file_exists(FCPATH . 'uploads/pengukuran/' . $row['file_dukung'])) {
-            unlink(FCPATH . 'uploads/pengukuran/' . $row['file_dukung']);
+    $existingFiles = json_decode($row['file_dukung'], true) ?: [];
+
+    $files = $this->request->getFiles();
+    $newFiles = [];
+
+    if (!empty($files["file_dukung"])) {
+        foreach ($files["file_dukung"] as $file) {
+            if ($file->isValid() && !$file->hasMoved()) {
+                $name = $file->getRandomName();
+                $file->move(FCPATH . 'uploads/pengukuran/', $name);
+                $newFiles[] = $name;
+            }
         }
-        $newName = $file->getRandomName();
-        $file->move(FCPATH . 'uploads/pengukuran/', $newName);
-        $save['file_dukung'] = $newName;
     }
+
+    if (!empty($newFiles)) {
+        $save['file_dukung'] = json_encode(array_merge($existingFiles, $newFiles));
+    }
+
 
     $this->pengukuranModel->update($id, $save);
 
@@ -457,9 +478,13 @@ public function delete($id)
     }
 
     // Hapus file
-    if (!empty($row['file_dukung']) && file_exists(FCPATH . 'uploads/pengukuran/' . $row['file_dukung'])) {
-        unlink(FCPATH . 'uploads/pengukuran/' . $row['file_dukung']);
+    $files = json_decode($row['file_dukung'], true) ?: [];
+
+    foreach ($files as $f) {
+        $path = FCPATH . 'uploads/pengukuran/' . $f;
+        if (file_exists($path)) unlink($path);
     }
+
 
     $this->pengukuranModel->delete($id);
 
@@ -532,6 +557,38 @@ public function report($tahunId, $tw)
     ]);
 
     return pdf_create($html, "Laporan-Pengukuran-TW-$tw-{$tahun['tahun']}");
+}
+
+public function deleteFile($pengukuranId, $fileIndex)
+{
+    $record = $this->pengukuranModel->find($pengukuranId);
+
+    if (!$record) {
+        return redirect()->back()->with('error', 'Data tidak ditemukan.');
+    }
+
+    $files = json_decode($record['file_dukung'], true);
+
+    if (!isset($files[$fileIndex])) {
+        return redirect()->back()->with('error', 'File tidak ditemukan.');
+    }
+
+    $filePath = WRITEPATH . 'uploads/pengukuran/' . $files[$fileIndex];
+
+    // hapus file dari folder
+    if (is_file($filePath)) {
+        unlink($filePath);
+    }
+
+    // hapus dari array
+    unset($files[$fileIndex]);
+
+    // simpan kembali
+    $this->pengukuranModel->update($pengukuranId, [
+        'file_dukung' => json_encode(array_values($files))
+    ]);
+
+    return redirect()->back()->with('success', 'File berhasil dihapus.');
 }
 
     

@@ -77,65 +77,102 @@
                 </thead>
 
                 <tbody>
-                    <?php foreach ($pengukuran as $p): ?>
-                        <tr class="hover:bg-gray-50">
-                            <td class="p-3 border"><?= esc($p['user_nama']) ?></td>
-                            <td class="p-3 border"><?= esc($p['realisasi']) ?></td>
-                            <td class="p-3 border"><?= $p['progress'] ? esc($p['progress']) : '-' ?></td>
-                            <td class="p-3 border"><?= esc($p['kendala'] ?: '-') ?></td>
-                            <td class="p-3 border"><?= esc($p['strategi'] ?: '-') ?></td>
+<?php foreach ($pengukuran as $p): ?>
+    <tr class="hover:bg-gray-50">
 
-                            <td class="p-3 border text-center">
-                                <?php if ($p['file_dukung']): ?>
-                                    <a href="<?= base_url('uploads/pengukuran/' . $p['file_dukung']) ?>"
-                                       target="_blank"
-                                       class="text-blue-600 hover:underline">
-                                        Lihat File
-                                    </a>
-                                <?php else: ?>
-                                    <span class="text-gray-500">-</span>
-                                <?php endif; ?>
-                            </td>
+        <!-- STAFF -->
+        <td class="p-3 border"><?= esc($p['user_nama']) ?></td>
 
-                            <td class="p-3 border">
-                                <?= esc(date('d M Y H:i', strtotime($p['created_at']))) ?>
-                            </td>
-                            <td class="p-3 border text-center">
-    <div class="flex items-center justify-center gap-3">
+        <!-- REALISASI -->
+        <td class="p-3 border"><?= esc($p['realisasi']) ?></td>
 
-        <!-- EDIT -->
-        <a href="<?= base_url('admin/pengukuran/edit/' . $p['id']) ?>"
-           class="p-2 bg-[var(--polban-blue)] text-white rounded-lg shadow hover:bg-blue-800 transition"
-           title="Edit">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 3.487a2.25 2.25 0 113.182 3.182L7.5 19.213 3 21l1.787-4.5L16.862 3.487z" />
-            </svg>
-        </a>
+        <!-- PROGRESS -->
+        <td class="p-3 border"><?= $p['progress'] ? esc($p['progress']) : '-' ?></td>
 
-        <!-- DELETE -->
-        <a href="<?= base_url('admin/pengukuran/delete/' . $p['id']) ?>"
-           onclick="return confirm('Yakin ingin menghapus data ini?')"
-           class="p-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 transition"
-           title="Hapus">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 7h12M9 7v10m6-10v10M4 7h16l-1 12a2 2 0 01-2 2H7a2 2 0 01-2-2L4 7zm5-3h6a1 1 0 011 1v1H8V5a1 1 0 011-1z" />
-            </svg>
-        </a>
+        <!-- KENDALA -->
+        <td class="p-3 border"><?= esc($p['kendala'] ?: '-') ?></td>
 
-        <!-- PDF -->
-        <a href="<?= base_url('admin/pengukuran/pdf/' . $p['id']) ?>"
-           class="p-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
-           title="Export PDF">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5V6m0 0l-1.5 1.5M12 6l1.5 1.5m-6 4.5h9m-9 3h6m4.5-8.25V18a2.25 2.25 0 01-2.25 2.25H7.5A2.25 2.25 0 015.25 18V6.75A2.25 2.25 0 017.5 4.5h6.75L18 7.5z" />
-            </svg>
-        </a>
+        <!-- STRATEGI -->
+        <td class="p-3 border"><?= esc($p['strategi'] ?: '-') ?></td>
 
-    </div>
-</td>
-                        </tr>
+        <!-- FILE DUKUNG -->
+        <td class="p-3 border text-center">
+            <?php
+                $files = json_decode($p['file_dukung'], true);
+
+                // BACKWARD COMPATIBILITY: jika single string
+                if (is_string($p['file_dukung']) && !is_array($files)) {
+                    $files = [$p['file_dukung']];
+                }
+            ?>
+
+            <?php if (!empty($files) && is_array($files)): ?>
+                <ul class="text-left space-y-1">
+                    <?php foreach ($files as $i => $f): ?>
+                        <li>
+                            <a href="<?= base_url('uploads/pengukuran/' . $f) ?>"
+                               target="_blank"
+                               class="text-blue-600 hover:underline">
+                                File <?= $i + 1 ?>
+                            </a>
+                        </li>
                     <?php endforeach; ?>
-                </tbody>
+                </ul>
+            <?php else: ?>
+                <span class="text-gray-500">-</span>
+            <?php endif; ?>
+        </td>
+
+        <!-- TANGGAL INPUT -->
+        <td class="p-3 border">
+            <?= esc(date('d M Y H:i', strtotime($p['created_at']))) ?>
+        </td>
+
+        <!-- AKSI -->
+        <td class="p-3 border text-center">
+            <div class="flex items-center justify-center gap-3">
+
+                <!-- EDIT -->
+                <a href="<?= base_url('admin/pengukuran/edit/' . $p['id']) ?>"
+                   class="p-2 bg-[var(--polban-blue)] text-white rounded-lg shadow hover:bg-blue-800 transition"
+                   title="Edit">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M16.862 3.487a2.25 2.25 0 113.182 3.182L7.5 19.213 3 21l1.787-4.5L16.862 3.487z" />
+                    </svg>
+                </a>
+
+                <!-- DELETE -->
+                <a href="<?= base_url('admin/pengukuran/delete/' . $p['id']) ?>"
+                   onclick="return confirm('Yakin ingin menghapus data ini?')"
+                   class="p-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 transition"
+                   title="Hapus">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M6 7h12M9 7v10m6-10v10M4 7h16l-1 12a2 2 0 01-2 2H7a2 2 0 01-2-2L4 7zm5-3h6a1 1 0 011 1v1H8V5a1 1 0 011-1z" />
+                    </svg>
+                </a>
+
+                <!-- PDF -->
+                <a href="<?= base_url('admin/pengukuran/pdf/' . $p['id']) ?>"
+                   class="p-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
+                   title="Export PDF">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 10.5V6m0 0l-1.5 1.5M12 6l1.5 1.5m-6 4.5h9m-9 3h6m4.5-8.25V18a2.25 2.25 0 01-2.25 2.25H7.5A2.25 2.25 0 015.25 18V6.75A2.25 2.25 0 017.5 4.5h6.75L18 7.5z" />
+                    </svg>
+                </a>
+
+            </div>
+        </td>
+
+    </tr>
+<?php endforeach; ?>
+</tbody>
+
             </table>
         </div>
 
