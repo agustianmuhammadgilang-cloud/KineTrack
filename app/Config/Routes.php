@@ -186,7 +186,11 @@ $routes->group('admin/pengukuran', function($routes) {
     $routes->post('update/(:num)', 'Admin\Pengukuran::update/$1');
     $routes->get('delete/(:num)', 'Admin\Pengukuran::delete/$1');
     $routes->get('pdf/(:num)', 'Admin\Pengukuran::exportPdf/$1');
+
+    // ==== Tambahkan ini ====
+    $routes->get('deleteFile/(:num)/(:num)', 'Admin\Pengukuran::deleteFile/$1/$2');
 });
+
 
 $routes->group('admin/tw', ['namespace' => 'App\Controllers\Admin'], function($routes){
     $routes->get('/', 'TwController::index');
