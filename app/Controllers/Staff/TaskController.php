@@ -268,6 +268,8 @@ class TaskController extends BaseController
 {
     $tahunId = $this->getTahunFromIndikator($indikatorId);
 
+    
+
     $measure = $this->pengukuranModel
         ->where('indikator_id', $indikatorId)
         ->where('triwulan', $tw)
