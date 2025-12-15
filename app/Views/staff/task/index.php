@@ -30,10 +30,8 @@
                 <?php foreach ([1,2,3,4] as $tw): ?>
 
                     <?php
-                        // Ambil data TW
                         $twInfo = $ind['tw_status'][$tw];
 
-                        // Normalisasi format
                         if (is_bool($twInfo)) {
                             $isOpen = $twInfo;
                             $source = $twInfo ? 'admin' : 'closed';
@@ -42,7 +40,6 @@
                             $source = $twInfo['source'];
                         }
 
-                        // Badge warna status TW
                         if (!$isOpen) {
                             $badge = "bg-red-500 text-white";
                         } elseif ($source === 'auto') {
@@ -51,14 +48,11 @@
                             $badge = "bg-green-600 text-white";
                         }
 
-                        // Data pengukuran TW (DIAMBIL dari controller, jangan sentuh logika lama)
                         $measure = $ind['pengukuran'][$tw] ?? null;
                         $hasFilled = $measure !== null;
 
-                        // Target TW (jika ada)
                         $targetTW = $ind['target_tw'][$tw] ?? null;
 
-                        // Hitung progress TW
                         $realisasi = $measure['realisasi'] ?? 0;
                         $percent = ($targetTW > 0) ? ($realisasi / $targetTW) * 100 : 0;
                     ?>
@@ -104,25 +98,17 @@
                                 </p>
                             </div>
 
-                            <!-- MENU BARU: REPORT / LIHAT PROGRESS -->
-                            <?php if ($measurements[$tw] && $measurements[$tw]['realisasi'] >= $targetTw[$tw]): ?>
-
-                            <div class="flex gap-2 mt-2">
-                                <!-- VIEW -->
-                                <a href="<?= base_url("staff/task/report/{$indikator_id}/{$tw}/view") ?>"
-                                target="_blank"
-                                class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
-                                    👁️ Lihat
+                            <!-- MENU: REPORT / PROGRESS -->
+                            <?php if ($percent >= 100): ?>
+                                <!-- REPORT (TAB BARU) -->
+                                <a href="<?= base_url('staff/task/report/'.$ind['indikator_id'].'/'.$tw) ?>"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   class="block mt-3 bg-green-600 text-white py-1.5 rounded hover:bg-green-700 transition text-sm">
+                                    Lihat Report
                                 </a>
-
-                                <!-- DOWNLOAD -->
-                                <a href="<?= base_url("staff/task/report/{$indikator_id}/{$tw}/download") ?>"
-                                class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">
-                                    ⬇️ Download
-                                </a>
-                            </div>
-
-                                <!-- Lihat Progress -->
+                            <?php else: ?>
+                                <!-- PROGRESS -->
                                 <a href="<?= base_url('staff/task/progress/'.$ind['indikator_id'].'/'.$tw) ?>"
                                    class="block mt-3 bg-yellow-500 text-white py-1.5 rounded hover:bg-yellow-600 transition text-sm">
                                     Lihat Progress
