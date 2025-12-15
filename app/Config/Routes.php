@@ -196,3 +196,13 @@ $routes->group('admin/tw', ['namespace' => 'App\Controllers\Admin'], function($r
     $routes->get('/', 'TwController::index');
     $routes->get('toggle/(:num)', 'TwController::toggle/$1');
 });
+
+$routes->get(
+    'admin/pengukuran/output/report/(:num)/(:num)/(:segment)',
+    'Admin\Pengukuran::report/$1/$2/$3'
+);
+
+$routes->get(
+    'staff/task/report/(:num)/(:num)/(:segment)',
+    'Staff\TaskController::report/$1/$2/$3'
+);
