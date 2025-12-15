@@ -27,14 +27,7 @@
     target="_blank"
     class="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg shadow 
             hover:bg-red-600 transition font-semibold">
-        Lihat PDF
-    </a>
-
-    <!-- DOWNLOAD PDF -->
-    <a href="<?= base_url('admin/pengukuran/output/report/'.$selected_tahun.'/'.$selected_tw.'/download') ?>"
-    class="flex items-center gap-2 px-4 py-2 bg-red-700 text-white rounded-lg shadow 
-            hover:bg-red-800 transition font-semibold">
-        Download PDF
+        Export PDF
     </a>
 
 
