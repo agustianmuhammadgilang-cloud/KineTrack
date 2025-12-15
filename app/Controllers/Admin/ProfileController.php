@@ -69,6 +69,22 @@ class ProfileController extends BaseController
             session()->set('foto', $namaBaru);
         }
 
+        // TTD ADMIN
+$ttd = $this->request->getFile('ttd_digital');
+if ($ttd && $ttd->isValid() && !$ttd->hasMoved()) {
+
+    if (!empty($admin['ttd_digital']) && file_exists('uploads/ttd/'.$admin['ttd_digital'])) {
+        unlink('uploads/ttd/'.$admin['ttd_digital']);
+    }
+
+    $ttdName = 'ttd_admin_'.$userId.'.'.$ttd->getExtension();
+    $ttd->move('uploads/ttd/', $ttdName, true);
+
+    $updateData['ttd_digital'] = $ttdName;
+    session()->set('ttd_digital', $ttdName);
+}
+
+
         // UPDATE DATA USER
         $userModel->update($userId, $updateData);
 
