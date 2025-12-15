@@ -15,24 +15,31 @@ class Profile extends BaseController
         return view('staff/profile', $data);
     }
 
-    public function update()
-    {
-        $model = new UserModel();
-        $id = session('user_id');
+public function update()
+{
+    $userId = session()->get('user_id');
+    $userModel = new \App\Models\UserModel();
 
-        $input = [
-            'nama'  => $this->request->getPost('nama'),
-            'email' => $this->request->getPost('email')
-        ];
+    $data = [
+        'nama'  => $this->request->getPost('nama'),
+        'email' => $this->request->getPost('email'),
+    ];
 
-        // Update password jika diisi
-        $password = $this->request->getPost('password');
-        if ($password) {
-            $input['password'] = password_hash($password, PASSWORD_DEFAULT);
-        }
+    // ================= TTD UPLOAD =================
+    $fileTtd = $this->request->getFile('ttd_digital');
 
-        $model->update($id, $input);
+    if ($fileTtd && $fileTtd->isValid() && !$fileTtd->hasMoved()) {
+        $newName = $fileTtd->getRandomName();
+        $fileTtd->move(FCPATH . 'uploads/ttd', $newName);
 
-        return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
+        // SIMPAN NAMA FILE KE DB
+        $data['ttd_digital'] = $newName;
     }
+
+    $userModel->update($userId, $data);
+
+    return redirect()->back()->with('success', 'Profil berhasil diperbarui');
+}
+
+
 }

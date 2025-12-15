@@ -1,160 +1,244 @@
 <?php
-// ========================
-//  LOAD LOGO AS BASE64
-// ========================
+// ================= DATA ADMIN =================
+$userModel = new \App\Models\UserModel();
+$admin = $userModel->find(session('user_id'));
 
-// Path file logo di server (boleh di luar public)
+$namaAdmin = $admin['nama'] ?? 'Admin';
+$ttdAdmin  = $admin['ttd_digital'] ?? null;
+
+// ================= LOAD TTD ADMIN AS BASE64 =================
+$ttdBase64 = '';
+
+if (!empty($ttdAdmin)) {
+    $ttdPath = FCPATH . 'uploads/ttd/' . $ttdAdmin;
+
+    if (file_exists($ttdPath)) {
+        $mimeType = mime_content_type($ttdPath);
+        $ttdBase64 = 'data:' . $mimeType . ';base64,' . base64_encode(
+            file_get_contents($ttdPath)
+        );
+    }
+}
+
+// ================= LOAD LOGO AS BASE64 =================
 $logoPolbanPath = FCPATH . 'assets/logo/LOGO_POLBAN_4K.png';
-$logoRightPath  = FCPATH . 'assets/logo/image.png';
-
-// Convert ke base64
 $logoPolban = '';
-$logoRight  = '';
 
 if (file_exists($logoPolbanPath)) {
     $logoPolban = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPolbanPath));
-}
-
-if (file_exists($logoRightPath)) {
-    $logoRight = 'data:image/png;base64,' . base64_encode(file_get_contents($logoRightPath));
 }
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
     <style>
         body {
-            font-family: DejaVu Sans, sans-serif; 
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 11px;
+            color: #000;
+        }
+        .kop {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .kop img {
+            width: 85px;
+            margin-bottom: 6px;
+        }
+        .kop-title {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .kop-sub {
             font-size: 12px;
+        }
+        .judul {
+            text-align: center;
+            font-weight: bold;
+            margin: 14px 0 10px;
+            font-size: 13px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 14px;
+            margin-top: 8px;
         }
-        table, th, td {
-            border: 1px solid #444;
+        th, td {
+            border: 1px solid #000;
+            padding: 6px;
         }
         th {
-            background: #0b5ed7;
-            color: white;
-            padding: 6px;
+            background: #e9ecef;
             text-align: center;
-            font-size: 12px;
         }
-        td {
-            padding: 6px;
-            vertical-align: top;
-        }
-
-        .kop-table td {
-            border: none;
-        }
-
-        .title {
-            margin-top: 4px;
-            text-align: center;
+        .sasaran {
             font-weight: bold;
-            font-size: 16px;
+            background: #f5f5f5;
         }
-        .subtitle {
+        .center {
             text-align: center;
-            margin-bottom: 10px;
-            font-size: 13px;
         }
         .footer {
             margin-top: 40px;
-            width: 100%;
             text-align: right;
-            font-size: 12px;
+            font-size: 11px;
+        }
+        .ttd-name {
+            font-weight: bold;
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-<!-- ========================== -->
-<!--  KOP RESMI POLITEKNIK     -->
-<!-- ========================== -->
+<!-- ================= KOP ================= -->
+<div class="kop">
+    <img src="<?= $logoPolban ?>">
+    <div class="kop-title">
+        KEMENTERIAN PENDIDIKAN TINGGI, SAINS, DAN TEKNOLOGI
+    </div>
+    <div class="kop-sub">
+        Politeknik Negeri Bandung
+    </div>
+</div>
 
-<table class="kop-table">
-    <tr>
-        <!-- LOGO POLBAN -->
-        <td style="width: 20%; text-align: left;">
-            <img src="<?= $logoPolban ?>" width="90">
-        </td>
+<!-- ================= JUDUL ================= -->
+<div class="judul">
+    Laporan Kinerja Triwulan <?= esc($tw) ?><br>
+    Politeknik Negeri Bandung<br>
+    Tahun <?= esc($tahun) ?>
+</div>
 
-        <!-- TEXT KOP -->
-        <td style="width: 60%; text-align: center;">
-            <div style="font-size: 18px; font-weight: bold;">POLITEKNIK NEGERI BANDUNG</div>
-            <div style="font-size: 14px;">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET, DAN TEKNOLOGI</div>
-            <div style="margin-top: 5px; font-size: 12px;">
-                Jl. Gegerkalong Hilir, Ciwaruga – Bandung 40559 • Telp. (022) 2013789
-            </div>
-        </td>
+<p>
+    Berikut ini kami sampaikan hasil capaian kinerja pada Politeknik Negeri Bandung
+    selama Triwulan <?= esc($tw) ?> tahun <?= esc($tahun) ?>.
+</p>
 
-        <!-- LOGO KANAN -->
-        <td style="width: 20%; text-align: right;">
-            <img src="<?= $logoRight ?>" width="90">
-        </td>
-    </tr>
-</table>
+<p><b>A. Progress Capaian Kinerja</b></p>
 
-<hr style="margin-top: -4px; border: 1px solid #000;"><br>
-
-<!-- ========================== -->
-<!--  TITLE LAPORAN             -->
-<!-- ========================== -->
-
-<div class="title">LAPORAN PENGUKURAN KINERJA</div>
-<div class="subtitle">Triwulan <?= $tw ?> – Tahun <?= $tahun ?></div>
-
-<!-- ========================== -->
-<!--  TABEL PENGUKURAN          -->
-<!-- ========================== -->
-
+<!-- ================= TABEL ================= -->
 <table>
     <thead>
         <tr>
-            <th>Sasaran</th>
-            <th>Indikator</th>
-            <th>PIC</th>
-            <th>Target<br>TW <?= $tw ?></th>
-            <th>Realisasi</th>
-            <th>Progress</th>
-            <th>Kendala</th>
-            <th>Strategi / Tindak Lanjut</th>
-            <th>File Pendukung</th>
+            <th style="width:32%">Sasaran / Indikator</th>
+            <th style="width:12%">PIC</th>
+            <th style="width:10%">Target PK</th>
+            <th style="width:10%">Satuan</th>
+            <th style="width:18%">TW <?= esc($tw) ?><br>Target</th>
+            <th style="width:18%">TW <?= esc($tw) ?><br>Realisasi</th>
         </tr>
     </thead>
-
     <tbody>
-        <?php foreach ($data as $row): ?>
-        <?php 
-            $target = $row["target_tw$tw"]; 
-        ?>
+
+    <?php
+    $currentSasaran = null;
+    foreach ($data as $row):
+        if ($currentSasaran !== $row['nama_sasaran']):
+            $currentSasaran = $row['nama_sasaran'];
+    ?>
         <tr>
-            <td><?= esc($row['nama_sasaran']) ?></td>
-            <td><?= esc($row['nama_indikator']) ?></td>
-            <td><?= esc($row['pic']) ?></td>
-            <td style="text-align:center;"><?= esc($target) ?></td>
-            <td style="text-align:center;"><?= esc($row['realisasi']) ?></td>
-            <td><?= esc($row['progress']) ?></td>
-            <td><?= esc($row['kendala']) ?></td>
-            <td><?= esc($row['strategi']) ?></td>
-            <td>
-                <?= $row['file_dukung'] ? esc($row['file_dukung']) : '-' ?>
-            </td>
+            <td class="sasaran" colspan="6"><?= esc($currentSasaran) ?></td>
         </tr>
-        <?php endforeach; ?>
+    <?php endif; ?>
+
+        <tr>
+            <td><?= esc($row['nama_indikator']) ?></td>
+            <td class="center"><?= esc($row['pic'] ?? '-') ?></td>
+            <td class="center"><?= esc($row['target_pk']) ?></td>
+            <td class="center"><?= esc($row['satuan']) ?></td>
+            <td class="center"><?= esc($row["target_tw$tw"]) ?></td>
+            <td class="center"><?= esc($row['realisasi'] ?? 0) ?></td>
+        </tr>
+    <?php endforeach; ?>
     </tbody>
 </table>
 
-<!-- FOOTER -->
+<!-- ================= FOOTER + TTD ADMIN ================= -->
 <div class="footer">
     Bandung, <?= date('d F Y') ?><br>
-    <b>Direktorat Politeknik Negeri Bandung</b>
+    Admin Sistem e-Kinerja<br><br>
+
+    <?php if ($ttdBase64): ?>
+        <img src="<?= $ttdBase64 ?>" style="height:80px;"><br>
+    <?php endif; ?>
+
+    <div class="ttd-name"><?= esc($namaAdmin) ?></div>
+    Admin e-Kinerja Politeknik Negeri Bandung
 </div>
+<!-- ================= B. ANALISIS HASIL CAPAIAN KINERJA ================= -->
+<p style="margin-top:25px;"><b>B. Analisis Hasil Capaian Kinerja</b></p>
+
+<?php
+$currentSasaranB   = null;
+$currentIndikator  = null;
+?>
+
+<?php foreach ($data as $row): ?>
+
+    <!-- SASARAN -->
+    <?php if ($currentSasaranB !== $row['nama_sasaran']): 
+        $currentSasaranB = $row['nama_sasaran'];
+    ?>
+        <div style="margin-top:18px; font-weight:bold;">
+            <?= esc($currentSasaranB) ?>
+        </div>
+    <?php endif; ?>
+
+    <!-- INDIKATOR -->
+    <?php if ($currentIndikator !== $row['nama_indikator']):
+        $currentIndikator = $row['nama_indikator'];
+    ?>
+        <div style="margin-top:10px; font-weight:bold;">
+            <?= esc($row['nama_indikator']) ?>
+        </div>
+    <?php endif; ?>
+
+    <!-- INFO PIC -->
+    <table style="margin-top:6px;">
+        <tr>
+            <td style="width:20%; font-weight:bold;">PIC</td>
+            <td><?= esc($row['pic'] ?? '-') ?></td>
+        </tr>
+    </table>
+
+    <!-- PROGRESS -->
+    <div style="margin-top:6px;">
+        <b>Progress / Kegiatan</b><br>
+        <?= !empty($row['progress']) ? nl2br(esc($row['progress'])) : '-' ?>
+    </div>
+
+    <!-- KENDALA -->
+    <div style="margin-top:6px;">
+        <b>Kendala / Permasalahan</b><br>
+        <?= !empty($row['kendala']) ? nl2br(esc($row['kendala'])) : '-' ?>
+    </div>
+
+    <!-- STRATEGI -->
+    <div style="margin-top:6px;">
+        <b>Strategi / Tindak Lanjut</b><br>
+        <?= !empty($row['strategi']) ? nl2br(esc($row['strategi'])) : '-' ?>
+    </div>
+
+    <!-- FILE DUKUNG -->
+    <div style="margin-top:6px;">
+        <b>File Pendukung</b><br>
+        <?php
+        $files = json_decode($row['file_dukung'] ?? '[]', true);
+        ?>
+        <?php if (empty($files)): ?>
+            -
+        <?php else: ?>
+            <ul style="margin:4px 0 0 15px;">
+                <?php foreach ($files as $f): ?>
+                    <li><?= esc($f) ?></li>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </div>
+
+<?php endforeach; ?>
 
 </body>
 </html>
