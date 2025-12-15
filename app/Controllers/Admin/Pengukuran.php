@@ -519,7 +519,8 @@ public function exportPdf($id)
     $dompdf->stream("Pengukuran_{$data['id']}.pdf", ['Attachment' => true]);
 }
 
-public function report($tahunId, $tw)
+
+public function report($tahunId, $tw, $mode = 'view')
 {
     helper('dompdf');
 
@@ -532,13 +533,15 @@ public function report($tahunId, $tw)
         ]);
     }
 
-    // QUERY FIX — gunakan tabel pengukuran_kinerja
     $data = $this->pengukuranModel
         ->select('
             pengukuran_kinerja.*,
-            indikator_kinerja.nama_indikator, indikator_kinerja.satuan,
-            indikator_kinerja.target_tw1, indikator_kinerja.target_tw2,
-            indikator_kinerja.target_tw3, indikator_kinerja.target_tw4,
+            indikator_kinerja.nama_indikator,
+            indikator_kinerja.satuan,
+            indikator_kinerja.target_tw1,
+            indikator_kinerja.target_tw2,
+            indikator_kinerja.target_tw3,
+            indikator_kinerja.target_tw4,
             sasaran_strategis.nama_sasaran,
             users.nama AS pic
         ')
@@ -556,8 +559,26 @@ public function report($tahunId, $tw)
         'data'  => $data
     ]);
 
-    return pdf_create($html, "Laporan-Pengukuran-TW-$tw-{$tahun['tahun']}");
+    // ===============================
+    // MODE PDF
+    // ===============================
+    if ($mode === 'download') {
+        return pdf_create(
+            $html,
+            "Laporan-Pengukuran-TW-$tw-{$tahun['tahun']}",
+            true // Attachment
+        );
+    }
+
+    // default: VIEW
+    return pdf_create(
+        $html,
+        "Laporan-Pengukuran-TW-$tw-{$tahun['tahun']}",
+        false // Inline
+    );
 }
+
+
 
 public function deleteFile($pengukuranId, $fileIndex)
 {

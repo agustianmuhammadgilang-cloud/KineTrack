@@ -264,42 +264,52 @@ class TaskController extends BaseController
     // ============================================================
     // REPORT PDF — ONLY IF >= 100%
     // ============================================================
-    public function report($indikatorId, $tw)
-    {
-        $tahunId = $this->getTahunFromIndikator($indikatorId);
+    public function report($indikatorId, $tw, $mode = 'view')
+{
+    $tahunId = $this->getTahunFromIndikator($indikatorId);
 
-        $measure = $this->pengukuranModel
-            ->where('indikator_id', $indikatorId)
-            ->where('triwulan', $tw)
-            ->where('tahun_id', $tahunId)
-            ->first();
+    $measure = $this->pengukuranModel
+        ->where('indikator_id', $indikatorId)
+        ->where('triwulan', $tw)
+        ->where('tahun_id', $tahunId)
+        ->first();
 
-        if (!$measure) {
-            return $this->fail("Tidak dapat membuat report.");
-        }
-
-        $indikator = $this->indikatorModel->find($indikatorId);
-        $target = $indikator['target_tw' . $tw];
-
-        if ($measure['realisasi'] < $target) {
-            return $this->fail("Report hanya tersedia jika progress ≥ 100%");
-        }
-
-        // HTML
-        $html = view('staff/task/report_pdf', [
-            'measure' => $measure,
-            'indikator' => $indikator,
-            'target' => $target,
-            'tw' => $tw
-        ]);
-
-        // PDF
-        $dompdf = new \Dompdf\Dompdf();
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-        $dompdf->stream("report_tw{$tw}.pdf", ["Attachment" => false]);
+    if (!$measure) {
+        return $this->fail("Tidak dapat membuat report.");
     }
+
+    $indikator = $this->indikatorModel->find($indikatorId);
+    $target = $indikator['target_tw' . $tw];
+
+    // VALIDASI WAJIB
+    if ($measure['realisasi'] < $target) {
+        return $this->fail("Report hanya tersedia jika progress ≥ 100%");
+    }
+
+    // HTML PDF
+    $html = view('staff/task/report_pdf', [
+        'measure'   => $measure,
+        'indikator' => $indikator,
+        'target'    => $target,
+        'tw'        => $tw
+    ]);
+
+    $dompdf = new \Dompdf\Dompdf();
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    // ======================
+    // MODE OUTPUT
+    // ======================
+    $attachment = ($mode === 'download');
+
+    $dompdf->stream(
+        "Report_{$indikator['nama_indikator']}_TW{$tw}.pdf",
+        ['Attachment' => $attachment]
+    );
+}
+
 
     // ============================================================
     // HELPER
