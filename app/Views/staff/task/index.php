@@ -105,13 +105,23 @@
                             </div>
 
                             <!-- MENU BARU: REPORT / LIHAT PROGRESS -->
-                            <?php if ($percent >= 100): ?>
-                                <!-- Report -->
-                                <a href="<?= base_url('staff/task/report/'.$ind['indikator_id'].'/'.$tw) ?>"
-                                   class="block mt-3 bg-green-600 text-white py-1.5 rounded hover:bg-green-700 transition text-sm">
-                                    Lihat Report
+                            <?php if ($measurements[$tw] && $measurements[$tw]['realisasi'] >= $targetTw[$tw]): ?>
+
+                            <div class="flex gap-2 mt-2">
+                                <!-- VIEW -->
+                                <a href="<?= base_url("staff/task/report/{$indikator_id}/{$tw}/view") ?>"
+                                target="_blank"
+                                class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
+                                    👁️ Lihat
                                 </a>
-                            <?php else: ?>
+
+                                <!-- DOWNLOAD -->
+                                <a href="<?= base_url("staff/task/report/{$indikator_id}/{$tw}/download") ?>"
+                                class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">
+                                    ⬇️ Download
+                                </a>
+                            </div>
+
                                 <!-- Lihat Progress -->
                                 <a href="<?= base_url('staff/task/progress/'.$ind['indikator_id'].'/'.$tw) ?>"
                                    class="block mt-3 bg-yellow-500 text-white py-1.5 rounded hover:bg-yellow-600 transition text-sm">
