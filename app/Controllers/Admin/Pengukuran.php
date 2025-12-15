@@ -535,21 +535,27 @@ public function report($tahunId, $tw)
 
     // QUERY FIX — gunakan tabel pengukuran_kinerja
     $data = $this->pengukuranModel
-        ->select('
-            pengukuran_kinerja.*,
-            indikator_kinerja.nama_indikator, indikator_kinerja.satuan,
-            indikator_kinerja.target_tw1, indikator_kinerja.target_tw2,
-            indikator_kinerja.target_tw3, indikator_kinerja.target_tw4,
-            sasaran_strategis.nama_sasaran,
-            users.nama AS pic
-        ')
-        ->join('indikator_kinerja', 'indikator_kinerja.id = pengukuran_kinerja.indikator_id')
-        ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
-        ->join('users', 'users.id = pengukuran_kinerja.user_id')
-        ->where('pengukuran_kinerja.tahun_id', $tahunId)
-        ->where('pengukuran_kinerja.triwulan', $tw)
-        ->orderBy('sasaran_strategis.nama_sasaran')
-        ->findAll();
+    ->select('
+        pengukuran_kinerja.*,
+        indikator_kinerja.nama_indikator,
+        indikator_kinerja.satuan,
+        indikator_kinerja.target_pk,
+        indikator_kinerja.target_tw1,
+        indikator_kinerja.target_tw2,
+        indikator_kinerja.target_tw3,
+        indikator_kinerja.target_tw4,
+        sasaran_strategis.nama_sasaran,
+        users.nama AS pic
+    ')
+    ->join('indikator_kinerja', 'indikator_kinerja.id = pengukuran_kinerja.indikator_id')
+    ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
+    ->join('users', 'users.id = pengukuran_kinerja.user_id')
+    ->where('pengukuran_kinerja.tahun_id', $tahunId)
+    ->where('pengukuran_kinerja.triwulan', $tw)
+    ->orderBy('sasaran_strategis.nama_sasaran')
+    ->orderBy('indikator_kinerja.id')
+    ->findAll();
+
 
     $html = view('admin/pengukuran/report_pdf', [
         'tahun' => $tahun['tahun'],

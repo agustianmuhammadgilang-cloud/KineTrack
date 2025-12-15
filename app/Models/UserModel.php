@@ -16,7 +16,8 @@ class UserModel extends Model
         'jabatan_id',
         'bidang_id',
         'role',
-        'foto'
+        'foto',
+        'ttd_digital'
     ];
 
     protected $returnType = 'array';
