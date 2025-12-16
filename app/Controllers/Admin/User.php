@@ -9,13 +9,16 @@ use App\Models\BidangModel;
 
 class User extends BaseController
 {
+    protected $userModel;
+
+    public function __construct()
+    {
+        $this->userModel = new UserModel();
+    }
+
     public function index()
     {
-        $userModel   = new UserModel();
-        $jabatanModel = new JabatanModel();
-        $bidangModel  = new BidangModel();
-
-        $data['users'] = $userModel
+        $data['users'] = $this->userModel
             ->select('users.*, jabatan.nama_jabatan, bidang.nama_bidang')
             ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
             ->join('bidang', 'bidang.id = users.bidang_id', 'left')
@@ -33,11 +36,22 @@ class User extends BaseController
 
     public function store()
     {
-        $userModel = new UserModel();
+        $nama  = $this->request->getPost('nama');
+        $email = $this->request->getPost('email');
 
-        $userModel->insert([
-            'nama'       => $this->request->getPost('nama'),
-            'email'      => $this->request->getPost('email'),
+        // Cek duplikat
+        $existing = $this->userModel
+            ->where('nama', $nama)
+            ->orWhere('email', $email)
+            ->first();
+
+        if ($existing) {
+            return redirect()->back()->withInput()->with('error', 'Akun dengan nama atau email ini sudah terdaftar!');
+        }
+
+        $this->userModel->insert([
+            'nama'       => $nama,
+            'email'      => $email,
             'jabatan_id' => $this->request->getPost('jabatan_id'),
             'bidang_id'  => $this->request->getPost('bidang_id'),
             'role'       => $this->request->getPost('role'),
@@ -49,7 +63,7 @@ class User extends BaseController
 
     public function edit($id)
     {
-        $userModel   = new UserModel();
+        $userModel   = $this->userModel;
         $jabatanModel = new JabatanModel();
         $bidangModel  = new BidangModel();
 
@@ -62,11 +76,25 @@ class User extends BaseController
 
     public function update($id)
     {
-        $userModel = new UserModel();
+        $nama  = $this->request->getPost('nama');
+        $email = $this->request->getPost('email');
 
-        $userModel->update($id, [
-            'nama'       => $this->request->getPost('nama'),
-            'email'      => $this->request->getPost('email'),
+        // Cek duplikat kecuali user yang sedang diupdate
+        $existing = $this->userModel
+            ->where('id !=', $id)
+            ->groupStart()
+            ->where('nama', $nama)
+            ->orWhere('email', $email)
+            ->groupEnd()
+            ->first();
+
+        if ($existing) {
+            return redirect()->back()->withInput()->with('error', 'Akun dengan nama atau email ini sudah terdaftar!');
+        }
+
+        $this->userModel->update($id, [
+            'nama'       => $nama,
+            'email'      => $email,
             'jabatan_id' => $this->request->getPost('jabatan_id'),
             'bidang_id'  => $this->request->getPost('bidang_id'),
             'role'       => $this->request->getPost('role'),
@@ -77,9 +105,23 @@ class User extends BaseController
 
     public function delete($id)
     {
-        $userModel = new UserModel();
-        $userModel->delete($id);
-
+        $this->userModel->delete($id);
         return redirect()->to('/admin/users')->with('success', 'User berhasil dihapus.');
+    }
+
+    // Endpoint Ajax untuk cek duplicate
+    public function checkDuplicate()
+    {
+        $data = $this->request->getJSON(true);
+
+        $nama  = $data['nama'] ?? '';
+        $email = $data['email'] ?? '';
+
+        $exists = $this->userModel
+            ->where('nama', $nama)
+            ->orWhere('email', $email)
+            ->first();
+
+        return $this->response->setJSON(['exists' => $exists ? true : false]);
     }
 }
