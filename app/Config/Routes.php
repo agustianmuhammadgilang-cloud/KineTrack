@@ -241,3 +241,5 @@ $routes->group('atasan', ['filter' => 'auth'], function ($routes) {
     // Arsip (KAJUR)
     $routes->get('dokumen/arsip', 'Atasan\Dokumen::arsip');
 });
+
+$routes->post('admin/users/delete/(:num)', 'Admin\User::delete/$1');
