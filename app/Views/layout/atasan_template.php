@@ -48,6 +48,29 @@
             Laporan
             <span id="pending-badge" class="badge bg-danger ms-2" style="display:none">0</span>
         </a>
+                <a href="<?= base_url('atasan/dokumen') ?>"
+          class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+                viewBox="0 0 24 24">
+                <use href="#folder" />
+            </svg>
+
+            Dokumen Masuk
+        </a>
+
+        </a>
+                <a href="<?= base_url('atasan/dokumen/arsip') ?>"
+          class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+                viewBox="0 0 24 24">
+                <use href="#folder" />
+            </svg>
+
+            Arsip Dokumen
+        </a>
+
     </nav>
 
     <div class="px-6 py-4 border-t border-white/20">

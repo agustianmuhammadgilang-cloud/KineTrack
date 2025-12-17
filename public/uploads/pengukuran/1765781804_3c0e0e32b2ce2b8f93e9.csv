@@ -1,0 +1,770 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Dec 15, 2025 at 03:01 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `kinetrack`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bidang`
+--
+
+CREATE TABLE `bidang` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `nama_bidang` varchar(100) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bidang`
+--
+
+INSERT INTO `bidang` (`id`, `nama_bidang`, `created_at`, `updated_at`) VALUES
+(1, 'Pendidikan', NULL, NULL),
+(2, 'Kebersihan', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `indikator_kinerja`
+--
+
+CREATE TABLE `indikator_kinerja` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `sasaran_id` int(11) UNSIGNED NOT NULL,
+  `kode_indikator` varchar(80) DEFAULT NULL,
+  `nama_indikator` text NOT NULL,
+  `satuan` varchar(50) DEFAULT NULL,
+  `target_pk` double DEFAULT NULL,
+  `target_tw1` double DEFAULT NULL,
+  `target_tw2` double DEFAULT NULL,
+  `target_tw3` double DEFAULT NULL,
+  `target_tw4` double DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `indikator_kinerja`
+--
+
+INSERT INTO `indikator_kinerja` (`id`, `sasaran_id`, `kode_indikator`, `nama_indikator`, `satuan`, `target_pk`, `target_tw1`, `target_tw2`, `target_tw3`, `target_tw4`, `created_at`, `updated_at`) VALUES
+(1, 1, 'IK-01', 'c', '%', 90, 25, 25, 25, 25, '2025-12-08 07:17:02', '2025-12-08 07:17:02'),
+(3, 3, 'IK-01', 'Tingkat Kelulusan Tepat Waktu (%)', '%', 90, 25, 25, 25, 25, '2025-12-08 08:31:45', '2025-12-08 08:31:45'),
+(4, 4, 'IK-01', 'ccc', '%', 90, 25, 0, 0, 0, '2025-12-09 01:12:18', '2025-12-09 01:12:18'),
+(8, 4, 'IK-02', 'uwei', 'Unit', 90, 25, 25, 25, 25, '2025-12-09 01:37:26', '2025-12-09 01:37:26'),
+(9, 5, 'IK-01', 'apasih', '%', 90, 25, 50, 75, 100, '2025-12-09 01:45:43', '2025-12-09 01:45:43'),
+(11, 7, 'IK-01', 'apa', '%', 90, 25, 25, 25, 25, '2025-12-09 04:05:44', '2025-12-09 04:05:44'),
+(12, 8, 'IK-01', 'cccacaacca', '%', 90, 25, 25, 25, 25, '2025-12-09 04:10:13', '2025-12-09 04:10:13'),
+(21, 15, 'IK-01', 'uiuiiiui', '%', 90, 25, 50, 75, 100, '2025-12-10 00:24:36', '2025-12-10 00:24:36'),
+(23, 17, 'IK-01', 'Tingkat Kelulusan Tepat Waktu (%)', '%', 100, 25, 25, 25, 25, '2025-12-10 02:18:15', '2025-12-10 02:18:15'),
+(27, 17, 'IK-02', 'Rasio Mahasiswa – Dosen', '%', 100, 25, 25, 25, 25, '2025-12-10 06:58:17', '2025-12-10 06:58:17'),
+(28, 17, 'IK-03', 'Persentase Mata Kuliah Berbasis Project-Based Learning (PBL)', '%', 100, 25, 25, 25, 25, '2025-12-10 06:59:54', '2025-12-10 06:59:54'),
+(31, 7, 'IK-02', 'ada', '%', 100, 25, 20, 30, 25, '2025-12-11 03:28:27', '2025-12-11 03:28:27'),
+(32, 7, 'IK-03', 'yes', '%', 100, 25, 25, 25, 25, '2025-12-11 03:30:08', '2025-12-11 03:30:08'),
+(33, 25, 'IK-01', 'Persentase lulusan S1/D4/D3/D2/D1 yang berhasil memiliki pekerjaan, melanjutkan studi, atau menjadi wirausaha.', '%', 100, 25, 25, 25, 25, '2025-12-11 08:22:45', '2025-12-11 08:22:45'),
+(34, 25, 'IK-02', 'Persentase mahasiswa yang melakukan pembelajaran di luar program studi atau meraih prestasi.', '%', 100, 10, 90, 90, 100, '2025-12-11 08:23:33', '2025-12-11 08:23:33'),
+(35, 27, 'IK-01', 'Persentase Mata Kuliah Berbasis Project-Based Learning (PBL)\r\n', '%', 100, 25, 25, 25, 25, '2025-12-12 03:12:11', '2025-12-12 03:12:11'),
+(36, 28, 'IK-01', 'Persentase Mata Kuliah Berbasis Project-Based Learning (PBL)\r\n', '%', 100, 25, 50, 75, 100, '2025-12-12 08:12:32', '2025-12-12 08:12:32'),
+(37, 28, 'IK-02', 'hhjhj', 'unit', 40, 10, 20, 30, 40, '2025-12-12 08:37:35', '2025-12-12 08:37:35'),
+(38, 29, 'IK-01', 'ccccuiiii', '%', 100, 25, 25, 25, 25, '2025-12-15 00:38:59', '2025-12-15 00:38:59');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jabatan`
+--
+
+CREATE TABLE `jabatan` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `nama_jabatan` varchar(100) NOT NULL,
+  `bidang_id` int(10) UNSIGNED NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `jabatan`
+--
+
+INSERT INTO `jabatan` (`id`, `nama_jabatan`, `bidang_id`, `created_at`, `updated_at`) VALUES
+(1, 'Direktur', 0, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `laporan`
+--
+
+CREATE TABLE `laporan` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `judul` varchar(255) NOT NULL,
+  `deskripsi` text NOT NULL,
+  `tanggal` date NOT NULL,
+  `file_bukti` varchar(255) DEFAULT NULL,
+  `status` enum('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+  `catatan_atasan` text DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `migrations`
+--
+
+CREATE TABLE `migrations` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `version` varchar(255) NOT NULL,
+  `class` varchar(255) NOT NULL,
+  `group` varchar(255) NOT NULL,
+  `namespace` varchar(255) NOT NULL,
+  `time` int(11) NOT NULL,
+  `batch` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `migrations`
+--
+
+INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`, `batch`) VALUES
+(1, '2025-11-17-040430', 'App\\Database\\Migrations\\CreateUsersTable', 'default', 'App', 1763352305, 1),
+(2, '2025-11-17-053422', 'App\\Database\\Migrations\\CreateJabatanTable', 'default', 'App', 1763358743, 2),
+(3, '2025-11-17-053600', 'App\\Database\\Migrations\\CreateBidangTable', 'default', 'App', 1763358743, 2),
+(4, '2025-11-17-060919', 'App\\Database\\Migrations\\CreateLaporanTable', 'default', 'App', 1763360135, 3),
+(5, '2025-11-19-062428', 'App\\Database\\Migrations\\CreateTahunAnggaran', 'default', 'App', 1763533882, 4),
+(6, '2025-11-19-062531', 'App\\Database\\Migrations\\CreateSasaranStrategis', 'default', 'App', 1763533882, 4),
+(7, '2025-11-19-062559', 'App\\Database\\Migrations\\CreateIndikatorKinerja', 'default', 'App', 1763533882, 4),
+(8, '2025-11-19-062627', 'App\\Database\\Migrations\\CreatePengukuranKinerja', 'default', 'App', 1763533882, 4),
+(9, '2025-11-21-013130', 'App\\Database\\Migrations\\CreatePicIndikator', 'default', 'App', 1763690455, 5),
+(10, '2025-11-21-024013', 'App\\Database\\Migrations\\AddBidangIdToJabatan', 'default', 'App', 1763692835, 6),
+(11, '2025-12-08-065907', 'App\\Database\\Migrations\\CreateTwSettings', 'default', 'App', 1765179940, 7),
+(12, '2025-12-08-075854', 'App\\Database\\Migrations\\AddAutoModeTw', 'default', 'App', 1765180753, 8);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `meta` text DEFAULT NULL,
+  `status` enum('unread','read') NOT NULL DEFAULT 'unread',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `user_id`, `message`, `meta`, `status`, `created_at`) VALUES
+(1, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 4.', '{\"indikator_id\":\"1\",\"tahun_id\":\"4\",\"sasaran_id\":\"1\"}', 'read', '2025-12-08 07:45:14'),
+(2, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 5.', '{\"indikator_id\":\"2\",\"tahun_id\":\"5\",\"sasaran_id\":\"2\"}', 'read', '2025-12-08 07:53:24'),
+(3, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 6.', '{\"indikator_id\":\"3\",\"tahun_id\":\"6\",\"sasaran_id\":\"3\"}', 'read', '2025-12-08 08:33:19'),
+(4, 1, 'PIC telah mengisi pengukuran indikator ID 3 pada TW 1.', NULL, 'read', '2025-12-08 08:41:49'),
+(5, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 6.', '{\"indikator_id\":\"3\",\"tahun_id\":\"6\",\"sasaran_id\":\"3\"}', 'read', '2025-12-09 00:54:51'),
+(6, 1, 'PIC telah mengisi pengukuran indikator ID 3 pada TW 1.', NULL, 'read', '2025-12-09 00:58:28'),
+(7, 1, 'PIC telah mengisi pengukuran indikator ID 3 pada TW 2.', NULL, 'read', '2025-12-09 01:00:11'),
+(8, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 7.', '{\"indikator_id\":\"4\",\"tahun_id\":\"7\",\"sasaran_id\":\"4\"}', 'read', '2025-12-09 01:12:51'),
+(9, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 7.', '{\"indikator_id\":\"8\",\"tahun_id\":\"7\",\"sasaran_id\":\"4\"}', 'read', '2025-12-09 01:37:39'),
+(10, 1, 'PIC telah mengisi pengukuran indikator ID 8 pada TW 3.', NULL, 'read', '2025-12-09 01:38:10'),
+(11, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 8.', '{\"indikator_id\":\"9\",\"tahun_id\":\"8\",\"sasaran_id\":\"5\"}', 'read', '2025-12-09 01:45:58'),
+(12, 1, 'PIC telah mengisi pengukuran indikator ID 9 pada TW 2.', NULL, 'read', '2025-12-09 01:47:09'),
+(13, 1, 'PIC telah mengisi pengukuran indikator ID 9 pada TW 4.', NULL, 'unread', '2025-12-09 02:07:33'),
+(14, 1, 'PIC telah mengisi pengukuran indikator ID 9 pada TW 2.', NULL, 'read', '2025-12-09 02:11:44'),
+(15, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 9.', '{\"indikator_id\":\"10\",\"tahun_id\":\"9\",\"sasaran_id\":\"6\"}', 'read', '2025-12-09 02:13:56'),
+(16, 1, 'PIC telah mengisi pengukuran indikator ID 10 pada TW 2.', NULL, 'unread', '2025-12-09 02:14:37'),
+(17, 1, 'PIC telah mengisi pengukuran indikator ID 10 pada TW 4.', NULL, 'unread', '2025-12-09 02:27:54'),
+(18, 1, 'PIC telah mengisi pengukuran indikator ID 9 pada TW 4.', NULL, 'unread', '2025-12-09 02:34:31'),
+(19, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 10.', '{\"indikator_id\":\"11\",\"tahun_id\":\"10\",\"sasaran_id\":\"7\"}', 'read', '2025-12-09 04:06:01'),
+(20, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 11.', '{\"indikator_id\":\"12\",\"tahun_id\":\"11\",\"sasaran_id\":\"8\"}', 'read', '2025-12-09 04:10:26'),
+(21, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 12.', '{\"indikator_id\":\"13\",\"tahun_id\":\"12\",\"sasaran_id\":\"9\"}', 'read', '2025-12-09 04:53:04'),
+(22, 1, 'PIC telah mengisi pengukuran indikator ID 13 pada TW 1.', NULL, 'read', '2025-12-09 04:53:51'),
+(23, 1, 'PIC telah mengisi pengukuran indikator ID 9 pada TW 4.', NULL, 'read', '2025-12-09 04:56:14'),
+(24, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 13.', '{\"indikator_id\":\"14\",\"tahun_id\":\"13\",\"sasaran_id\":\"10\"}', 'read', '2025-12-09 04:59:09'),
+(25, 1, 'PIC telah mengisi pengukuran indikator ID 14 pada TW 3.', NULL, 'read', '2025-12-09 04:59:39'),
+(26, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 14.', '{\"indikator_id\":\"15\",\"tahun_id\":\"14\",\"sasaran_id\":\"11\"}', 'read', '2025-12-09 06:06:33'),
+(27, 13, 'Anda mendapatkan tugas baru untuk indikator tahun 16.', '{\"indikator_id\":\"16\",\"tahun_id\":\"16\",\"sasaran_id\":\"12\"}', 'read', '2025-12-09 07:19:32'),
+(28, 1, 'PIC mengisi pengukuran indikator ID 16 pada TW 3.', NULL, 'unread', '2025-12-09 07:20:50'),
+(29, 1, 'PIC mengisi pengukuran indikator ID 16 pada TW 4.', NULL, 'unread', '2025-12-09 07:41:07'),
+(30, 13, 'Anda mendapatkan tugas baru untuk indikator tahun 18.', '{\"indikator_id\":\"17\",\"tahun_id\":\"18\",\"sasaran_id\":\"13\"}', 'read', '2025-12-09 07:51:35'),
+(31, 13, 'Anda mendapatkan tugas baru untuk indikator tahun 18.', '{\"indikator_id\":\"18\",\"tahun_id\":\"18\",\"sasaran_id\":\"13\"}', 'read', '2025-12-09 07:51:57'),
+(32, 13, 'Anda mendapatkan tugas baru untuk indikator tahun 18.', '{\"indikator_id\":\"19\",\"tahun_id\":\"18\",\"sasaran_id\":\"14\"}', 'read', '2025-12-09 07:52:16'),
+(33, 13, 'Anda mendapatkan tugas baru untuk indikator tahun 18.', '{\"indikator_id\":\"20\",\"tahun_id\":\"18\",\"sasaran_id\":\"14\"}', 'read', '2025-12-09 07:52:32'),
+(34, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 19.', '{\"indikator_id\":\"21\",\"tahun_id\":\"19\",\"sasaran_id\":\"15\"}', 'read', '2025-12-10 00:24:57'),
+(35, 1, 'PIC mengisi pengukuran indikator ID 21 pada TW 2.', NULL, 'read', '2025-12-10 00:26:21'),
+(36, 1, 'PIC mengisi pengukuran indikator ID 21 pada TW 4.', NULL, 'unread', '2025-12-10 00:27:24'),
+(37, 14, 'Anda mendapatkan tugas baru untuk indikator tahun 18.', '{\"indikator_id\":\"22\",\"tahun_id\":\"18\",\"sasaran_id\":\"16\"}', 'read', '2025-12-10 01:05:52'),
+(38, 1, 'PIC mengisi pengukuran indikator ID 22 pada TW 4.', NULL, 'read', '2025-12-10 01:08:26'),
+(39, 1, 'PIC mengisi pengukuran indikator ID 22 pada TW 2.', NULL, 'unread', '2025-12-10 01:09:54'),
+(40, 14, 'Anda mendapatkan tugas baru untuk indikator tahun 20.', '{\"indikator_id\":\"23\",\"tahun_id\":\"20\",\"sasaran_id\":\"17\"}', 'read', '2025-12-10 02:18:44'),
+(41, 1, 'PIC mengisi pengukuran indikator ID 23 pada TW 3.', NULL, 'read', '2025-12-10 02:22:57'),
+(42, 14, 'Anda mendapatkan tugas baru untuk indikator tahun 22.', '{\"indikator_id\":\"24\",\"tahun_id\":\"22\",\"sasaran_id\":\"20\"}', 'read', '2025-12-10 03:08:58'),
+(43, 14, 'Anda mendapatkan tugas baru untuk indikator tahun 23.', '{\"indikator_id\":\"25\",\"tahun_id\":\"23\",\"sasaran_id\":\"21\"}', 'read', '2025-12-10 03:16:43'),
+(44, 14, 'Anda mendapatkan tugas baru untuk indikator tahun 26.', '{\"indikator_id\":\"26\",\"tahun_id\":\"26\",\"sasaran_id\":\"22\"}', 'read', '2025-12-10 03:28:48'),
+(45, 1, 'PIC mengisi pengukuran indikator ID 26 pada TW 2.', NULL, 'read', '2025-12-10 03:30:26'),
+(46, 1, 'PIC mengisi pengukuran indikator ID 26 pada TW 4.', NULL, 'unread', '2025-12-10 03:31:11'),
+(47, 14, 'Anda mendapatkan tugas baru untuk indikator tahun 20.', '{\"indikator_id\":\"27\",\"tahun_id\":\"20\",\"sasaran_id\":\"17\"}', 'read', '2025-12-10 06:58:57'),
+(48, 14, 'Anda mendapatkan tugas baru untuk indikator tahun 20.', '{\"indikator_id\":\"28\",\"tahun_id\":\"20\",\"sasaran_id\":\"17\"}', 'read', '2025-12-10 07:00:10'),
+(49, 1, 'PIC mengisi pengukuran indikator ID 28 pada TW 3.', NULL, 'read', '2025-12-10 07:01:39'),
+(50, 16, 'Anda mendapatkan tugas baru untuk indikator tahun 38.', '{\"indikator_id\":\"29\",\"tahun_id\":\"38\",\"sasaran_id\":\"23\"}', 'read', '2025-12-10 08:01:26'),
+(51, 1, 'PIC mengisi pengukuran indikator ID 29 pada TW 3.', NULL, 'read', '2025-12-10 08:02:34'),
+(52, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 39.', '{\"indikator_id\":\"30\",\"tahun_id\":\"39\",\"sasaran_id\":\"24\"}', 'read', '2025-12-11 00:30:03'),
+(53, 1, 'PIC mengisi pengukuran indikator ID 30 pada TW 4.', NULL, 'read', '2025-12-11 00:30:58'),
+(54, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 10.', '{\"indikator_id\":\"31\",\"tahun_id\":\"10\",\"sasaran_id\":\"7\"}', 'read', '2025-12-11 03:29:19'),
+(55, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 10.', '{\"indikator_id\":\"32\",\"tahun_id\":\"10\",\"sasaran_id\":\"7\"}', 'read', '2025-12-11 03:30:33'),
+(56, 1, 'PIC mengisi pengukuran indikator ID 32 pada TW 4.', NULL, 'unread', '2025-12-11 03:31:30'),
+(57, 1, 'PIC mengisi pengukuran indikator ID 30 pada TW 2.', NULL, 'unread', '2025-12-11 05:35:54'),
+(58, 16, 'Anda mendapatkan tugas baru untuk indikator tahun 10.', '{\"indikator_id\":\"32\",\"tahun_id\":\"10\",\"sasaran_id\":\"7\"}', 'read', '2025-12-11 07:11:44'),
+(59, 1, 'PIC mengisi pengukuran indikator ID 32 pada TW 2.', NULL, 'read', '2025-12-11 07:12:40'),
+(60, 1, 'PIC mengisi pengukuran indikator ID 32 pada TW 3.', NULL, 'unread', '2025-12-11 07:13:25'),
+(61, 16, 'Anda mendapatkan tugas baru untuk indikator tahun 41.', '{\"indikator_id\":\"33\",\"tahun_id\":\"41\",\"sasaran_id\":\"25\"}', 'read', '2025-12-11 08:23:52'),
+(62, 1, 'PIC mengisi pengukuran indikator ID 33 pada TW 2.', NULL, 'unread', '2025-12-11 08:28:08'),
+(63, 1, 'PIC mengisi pengukuran indikator ID 33 pada TW 3.', NULL, 'read', '2025-12-11 08:29:58'),
+(64, 1, 'PIC mengisi pengukuran indikator ID 33 pada TW 4.', NULL, 'unread', '2025-12-12 01:48:53'),
+(65, 17, 'Anda mendapatkan tugas baru untuk indikator tahun 42.', '{\"indikator_id\":\"35\",\"tahun_id\":\"42\",\"sasaran_id\":\"27\"}', 'read', '2025-12-12 03:12:42'),
+(66, 1, 'PIC mengisi pengukuran indikator ID 35 pada TW 2.', NULL, 'unread', '2025-12-12 03:14:27'),
+(67, 1, 'PIC mengisi pengukuran indikator ID 35 pada TW 4.', NULL, 'unread', '2025-12-12 03:16:00'),
+(68, 17, 'Anda mendapatkan tugas baru untuk indikator tahun 44.', '{\"indikator_id\":\"36\",\"tahun_id\":\"44\",\"sasaran_id\":\"28\"}', 'read', '2025-12-12 08:13:14'),
+(69, 1, 'PIC mengisi pengukuran indikator ID 36 pada TW 4.', NULL, 'read', '2025-12-12 08:17:29'),
+(70, 17, 'Anda mendapatkan tugas baru untuk indikator tahun 44.', '{\"indikator_id\":\"37\",\"tahun_id\":\"44\",\"sasaran_id\":\"28\"}', 'read', '2025-12-12 08:38:08'),
+(71, 1, 'PIC mengisi pengukuran indikator ID 37 pada TW 3.', NULL, 'unread', '2025-12-12 08:40:30'),
+(72, 1, 'PIC mengisi pengukuran indikator ID 37 pada TW 2.', NULL, 'unread', '2025-12-12 08:40:53'),
+(73, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 8.', '{\"indikator_id\":\"38\",\"tahun_id\":\"8\",\"sasaran_id\":\"29\"}', 'read', '2025-12-15 00:39:44'),
+(74, 3, 'Anda mendapatkan tugas baru untuk indikator tahun 8.', '{\"indikator_id\":\"38\",\"tahun_id\":\"8\",\"sasaran_id\":\"29\"}', 'unread', '2025-12-15 00:39:44'),
+(75, 1, 'PIC mengisi pengukuran indikator ID 38 pada TW 1.', NULL, 'unread', '2025-12-15 00:40:48'),
+(76, 1, 'PIC mengisi pengukuran indikator ID 31 pada TW 4.', NULL, 'unread', '2025-12-15 01:52:25');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pengukuran_kinerja`
+--
+
+CREATE TABLE `pengukuran_kinerja` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `indikator_id` int(11) UNSIGNED NOT NULL,
+  `tahun_id` int(11) UNSIGNED NOT NULL,
+  `triwulan` tinyint(1) NOT NULL DEFAULT 1,
+  `user_id` int(11) UNSIGNED DEFAULT NULL,
+  `realisasi` double DEFAULT NULL,
+  `progress` varchar(255) DEFAULT NULL,
+  `kendala` text DEFAULT NULL,
+  `strategi` text DEFAULT NULL,
+  `file_dukung` text DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `pengukuran_kinerja`
+--
+
+INSERT INTO `pengukuran_kinerja` (`id`, `indikator_id`, `tahun_id`, `triwulan`, `user_id`, `realisasi`, `progress`, `kendala`, `strategi`, `file_dukung`, `created_by`, `created_at`, `updated_at`) VALUES
+(3, 3, 6, 1, 12, 90, 'ada', 'ada', 'ada', '1765241908_c9cd39fa7ed51a3d2638.jpg', NULL, '2025-12-09 00:58:28', '2025-12-09 00:58:28'),
+(4, 3, 6, 1, 12, 90, 'adaa', 'ada', 'ada', '1765242011_92c081cf4bcd258ef3b6.jpg', NULL, '2025-12-09 01:00:11', '2025-12-09 01:00:11'),
+(5, 8, 7, 1, 12, 89, 'ada', 'ada', 'ga ada', '1765244290_567307e2615ebbb5c3e6.jpeg', NULL, '2025-12-09 01:38:10', '2025-12-09 01:38:10'),
+(6, 9, 8, 1, 12, 90, 'adaa', 'adaa', 'ada', '1765244829_7516f52e186b3709cdd9.jpeg', NULL, '2025-12-09 01:47:09', '2025-12-09 01:47:09'),
+(7, 9, 8, 1, 12, 90, 'ada', 'ada', 'ada', '1765246053_9a5917f1f3da0c629831.jpg', NULL, '2025-12-09 02:07:33', '2025-12-09 02:07:33'),
+(8, 9, 8, 1, 12, 90, 'adarepan', 'adarepan', 'adarepan', '1765246304_3966f3e4191152d636b7.jpg', NULL, '2025-12-09 02:11:44', '2025-12-09 02:11:44'),
+(11, 9, 8, 4, 12, 90, 'add', 'add', 'add repan', '1765247671_f213898c024bd465cfe4.jpg', NULL, '2025-12-09 02:34:31', '2025-12-09 02:34:31'),
+(13, 9, 8, 4, 12, 90, 'adaaadda', 'dadada', 'aadd', '1765256174_69dc7dcf33f7c77b4c84.jpg', NULL, '2025-12-09 04:56:14', '2025-12-09 04:56:14'),
+(17, 21, 19, 2, 2, 90, 'deuf', 'ada', 'add', '1765326381_f160a7895411ee37752c.jpg', NULL, '2025-12-10 00:26:21', '2025-12-10 00:26:21'),
+(18, 21, 19, 4, 2, 78, 'tidak ada', 'ada', 'ada', '1765326444_7eba25a8bbba5fb87e91.jpg', NULL, '2025-12-10 00:27:24', '2025-12-10 00:27:40'),
+(21, 23, 20, 3, 14, 90, 'halo', 'halo', 'halo', '1765333377_186620e8edd5463f3144.jpg', NULL, '2025-12-10 02:22:57', '2025-12-10 02:22:57'),
+(24, 28, 20, 3, 14, 90, 'add', 'add', 'add', '1765350099_5e2e8e38184fde47ec45.jpg', NULL, '2025-12-10 07:01:39', '2025-12-10 07:01:39'),
+(27, 32, 10, 4, 2, 20, 'swws', 'defdfer', 'erzcrf', '1765423890_1adf9726b2ee16e2b0bc.jpg', NULL, '2025-12-11 03:31:30', '2025-12-11 03:31:30'),
+(29, 32, 10, 2, 16, 90, 'ad', 'ad', 'ad', NULL, NULL, '2025-12-11 07:12:40', '2025-12-11 07:12:40'),
+(30, 32, 10, 3, 16, 90, 'ada', 'ada', 'ada', NULL, NULL, '2025-12-11 07:13:25', '2025-12-11 07:13:25'),
+(31, 33, 41, 2, 16, 25, 'Sepanjang periode pelaporan, pencapaian peningkatan kualitas lulusan menunjukkan perkembangan yang cukup baik meskipun belum sepenuhnya mencapai target yang ditetapkan. Hingga triwulan IV, tingkat keterserapan lulusan pada dunia kerja, pendidikan lanjut, ', 'Capaian yang belum optimal ini dipengaruhi oleh beberapa hambatan yang bersifat struktural maupun teknis. Salah satu kendala utama adalah belum tersedianya data tracer study secara lengkap dan terbarui, sehingga proses verifikasi status lulusan menjadi terhambat. Selain itu, tidak semua program studi memiliki kemitraan aktif dengan industri yang mampu memberikan kepastian penyerapan lulusan secara berkala. Sebagian lulusan juga memilih menunda aktivitas kerja karena mengikuti proses seleksi CPNS, BUMN, maupun rekrutmen lembaga lain yang membutuhkan waktu panjang, sehingga secara administratif mereka belum dapat dikategorikan sebagai “tersalurkan”. Kesenjangan kesiapan antarjurusan pun masih terlihat karena perbedaan fasilitas, jejaring industri, dan pendekatan pembelajaran.', 'Untuk meningkatkan capaian pada periode berikutnya, Polban akan memperkuat mekanisme pelacakan lulusan berbasis sistem informasi guna memastikan data yang lebih akurat dan komprehensif. Selain itu, perluasan kerja sama industri akan diprioritaskan melalui penyusunan MoU dan MoA yang lebih terarah, terutama pada bidang yang memiliki potensi penyerapan tenaga kerja tinggi. Polban juga akan mengoptimalkan fungsi career center dengan menyediakan layanan pembekalan karier, bursa kerja terjadwal, serta kolaborasi rekrutmen bersama mitra industri strategis. Dengan langkah-langkah tersebut, diharapkan kemampuan institusi dalam memastikan keterhubungan lulusan dengan dunia kerja dapat semakin kuat dan memberikan kontribusi pada peningkatan angka serapan lulusan secara berkelanjutan.', '[\"1765441688_ad6c81a374100b01775b.jpeg\",\"1765441688_d225c0a255f5e21d5e63.jpg\",\"1765441688_fd8dd4c0dcd9fd8bab0f.jpg\"]', NULL, '2025-12-11 08:28:08', '2025-12-11 08:28:08'),
+(32, 33, 41, 3, 16, 5, 'Untuk meningkatkan capaian pada periode berikutnya, Polban akan memperkuat mekanisme pelacakan lulusan berbasis sistem informasi guna memastikan data yang lebih akurat dan komprehensif. Selain itu, perluasan kerja sama industri akan diprioritaskan melalui', 'Untuk meningkatkan capaian pada periode berikutnya, Polban akan memperkuat mekanisme pelacakan lulusan berbasis sistem informasi guna memastikan data yang lebih akurat dan komprehensif. Selain itu, perluasan kerja sama industri akan diprioritaskan melalui penyusunan MoU dan MoA yang lebih terarah, terutama pada bidang yang memiliki potensi penyerapan tenaga kerja tinggi. Polban juga akan mengoptimalkan fungsi career center dengan menyediakan layanan pembekalan karier, bursa kerja terjadwal, serta kolaborasi rekrutmen bersama mitra industri strategis. Dengan langkah-langkah tersebut, diharapkan kemampuan institusi dalam memastikan keterhubungan lulusan dengan dunia kerja dapat semakin kuat dan memberikan kontribusi pada peningkatan angka serapan lulusan secara berkelanjutan.', 'Untuk meningkatkan capaian pada periode berikutnya, Polban akan memperkuat mekanisme pelacakan lulusan berbasis sistem informasi guna memastikan data yang lebih akurat dan komprehensif. Selain itu, perluasan kerja sama industri akan diprioritaskan melalui penyusunan MoU dan MoA yang lebih terarah, terutama pada bidang yang memiliki potensi penyerapan tenaga kerja tinggi. Polban juga akan mengoptimalkan fungsi career center dengan menyediakan layanan pembekalan karier, bursa kerja terjadwal, serta kolaborasi rekrutmen bersama mitra industri strategis. Dengan langkah-langkah tersebut, diharapkan kemampuan institusi dalam memastikan keterhubungan lulusan dengan dunia kerja dapat semakin kuat dan memberikan kontribusi pada peningkatan angka serapan lulusan secara berkelanjutan.', '[\"1765441798_ddb9433e9caab8d06f67.jpeg\",\"1765441798_18308b37b21de286660c.jpg\",\"1765441798_e6ab5f854e052b549e98.jpg\"]', NULL, '2025-12-11 08:29:58', '2025-12-12 01:44:26'),
+(33, 33, 41, 4, 16, 25, 'ada', 'tidak ada', 'ada', '[\"1765504133_80486f6a5d1ba636146b.png\",\"1765504133_a0812c07e5ca2d63977e.png\",\"1765504133_9ad1d59bb78ff0020fc0.png\",\"1765504133_bccd16c162bd726b76f7.png\",\"1765504349_740b64bff1ee13725b81.jpg\"]', NULL, '2025-12-12 01:48:53', '2025-12-12 01:56:52'),
+(34, 35, 42, 2, 17, 25, 'Implementasi PBL telah diterapkan pada 58% mata kuliah inti di seluruh jurusan.\r\n\r\nDosen telah mengikuti 3 kali workshop pengembangan modul PBL.\r\n\r\nPlatform LMS kampus telah diintegrasikan dengan fitur penilaian berbasis proyek.', 'Tidak semua dosen familiar dengan metode PBL sehingga kualitas implementasi masih beragam.\r\n\r\nKetersediaan sarana laboratorium untuk proyek tertentu masih terbatas.\r\n\r\nBeberapa program studi masih menggunakan kurikulum lama sehingga butuh penyesuaian dokumen akademik.', 'Menyelenggarakan pelatihan intensif dan mentoring antar-dosen untuk implementasi PBL.\r\n\r\nMenambah alokasi anggaran untuk peralatan laboratorium lintas prodi.\r\n\r\nMempercepat peninjauan kurikulum agar semua mata kuliah kompatibel dengan pendekatan proyek.', '[\"1765509267_5b9e6b7ab8009e2b2cbc.png\",\"1765509267_95d1096d900e7a908b55.png\",\"1765509267_8240076d0ecc77f10c3e.png\"]', NULL, '2025-12-12 03:14:27', '2025-12-12 03:14:27'),
+(35, 35, 42, 4, 17, 23, 'Implementasi PBL telah diterapkan pada 58% mata kuliah inti di seluruh jurusan.\r\n\r\nDosen telah mengikuti 3 kali workshop pengembangan modul PBL.\r\n\r\nPlatform LMS kampus telah diintegrasikan dengan fitur penilaian berbasis proyek.', 'Tidak semua dosen familiar dengan metode PBL sehingga kualitas implementasi masih beragam.\r\n\r\nKetersediaan sarana laboratorium untuk proyek tertentu masih terbatas.\r\n\r\nBeberapa program studi masih menggunakan kurikulum lama sehingga butuh penyesuaian dokumen akademik.', 'Menyelenggarakan pelatihan intensif dan mentoring antar-dosen untuk implementasi PBL.\r\n\r\nMenambah alokasi anggaran untuk peralatan laboratorium lintas prodi.\r\n\r\nMempercepat peninjauan kurikulum agar semua mata kuliah kompatibel dengan pendekatan proyek.', '[\"1765509360_f0b889c9c39ffa0096c6.png\"]', NULL, '2025-12-12 03:16:00', '2025-12-12 03:16:00'),
+(36, 36, 44, 4, 17, 80, 'Implementasi PBL telah diterapkan pada 58% mata kuliah inti di seluruh jurusan.\r\n\r\nDosen telah mengikuti 3 kali workshop pengembangan modul PBL. \r\n\r\nPlatform LMS kampus telah diintegrasikan dengan fitur penilaian berbasis proyek. Repan, S.Kom, M.T.', 'Tidak semua dosen familiar dengan metode PBL sehingga kualitas implementasi masih beragam.\r\n\r\nKetersediaan sarana laboratorium untuk proyek tertentu masih terbatas.\r\n\r\nBeberapa program studi masih menggunakan kurikulum lama sehingga butuh penyesuaian dokumen akademik.', 'Menyelenggarakan pelatihan intensif dan mentoring antar-dosen untuk implementasi PBL.\r\n\r\nMenambah alokasi anggaran untuk peralatan laboratorium lintas prodi.\r\n\r\nMempercepat peninjauan kurikulum agar semua mata kuliah kompatibel dengan pendekatan proyek.', '[\"1765527449_d06ff930d6bf4f9d2cdb.png\",\"1765527449_bc45b0364e83f1d6e247.png\",\"1765527449_9f5e49b5b88d86597834.png\"]', NULL, '2025-12-12 08:17:29', '2025-12-12 08:19:25'),
+(37, 37, 44, 3, 17, 30, 'ada', 'ada', 'ada', '[\"1765528830_470155496028e3facc0b.png\",\"1765528830_174ad0153a21b34c885d.png\",\"1765528830_5f3d29b5bddd83a594ef.png\",\"1765528830_ee2a98d9715294348192.png\"]', NULL, '2025-12-12 08:40:30', '2025-12-12 08:45:40'),
+(38, 37, 44, 2, 17, 10, 'ada', 'ada', 'ada', '[\"1765528853_e7bfc17caf9e763ccfb3.png\",\"1765528853_7639db03efd2bc4b1efb.png\",\"1765528853_540fd6fe9137fc7c04dd.png\"]', NULL, '2025-12-12 08:40:53', '2025-12-12 08:40:53'),
+(39, 38, 8, 1, 2, 25, 'hfuhfhjkdhfdsjfj', 'fkjhdsvjbdsjvb', 'jhjfdsvnjdbjvfj', '[\"1765759248_e39269478a1d3ef9bd5d.png\",\"1765759248_9a3c90d7cddfa9f304aa.png\",\"1765759248_473544f41f4929d436c3.png\"]', NULL, '2025-12-15 00:40:48', '2025-12-15 00:40:48'),
+(40, 31, 10, 4, 2, 1, 'h', 'h', 'h', '[\"1765763545_6e536e52f55842224f67.png\",\"1765763545_2538e9b7504c8f590c2b.png\",\"1765763545_7a6f94c315791c9a5fa9.png\",\"1765763545_77744164f2aa8aad3d3c.png\"]', NULL, '2025-12-15 01:52:25', '2025-12-15 01:52:25');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pic_indikator`
+--
+
+CREATE TABLE `pic_indikator` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `indikator_id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `tahun_id` int(11) UNSIGNED NOT NULL,
+  `sasaran_id` int(11) UNSIGNED NOT NULL,
+  `bidang_id` int(11) UNSIGNED NOT NULL,
+  `jabatan_id` int(11) UNSIGNED NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `pic_indikator`
+--
+
+INSERT INTO `pic_indikator` (`id`, `indikator_id`, `user_id`, `tahun_id`, `sasaran_id`, `bidang_id`, `jabatan_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 2, 4, 1, 1, 1, '2025-12-08 07:45:14', '2025-12-08 07:45:14'),
+(3, 3, 2, 6, 3, 1, 1, '2025-12-08 08:33:19', '2025-12-08 08:33:19'),
+(4, 3, 12, 6, 3, 1, 1, '2025-12-09 00:54:51', '2025-12-09 00:54:51'),
+(5, 4, 12, 7, 4, 1, 1, '2025-12-09 01:12:51', '2025-12-09 01:12:51'),
+(6, 8, 12, 7, 4, 1, 1, '2025-12-09 01:37:39', '2025-12-09 01:37:39'),
+(7, 9, 12, 8, 5, 1, 1, '2025-12-09 01:45:58', '2025-12-09 01:45:58'),
+(9, 11, 12, 10, 7, 1, 1, '2025-12-09 04:06:01', '2025-12-09 04:06:01'),
+(10, 12, 12, 11, 8, 1, 1, '2025-12-09 04:10:26', '2025-12-09 04:10:26'),
+(19, 21, 2, 19, 15, 1, 1, '2025-12-10 00:24:57', '2025-12-10 00:24:57'),
+(21, 23, 14, 20, 17, 1, 1, '2025-12-10 02:18:44', '2025-12-10 02:18:44'),
+(25, 27, 14, 20, 17, 1, 1, '2025-12-10 06:58:57', '2025-12-10 06:58:57'),
+(26, 28, 14, 20, 17, 1, 1, '2025-12-10 07:00:10', '2025-12-10 07:00:10'),
+(29, 31, 2, 10, 7, 1, 1, '2025-12-11 03:29:19', '2025-12-11 03:29:19'),
+(30, 32, 2, 10, 7, 1, 1, '2025-12-11 03:30:33', '2025-12-11 03:30:33'),
+(31, 32, 16, 10, 7, 1, 1, '2025-12-11 07:11:44', '2025-12-11 07:11:44'),
+(32, 33, 16, 41, 25, 1, 1, '2025-12-11 08:23:52', '2025-12-11 08:23:52'),
+(33, 35, 17, 42, 27, 1, 1, '2025-12-12 03:12:42', '2025-12-12 03:12:42'),
+(34, 36, 17, 44, 28, 1, 1, '2025-12-12 08:13:14', '2025-12-12 08:13:14'),
+(35, 37, 17, 44, 28, 1, 1, '2025-12-12 08:38:08', '2025-12-12 08:38:08'),
+(36, 38, 2, 8, 29, 1, 1, '2025-12-15 00:39:44', '2025-12-15 00:39:44'),
+(37, 38, 3, 8, 29, 1, 1, '2025-12-15 00:39:44', '2025-12-15 00:39:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sasaran_strategis`
+--
+
+CREATE TABLE `sasaran_strategis` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `tahun_id` int(11) UNSIGNED NOT NULL,
+  `kode_sasaran` varchar(50) DEFAULT NULL,
+  `nama_sasaran` text NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `triwulan` tinyint(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sasaran_strategis`
+--
+
+INSERT INTO `sasaran_strategis` (`id`, `tahun_id`, `kode_sasaran`, `nama_sasaran`, `created_at`, `updated_at`, `triwulan`) VALUES
+(1, 4, 'SS-01', 'p', '2025-12-08 07:16:36', '2025-12-08 07:16:36', NULL),
+(3, 6, 'SS-01', 'Peningkatan Mutu Pendidikan dan Pembelajaran Vokasi', '2025-12-08 08:30:29', '2025-12-08 08:30:29', NULL),
+(4, 7, 'SS-01', 'pppppp', '2025-12-09 01:11:57', '2025-12-09 01:11:57', NULL),
+(5, 8, 'SS-01', 'apalah dia', '2025-12-09 01:45:05', '2025-12-09 01:45:05', NULL),
+(7, 10, 'SS-01', 'naon', '2025-12-09 04:05:19', '2025-12-09 04:05:19', NULL),
+(8, 11, 'SS-01', 'pppppaaa', '2025-12-09 04:09:51', '2025-12-09 04:09:51', NULL),
+(15, 19, 'SS-01', 'opopop', '2025-12-10 00:23:47', '2025-12-10 00:23:47', NULL),
+(17, 20, 'SS-01', 'Peningkatan Mutu Pendidikan dan Pembelajaran Vokasi', '2025-12-10 02:16:03', '2025-12-10 02:16:03', NULL),
+(18, 20, 'SS-02', 'Peningkatan Kompetensi Lulusan dan Link & Match Industri', '2025-12-10 02:16:26', '2025-12-10 02:16:26', NULL),
+(19, 20, 'SS-03', 'Penguatan Riset Terapan dan Inovasi', '2025-12-10 02:16:40', '2025-12-10 02:16:40', NULL),
+(25, 41, 'SS-01', 'Meningkatnya Kualitas Lulusan Pendidikan Tinggi', '2025-12-11 08:21:38', '2025-12-11 08:21:38', NULL),
+(26, 41, 'SS-02', 'Meningkatnya Kualitas Dosen Pendidikan Tinggi', '2025-12-11 08:21:56', '2025-12-11 08:21:56', NULL),
+(27, 42, 'SS-01', ' Peningkatan Kualitas Pembelajaran Vokasi\r\n', '2025-12-12 03:10:58', '2025-12-12 03:10:58', NULL),
+(28, 44, 'SS-01', 'Peningkatan Kualitas Pembelajaran Vokasi\r\n', '2025-12-12 08:09:33', '2025-12-12 08:09:33', NULL),
+(29, 8, 'SS-02', 'ppppaaaaa', '2025-12-15 00:38:39', '2025-12-15 00:38:39', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tahun_anggaran`
+--
+
+CREATE TABLE `tahun_anggaran` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `tahun` int(4) NOT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'inactive',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tahun_anggaran`
+--
+
+INSERT INTO `tahun_anggaran` (`id`, `tahun`, `status`, `created_at`, `updated_at`) VALUES
+(1, 2019, 'inactive', '2025-11-28 00:54:44', '2025-11-28 02:49:31'),
+(2, 1945, 'inactive', '2025-11-28 02:49:26', '2025-12-09 07:42:51'),
+(3, 2015, 'inactive', '2025-12-02 11:18:24', '2025-12-08 01:45:35'),
+(4, 1999, 'inactive', '2025-12-08 01:45:55', '2025-12-09 07:42:46'),
+(6, 2020, 'inactive', '2025-12-08 08:29:26', '2025-12-09 07:42:29'),
+(7, 999, 'inactive', '2025-12-09 01:11:13', '2025-12-09 07:42:55'),
+(8, 9090, 'active', '2025-12-09 01:44:55', '2025-12-12 08:49:49'),
+(10, 2025, 'inactive', '2025-12-09 04:05:06', '2025-12-11 08:20:42'),
+(11, 2000, 'inactive', '2025-12-09 04:09:40', '2025-12-09 07:42:36'),
+(19, 1212, 'inactive', '2025-12-10 00:23:38', '2025-12-10 00:28:43'),
+(20, 2026, 'inactive', '2025-12-10 02:15:32', '2025-12-11 00:31:49'),
+(25, 10000, 'inactive', '2025-12-10 03:27:32', '2025-12-10 06:33:34'),
+(31, 10, 'inactive', '2025-12-10 06:05:25', '2025-12-10 06:11:04'),
+(32, 12, 'inactive', '2025-12-10 06:08:28', '2025-12-10 06:13:13'),
+(33, 1200, 'inactive', '2025-12-10 06:17:11', '2025-12-10 06:45:25'),
+(34, 1300, 'inactive', '2025-12-10 06:17:44', '2025-12-10 06:46:55'),
+(41, 2013, 'inactive', '2025-12-11 08:21:00', '2025-12-12 03:10:27'),
+(42, 2027, 'active', '2025-12-12 03:10:20', '2025-12-12 03:10:20'),
+(44, 2028, 'active', '2025-12-12 08:08:55', '2025-12-12 08:08:55');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tw_settings`
+--
+
+CREATE TABLE `tw_settings` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `tahun_id` int(10) UNSIGNED NOT NULL,
+  `tw` tinyint(4) NOT NULL,
+  `is_open` tinyint(1) NOT NULL DEFAULT 0,
+  `auto_mode` tinyint(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tw_settings`
+--
+
+INSERT INTO `tw_settings` (`id`, `tahun_id`, `tw`, `is_open`, `auto_mode`) VALUES
+(1, 1, 1, 0, 1),
+(2, 1, 2, 0, 1),
+(3, 1, 3, 0, 1),
+(4, 1, 4, 1, 1),
+(5, 2, 1, 0, 1),
+(6, 2, 2, 0, 1),
+(7, 2, 3, 0, 1),
+(8, 2, 4, 1, 1),
+(9, 3, 1, 0, 1),
+(10, 3, 2, 0, 1),
+(11, 3, 3, 0, 1),
+(12, 3, 4, 1, 1),
+(13, 4, 1, 0, 1),
+(14, 4, 2, 0, 1),
+(15, 4, 3, 0, 1),
+(16, 4, 4, 1, 1),
+(21, 6, 1, 0, 1),
+(22, 6, 2, 0, 1),
+(23, 6, 3, 0, 1),
+(24, 6, 4, 1, 1),
+(25, 7, 1, 0, 1),
+(26, 7, 2, 0, 1),
+(27, 7, 3, 0, 1),
+(28, 7, 4, 1, 1),
+(29, 8, 1, 1, 1),
+(30, 8, 2, 0, 1),
+(31, 8, 3, 0, 1),
+(32, 8, 4, 1, 1),
+(37, 10, 1, 0, 1),
+(38, 10, 2, 1, 1),
+(39, 10, 3, 1, 1),
+(40, 10, 4, 1, 1),
+(41, 11, 1, 0, 1),
+(42, 11, 2, 0, 1),
+(43, 11, 3, 0, 1),
+(44, 11, 4, 1, 1),
+(73, 19, 1, 0, 1),
+(74, 19, 2, 1, 1),
+(75, 19, 3, 0, 1),
+(76, 19, 4, 0, 1),
+(77, 20, 1, 0, 1),
+(78, 20, 2, 0, 1),
+(79, 20, 3, 1, 1),
+(80, 20, 4, 1, 1),
+(113, 41, 1, 0, 1),
+(114, 41, 2, 1, 1),
+(115, 41, 3, 1, 1),
+(116, 41, 4, 1, 1),
+(117, 42, 1, 1, 1),
+(118, 42, 2, 1, 1),
+(119, 42, 3, 0, 1),
+(120, 42, 4, 1, 1),
+(121, 44, 1, 0, 1),
+(122, 44, 2, 1, 1),
+(123, 44, 3, 1, 1),
+(124, 44, 4, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `jabatan_id` int(10) UNSIGNED DEFAULT NULL,
+  `bidang_id` int(10) UNSIGNED DEFAULT NULL,
+  `role` enum('admin','atasan','staff') NOT NULL DEFAULT 'staff',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `foto` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `nama`, `email`, `password`, `jabatan_id`, `bidang_id`, `role`, `created_at`, `updated_at`, `foto`) VALUES
+(1, 'Administrator', 'admin@kinetrack.test', '$2y$10$3APCDYJvzF1L6raWEXXRRu5u8RRTJQN0mRZiKdUhk1bRUtFMgf4xO', NULL, NULL, 'admin', NULL, NULL, NULL),
+(2, 'repan', 'repan@gmail.com', '$2y$10$CmwJ/.NzystCHqqFmu6pNO8La3rh6tGGLky5mublaxe3ecuYqAWwO', 1, 1, 'staff', NULL, NULL, NULL),
+(3, 'Arief Maulana', 'arief@gmail.com', '$2y$10$gWcvnWrUcLtstXuKRp/Pb.zdfxWqb3DMxmE3W67va0I9GW3itsiS6', 1, 1, 'staff', NULL, NULL, NULL),
+(4, 'Agung Setiawan', 'agung@gmail.com', '$2y$10$4L5ryPZqsQgISbtw54VYHuOgYo1tRm5vYYlKgleS8kiBH9yqnsRfy', 1, 1, 'staff', NULL, NULL, NULL),
+(5, 'Adit', 'adit@gmail.com', '$2y$10$QI9FXjRJu/ARX6sSrP2/ZO8BCPRX2vmIHKv0eM/Gbq5osrfy7.IM2', 1, 1, 'staff', NULL, NULL, NULL),
+(6, 'bp adi', 'adi@gmail.com', '$2y$10$49rFqGt2IZUiAkYRHWipUuKl2CQ/PowBVPnOHGT6lH1hwjdUw7ijq', 1, 1, 'admin', NULL, NULL, NULL),
+(7, 'Wihendra', 'hendra@gmail.com', '$2y$10$bNpHLltjQs.Da/QOL5c2IObD2BuEjlysVOmRrUNg809/8fLBGVpxy', 1, 1, 'staff', NULL, NULL, NULL),
+(8, 'Ahmad', 'ahmad@gmail.com', '$2y$10$GFHVST2Xpz2pwVROuqosJ.P.7NNXTqzsn7PSkrPy9rzrloVy1Lmya', 1, 1, 'staff', NULL, NULL, NULL),
+(9, 'Nabil', 'nabil@gmail.com', '$2y$10$jmVvTFwH80hukv/yzQIsCOy/Kf0Ua8m4fHkkLDhVhi.tCGdx2YCpm', 1, 1, 'staff', NULL, NULL, NULL),
+(10, 'Muhammad Farel Titansyah', 'farel@gmail.com', '$2y$10$QQeIovUzmJl4YIfs4bEydO61XijPB5SFy/t2cUGkqsVj4B.Y2/BpC', 1, 1, 'staff', NULL, NULL, NULL),
+(11, 'Nurul', 'nurul@gmail.com', '$2y$10$CtUzn4pmq6gZHSgc5kLjlOHh0Xdd6Ci1dulb2sEs0ds1Z3fGAsiBi', 1, 2, 'staff', NULL, NULL, NULL),
+(12, 'Toni ', 'toni@gmail.com', '$2y$10$TpbziTcYxRaNRA65G64HGu0u.w8HUt0Mgse0KtjLSLVo2axzz4Nle', 1, 1, 'staff', NULL, NULL, NULL),
+(13, 'dedy', 'dedy@gmail.com', '$2y$10$EmcmpctZasdyQQNm.Abpeeh3ronv1ILHjx8mjCjZrTe3FlEVMrxva', 1, 1, 'staff', NULL, NULL, NULL),
+(14, 'Sandi', 'sandi@gmail.com', '$2y$10$MuOqEFOYJ65MBkS/bU0xYuUxZ1/YlegbA2xnknvTVCbXyjs5GBxU2', 1, 1, 'staff', NULL, NULL, NULL),
+(16, 'pak tantan', 'tantan@gmail.com', '$2y$10$AtlBM31Yw8eJn0AJTljha.ego9nxq/HVuC3yR/uXUSQtTWL5/qwtS', 1, 1, 'staff', NULL, NULL, NULL),
+(17, 'arga', 'arga@gmail.com', '$2y$10$dow6Oq1vxs/MM6MOKdDCMO/C4BVoYkWwzgUUKFS3dJocai7Jd/PLe', 1, 1, 'staff', NULL, NULL, NULL);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `bidang`
+--
+ALTER TABLE `bidang`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `indikator_kinerja`
+--
+ALTER TABLE `indikator_kinerja`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `indikator_kinerja_sasaran_id_foreign` (`sasaran_id`);
+
+--
+-- Indexes for table `jabatan`
+--
+ALTER TABLE `jabatan`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `laporan`
+--
+ALTER TABLE `laporan`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `laporan_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `migrations`
+--
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `status` (`status`);
+
+--
+-- Indexes for table `pengukuran_kinerja`
+--
+ALTER TABLE `pengukuran_kinerja`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pengukuran_kinerja_indikator_id_foreign` (`indikator_id`),
+  ADD KEY `pengukuran_kinerja_tahun_id_foreign` (`tahun_id`);
+
+--
+-- Indexes for table `pic_indikator`
+--
+ALTER TABLE `pic_indikator`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_pic_indikator` (`user_id`,`indikator_id`,`tahun_id`),
+  ADD KEY `pic_indikator_tahun_id_foreign` (`tahun_id`),
+  ADD KEY `pic_indikator_sasaran_id_foreign` (`sasaran_id`),
+  ADD KEY `pic_indikator_bidang_id_foreign` (`bidang_id`),
+  ADD KEY `pic_indikator_jabatan_id_foreign` (`jabatan_id`),
+  ADD KEY `idx_user_id` (`user_id`),
+  ADD KEY `idx_indikator_id` (`indikator_id`);
+
+--
+-- Indexes for table `sasaran_strategis`
+--
+ALTER TABLE `sasaran_strategis`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sasaran_strategis_tahun_id_foreign` (`tahun_id`);
+
+--
+-- Indexes for table `tahun_anggaran`
+--
+ALTER TABLE `tahun_anggaran`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tw_settings`
+--
+ALTER TABLE `tw_settings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `tw_settings_tahun_id_foreign` (`tahun_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `bidang`
+--
+ALTER TABLE `bidang`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `indikator_kinerja`
+--
+ALTER TABLE `indikator_kinerja`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+
+--
+-- AUTO_INCREMENT for table `jabatan`
+--
+ALTER TABLE `jabatan`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `laporan`
+--
+ALTER TABLE `laporan`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+
+--
+-- AUTO_INCREMENT for table `pengukuran_kinerja`
+--
+ALTER TABLE `pengukuran_kinerja`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
+--
+-- AUTO_INCREMENT for table `pic_indikator`
+--
+ALTER TABLE `pic_indikator`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+
+--
+-- AUTO_INCREMENT for table `sasaran_strategis`
+--
+ALTER TABLE `sasaran_strategis`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT for table `tahun_anggaran`
+--
+ALTER TABLE `tahun_anggaran`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+
+--
+-- AUTO_INCREMENT for table `tw_settings`
+--
+ALTER TABLE `tw_settings`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `indikator_kinerja`
+--
+ALTER TABLE `indikator_kinerja`
+  ADD CONSTRAINT `indikator_kinerja_sasaran_id_foreign` FOREIGN KEY (`sasaran_id`) REFERENCES `sasaran_strategis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `laporan`
+--
+ALTER TABLE `laporan`
+  ADD CONSTRAINT `laporan_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `pengukuran_kinerja`
+--
+ALTER TABLE `pengukuran_kinerja`
+  ADD CONSTRAINT `pengukuran_kinerja_indikator_id_foreign` FOREIGN KEY (`indikator_id`) REFERENCES `indikator_kinerja` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pengukuran_kinerja_tahun_id_foreign` FOREIGN KEY (`tahun_id`) REFERENCES `tahun_anggaran` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `pic_indikator`
+--
+ALTER TABLE `pic_indikator`
+  ADD CONSTRAINT `pic_indikator_bidang_id_foreign` FOREIGN KEY (`bidang_id`) REFERENCES `bidang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pic_indikator_indikator_id_foreign` FOREIGN KEY (`indikator_id`) REFERENCES `indikator_kinerja` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pic_indikator_jabatan_id_foreign` FOREIGN KEY (`jabatan_id`) REFERENCES `jabatan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pic_indikator_sasaran_id_foreign` FOREIGN KEY (`sasaran_id`) REFERENCES `sasaran_strategis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pic_indikator_tahun_id_foreign` FOREIGN KEY (`tahun_id`) REFERENCES `tahun_anggaran` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pic_indikator_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `sasaran_strategis`
+--
+ALTER TABLE `sasaran_strategis`
+  ADD CONSTRAINT `sasaran_strategis_tahun_id_foreign` FOREIGN KEY (`tahun_id`) REFERENCES `tahun_anggaran` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `tw_settings`
+--
+ALTER TABLE `tw_settings`
+  ADD CONSTRAINT `tw_settings_tahun_id_foreign` FOREIGN KEY (`tahun_id`) REFERENCES `tahun_anggaran` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

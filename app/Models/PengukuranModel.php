@@ -16,9 +16,26 @@ class PengukuranModel extends Model
         'kendala',
         'strategi',
         'file_dukung',
-        'user_id'       // ← dipakai untuk relasi ke users
+        'user_id' // relasi ke PIC
     ];
 
     protected $returnType = 'array';
     protected $useTimestamps = true;
+
+    /**
+     * Ambil semua pengukuran per indikator + triwulan
+     * Bisa difilter per user jika $userId diisi
+     */
+    public function getPengukuran($indikatorId, $tw, $tahunId, $userId = null)
+    {
+        $builder = $this->where('indikator_id', $indikatorId)
+                        ->where('triwulan', $tw)
+                        ->where('tahun_id', $tahunId);
+
+        if ($userId) {
+            $builder->where('user_id', $userId);
+        }
+
+        return $builder->first();
+    }
 }

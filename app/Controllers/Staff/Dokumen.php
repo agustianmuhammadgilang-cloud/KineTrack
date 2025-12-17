@@ -1,0 +1,198 @@
+<?php
+
+namespace App\Controllers\Staff;
+
+use App\Controllers\BaseController;
+use App\Models\DokumenModel;
+use App\Models\BidangModel;
+
+class Dokumen extends BaseController
+{
+    protected $dokumenModel;
+    protected $bidangModel;
+
+    public function __construct()
+    {
+        $this->dokumenModel = new DokumenModel();
+        $this->bidangModel  = new BidangModel();
+    }
+
+    /**
+     * ============================
+     * LIST DOKUMEN MILIK STAFF
+     * ============================
+     */
+    public function index()
+{
+    $userId = session()->get('user_id');
+
+    if (!$userId) {
+        return redirect()->to('/login');
+    }
+
+    $data['dokumen'] = $this->dokumenModel
+        ->where('created_by', $userId)
+        ->orderBy('created_at', 'DESC')
+        ->findAll();
+
+    return view('staff/dokumen/index', $data);
+}
+
+
+    /**
+     * ============================
+     * FORM UPLOAD DOKUMEN
+     * ============================
+     */
+    public function create()
+    {
+        return view('staff/dokumen/create');
+    }
+
+    /**
+     * ============================
+     * SIMPAN DOKUMEN
+     * ============================
+     */
+    public function store()
+{
+    $userId   = session()->get('user_id');
+    $bidangId = session()->get('bidang_id');
+
+    if (!$userId || !$bidangId) {
+        return redirect()->to('/login');
+    }
+
+    $file = $this->request->getFile('file');
+
+    if (!$file || !$file->isValid()) {
+        return redirect()->back()->with('error', 'File tidak valid');
+    }
+
+    $bidangUser = $this->bidangModel->find($bidangId);
+
+    if (!$bidangUser) {
+        return redirect()->back()->with('error', 'Unit kerja tidak ditemukan');
+    }
+
+    // ===== TENTUKAN ALUR =====
+    if ($bidangUser['parent_id'] !== null) {
+        // STAFF PRODI
+        $unitAsal    = $bidangUser['id'];
+        $unitJurusan = $bidangUser['parent_id'];
+        $status      = 'pending_kaprodi';
+        $reviewer    = 'kaprodi';
+    } else {
+        // STAFF JURUSAN
+        $unitAsal    = $bidangUser['id'];
+        $unitJurusan = $bidangUser['id'];
+        $status      = 'pending_kajur';
+        $reviewer    = 'kajur';
+    }
+
+    // Upload file
+    $newName = $file->getRandomName();
+    $file->move('uploads/dokumen', $newName);
+
+    // Simpan DB
+    $this->dokumenModel->insert([
+        'judul'            => $this->request->getPost('judul'),
+        'deskripsi'        => $this->request->getPost('deskripsi'),
+        'file_path'        => $newName,
+        'created_by'       => $userId,
+        'unit_asal_id'     => $unitAsal,
+        'unit_jurusan_id'  => $unitJurusan,
+        'status'           => $status,
+        'current_reviewer' => $reviewer,
+    ]);
+
+    return redirect()->to('/staff/dokumen')
+        ->with('success', 'Dokumen berhasil dikirim');
+}
+
+public function resubmit($id)
+{
+    $userId = session()->get('user_id');
+
+    $dokumen = $this->dokumenModel
+        ->where('id', $id)
+        ->where('created_by', $userId)
+        ->whereIn('status', ['rejected_kaprodi', 'rejected_kajur'])
+        ->first();
+
+    if (!$dokumen) {
+        return redirect()->back()->with('error', 'Dokumen tidak dapat direvisi');
+    }
+
+    return view('staff/dokumen/resubmit', [
+        'dokumen' => $dokumen
+    ]);
+
+}
+
+public function processResubmit($id)
+{
+    $userId   = session()->get('user_id');
+    $bidangId = session()->get('bidang_id');
+
+    $dokumen = $this->dokumenModel
+        ->where('id', $id)
+        ->where('created_by', $userId)
+        ->first();
+
+    if (!$dokumen) {
+        return redirect()->back()->with('error', 'Dokumen tidak ditemukan');
+    }
+
+    $file = $this->request->getFile('file');
+    if (!$file || !$file->isValid()) {
+        return redirect()->back()->with('error', 'File tidak valid');
+    }
+
+    $bidangUser = $this->bidangModel->find($bidangId);
+
+    // Tentukan ulang alur
+    if ($bidangUser['parent_id'] !== null) {
+        $status   = 'pending_kaprodi';
+        $reviewer = 'kaprodi';
+    } else {
+        $status   = 'pending_kajur';
+        $reviewer = 'kajur';
+    }
+
+    // Upload file baru
+    $newName = $file->getRandomName();
+    $file->move('uploads/dokumen', $newName);
+
+    $this->dokumenModel->update($id, [
+        'judul'            => $this->request->getPost('judul'),
+        'deskripsi'        => $this->request->getPost('deskripsi'),
+        'file_path'        => $newName,
+        'status'           => $status,
+        'current_reviewer' => $reviewer,
+        'catatan'          => null,
+        'updated_at'       => date('Y-m-d H:i:s'),
+    ]);
+
+    return redirect()->to('/staff/dokumen')
+        ->with('success', 'Dokumen berhasil dikirim ulang');
+}
+
+public function arsip()
+{
+    $userId = session()->get('user_id');
+
+    if (!$userId) {
+        return redirect()->to('/login');
+    }
+
+    $data['dokumen'] = $this->dokumenModel
+        ->where('created_by', $userId)
+        ->where('status', 'archived')
+        ->orderBy('updated_at', 'DESC')
+        ->findAll();
+
+    return view('staff/dokumen/arsip', $data);
+}
+
+}
