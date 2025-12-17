@@ -115,13 +115,13 @@
                 <a href="<?= base_url('admin/jabatan') ?>"
                     class="px-4 py-2 rounded hover:bg-white/10 transition
                     <?= (service('uri')->getSegment(2) == 'jabatan') ? 'bg-white/20 font-semibold' : '' ?>">
-                    Kelola Jabatan
+                    Kelola Jabatan/Role
                 </a>
 
                 <a href="<?= base_url('admin/bidang') ?>"
                     class="px-4 py-2 rounded hover:bg-white/10 transition
                     <?= (service('uri')->getSegment(2) == 'bidang') ? 'bg-white/20 font-semibold' : '' ?>">
-                    Kelola Bidang
+                    Kelola Unit Kerja
                 </a>
 
             </div>

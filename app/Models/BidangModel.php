@@ -8,6 +8,6 @@ class BidangModel extends Model
 {
     protected $table = 'bidang';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nama_bidang'];
+    protected $allowedFields = ['nama_bidang','jenis_unit','parent_id'];
     protected $returnType = 'array';
 }

@@ -206,3 +206,38 @@ $routes->get(
     'staff/task/report/(:num)/(:num)/(:segment)',
     'Staff\TaskController::report/$1/$2/$3'
 );
+
+$routes->group('staff', ['filter' => 'auth'], function ($routes) {
+
+    // Dokumen
+    $routes->get('dokumen', 'Staff\Dokumen::index');
+    $routes->get('dokumen/create', 'Staff\Dokumen::create');
+    $routes->post('dokumen/store', 'Staff\Dokumen::store');
+
+    // Resubmit dokumen ditolak
+    $routes->get('dokumen/resubmit/(:num)', 'Staff\Dokumen::resubmit/$1');
+    $routes->post('dokumen/resubmit/(:num)', 'Staff\Dokumen::processResubmit/$1');
+
+    // Arsip (dokumen disetujui)
+    $routes->get('dokumen/arsip', 'Staff\Dokumen::arsip');
+});
+
+
+// =======================
+// ATASAN ROUTES
+// =======================
+$routes->group('atasan', ['filter' => 'auth'], function ($routes) {
+
+    // Dokumen masuk
+    $routes->get('dokumen', 'Atasan\Dokumen::index');
+
+    // Review
+    $routes->get('dokumen/review/(:num)', 'Atasan\Dokumen::review/$1');
+
+    // Approval
+    $routes->post('dokumen/approve/(:num)', 'Atasan\Dokumen::approve/$1');
+    $routes->post('dokumen/reject/(:num)', 'Atasan\Dokumen::reject/$1');
+
+    // Arsip (KAJUR)
+    $routes->get('dokumen/arsip', 'Atasan\Dokumen::arsip');
+});
