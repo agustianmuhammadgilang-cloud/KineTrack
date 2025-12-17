@@ -32,7 +32,6 @@ foreach ($users as $u) {
 
 <?php foreach ($groupedUsers as $unitName => $unitUsers): ?>
 
-    <!-- UNIT KERJA -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg">
 
         <div class="bg-blue-900 text-white px-4 py-2 rounded-t-lg font-semibold">
@@ -42,7 +41,6 @@ foreach ($users as $u) {
         <div class="p-4 space-y-2">
 
             <?php
-            // Pisahkan atasan & staff
             $atasan = [];
             $staff  = [];
 
@@ -66,9 +64,29 @@ foreach ($users as $u) {
                             <?= esc($a['nama_jabatan']) ?> · <?= esc($a['email']) ?>
                         </div>
                     </div>
-                    <span class="px-2 py-1 text-xs rounded bg-red-500 text-white">
-                        Atasan
-                    </span>
+
+                    <div class="flex items-center gap-2">
+                        <span class="px-2 py-1 text-xs rounded bg-red-500 text-white">
+                            Atasan
+                        </span>
+
+                        <?php if ($a['role'] !== 'admin'): ?>
+                            <a href="<?= base_url('admin/users/edit/'.$a['id']) ?>"
+                               class="text-xs bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">
+                                Edit
+                            </a>
+
+                            <form action="<?= base_url('admin/users/delete/'.$a['id']) ?>" 
+                                  method="post" 
+                                  onsubmit="return confirm('Yakin ingin menghapus user ini?')">
+                                <?= csrf_field() ?>
+                                <button type="submit"
+                                        class="text-xs bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+                                    Hapus
+                                </button>
+                            </form>
+                        <?php endif; ?>
+                    </div>
                 </div>
             <?php endforeach; ?>
 
@@ -83,14 +101,33 @@ foreach ($users as $u) {
                             <?= esc($s['nama_jabatan']) ?> · <?= esc($s['email']) ?>
                         </div>
                     </div>
-                    <span class="px-2 py-1 text-xs rounded bg-gray-400 text-white">
-                        Staff
-                    </span>
+
+                    <div class="flex items-center gap-2">
+                        <span class="px-2 py-1 text-xs rounded bg-gray-400 text-white">
+                            Staff
+                        </span>
+
+                        <?php if ($s['role'] !== 'admin'): ?>
+                            <a href="<?= base_url('admin/users/edit/'.$s['id']) ?>"
+                               class="text-xs bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">
+                                Edit
+                            </a>
+
+                            <form action="<?= base_url('admin/users/delete/'.$s['id']) ?>" 
+                                  method="post"
+                                  onsubmit="return confirm('Yakin ingin menghapus user ini?')">
+                                <?= csrf_field() ?>
+                                <button type="submit"
+                                        class="text-xs bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+                                    Hapus
+                                </button>
+                            </form>
+                        <?php endif; ?>
+                    </div>
                 </div>
             <?php endforeach; ?>
 
         </div>
-
     </div>
 
 <?php endforeach; ?>
