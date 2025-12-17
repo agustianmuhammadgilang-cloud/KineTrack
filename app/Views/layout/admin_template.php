@@ -115,7 +115,7 @@
                 <a href="<?= base_url('admin/jabatan') ?>"
                     class="px-4 py-2 rounded hover:bg-white/10 transition
                     <?= (service('uri')->getSegment(2) == 'jabatan') ? 'bg-white/20 font-semibold' : '' ?>">
-                    Kelola Jabatan/Role
+                    Kelola Jabatan
                 </a>
 
                 <a href="<?= base_url('admin/bidang') ?>"
