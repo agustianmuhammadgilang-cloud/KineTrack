@@ -18,7 +18,8 @@ class DokumenModel extends Model
         'unit_jurusan_id',
         'status',
         'current_reviewer',
-        'catatan'
+        'catatan',
+        'kategori_id'
     ];
 
     protected $useTimestamps = true;
