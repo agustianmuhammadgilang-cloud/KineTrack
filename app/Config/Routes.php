@@ -86,9 +86,40 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     $routes->post('profile/update', 'Admin\ProfileController::update');
     $routes->post('profile/password', 'Admin\ProfileController::updatePassword');
 
+    $routes->get('pengajuan-kategori', 'Admin\PengajuanKategori::index');
 
-    
+    $routes->get('pengajuan-kategori/approve/(:num)', 'Admin\PengajuanKategori::approve/$1');
+    $routes->get('pengajuan-kategori/reject/(:num)', 'Admin\PengajuanKategori::reject/$1');
+
+
+    // DOKUMEN TERVALIDASI
+    // LEVEL 1 — KATEGORI
+    $routes->get('dokumen-tervalidasi', 'Admin\DokumenTervalidasi::kategori');
+
+    // LEVEL 2 — DOKUMEN PER KATEGORI
+    $routes->get(
+        'dokumen-tervalidasi/(:num)',
+        'Admin\DokumenTervalidasi::dokumen/$1'
+    );
+
+
+  
 });
+
+$routes->get(
+    'admin/dokumen-tervalidasi',
+    'Admin\DokumenTervalidasi::kategori'
+);
+
+$routes->get(
+    'admin/dokumen-tervalidasi/(:num)',
+    'Admin\DokumenTervalidasi::dokumen/$1'
+);
+
+$routes->post(
+    'admin/dokumen-tervalidasi/update-kategori/(:num)',
+    'Admin\DokumenTervalidasi::updateKategori/$1'
+);
 
 // ADMIN - DETAIL BIDANG
 $routes->group('admin/bidang', ['filter' => 'auth'], function($routes) {
@@ -115,6 +146,9 @@ $routes->get('task/report/(:num)/(:num)', 'Staff\TaskController::report/$1/$2');
     $routes->post('laporan/resubmit/(:num)', 'Staff\Laporan::resubmit/$1');
     $routes->get('profile', 'Staff\Profile::index');
     $routes->post('profile/update', 'Staff\Profile::update');
+
+    $routes->get('kategori/ajukan', 'Staff\PengajuanKategori::create');
+    $routes->post('kategori/ajukan/store', 'Staff\PengajuanKategori::store');
 
 });
 
@@ -243,3 +277,15 @@ $routes->group('atasan', ['filter' => 'auth'], function ($routes) {
 });
 
 $routes->post('admin/users/delete/(:num)', 'Admin\User::delete/$1');
+
+$routes->group('admin', ['filter' => 'auth'], function ($routes) {
+
+    $routes->get('kategori-dokumen', 'Admin\KategoriDokumen::index');
+    $routes->get('kategori-dokumen/create', 'Admin\KategoriDokumen::create');
+    $routes->post('kategori-dokumen/store', 'Admin\KategoriDokumen::store');
+
+    $routes->get('kategori-dokumen/edit/(:num)', 'Admin\KategoriDokumen::edit/$1');
+    $routes->post('kategori-dokumen/update/(:num)', 'Admin\KategoriDokumen::update/$1');
+
+    $routes->get('kategori-dokumen/toggle/(:num)', 'Admin\KategoriDokumen::toggleStatus/$1');
+});
