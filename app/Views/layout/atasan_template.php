@@ -11,6 +11,8 @@
 <!-- Heroicons -->
 <script src="https://unpkg.com/heroicons@2.1.1/dist/umd/outline.js"></script>
 
+<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
 <style>
   :root {
     --polban-blue: #1D2F83;
@@ -38,54 +40,75 @@
         <img src="<?= base_url('img/Logo No Name.png') ?>" alt="Polban Logo" class="mx-auto w-16 mb-2">
     </div>
 
-    <nav class="flex-1 overflow-y-auto mt-4">
-        <a href="<?= base_url('atasan') ?>" class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#chart-bar" /></svg>
-            Dashboard
-        </a>
-        <a href="<?= base_url('atasan/laporan') ?>" class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#user" /></svg>
-            Laporan
-            <span id="pending-badge" class="badge bg-danger ms-2" style="display:none">0</span>
-        </a>
-                <a href="<?= base_url('atasan/dokumen') ?>"
-          class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+   <nav class="flex-1 overflow-y-auto mt-4" x-data="{ openDokumen: localStorage.getItem('dokumenOpen') === 'true' }"
+     x-init="$watch('openDokumen', val => localStorage.setItem('dokumenOpen', val))">
 
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
+    <!-- Dashboard -->
+    <a href="<?= base_url('atasan') ?>"
+       class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2">
+            <use href="#chart-bar" />
+        </svg>
+        Dashboard
+    </a>
+
+    <!-- Isi Pengukuran -->
+    <a href="<?= base_url('atasan/pengukuran') ?>"
+       class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2">
+            <use href="#chart-pie" />
+        </svg>
+        Isi Pengukuran
+    </a>
+
+    <!-- Dokumen (Dropdown Persistent) -->
+    <button type="button"
+            @click="openDokumen = !openDokumen"
+            class="w-full flex items-center justify-between px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+        <div class="flex items-center">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2">
                 <use href="#folder" />
             </svg>
+            Dokumen
+        </div>
+        <svg class="w-4 h-4 transition-transform"
+             :class="openDokumen ? 'rotate-90' : ''"
+             fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+    </button>
 
+    <div x-show="openDokumen"
+         x-transition
+         class="ml-6 mt-1 space-y-1">
+
+        <a href="<?= base_url('atasan/dokumen') ?>"
+           class="block px-6 py-2 text-sm rounded hover:bg-white/10 transition">
             Dokumen Masuk
         </a>
 
+        <a href="<?= base_url('atasan/dokumen/unit') ?>"
+           class="block px-6 py-2 text-sm rounded hover:bg-white/10 transition">
+            Dokumen Unit
         </a>
 
-
-        <a href="<?= base_url('atasan/dokumen/unit') ?>"
-   class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
-
-    <svg class="w-5 h-5 mr-3">
-        <use href="#folder" />
-    </svg>
-
-    Dokumen Unit
-</a>
-
-
-
-                <a href="<?= base_url('atasan/dokumen/arsip') ?>"
-          class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
-
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <use href="#folder" />
-            </svg>
-
+        <a href="<?= base_url('atasan/dokumen/arsip') ?>"
+           class="block px-6 py-2 text-sm rounded hover:bg-white/10 transition">
             Arsip Dokumen
         </a>
+    </div>
 
-    </nav>
+    <!-- Profile -->
+    <a href="<?= base_url('atasan/profile') ?>"
+       class="flex items-center px-6 py-3 mt-2 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2">
+            <use href="#user" />
+        </svg>
+        Profile
+    </a>
+
+</nav>
+
 
     <div class="px-6 py-4 border-t border-white/20">
         <button onclick="window.location.href='<?= base_url('logout') ?>'" class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium bg-[var(--polban-orange)] rounded hover:bg-orange-600 transition-colors">
