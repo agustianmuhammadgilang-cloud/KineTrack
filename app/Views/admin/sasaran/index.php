@@ -31,25 +31,23 @@
         </thead>
 
         <tbody class="divide-y divide-gray-200">
-            <?php foreach($sasaran as $s): ?>
+            <?php foreach ($sasaran as $s): ?>
             <tr class="hover:bg-gray-50">
                 <td class="px-4 py-3 text-gray-700"><?= $s['kode_sasaran'] ?></td>
                 <td class="px-4 py-3 text-gray-700"><?= $s['nama_sasaran'] ?></td>
                 <td class="px-4 py-3 text-gray-700"><?= $s['tahun'] ?></td>
 
                 <td class="px-4 py-3 flex justify-center gap-2">
-
-                    <a href="<?= base_url('admin/sasaran/edit/'.$s['id']) ?>"
+                    <a href="<?= base_url('admin/sasaran/edit/' . $s['id']) ?>"
                        class="px-3 py-1 bg-yellow-500 text-white rounded-lg text-xs hover:bg-yellow-600 transition">
                         Edit
                     </a>
 
-                    <a href="<?= base_url('admin/sasaran/delete/'.$s['id']) ?>"
+                    <a href="<?= base_url('admin/sasaran/delete/' . $s['id']) ?>"
                        onclick="return confirm('Hapus sasaran?')"
                        class="px-3 py-1 bg-red-600 text-white rounded-lg text-xs hover:bg-red-700 transition">
                         Hapus
                     </a>
-
                 </td>
             </tr>
             <?php endforeach ?>

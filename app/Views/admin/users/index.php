@@ -10,10 +10,11 @@
    + Tambah User
 </a>
 
-<?php if(session()->getFlashdata('success')): ?>
-<div class="bg-green-100 text-green-800 px-4 py-2 rounded mb-4 shadow-sm">
-    <?= session()->getFlashdata('success') ?>
-</div>
+<!-- NOTIFIKASI (TAMBAHAN, TANPA UBAH LOGIKA FORM) -->
+<?php if (session()->getFlashdata('error')): ?>
+    <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-700 font-semibold">
+        <?= session()->getFlashdata('error') ?>
+    </div>
 <?php endif; ?>
 
 <?php

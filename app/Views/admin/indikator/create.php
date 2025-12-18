@@ -6,6 +6,14 @@
 </h3>
 
 <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 max-w-3xl">
+
+<!-- NOTIFIKASI (TAMBAHAN, TANPA UBAH LOGIKA FORM) -->
+<?php if (session()->getFlashdata('error')): ?>
+    <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-700 font-semibold">
+        <?= session()->getFlashdata('error') ?>
+    </div>
+<?php endif; ?>
+
     <form id="indikatorForm" action="<?= base_url('admin/indikator/store') ?>" method="post" class="space-y-5">
 
         <!-- ===================== TAHUN ===================== -->
