@@ -94,12 +94,15 @@ class Dokumen extends BaseController
 
     $newName = $file->getRandomName();
     $file->move('uploads/dokumen', $newName);
+    $scope = $this->request->getPost('scope') ?? 'unit';
+
 
     // ✅ kategori_id DISIMPAN
     $this->dokumenModel->insert([
         'judul'            => $this->request->getPost('judul'),
         'deskripsi'        => $this->request->getPost('deskripsi'),
         'kategori_id'      => $kategoriId, // ⬅️ INI KUNCI
+        'scope'            => $scope,
         'file_path'        => $newName,
         'created_by'       => $userId,
         'unit_asal_id'     => $unitAsal,
@@ -213,4 +216,55 @@ class Dokumen extends BaseController
 
         return view('staff/dokumen/arsip', $data);
     }
+    /**
+ * ============================
+ * DOKUMEN PERSONAL (DOKUMEN SAYA)
+ * ============================
+ */
+public function personal()
+{
+    $userId = session()->get('user_id');
+
+    if (!$userId) {
+        return redirect()->to('/login');
+    }
+
+    $data['dokumen'] = $this->dokumenModel
+        ->where('created_by', $userId)
+        ->where('scope', 'personal') // asumsi dari pilihan saat create
+        ->orderBy('created_at', 'DESC')
+        ->findAll();
+
+    return view('staff/dokumen/personal', $data);
+}
+
+/**
+ * ============================
+ * DOKUMEN UNIT
+ * ============================
+ */
+public function unit()
+{
+    $userId   = session()->get('user_id');
+    $bidangId = session()->get('bidang_id');
+
+    if (!$userId || !$bidangId) {
+        return redirect()->to('/login');
+    }
+
+    $bidangUser = $this->bidangModel->find($bidangId);
+
+    // Tentukan unit jurusan
+    $unitJurusan = $bidangUser['parent_id'] ?? $bidangUser['id'];
+
+    $data['dokumen'] = $this->dokumenModel
+        ->where('unit_jurusan_id', $unitJurusan)
+        ->where('scope', 'unit')
+        ->orderBy('created_at', 'DESC')
+        ->findAll();
+
+    return view('staff/dokumen/unit', $data);
+}
+
+
 }

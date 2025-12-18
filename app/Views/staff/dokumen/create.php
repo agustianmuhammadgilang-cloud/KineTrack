@@ -42,6 +42,24 @@
                     <?php endforeach; ?>
                 </select>
 
+                <!-- JENIS DOKUMEN -->
+<div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+        Jenis Dokumen <span class="text-red-500">*</span>
+    </label>
+
+    <select name="scope" required
+            class="w-full border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500">
+        <option value="unit">Dokumen Unit</option>
+        <option value="personal">Dokumen Pribadi</option>
+    </select>
+
+    <p class="text-xs text-gray-500 mt-1">
+        Dokumen pribadi hanya dapat dilihat oleh Anda sendiri.
+    </p>
+</div>
+
+
                 <p class="text-xs text-gray-500 mt-1">
                     Kategori tidak tersedia?
                     <a href="<?= base_url('staff/kategori/ajukan') ?>"

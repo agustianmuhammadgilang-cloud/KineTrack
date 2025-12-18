@@ -140,6 +140,30 @@ function fileUpload() {
 </a>
 
 
+<!-- DOKUMEN -->
+<a href="<?= base_url('staff/dokumen/saya') ?>"
+   class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+
+    <svg class="w-5 h-5 mr-3">
+        <use href="#user" />
+    </svg>
+
+    Dokumen Saya
+</a>
+
+
+<a href="<?= base_url('staff/dokumen/unit') ?>"
+   class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+
+    <svg class="w-5 h-5 mr-3">
+        <use href="#folder" />
+    </svg>
+
+    Dokumen Unit
+</a>
+
+
+
     </nav>
 
     <div class="px-6 py-4 border-t border-white/20">
@@ -175,7 +199,6 @@ function fileUpload() {
 </symbol>
 
 </svg>
-
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php if (session()->getFlashdata('alert')): 
@@ -340,8 +363,5 @@ Swal.fire({
 <?php endforeach; ?>
 </script>
 <?php endif; ?>
-
-
-
 </body>
 </html>
