@@ -67,20 +67,39 @@ class Indikator extends BaseController
 
 
     public function store()
-    {
-        $this->model->insert([
-            'sasaran_id' => $this->request->getPost('sasaran_id'),
-            'kode_indikator' => $this->request->getPost('kode_indikator'),
-            'nama_indikator' => $this->request->getPost('nama_indikator'),
-            'satuan' => $this->request->getPost('satuan'),
-            'target_pk' => $this->request->getPost('target_pk'),
-            'target_tw1' => $this->request->getPost('target_tw1'),
-            'target_tw2' => $this->request->getPost('target_tw2'),
-            'target_tw3' => $this->request->getPost('target_tw3'),
-            'target_tw4' => $this->request->getPost('target_tw4'),
-        ]);
-        return redirect()->to('/admin/indikator')->with('success','Indikator ditambahkan');
+{
+    $sasaranId = $this->request->getPost('sasaran_id');
+    $nama      = trim($this->request->getPost('nama_indikator'));
+
+    // ===== VALIDASI DUPLIKASI NAMA INDIKATOR =====
+    $exists = $this->model
+        ->where('sasaran_id', $sasaranId)
+        ->where('nama_indikator', $nama)
+        ->first();
+
+    if ($exists) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Nama indikator sudah ada pada sasaran dan tahun yang sama');
     }
+
+    // ===== INSERT DATA (LOGIKA LAMA TETAP) =====
+    $this->model->insert([
+        'sasaran_id'     => $sasaranId,
+        'kode_indikator' => $this->request->getPost('kode_indikator'),
+        'nama_indikator' => $nama,
+        'satuan'         => $this->request->getPost('satuan'),
+        'target_pk'      => $this->request->getPost('target_pk'),
+        'target_tw1'     => $this->request->getPost('target_tw1'),
+        'target_tw2'     => $this->request->getPost('target_tw2'),
+        'target_tw3'     => $this->request->getPost('target_tw3'),
+        'target_tw4'     => $this->request->getPost('target_tw4'),
+    ]);
+
+    return redirect()->to('/admin/indikator')
+        ->with('success','Indikator berhasil ditambahkan');
+}
+
 
     public function edit($id)
     {
@@ -92,20 +111,40 @@ class Indikator extends BaseController
     }
 
     public function update($id)
-    {
-        $this->model->update($id, [
-            'sasaran_id' => $this->request->getPost('sasaran_id'),
-            'kode_indikator' => $this->request->getPost('kode_indikator'),
-            'nama_indikator' => $this->request->getPost('nama_indikator'),
-            'satuan' => $this->request->getPost('satuan'),
-            'target_pk' => $this->request->getPost('target_pk'),
-            'target_tw1' => $this->request->getPost('target_tw1'),
-            'target_tw2' => $this->request->getPost('target_tw2'),
-            'target_tw3' => $this->request->getPost('target_tw3'),
-            'target_tw4' => $this->request->getPost('target_tw4'),
-        ]);
-        return redirect()->to('/admin/indikator')->with('success','Diupdate');
+{
+    $sasaranId = $this->request->getPost('sasaran_id');
+    $nama      = trim($this->request->getPost('nama_indikator'));
+
+    // ===== VALIDASI DUPLIKASI (EXCLUDE ID SENDIRI) =====
+    $exists = $this->model
+        ->where('sasaran_id', $sasaranId)
+        ->where('nama_indikator', $nama)
+        ->where('id !=', $id)
+        ->first();
+
+    if ($exists) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Nama indikator sudah ada pada sasaran dan tahun yang sama');
     }
+
+    // ===== UPDATE DATA (LOGIKA LAMA TETAP) =====
+    $this->model->update($id, [
+        'sasaran_id'     => $sasaranId,
+        'kode_indikator' => $this->request->getPost('kode_indikator'),
+        'nama_indikator' => $nama,
+        'satuan'         => $this->request->getPost('satuan'),
+        'target_pk'      => $this->request->getPost('target_pk'),
+        'target_tw1'     => $this->request->getPost('target_tw1'),
+        'target_tw2'     => $this->request->getPost('target_tw2'),
+        'target_tw3'     => $this->request->getPost('target_tw3'),
+        'target_tw4'     => $this->request->getPost('target_tw4'),
+    ]);
+
+    return redirect()->to('/admin/indikator')
+        ->with('success','Indikator berhasil diperbarui');
+}
+
 
     public function delete($id)
     {

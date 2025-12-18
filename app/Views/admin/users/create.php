@@ -7,11 +7,12 @@
 
 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-xl mx-auto">
 
-    <?php if (session()->getFlashdata('error')): ?>
-        <div class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg font-medium">
-            <?= session()->getFlashdata('error') ?>
-        </div>
-    <?php endif; ?>
+    <!-- NOTIFIKASI (TAMBAHAN, TANPA UBAH LOGIKA FORM) -->
+<?php if (session()->getFlashdata('error')): ?>
+    <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-700 font-semibold">
+        <?= session()->getFlashdata('error') ?>
+    </div>
+<?php endif; ?>
 
     <form action="<?= base_url('admin/users/store') ?>" method="POST" class="space-y-5">
 

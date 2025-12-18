@@ -7,6 +7,13 @@
 
 <div class="bg-white p-6 rounded-xl shadow border border-gray-200">
 
+    <!-- NOTIFIKASI (TAMBAHAN, TANPA UBAH LOGIKA FORM) -->
+    <?php if (session()->getFlashdata('error')): ?>
+        <div class="mb-4 p-4 rounded-lg bg-red-100 text-red-700 font-semibold">
+            <?= session()->getFlashdata('error') ?>
+        </div>
+    <?php endif; ?>
+
     <form action="<?= base_url('admin/sasaran/store') ?>" method="post" class="space-y-5">
 
         <!-- Tahun Anggaran -->
@@ -16,8 +23,10 @@
                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 
                        focus:ring-[var(--polban-blue)] focus:outline-none" required>
                 <option value="">-- Pilih Tahun --</option>
-                <?php foreach($tahun as $t): ?>
-                    <option value="<?= $t['id'] ?>"><?= $t['tahun'] ?></option>
+                <?php foreach ($tahun as $t): ?>
+                    <option value="<?= $t['id'] ?>">
+                        <?= $t['tahun'] ?>
+                    </option>
                 <?php endforeach ?>
             </select>
         </div>
@@ -35,7 +44,7 @@
             <label class="block font-semibold text-gray-700 mb-1">Nama Sasaran</label>
             <textarea name="nama_sasaran" required
                 class="w-full h-28 px-3 py-2 border border-gray-300 rounded-lg 
-                       focus:ring-2 focus:ring-[var(--polban-blue)] focus:outline-none"></textarea>
+                       focus:ring-2 focus:ring-[var(--polban-blue)] focus:outline-none"><?= old('nama_sasaran') ?></textarea>
         </div>
 
         <!-- Buttons -->
@@ -56,8 +65,7 @@
 
 </div>
 
-
-<!-- AUTO-GENERATE KODE SASARAN (HANYA BERDASARKAN TAHUN) -->
+<!-- AUTO-GENERATE KODE SASARAN (LOGIKA LAMA, TIDAK DIUBAH) -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const tahunSelect = document.getElementById("tahunSelect");

@@ -13,6 +13,22 @@
 <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
 <style>
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.animate-slide-in {
+    animation: slideIn 0.4s ease-out;
+}
+
+
   :root {
     --polban-blue: #1D2F83;
     --polban-orange: #F58025;
@@ -49,11 +65,48 @@
 }
 
 
-
-
 </style>
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
+
+<?php if (session()->getFlashdata('success')): ?>
+<div id="toast-success"
+     class="fixed top-6 right-6 z-50 flex items-start gap-4 w-full max-w-sm
+            bg-white border border-gray-200 rounded-xl shadow-lg p-4
+            animate-slide-in">
+
+    <!-- ICON -->
+    <div class="flex-shrink-0">
+        <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M5 13l4 4L19 7"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- TEXT -->
+    <div class="flex-1">
+        <p class="font-semibold text-gray-800">Berhasil</p>
+        <p class="text-sm text-gray-600">
+            <?= session()->getFlashdata('success') ?>
+        </p>
+    </div>
+
+</div>
+
+<script>
+    setTimeout(() => {
+        const toast = document.getElementById('toast-success');
+        if (toast) {
+            toast.classList.add('opacity-0', 'translate-x-10');
+            setTimeout(() => toast.remove(), 300);
+        }
+    }, 3500);
+</script>
+<?php endif; ?>
+
 
 <body class="bg-gray-100">
 

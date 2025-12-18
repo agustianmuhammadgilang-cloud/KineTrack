@@ -45,10 +45,31 @@ class Sasaran extends BaseController
     ============================== */
     public function store()
 {
+    $tahunId     = $this->request->getPost('tahun_id');
+    $kodeSasaran = $this->request->getPost('kode_sasaran');
+    $namaSasaran = trim($this->request->getPost('nama_sasaran'));
+
+    // =============================
+    // VALIDASI DUPLIKASI (TAMBAHAN)
+    // =============================
+    $cek = $this->model
+        ->where('tahun_id', $tahunId)
+        ->where('nama_sasaran', $namaSasaran)
+        ->first();
+
+    if ($cek) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Sasaran strategis ini sudah tersedia');
+    }
+    // =============================
+    // LOGIKA LAMA (TIDAK DIUBAH)
+    // =============================
+
     $data = [
-        'tahun_id'     => $this->request->getPost('tahun_id'),
-        'kode_sasaran' => $this->request->getPost('kode_sasaran'),
-        'nama_sasaran' => $this->request->getPost('nama_sasaran'),
+        'tahun_id'     => $tahunId,
+        'kode_sasaran' => $kodeSasaran,
+        'nama_sasaran' => $namaSasaran,
     ];
 
     $this->model->insert($data);
@@ -74,19 +95,42 @@ class Sasaran extends BaseController
        UPDATE DATA SASARAN
     ============================== */
     public function update($id)
-    {
-        $data = [
-            'tahun_id'     => $this->request->getPost('tahun_id'),
-            'kode_sasaran' => $this->request->getPost('kode_sasaran'),
-            'nama_sasaran' => $this->request->getPost('nama_sasaran'),
-            'triwulan'     => $this->request->getPost('triwulan'),  // NEW FIELD
-        ];
+{
+    $tahunId     = $this->request->getPost('tahun_id');
+    $kodeSasaran = $this->request->getPost('kode_sasaran');
+    $namaSasaran = trim($this->request->getPost('nama_sasaran'));
 
-        $this->model->update($id, $data);
+    // =============================
+    // VALIDASI DUPLIKASI (TAMBAHAN)
+    // =============================
+    $cek = $this->model
+        ->where('tahun_id', $tahunId)
+        ->where('nama_sasaran', $namaSasaran)
+        ->where('id !=', $id) // abaikan data yang sedang diedit
+        ->first();
 
-        return redirect()->to('/admin/sasaran')
-            ->with('success', 'Sasaran Strategis berhasil diperbarui');
+    if ($cek) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Sasaran strategis ini sudah tersedia, harap gunakan nama lain');
     }
+    // =============================
+    // LOGIKA LAMA (TIDAK DIUBAH)
+    // =============================
+
+    $data = [
+        'tahun_id'     => $tahunId,
+        'kode_sasaran' => $kodeSasaran,
+        'nama_sasaran' => $namaSasaran,
+        'triwulan'     => $this->request->getPost('triwulan'),
+    ];
+
+    $this->model->update($id, $data);
+
+    return redirect()->to('/admin/sasaran')
+        ->with('success', 'Sasaran Strategis berhasil diperbarui');
+}
+
 
     /* =============================
        DELETE
