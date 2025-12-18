@@ -252,4 +252,53 @@ class Dokumen extends BaseController
     return view('atasan/dokumen/arsip', $data);
 }
 
+
+/**
+ * =================================
+ * DOKUMEN UNIT (READ ONLY)
+ * =================================
+ */
+public function unit()
+{
+    if (session()->get('role') !== 'atasan') {
+        return redirect()->back();
+    }
+
+    $bidangId = session()->get('bidang_id');
+    $bidang   = $this->bidangModel->find($bidangId);
+
+    if (!$bidang) {
+        return redirect()->back();
+    }
+
+    // =========================
+    // KETUA PRODI
+    // =========================
+    if ($bidang['parent_id'] !== null) {
+
+        $dokumen = $this->dokumenModel
+            ->where('unit_asal_id', $bidangId)
+            ->where('scope', 'unit') // 🔥 FILTER KUNCI
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
+    }
+    // =========================
+    // KETUA JURUSAN
+    // =========================
+    else {
+
+        $dokumen = $this->dokumenModel
+            ->where('unit_jurusan_id', $bidangId)
+            ->where('scope', 'unit') // 🔥 FILTER KUNCI
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
+    }
+
+    return view('atasan/dokumen/unit', [
+        'dokumen' => $dokumen
+    ]);
+}
+
+
+
 }

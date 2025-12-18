@@ -60,6 +60,20 @@
         </a>
 
         </a>
+
+
+        <a href="<?= base_url('atasan/dokumen/unit') ?>"
+   class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
+
+    <svg class="w-5 h-5 mr-3">
+        <use href="#folder" />
+    </svg>
+
+    Dokumen Unit
+</a>
+
+
+
                 <a href="<?= base_url('atasan/dokumen/arsip') ?>"
           class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
 

@@ -243,16 +243,28 @@ $routes->get(
 
 $routes->group('staff', ['filter' => 'auth'], function ($routes) {
 
-    // Dokumen
+    // =====================
+    // DOKUMEN
+    // =====================
+
+    // Riwayat semua dokumen milik user
     $routes->get('dokumen', 'Staff\Dokumen::index');
+
+    // Dokumen Personal (Dokumen Saya)
+    $routes->get('dokumen/saya', 'Staff\Dokumen::personal');
+
+    // Dokumen Unit
+    $routes->get('dokumen/unit', 'Staff\Dokumen::unit');
+ 
+    // Create & Store
     $routes->get('dokumen/create', 'Staff\Dokumen::create');
     $routes->post('dokumen/store', 'Staff\Dokumen::store');
 
-    // Resubmit dokumen ditolak
+    // Revisi
     $routes->get('dokumen/resubmit/(:num)', 'Staff\Dokumen::resubmit/$1');
     $routes->post('dokumen/resubmit/(:num)', 'Staff\Dokumen::processResubmit/$1');
 
-    // Arsip (dokumen disetujui)
+    // Arsip
     $routes->get('dokumen/arsip', 'Staff\Dokumen::arsip');
 });
 
@@ -264,6 +276,9 @@ $routes->group('atasan', ['filter' => 'auth'], function ($routes) {
 
     // Dokumen masuk
     $routes->get('dokumen', 'Atasan\Dokumen::index');
+
+    // Dokumen Unit (Masuk)
+$routes->get('dokumen/unit', 'Atasan\Dokumen::unit');
 
     // Review
     $routes->get('dokumen/review/(:num)', 'Atasan\Dokumen::review/$1');
