@@ -30,6 +30,94 @@
     background-color: rgba(255,255,255,0.2);
     border-radius: 3px;
   }
+
+/* ========== SIDEBAR UX ========= */
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    color: white;
+    font-size: 0.875rem;
+    border-radius: 10px;
+    position: relative;
+    transition: all .2s ease;
+}
+
+.sidebar-link:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+.sidebar-link.active {
+    background: rgba(255,255,255,0.18);
+    font-weight: 600;
+}
+
+.sidebar-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 4px;
+    background: var(--polban-orange);
+    border-radius: 0 6px 6px 0;
+}
+
+.sidebar-icon {
+    width: 20px;
+    height: 20px;
+    stroke: white;
+    stroke-width: 2;
+    opacity: .7;
+    transition: all .2s ease;
+}
+
+.sidebar-link:hover .sidebar-icon,
+.sidebar-link.active .sidebar-icon {
+    opacity: 1;
+    transform: translateX(2px);
+}
+
+/* Submenu */
+.submenu {
+    margin-left: 36px;
+    margin-top: 6px;
+}
+
+.submenu-link {
+    display: block;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    opacity: .8;
+    transition: all .2s ease;
+}
+
+.submenu-link:hover {
+    background: rgba(255,255,255,0.1);
+    opacity: 1;
+}
+
+.submenu-link.active {
+    background: rgba(255,255,255,0.15);
+    font-weight: 500;
+    opacity: 1;
+}
+
+
+  /* FORCE WHITE ICON */
+.sidebar-icon {
+    stroke: #ffffff !important;
+    fill: none !important;
+}
+
+.sidebar-link:hover .sidebar-icon,
+.sidebar-link.active .sidebar-icon {
+    stroke: #ffffff !important;
+    opacity: 1;
+}
+
 </style>
 
 <script>
@@ -78,93 +166,100 @@ function fileUpload() {
         <img src="<?= base_url('img/Logo No Name.png') ?>" alt="Polban Logo" class="mx-auto w-16 mb-2">
     </div>
 
-    <nav class="flex-1 overflow-y-auto mt-4">
-        <a href="<?= base_url('staff') ?>" class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#chart-bar" /></svg>
-            Dashboard
+    <nav class="flex-1 overflow-y-auto mt-4 px-3 space-y-1">
+
+    <!-- DASHBOARD -->
+    <a href="<?= base_url('staff') ?>"
+       class="sidebar-link <?= service('uri')->getSegment(1)=='staff' && service('uri')->getSegment(2)==null ? 'active':'' ?>">
+        <svg class="sidebar-icon"><use href="#chart-bar"/></svg>
+        <span>Dashboard</span>
+    </a>
+
+    <!-- ISI PENGUKURAN KINERJA -->
+    <a href="<?= base_url('staff/task') ?>"
+       class="sidebar-link <?= service('uri')->getSegment(2)=='task' ? 'active':'' ?>">
+        <svg class="sidebar-icon"><use href="#chart-pie"/></svg>
+        <span>Isi Pengukuran Kinerja</span>
+    </a>
+
+    <!-- DOKUMEN GROUP -->
+    <?php
+        $docActive = in_array(service('uri')->getSegment(2), ['dokumen','kategori']);
+    ?>
+
+    <div x-data="{ open: <?= $docActive ? 'true':'false' ?> }" class="mt-2">
+
+        <!-- PARENT -->
+        <button @click="open = !open"
+            class="sidebar-link w-full justify-between <?= $docActive ? 'active':'' ?>">
+            <div class="flex items-center gap-3">
+                <svg class="sidebar-icon"><use href="#folder"/></svg>
+                <span>Dokumen</span>
+            </div>
+
+            <svg
+    class="w-4 h-4 text-white/80 transition-transform"
+    stroke="currentColor"
+    fill="none"
+    :class="open && 'rotate-90'">
+    <use href="#arrow-left-on-rectangle"/>
+</svg>
+
+        </button>
+
+        <!-- SUBMENU -->
+        <?php
+$uri = service('uri');
+$seg2 = $uri->getSegment(2, ''); // aman
+$seg3 = $uri->getTotalSegments() >= 3 ? $uri->getSegment(3) : ''; // aman
+?>
+<div x-show="open" x-transition class="submenu space-y-1">
+
+    <a href="<?= base_url('staff/dokumen') ?>"
+       class="submenu-link <?= $seg2=='dokumen' && $seg3=='' ? 'active':'' ?>">
+        Dokumen Kinerja
+    </a>
+
+    <a href="<?= base_url('staff/kategori/ajukan') ?>"
+       class="submenu-link <?= $seg3=='ajukan' ? 'active':'' ?>">
+        Pengajuan Dokumen
+    </a>
+
+    <a href="<?= base_url('staff/dokumen/arsip') ?>"
+       class="submenu-link <?= $seg3=='arsip' ? 'active':'' ?>">
+        Arsip
+    </a>
+
+    <!-- DIVIDER -->
+    <div class="mt-3 pt-2 border-t border-white/10">
+        <div class="px-2 mb-1 text-[11px] tracking-widest uppercase text-white/50">
+            Jenis Dokumen
+        </div>
+
+        <a href="<?= base_url('staff/dokumen/saya') ?>"
+           class="submenu-link <?= $seg3=='saya' ? 'active':'' ?>">
+            Dokumen Saya
         </a>
-        <a href="<?= base_url('staff/laporan') ?>" class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><use href="#user" /></svg>
-            Laporan
+
+        <a href="<?= base_url('staff/dokumen/unit') ?>"
+           class="submenu-link <?= $seg3=='unit' ? 'active':'' ?>">
+            Dokumen Unit
         </a>
-        <!-- MENU TASK -->
-<a href="<?= base_url('staff/task') ?>" 
-   class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors relative">
+    </div>
+</div>
 
-    <svg class="w-5 h-5 mr-3">
-        <use href="#check-badge" />
-    </svg>
+    </div>
 
-    Task
+    <!-- PROFIL -->
+    <a href="<?= base_url('staff/profile') ?>"
+       class="sidebar-link <?= service('uri')->getSegment(2)=='profile' ? 'active':'' ?>">
+        <svg class="sidebar-icon"><use href="#user"/></svg>
+        <span>Pengaturan Profil</span>
+    </a>
 
-    <!-- BADGE TAILWIND -->
-    <?php if (!empty($pending_task_count) && $pending_task_count > 0): ?>
-        <span 
-            class="absolute right-6 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow">
-            <?= $pending_task_count ?>
-        </span>
-    <?php endif; ?>
-</a>
-
-<a href="<?= base_url('staff/dokumen') ?>"
-   class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
-
-    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
-         viewBox="0 0 24 24">
-        <use href="#folder" />
-    </svg>
-
-    Dokumen Kinerja
-</a>
-
-<a href="<?= base_url('staff/dokumen/arsip') ?>"
-   class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
-
-    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
-         viewBox="0 0 24 24">
-        <use href="#folder" />
-    </svg>
-
-    Dokumen Yang Di Setujui
-</a>
-
-<a href="<?= base_url('staff/kategori/ajukan') ?>"
-   class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
-
-    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
-         viewBox="0 0 24 24">
-        <use href="#badge-check" />
-    </svg>
-
-    Ajukan Kategori Dokumen
-</a>
+</nav>
 
 
-<!-- DOKUMEN -->
-<a href="<?= base_url('staff/dokumen/saya') ?>"
-   class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
-
-    <svg class="w-5 h-5 mr-3">
-        <use href="#user" />
-    </svg>
-
-    Dokumen Saya
-</a>
-
-
-<a href="<?= base_url('staff/dokumen/unit') ?>"
-   class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
-
-    <svg class="w-5 h-5 mr-3">
-        <use href="#folder" />
-    </svg>
-
-    Dokumen Unit
-</a>
-
-
-
-    </nav>
 
     <div class="px-6 py-4 border-t border-white/20">
         <button onclick="window.location.href='<?= base_url('logout') ?>'" class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium bg-[var(--polban-orange)] rounded hover:bg-orange-600 transition-colors">
