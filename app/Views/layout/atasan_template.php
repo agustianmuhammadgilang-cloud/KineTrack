@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Atasan - Kinetrack</title>
 
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 
 <!-- Heroicons -->
 <script src="https://unpkg.com/heroicons@2.1.1/dist/umd/outline.js"></script>
-
-<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
 <style>
   :root {
@@ -30,7 +30,126 @@
     background-color: rgba(255,255,255,0.2);
     border-radius: 3px;
   }
+
+  /* ========== SIDEBAR UX ========= */
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    color: white;
+    font-size: 0.875rem;
+    border-radius: 10px;
+    position: relative;
+    transition: all .2s ease;
+}
+
+.sidebar-link:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+.sidebar-link.active {
+    background: rgba(255,255,255,0.18);
+    font-weight: 600;
+}
+
+.sidebar-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 4px;
+    background: var(--polban-orange);
+    border-radius: 0 6px 6px 0;
+}
+
+.sidebar-icon {
+    width: 20px;
+    height: 20px;
+    stroke: white;
+    stroke-width: 2;
+    opacity: .7;
+    transition: all .2s ease;
+}
+
+.sidebar-link:hover .sidebar-icon,
+.sidebar-link.active .sidebar-icon {
+    opacity: 1;
+    transform: translateX(2px);
+}
+
+/* Submenu */
+.submenu {
+    margin-left: 36px;
+    margin-top: 6px;
+}
+
+.submenu-link {
+    display: block;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    opacity: .8;
+    transition: all .2s ease;
+}
+
+.submenu-link:hover {
+    background: rgba(255,255,255,0.1);
+    opacity: 1;
+}
+
+.submenu-link.active {
+    background: rgba(255,255,255,0.15);
+    font-weight: 500;
+    opacity: 1;
+}
+
+/* FORCE WHITE ICON */
+.sidebar-icon {
+    stroke: #ffffff !important;
+    fill: none !important;
+}
+
+.sidebar-link:hover .sidebar-icon,
+.sidebar-link.active .sidebar-icon {
+    stroke: #ffffff !important;
+    opacity: 1;
+}
 </style>
+
+<script>
+function fileUpload() {
+    return {
+        drag: false,
+        files: [],
+        updateInput() {
+            const dt = new DataTransfer();
+            this.files.forEach(f => dt.items.add(f));
+            this.$refs.input.files = dt.files;
+        },
+        handleFileSelect(event) {
+            for (let f of event.target.files) {
+                this.files.push(f);
+            }
+            this.updateInput();
+        },
+        handleDrop(e) {
+            this.drag = false;
+            const dropped = e.dataTransfer.files;
+            for (let f of dropped) {
+                this.files.push(f);
+            }
+            this.updateInput();
+        },
+        removeFile(index) {
+            this.files.splice(index, 1);
+            this.updateInput();
+        }
+    }
+}
+</script>
+
 </head>
 <body class="bg-gray-100">
 
@@ -40,75 +159,71 @@
         <img src="<?= base_url('img/Logo No Name.png') ?>" alt="Polban Logo" class="mx-auto w-16 mb-2">
     </div>
 
-   <nav class="flex-1 overflow-y-auto mt-4" x-data="{ openDokumen: localStorage.getItem('dokumenOpen') === 'true' }"
-     x-init="$watch('openDokumen', val => localStorage.setItem('dokumenOpen', val))">
+    <nav class="flex-1 overflow-y-auto mt-4 px-3 space-y-1">
 
-    <!-- Dashboard -->
-    <a href="<?= base_url('atasan') ?>"
-       class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
-        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2">
-            <use href="#chart-bar" />
-        </svg>
-        Dashboard
-    </a>
+        <!-- DASHBOARD -->
+        <a href="<?= base_url('atasan') ?>"
+           class="sidebar-link <?= service('uri')->getSegment(1)=='atasan' && service('uri')->getSegment(2)==null ? 'active':'' ?>">
+            <svg class="sidebar-icon"><use href="#chart-bar"/></svg>
+            <span>Dashboard</span>
+        </a>
 
-    <!-- Isi Pengukuran -->
-    <a href="<?= base_url('atasan/pengukuran') ?>"
-       class="flex items-center px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
-        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2">
-            <use href="#chart-pie" />
-        </svg>
-        Isi Pengukuran
-    </a>
+        <!-- ISI PENGUKURAN KINERJA -->
+        <a href="<?= base_url('atasan/task') ?>"
+           class="sidebar-link <?= service('uri')->getSegment(2)=='task' ? 'active':'' ?>">
+            <svg class="sidebar-icon"><use href="#chart-pie"/></svg>
+            <span>Isi Pengukuran Kinerja</span>
+        </a>
 
-    <!-- Dokumen (Dropdown Persistent) -->
-    <button type="button"
-            @click="openDokumen = !openDokumen"
-            class="w-full flex items-center justify-between px-6 py-3 text-sm font-medium rounded hover:bg-white/10 transition-colors">
-        <div class="flex items-center">
-            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2">
-                <use href="#folder" />
-            </svg>
-            Dokumen
+        <!-- DOKUMEN GROUP -->
+        <?php
+            $docActive = in_array(service('uri')->getSegment(2), ['dokumen','kategori']);
+        ?>
+        <div x-data="{ open: <?= $docActive ? 'true':'false' ?> }" class="mt-2">
+            <button @click="open = !open"
+                class="sidebar-link w-full justify-between <?= $docActive ? 'active':'' ?>">
+                <div class="flex items-center gap-3">
+                    <svg class="sidebar-icon"><use href="#folder"/></svg>
+                    <span>Dokumen</span>
+                </div>
+                <svg
+                    class="w-4 h-4 text-white/80 transition-transform"
+                    stroke="currentColor"
+                    fill="none"
+                    :class="open && 'rotate-90'">
+                    <use href="#arrow-left-on-rectangle"/>
+                </svg>
+            </button>
+
+            <!-- SUBMENU -->
+            <?php
+            $uri = service('uri');
+            $seg2 = $uri->getSegment(2, '');
+            $seg3 = $uri->getTotalSegments() >= 3 ? $uri->getSegment(3) : '';
+            ?>
+            <div x-show="open" x-transition class="submenu space-y-1">
+                <a href="<?= base_url('atasan/dokumen') ?>"
+                   class="submenu-link <?= $seg2=='dokumen' && $seg3=='' ? 'active':'' ?>">
+                    Dokumen Kinerja
+                </a>
+                <a href="<?= base_url('atasan/kategori/ajukan') ?>"
+                   class="submenu-link <?= $seg3=='ajukan' ? 'active':'' ?>">
+                    Pengajuan Dokumen
+                </a>
+                <a href="<?= base_url('atasan/dokumen/arsip') ?>"
+                   class="submenu-link <?= $seg3=='arsip' ? 'active':'' ?>">
+                    Arsip
+                </a>
+            </div>
         </div>
-        <svg class="w-4 h-4 transition-transform"
-             :class="openDokumen ? 'rotate-90' : ''"
-             fill="none" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-        </svg>
-    </button>
 
-    <div x-show="openDokumen"
-         x-transition
-         class="ml-6 mt-1 space-y-1">
-
-        <a href="<?= base_url('atasan/dokumen') ?>"
-           class="block px-6 py-2 text-sm rounded hover:bg-white/10 transition">
-            Dokumen Masuk
+        <!-- PROFIL -->
+        <a href="<?= base_url('atasan/profile') ?>"
+           class="sidebar-link <?= service('uri')->getSegment(2)=='profile' ? 'active':'' ?>">
+            <svg class="sidebar-icon"><use href="#user"/></svg>
+            <span>Pengaturan Profil</span>
         </a>
-
-        <a href="<?= base_url('atasan/dokumen/unit') ?>"
-           class="block px-6 py-2 text-sm rounded hover:bg-white/10 transition">
-            Dokumen Unit
-        </a>
-
-        <a href="<?= base_url('atasan/dokumen/arsip') ?>"
-           class="block px-6 py-2 text-sm rounded hover:bg-white/10 transition">
-            Arsip Dokumen
-        </a>
-    </div>
-
-    <!-- Profile -->
-    <a href="<?= base_url('atasan/profile') ?>"
-       class="flex items-center px-6 py-3 mt-2 text-sm font-medium rounded hover:bg-white/10 transition-colors">
-        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2">
-            <use href="#user" />
-        </svg>
-        Profile
-    </a>
-
-</nav>
-
+    </nav>
 
     <div class="px-6 py-4 border-t border-white/20">
         <button onclick="window.location.href='<?= base_url('logout') ?>'" class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium bg-[var(--polban-orange)] rounded hover:bg-orange-600 transition-colors">
@@ -133,86 +248,16 @@
   <symbol id="arrow-left-on-rectangle" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 17l-5-5 5-5M21 12H9"/></symbol>
 </svg>
 
-<!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<!-- Axios (optional) or use fetch) -->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+<?php if (session()->getFlashdata('alert')): 
+    $a = session()->getFlashdata('alert'); ?>
 <script>
-  // --- SweetAlert2 Toast default ---
-  const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 4000,
-    timerProgressBar: true,
-    customClass: { popup: 'shadow-sm' }
+  Swal.fire({
+    toast: true, position: 'top-end', showConfirmButton:false, timer:4000,
+    icon: '<?= esc($a['type']) ?>', title: '<?= esc($a['title']) ?>', text: '<?= esc($a['message']) ?>'
   });
-
-  // show flashdata alert as toast (if server set session 'alert' array)
-  <?php if (session()->getFlashdata('alert')): 
-      $a = session()->getFlashdata('alert'); ?>
-    Toast.fire({
-      icon: '<?= esc($a['type']) ?>',
-      title: '<?= esc($a['title']) ?>',
-      text: '<?= esc($a['message']) ?>'
-    });
-  <?php endif; ?>
-
-  // --- Polling logic for pending badge & toast ---
-  (function(){
-    let prevCount = null;            // store last count locally
-    const badge = document.getElementById('pending-badge');
-
-    // update badge UI
-    function updateBadge(count){
-      if(!badge) return;
-      if(count && count > 0){
-        badge.style.display = 'inline-block';
-        badge.innerText = count;
-      }else{
-        badge.style.display = 'none';
-      }
-    }
-
-    // call server endpoint
-    async function fetchPending(){
-      try{
-        const res = await axios.get('<?= base_url('atasan/notifications/pending-count') ?>', { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
-        if(res && res.data){
-          const count = parseInt(res.data.pending) || 0;
-          // first load: just set badge
-          if(prevCount === null){
-            prevCount = count;
-            updateBadge(count);
-            return;
-          }
-          // if count increased -> show toast
-          if(count > prevCount){
-            const added = count - prevCount;
-            Toast.fire({
-              icon: 'info',
-              title: 'Ada laporan baru',
-              text: `Anda memiliki ${count} laporan pending (${added} baru).`
-            });
-          }
-          // update prev & badge
-          prevCount = count;
-          updateBadge(count);
-        }
-      }catch(err){
-        console.error('Notif fetch error', err);
-      }
-    }
-
-    // initial fetch
-    fetchPending();
-
-    // polling interval: 10 seconds (adjust as needed)
-    setInterval(fetchPending, 10000);
-  })();
 </script>
+<?php endif; ?>
 
 </body>
 </html>

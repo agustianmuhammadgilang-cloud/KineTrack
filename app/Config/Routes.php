@@ -270,26 +270,52 @@ $routes->group('staff', ['filter' => 'auth'], function ($routes) {
 
 
 // =======================
-// ATASAN ROUTES
+// ATASAN ROUTES (FINAL)
 // =======================
 $routes->group('atasan', ['filter' => 'auth'], function ($routes) {
 
-    // Dokumen masuk
+    // =====================
+    // DASHBOARD & PROFILE
+    // =====================
+    $routes->get('/', 'Atasan\Dashboard::index');
+    $routes->get('profile', 'Atasan\Profile::index');
+    $routes->post('profile/update', 'Atasan\Profile::update');
+
+    // =====================
+    // LAPORAN
+    // =====================
+    $routes->get('laporan', 'Atasan\Laporan::index');
+    $routes->get('laporan/detail/(:num)', 'Atasan\Laporan::detail/$1');
+    $routes->get('laporan/approve/(:num)', 'Atasan\Laporan::approve/$1');
+    $routes->post('laporan/reject/(:num)', 'Atasan\Laporan::reject/$1');
+
+    // =====================
+    // NOTIFICATIONS
+    // =====================
+    $routes->get('notifications/pending-count', 'Atasan\Notifications::pendingCount');
+    $routes->get('notifications/list', 'Atasan\Notifications::list');
+
+    // =====================
+    // DOKUMEN
+    // =====================
     $routes->get('dokumen', 'Atasan\Dokumen::index');
-
-    // Dokumen Unit (Masuk)
-$routes->get('dokumen/unit', 'Atasan\Dokumen::unit');
-
-    // Review
+    $routes->get('dokumen/unit', 'Atasan\Dokumen::unit');
     $routes->get('dokumen/review/(:num)', 'Atasan\Dokumen::review/$1');
-
-    // Approval
     $routes->post('dokumen/approve/(:num)', 'Atasan\Dokumen::approve/$1');
     $routes->post('dokumen/reject/(:num)', 'Atasan\Dokumen::reject/$1');
-
-    // Arsip (KAJUR)
     $routes->get('dokumen/arsip', 'Atasan\Dokumen::arsip');
+
+    // =====================
+    // ⬇️ TAMBAHAN HALAMAN BARU (DARI STAFF)
+    // =====================
+    $routes->get('task', 'Atasan\TaskController::index');
+        $routes->get('task/input/(:num)/(:num)', 'Atasan\TaskController::input/$1/$2');
+        $routes->post('task/store', 'Atasan\TaskController::store');
+        $routes->get('task/progress/(:num)/(:num)', 'Atasan\TaskController::progress/$1/$2');
+        $routes->get('task/report/(:num)/(:num)', 'Atasan\TaskController::report_pdf/$1/$2');
+
 });
+
 
 $routes->post('admin/users/delete/(:num)', 'Admin\User::delete/$1');
 
