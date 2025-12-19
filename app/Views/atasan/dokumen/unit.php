@@ -35,6 +35,20 @@
             <span class="text-gray-400">
                 <?= date('d M Y', strtotime($d['created_at'])) ?>
             </span>
+
+            <!-- VIEW -->
+                    <a href="<?= base_url('uploads/dokumen/'.$d['file_path']) ?>"
+                       target="_blank"
+                       class="inline-flex items-center gap-2
+                              bg-gray-100 hover:bg-gray-200
+                              text-gray-700 px-4 py-2
+                              rounded-xl text-sm transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Lihat Dokumen
+                    </a>
         </div>
     </div>
 <?php endforeach; ?>

@@ -200,12 +200,6 @@
 </svg>
 
 
-
-
-
-        
-
-        
         <!-- Input Pengukuran (Dropdown Group) -->
         <div 
         x-data="{
