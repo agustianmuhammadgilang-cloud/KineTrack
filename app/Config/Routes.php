@@ -312,7 +312,15 @@ $routes->group('atasan', ['filter' => 'auth'], function ($routes) {
         $routes->get('task/input/(:num)/(:num)', 'Atasan\TaskController::input/$1/$2');
         $routes->post('task/store', 'Atasan\TaskController::store');
         $routes->get('task/progress/(:num)/(:num)', 'Atasan\TaskController::progress/$1/$2');
-        $routes->get('task/report/(:num)/(:num)', 'Atasan\TaskController::report_pdf/$1/$2');
+        $routes->get(
+                        'task/report/(:num)/(:num)',
+                        'Atasan\TaskController::report/$1/$2'
+                    );
+        $routes->get(
+                        'task/report/(:num)/(:num)/(:segment)',
+                        'Atasan\TaskController::report/$1/$2/$3'
+                    );
+
 
 });
 

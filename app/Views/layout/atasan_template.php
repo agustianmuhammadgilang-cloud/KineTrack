@@ -206,10 +206,12 @@ function fileUpload() {
                    class="submenu-link <?= $seg2=='dokumen' && $seg3=='' ? 'active':'' ?>">
                     Dokumen Kinerja
                 </a>
-                <a href="<?= base_url('atasan/kategori/ajukan') ?>"
-                   class="submenu-link <?= $seg3=='ajukan' ? 'active':'' ?>">
-                    Pengajuan Dokumen
-                </a>
+                <!--  -->
+                <!-- Dokumen Unit (PUBLIC UNIT) -->
+    <a href="<?= base_url('atasan/dokumen/unit') ?>"
+       class="submenu-link <?= $seg3=='unit' ? 'active':'' ?>">
+        Dokumen Unit
+    </a>
                 <a href="<?= base_url('atasan/dokumen/arsip') ?>"
                    class="submenu-link <?= $seg3=='arsip' ? 'active':'' ?>">
                     Arsip
