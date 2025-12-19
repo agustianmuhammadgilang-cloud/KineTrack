@@ -1,4 +1,4 @@
-<?= $this->extend('layout/staff_template') ?>
+<?= $this->extend('layout/atasan_template') ?>
 <?= $this->section('content') ?>
 
 <h3 class="text-2xl font-bold text-[var(--polban-blue)] mb-6">

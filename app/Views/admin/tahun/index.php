@@ -12,14 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 <?php endif; ?>
 
-<!-- Trigger flashdata success -->
-<?php if(session()->getFlashdata('success')): ?>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    showToast("<?= session()->getFlashdata('success') ?>", "success");
-});
-</script>
-<?php endif; ?>
+
 
 
 <h3 class="text-2xl font-bold text-[var(--polban-blue)] mb-6">Tahun Anggaran</h3>

@@ -22,21 +22,22 @@ class TaskController extends BaseController
     protected $notifModel;
 
     public function __construct()
-    {
-        $this->picModel        = new PicModel();
-        $this->indikatorModel  = new IndikatorModel();
-        $this->sasaranModel    = new SasaranModel();
-        $this->pengukuranModel = new PengukuranModel();
-        $this->tahunModel      = new TahunAnggaranModel();
-        $this->notifModel      = new NotificationModel();
-    }
+{
+    $this->picModel        = new \App\Models\PicModel();
+    $this->indikatorModel  = new \App\Models\IndikatorModel();
+    $this->sasaranModel    = new \App\Models\SasaranModel();
+    $this->pengukuranModel = new \App\Models\PengukuranModel(); // tabel: pengukuran_kinerja
+    $this->tahunModel      = new \App\Models\TahunAnggaranModel();
+    $this->notifModel      = new \App\Models\NotificationModel();
+}
+
 
     // ============================================================
     // INDEX — TASK LIST + STATUS + PROGRESS READY
     // ============================================================
     public function index()
 {
-    $userId = session()->get('user_id'); // ⬅️ WAJIB
+    $userId = session()->get('user_id');
 
     $tasks = $this->picModel
         ->select("
@@ -47,14 +48,12 @@ class TaskController extends BaseController
             indikator_kinerja.target_tw3, indikator_kinerja.target_tw4,
             sasaran_strategis.nama_sasaran,
             tahun_anggaran.tahun,
-            tahun_anggaran.id AS tahun_id,
-            users.nama AS pic_nama
+            tahun_anggaran.id AS tahun_id
         ")
         ->join('indikator_kinerja', 'indikator_kinerja.id = pic_indikator.indikator_id')
         ->join('sasaran_strategis', 'sasaran_strategis.id = pic_indikator.sasaran_id')
         ->join('tahun_anggaran', 'tahun_anggaran.id = pic_indikator.tahun_id')
-        ->join('users', 'users.id = pic_indikator.user_id')
-        ->where('pic_indikator.user_id', $userId) // ✅ INI KUNCINYA
+        ->where('pic_indikator.user_id', $userId)
         ->orderBy('sasaran_strategis.nama_sasaran')
         ->findAll();
 
@@ -83,176 +82,263 @@ class TaskController extends BaseController
                 ->where('indikator_id', $row['indikator_id'])
                 ->where('triwulan', $tw)
                 ->where('tahun_id', $tahunId)
-                ->where('user_id', $userId)
+                ->where('user_id', $userId) // filter PIC sendiri
                 ->first();
         }
 
         $result[$row['nama_sasaran']][] = [
-            'indikator_id'   => $row['indikator_id'],
-            'nama_indikator'=> $row['nama_indikator'],
-            'tahun'          => $row['tahun'],
-            'tahun_id'       => $tahunId,
-            'tw_status'      => $twStatus,
-            'target_tw'      => $targetTw,
-            'pengukuran'     => $measurements,
-            'pic'            => ['nama' => $row['pic_nama']]
+            'indikator_id' => $row['indikator_id'],
+            'nama_indikator' => $row['nama_indikator'],
+            'tahun' => $row['tahun'],
+            'tahun_id' => $tahunId,
+            'tw_status' => $twStatus,
+            'target_tw' => $targetTw,
+            'pengukuran' => $measurements
         ];
     }
 
-    return view('atasan/task/index', [
-        'tasksGrouped' => $result
-    ]);
+        return view('atasan/task/index', [
+            'tasksGrouped' => $result
+        ]);
 }
 
+
     // ============================================================
-    // FORM INPUT
+    // INPUT FORM
     // ============================================================
-    public function input($indikator_id, $tw)
+    public function input($indikatorId, $tw)
     {
-        // Ambil PIC terkait indikator
-        $pic = $this->picModel->where('indikator_id', $indikator_id)->first();
+        $userId = session()->get('user_id');
+
+        $pic = $this->picModel
+            ->select('
+                pic_indikator.*,
+                users.nama, users.email,
+                bidang.nama_bidang, jabatan.nama_jabatan,
+                sasaran_strategis.nama_sasaran,
+                indikator_kinerja.nama_indikator, indikator_kinerja.satuan, indikator_kinerja.target_pk,
+                indikator_kinerja.target_tw1, indikator_kinerja.target_tw2,
+                indikator_kinerja.target_tw3, indikator_kinerja.target_tw4,
+                tahun_anggaran.tahun
+            ')
+            ->join('users', 'users.id = pic_indikator.user_id')
+            ->join('bidang', 'bidang.id = users.bidang_id')
+            ->join('jabatan', 'jabatan.id = users.jabatan_id')
+            ->join('indikator_kinerja', 'indikator_kinerja.id = pic_indikator.indikator_id')
+            ->join('sasaran_strategis', 'sasaran_strategis.id = pic_indikator.sasaran_id')
+            ->join('tahun_anggaran', 'tahun_anggaran.id = pic_indikator.tahun_id')
+            ->where('pic_indikator.user_id', $userId)
+            ->where('pic_indikator.indikator_id', $indikatorId)
+            ->first();
+
         if (!$pic) {
             return $this->failAccess();
         }
 
-        $indikator = $this->indikatorModel->find($indikator_id);
-        $sasaran   = $this->sasaranModel->find($indikator['sasaran_id']);
-
-        // Ambil tahun_id dari PIC, fallback ke tahun terbaru
-        $tahun_id = $pic['tahun_id'] ?? null;
-        if (!$tahun_id) {
-            $tahunData = $this->tahunModel->orderBy('tahun', 'DESC')->first();
-            $tahun_id = $tahunData['id'] ?? null;
+        // TW open?
+        $twInfo = getTwStatus($pic['tahun_id'], $tw);
+        if (!$twInfo['is_open']) {
+            return $this->failTwClosed();
         }
 
-        $tahun = $this->tahunModel->find($tahun_id)['tahun'] ?? date('Y');
-
-        $target_tw = [
-            1 => $indikator['target_tw1'],
-            2 => $indikator['target_tw2'],
-            3 => $indikator['target_tw3'],
-            4 => $indikator['target_tw4']
-        ];
-
-        return view('atasan/task/input', compact('indikator_id', 'indikator', 'sasaran', 'tahun', 'tahun_id', 'tw', 'pic', 'target_tw'));
+        return view('atasan/task/input', [
+            'indikator_id' => $indikatorId,
+            'tw' => $tw,
+            'pic' => $pic,
+            'sasaran' => ['nama_sasaran' => $pic['nama_sasaran']],
+            'indikator' => [
+                'nama_indikator' => $pic['nama_indikator'],
+                'satuan' => $pic['satuan'],
+                'target_pk' => $pic['target_pk']
+            ],
+            'tahun' => $pic['tahun'],
+            'target_tw' => [
+                1 => $pic['target_tw1'],
+                2 => $pic['target_tw2'],
+                3 => $pic['target_tw3'],
+                4 => $pic['target_tw4']
+            ]
+        ]);
     }
 
     // ============================================================
     // STORE INPUT
     // ============================================================
     public function store()
-    {
-        $indikator_id = $this->request->getPost('indikator_id');
-        $triwulan     = $this->request->getPost('triwulan');
+{
+    $indikatorId = $this->request->getPost('indikator_id');
+    $tw = $this->request->getPost('triwulan');
+    $userId = session()->get('user_id');
 
-        // Ambil PIC terkait
-        $pic = $this->picModel->where('indikator_id', $indikator_id)->first();
-        if (!$pic) {
-            return $this->failAccess();
-        }
+    $pic = $this->picModel
+        ->where('user_id', $userId)
+        ->where('indikator_id', $indikatorId)
+        ->first();
 
-        $tahun_id = $pic['tahun_id'] ?? null;
-        if (!$tahun_id) {
-            $tahunData = $this->tahunModel->orderBy('tahun', 'DESC')->first();
-            $tahun_id = $tahunData['id'] ?? null;
-        }
+    if (!$pic) {
+        return $this->failAccess();
+    }
 
-        $data = [
-            'indikator_id' => $indikator_id,
-            'triwulan'     => $triwulan,
-            'tahun_id'     => $tahun_id,
-            'user_id'      => $pic['user_id'],
-            'realisasi'    => $this->request->getPost('realisasi'),
-            'progress'     => $this->request->getPost('progress'),
-            'kendala'      => $this->request->getPost('kendala'),
-            'strategi'     => $this->request->getPost('strategi'),
-            'file_dukung'  => null
-        ];
+    $twInfo = getTwStatus($pic['tahun_id'], $tw);
+    if (!$twInfo['is_open']) {
+        return $this->failTwClosed();
+    }
 
-        // Handle multiple files
-        $files = $this->request->getFiles();
-        $fileDukung = [];
-        if (!empty($files['file_dukung'])) {
-            foreach ($files['file_dukung'] as $file) {
-                if ($file->isValid() && !$file->hasMoved()) {
-                    $newName = $file->getRandomName();
-                    $file->move(WRITEPATH.'uploads/pengukuran', $newName);
-                    $fileDukung[] = $newName;
-                }
+    $realisasi = $this->request->getPost('realisasi');
+    $progress  = trim($this->request->getPost('progress'));
+    $kendala   = trim($this->request->getPost('kendala'));
+    $strategi  = trim($this->request->getPost('strategi'));
+
+    $files = $this->request->getFiles();
+    $uploaded = [];
+
+    if (isset($files['file_dukung'])) {
+        foreach ($files['file_dukung'] as $file) {
+            if ($file->isValid() && !$file->hasMoved()) {
+                $name = $file->getRandomName();
+                $file->move(FCPATH . 'uploads/pengukuran', $name);
+                $uploaded[] = $name;
             }
         }
-        $data['file_dukung'] = json_encode($fileDukung);
-
-        $this->pengukuranModel->insert($data);
-
-        return redirect()->to(base_url('atasan/task'))
-            ->with('success', 'Pengukuran berhasil disimpan.');
     }
+
+    $this->pengukuranModel->insert([
+        'indikator_id' => $indikatorId,
+        'triwulan'     => $tw,
+        'tahun_id'     => $pic['tahun_id'],
+        'user_id'      => $userId,
+        'realisasi'    => $realisasi,
+        'progress'     => $progress,
+        'kendala'      => $kendala,
+        'strategi'     => $strategi,
+        'file_dukung'  => json_encode($uploaded)
+    ]);
+
+    $this->notifModel->insert([
+        'user_id' => 1,
+        'message' => "PIC mengisi pengukuran indikator ID $indikatorId pada TW $tw.",
+        'status'  => 'unread'
+    ]);
+
+    return redirect()->to('/atasan/task')->with('alert', [
+        'type' => 'success',
+        'title' => 'Berhasil',
+        'message' => 'Pengukuran berhasil disimpan.'
+    ]);
+}
+
 
     // ============================================================
     // PROGRESS
     // ============================================================
-    public function progress($indikator_id, $tw)
-    {
-        $pic = $this->picModel->where('indikator_id', $indikator_id)->first();
-        if (!$pic) {
-            return $this->failAccess();
-        }
+    public function progress($indikatorId, $tw)
+{
+    $tahunId = $this->getTahunFromIndikator($indikatorId);
+    $userId  = session()->get('user_id');
 
-        $measure = $this->pengukuranModel
-            ->where('indikator_id', $indikator_id)
-            ->where('triwulan', $tw)
-            ->where('tahun_id', $pic['tahun_id'])
-            ->where('user_id', $pic['user_id'])
-            ->first();
+    $measure = $this->pengukuranModel
+        ->where('indikator_id', $indikatorId)
+        ->where('triwulan', $tw)
+        ->where('tahun_id', $tahunId)
+        ->where('user_id', $userId)
+        ->first();
 
-        $indikator = $this->indikatorModel->find($indikator_id);
-        $target    = $indikator['target_tw'.$tw] ?? 0;
-        $percent   = ($target > 0 && $measure) ? ($measure['realisasi']/$target)*100 : 0;
-
-        return view('atasan/task/progress', compact('indikator','measure','percent','tw','target'));
+    if (!$measure) {
+        return $this->fail("Belum ada pengukuran untuk TW ini.");
     }
 
+    $indikator = $this->indikatorModel->find($indikatorId);
+    $target = $indikator['target_tw' . $tw];
+    $percent = $target > 0 ? ($measure['realisasi'] / $target) * 100 : 0;
+
+    return view('atasan/task/progress', [
+        'measure' => $measure,
+        'indikator' => $indikator,
+        'target' => $target,
+        'percent' => $percent,
+        'tw' => $tw
+    ]);
+}
+
+
     // ============================================================
-    // REPORT PDF
+    // REPORT PDF — ONLY IF >= 100%
     // ============================================================
-    public function report_pdf($indikator_id, $tw)
-    {
-        $pic = $this->picModel->where('indikator_id', $indikator_id)->first();
-        if (!$pic) return $this->failAccess();
+    public function report($indikatorId, $tw, $mode = 'view')
+{
+    $tahunId = $this->getTahunFromIndikator($indikatorId);
+    $userId  = session()->get('user_id');
 
-        $measure = $this->pengukuranModel
-            ->where('indikator_id', $indikator_id)
-            ->where('triwulan', $tw)
-            ->where('tahun_id', $pic['tahun_id'])
-            ->where('user_id', $pic['user_id'])
-            ->first();
+    $measure = $this->pengukuranModel
+        ->where('indikator_id', $indikatorId)
+        ->where('triwulan', $tw)
+        ->where('tahun_id', $tahunId)
+        ->where('user_id', $userId)
+        ->first();
 
-        $indikator = $this->indikatorModel->find($indikator_id);
-        $target    = $indikator['target_tw'.$tw] ?? 0;
-
-        $dompdf = new Dompdf();
-        $html = view('atasan/task/report_pdf', compact('indikator','measure','tw','target'));
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4','portrait');
-        $dompdf->render();
-        $dompdf->stream("Laporan_Pengukuran_TW$tw.pdf", ["Attachment" => false]);
+    if (!$measure) {
+        return $this->fail("Tidak dapat membuat report.");
     }
 
-    // ============================================================
-    // HELPERS
-    // ============================================================
-    private function fail($msg)
-    {
-        return redirect()->back()->with('alert', [
-            'type' => 'error',
-            'title' => 'Gagal',
-            'message' => $msg
-        ]);
+    $indikator = $this->indikatorModel->find($indikatorId);
+    $target = $indikator['target_tw' . $tw];
+
+    if ($measure['realisasi'] < $target) {
+        return $this->fail("Report hanya tersedia jika progress ≥ 100%");
     }
+
+    $html = view('atasan/task/report_pdf', [
+        'measure'   => $measure,
+        'indikator' => $indikator,
+        'target'    => $target,
+        'tw'        => $tw
+    ]);
+
+    $options = new Options();
+    $options->set('isRemoteEnabled', true);
+    $options->set('isHtml5ParserEnabled', true);
+
+    $dompdf = new Dompdf($options);
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    $attachment = ($mode === 'download');
+
+    return $dompdf->stream(
+        "Report_{$indikator['nama_indikator']}_TW{$tw}.pdf",
+        ['Attachment' => $attachment]
+    );
+}
+
+
+
+    // ============================================================
+    // HELPER
+    // ============================================================
+    private function getTahunFromIndikator($indikatorId)
+{
+    return $this->picModel
+        ->where('indikator_id', $indikatorId)
+        ->first()['tahun_id'] ?? null;
+}
+
+private function fail($msg)
+{
+    return redirect()->back()->with('alert', [
+        'type' => 'error',
+        'title' => 'Gagal',
+        'message' => $msg
+    ]);
+}
 
     private function failAccess()
     {
         return $this->fail("Anda tidak memiliki akses.");
+    }
+
+    private function failTwClosed()
+    {
+        return $this->fail("Triwulan ini sedang dikunci.");
     }
 }
