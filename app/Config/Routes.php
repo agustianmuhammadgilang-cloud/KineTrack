@@ -102,6 +102,12 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
         'Admin\DokumenTervalidasi::dokumen/$1'
     );
 
+    $routes->get(
+    'pengukuran/detail/(:num)/(:num)/(:num)',
+    'Admin\Pengukuran::detail/$1/$2/$3'
+);
+
+
 
   
 });

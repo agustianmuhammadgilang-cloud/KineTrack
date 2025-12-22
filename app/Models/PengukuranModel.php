@@ -16,7 +16,9 @@ class PengukuranModel extends Model
         'kendala',
         'strategi',
         'file_dukung',
-        'user_id' // relasi ke PIC
+        'user_id', // relasi ke PIC
+        'created_at',   // ✅ TAMBAH
+        'updated_at'    // 🔥 INI KUNCINYA
     ];
 
     protected $returnType = 'array';

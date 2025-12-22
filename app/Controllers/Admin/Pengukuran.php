@@ -83,7 +83,6 @@ public function store()
     $tahunId = $this->request->getPost('tahun_id');
     $tw      = (int)$this->request->getPost('triwulan');
 
-    // Ambil semua indikator berdasarkan tahun
     $indikatorList = $this->indikatorModel
         ->select('indikator_kinerja.id')
         ->join('sasaran_strategis', 'sasaran_strategis.id = indikator_kinerja.sasaran_id')
@@ -97,30 +96,40 @@ public function store()
     $saveCount = 0;
 
     foreach ($indikatorList as $ind) {
-        $id = $ind['id'];
+        $indikatorId = $ind['id'];
+
+        // CEK APAKAH SUDAH ADA
+        $existing = $this->pengukuranModel
+            ->where('indikator_id', $indikatorId)
+            ->where('tahun_id', $tahunId)
+            ->where('triwulan', $tw)
+            ->first();
+
+        // 🔒 JIKA SUDAH ADA → JANGAN DITIMPA
+        if ($existing) {
+            continue;
+        }
 
         $dataSave = [
-            'indikator_id' => $id,
+            'indikator_id' => $indikatorId,
             'tahun_id'     => $tahunId,
             'triwulan'     => $tw,
-            'realisasi'    => (float)$this->request->getPost("realisasi_$id"),
-            'kendala'      => trim($this->request->getPost("kendala_$id")),
-            'strategi'     => trim($this->request->getPost("strategi_$id")),
-            'data_dukung'  => trim($this->request->getPost("data_dukung_$id")),
-            'created_by'   => session('user_id')
+            'realisasi'    => (float)$this->request->getPost("realisasi_$indikatorId"),
+            'kendala'      => trim($this->request->getPost("kendala_$indikatorId")),
+            'strategi'     => trim($this->request->getPost("strategi_$indikatorId")),
+            'user_id'      => session('user_id'),
         ];
 
-        // Upload File
+        // UPLOAD FILE
         $files = $this->request->getFiles();
         $fileArr = [];
 
-        if (!empty($files["file_$id"])) {
-            foreach ($files["file_$id"] as $file) {
-
+        if (!empty($files["file_$indikatorId"])) {
+            foreach ($files["file_$indikatorId"] as $file) {
                 if ($file->isValid() && !$file->hasMoved()) {
-                    $newName = $file->getRandomName();
-                    $file->move(WRITEPATH . 'uploads/pengukuran/', $newName);
-                    $fileArr[] = $newName;
+                    $name = $file->getRandomName();
+                    $file->move(WRITEPATH . 'uploads/pengukuran/', $name);
+                    $fileArr[] = $name;
                 }
             }
         }
@@ -129,25 +138,13 @@ public function store()
             $dataSave['file_dukung'] = json_encode($fileArr);
         }
 
-
-        // Insert / Update
-        $existing = $this->pengukuranModel
-            ->where('indikator_id', $id)
-            ->where('tahun_id', $tahunId)
-            ->where('triwulan', $tw)
-            ->first();
-
-        if ($existing) {
-            $this->pengukuranModel->update($existing['id'], $dataSave);
-        } else {
-            $this->pengukuranModel->insert($dataSave);
-        }
-
+        $this->pengukuranModel->insert($dataSave);
         $saveCount++;
     }
 
     return redirect()->back()->with('success', "$saveCount data berhasil disimpan");
 }
+
 
 
 
@@ -230,13 +227,14 @@ public function detail($indikator_id, $tahun_id, $tw)
     // 3. Ambil semua input pengukuran staff
     // =============================
     $pengukuran = $this->pengukuranModel
-        ->select('pengukuran_kinerja.*, users.nama as user_nama')
-        ->join('users', 'users.id = pengukuran_kinerja.user_id', 'left')
-        ->where('pengukuran_kinerja.indikator_id', $indikator_id)
-        ->where('pengukuran_kinerja.tahun_id', $tahun_id)
-        ->where('pengukuran_kinerja.triwulan', $tw)  // pastikan kolom = triwulan
-        ->orderBy('pengukuran_kinerja.created_at', 'DESC')
-        ->findAll();
+    ->select('pengukuran_kinerja.*, users.nama as user_nama')
+    ->join('users', 'users.id = pengukuran_kinerja.user_id', 'left')
+    ->where('pengukuran_kinerja.indikator_id', $indikator_id)
+    ->where('pengukuran_kinerja.tahun_id', $tahun_id)
+    ->where('pengukuran_kinerja.triwulan', $tw)
+    ->orderBy('pengukuran_kinerja.updated_at', 'DESC') // 🔥 FIX
+    ->findAll();
+
 
     // =============================
     // 4. Kirim ke view
@@ -461,8 +459,14 @@ public function update($id)
 
     $this->pengukuranModel->update($id, $save);
 
-    return redirect()->to(base_url('admin/pengukuran/output?tahun_id=' . $row['tahun_id'] . '&triwulan=' . $row['triwulan']))
-        ->with('success', 'Data berhasil diupdate');
+    return redirect()->to(
+    base_url('admin/pengukuran/detail/'
+        . $row['indikator_id'] . '/'
+        . $row['tahun_id'] . '/'
+        . $row['triwulan']
+    )
+)->with('success', 'Data berhasil diupdate');
+
 }
 
 
