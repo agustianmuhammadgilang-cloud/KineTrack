@@ -333,6 +333,13 @@ LHE
     Dokumen Tervalidasi
 </a>
 
+<a href="<?= base_url('admin/dokumen-tidak-tervalidasi') ?>"
+   class="px-4 py-2 rounded hover:bg-white/10 transition
+   <?= service('uri')->getSegment(2) == 'dokumen-tidak-tervalidasi' ? 'bg-white/20 font-semibold' : '' ?>">
+   Dokumen Tidak Tervalidasi
+</a>
+
+
 
     </div>
 </div>
