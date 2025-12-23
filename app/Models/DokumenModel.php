@@ -20,7 +20,8 @@ class DokumenModel extends Model
         'current_reviewer',
         'catatan',
         'kategori_id',
-        'scope'
+        'scope',
+        'published_at'
     ];
 
     protected $useTimestamps = true;

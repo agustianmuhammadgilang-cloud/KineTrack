@@ -272,6 +272,7 @@ $routes->group('staff', ['filter' => 'auth'], function ($routes) {
 
     // Arsip
     $routes->get('dokumen/arsip', 'Staff\Dokumen::arsip');
+     $routes->get('dokumen/public', 'Staff\Dokumen::public');
 });
 
 
@@ -309,6 +310,7 @@ $routes->group('atasan', ['filter' => 'auth'], function ($routes) {
     $routes->get('dokumen/review/(:num)', 'Atasan\Dokumen::review/$1');
     $routes->post('dokumen/approve/(:num)', 'Atasan\Dokumen::approve/$1');
     $routes->post('dokumen/reject/(:num)', 'Atasan\Dokumen::reject/$1');
+    $routes->get('dokumen/public', 'Atasan\Dokumen::public');
     $routes->get('dokumen/arsip', 'Atasan\Dokumen::arsip');
 
     // =====================
