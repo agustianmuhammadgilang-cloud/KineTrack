@@ -57,16 +57,40 @@
                 <!-- KATEGORI -->
                 <div>
                     <label class="text-sm font-medium">Kategori *</label>
-                    <select name="kategori_id" x-model="kategori"
-                            @change="validate"
-                            class="w-full mt-1 rounded-lg border px-4 py-2.5">
-                        <option value="">Pilih kategori</option>
-                        <?php foreach ($kategori as $k): ?>
-                            <option value="<?= $k['id'] ?>">
-                                <?= esc($k['nama_kategori']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                  <select name="kategori_id" x-model="kategori"
+        @change="validate"
+        class="w-full mt-1 rounded-lg border px-4 py-2.5">
+
+            <option value="">Pilih kategori</option>
+
+            <?php foreach ($kategori as $k): ?>
+                <?php
+                    switch ($k['status']) {
+                        case 'aktif':
+                            $label = '✅ Resmi';
+                            $class = 'text-green-700';
+                            break;
+                        case 'pending':
+                            $label = '⏳ Menunggu persetujuan admin';
+                            $class = 'text-yellow-700';
+                            break;
+                        case 'rejected':
+                            $label = '❌ Ditolak admin';
+                            $class = 'text-red-700';
+                            break;
+                        default:
+                            $label = '';
+                            $class = '';
+                    }
+                ?>
+                <option value="<?= $k['id'] ?>" class="<?= $class ?>">
+                    <?= esc($k['nama_kategori']) ?> — <?= $label ?>
+                </option>
+            <?php endforeach; ?>
+
+        </select>
+
+
                     <p x-show="errors.kategori" class="text-xs text-red-500 mt-1">
                         Pilih kategori
                     </p>

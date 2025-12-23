@@ -105,4 +105,6 @@ class KategoriDokumen extends BaseController
         return redirect()->back()
                          ->with('success', 'Status kategori diperbarui');
     }
+
+    
 }

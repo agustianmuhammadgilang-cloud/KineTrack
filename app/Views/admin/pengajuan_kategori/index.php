@@ -58,13 +58,16 @@
     <td class="p-4 text-center">
         <?php
             $statusClasses = [
-                'pending' => 'bg-yellow-100 text-yellow-700',
-                'approved' => 'bg-green-100 text-green-700',
-                'rejected' => 'bg-red-100 text-red-700'
-            ];
+            'pending'       => 'bg-yellow-100 text-yellow-700',
+            'approved'      => 'bg-green-100 text-green-700',
+            'approved_auto' => 'bg-blue-100 text-blue-700', // 🔥 TAMBAHAN
+            'rejected'      => 'bg-red-100 text-red-700'
+        ];
+
             $statusIcons = [
                 'pending' => '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3"/></svg>',
                 'approved' => '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>',
+                'approved_auto' => '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>',
                 'rejected' => '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>'
             ];
         ?>

@@ -345,4 +345,10 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->post('kategori-dokumen/update/(:num)', 'Admin\KategoriDokumen::update/$1');
 
     $routes->get('kategori-dokumen/toggle/(:num)', 'Admin\KategoriDokumen::toggleStatus/$1');
+
+    $routes->get('dokumen-tervalidasi', 'Admin\DokumenTervalidasi::kategori');
+    $routes->get('dokumen-tervalidasi/(:num)', 'Admin\DokumenTervalidasi::dokumen/$1');
+
+    $routes->get('dokumen-tidak-tervalidasi', 'Admin\DokumenTidakTervalidasi::kategori');
+    $routes->get('dokumen-tidak-tervalidasi/(:num)', 'Admin\DokumenTidakTervalidasi::dokumen/$1');
 });

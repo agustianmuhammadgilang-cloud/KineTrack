@@ -46,12 +46,14 @@ class Dokumen extends BaseController
      * FORM UPLOAD DOKUMEN
      * ============================
      */
-    public function create()
-    {
-        return view('staff/dokumen/create', [
-            'kategori' => $this->kategoriModel->getAktif()
-        ]);
-    }
+public function create()
+{
+    return view('staff/dokumen/create', [
+        'kategori' => $this->kategoriModel->getUntukFormStaff()
+    ]);
+}
+
+
 
     /**
      * ============================
@@ -294,8 +296,6 @@ public function public()
 
     return view('staff/dokumen/public', $data);
 }
-
-
 
 
 }
