@@ -75,11 +75,11 @@
                 <!-- JENIS -->
                 <div>
                     <label class="text-sm font-medium">Jenis Dokumen *</label>
-                    <select name="scope"
-                            class="w-full mt-1 rounded-lg border px-4 py-2.5">
-                        <option value="unit">Dokumen Unit</option>
-                        <option value="personal">Dokumen Pribadi</option>
-                    </select>
+                    <select name="scope" class="w-full mt-1 rounded-lg border px-4 py-2.5">
+    <option value="personal">Dokumen Pribadi</option>
+    <option value="unit">Dokumen Unit</option>
+    <option value="public">Dokumen Publik</option>
+</select>
                 </div>
             </div>
         </div>

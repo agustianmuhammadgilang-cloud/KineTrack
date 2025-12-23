@@ -212,6 +212,12 @@ function fileUpload() {
        class="submenu-link <?= $seg3=='unit' ? 'active':'' ?>">
         Dokumen Unit
     </a>
+
+    <a href="<?= base_url('atasan/dokumen/public') ?>"
+   class="submenu-link <?= $seg3=='public' ? 'active':'' ?>">
+    Dokumen Publik
+</a>
+
                 <a href="<?= base_url('atasan/dokumen/arsip') ?>"
                    class="submenu-link <?= $seg3=='arsip' ? 'active':'' ?>">
                     Arsip

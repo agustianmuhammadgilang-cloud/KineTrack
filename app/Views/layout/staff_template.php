@@ -245,6 +245,13 @@ $seg3 = $uri->getTotalSegments() >= 3 ? $uri->getSegment(3) : ''; // aman
            class="submenu-link <?= $seg3=='unit' ? 'active':'' ?>">
             Dokumen Unit
         </a>
+
+
+        <a href="<?= base_url('staff/dokumen/public') ?>"
+   class="submenu-link <?= $seg3=='public' ? 'active':'' ?>">
+    Dokumen Publik
+</a>
+
     </div>
 </div>
 
