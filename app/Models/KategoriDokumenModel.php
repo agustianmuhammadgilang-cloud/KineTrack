@@ -75,22 +75,28 @@ public function getAktifDanPending()
 
 public function getUntukFormStaff()
 {
-    return $this->select("
-            id,
-            nama_kategori,
-            status
-        ")
+    return $this->select([
+            'id',
+            'nama_kategori',
+            'status'
+        ])
+        // 🔑 SEMUA STATUS YANG HARUS TAMPIL
         ->whereIn('status', ['aktif', 'pending', 'rejected'])
-        ->orderBy("
-            CASE 
+
+        // 🔑 URUTAN UX (Resmi → Pending → Ditolak)
+        ->orderBy(
+            "CASE 
                 WHEN status = 'aktif' THEN 1
                 WHEN status = 'pending' THEN 2
                 WHEN status = 'rejected' THEN 3
-            END
-        ")
+             END",
+            '',
+            false // ⬅️ WAJIB agar CASE tidak di-escape CI
+        )
         ->orderBy('nama_kategori', 'ASC')
         ->findAll();
 }
+
 
 
 }
