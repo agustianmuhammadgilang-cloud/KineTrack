@@ -89,22 +89,31 @@ class KategoriDokumen extends BaseController
     // AKTIF / NONAKTIF
     // ============================
     public function toggleStatus($id)
-    {
-        $kategori = $this->kategoriModel->find($id);
+{
+    $kategori = $this->kategoriModel->find($id);
 
-        if (!$kategori) {
-            return redirect()->back()->with('error', 'Data tidak ditemukan');
-        }
-
-        $statusBaru = $kategori['status'] === 'aktif' ? 'nonaktif' : 'aktif';
-
-        $this->kategoriModel->update($id, [
-            'status' => $statusBaru
-        ]);
-
-        return redirect()->back()
-                         ->with('success', 'Status kategori diperbarui');
+    if (!$kategori) {
+        return redirect()->back()->with('error', 'Data tidak ditemukan');
     }
+
+    // 🔒 HANYA BOLEH toggle kategori RESMI
+    if ($kategori['status'] !== 'aktif' && $kategori['status'] !== 'nonaktif') {
+        return redirect()->back()
+            ->with('error', 'Kategori ini tidak bisa diubah statusnya');
+    }
+
+    $statusBaru = $kategori['status'] === 'aktif'
+        ? 'nonaktif'
+        : 'aktif';
+
+    $this->kategoriModel->update($id, [
+        'status' => $statusBaru
+    ]);
+
+    return redirect()->back()
+        ->with('success', 'Status kategori diperbarui');
+}
+
 
     
 }

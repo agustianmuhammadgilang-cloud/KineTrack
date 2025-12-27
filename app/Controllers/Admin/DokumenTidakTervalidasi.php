@@ -51,40 +51,42 @@ public function kategori()
      * ================================
      */
     public function dokumen($kategoriId)
-    {
-        $kategori = $this->kategoriModel->find($kategoriId);
+{
+    $kategori = $this->kategoriModel->find($kategoriId);
 
-        if (!$kategori || $kategori['status'] !== 'pending') {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException(
-                'Kategori tidak ditemukan'
-            );
-        }
-
-        $bidangId = $this->request->getGet('bidang');
-        $keyword  = $this->request->getGet('q');
-
-        $builder = $this->dokumenModel
-            ->select('dk.id, dk.judul, dk.file_path, dk.updated_at, b.nama_bidang')
-            ->from('dokumen_kinerja dk')
-            ->join('bidang b', 'b.id = dk.unit_asal_id', 'left')
-            ->where('dk.kategori_id', $kategoriId)
-            ->where('dk.status', 'archived')
-            ->groupBy('dk.id')
-            ->orderBy('dk.updated_at', 'DESC');
-
-        if ($bidangId) {
-            $builder->where('dk.unit_asal_id', $bidangId);
-        }
-
-        if ($keyword) {
-            $builder->like('dk.judul', $keyword);
-        }
-
-        return view('admin/dokumen_tidak_tervalidasi/dokumen', [
-            'title'        => 'Dokumen Tidak Tervalidasi',
-            'kategori'     => $kategori,
-            'dokumen'      => $builder->findAll(),
-            'bidang'       => $this->bidangModel->findAll()
-        ]);
+    // 🔑 pending & rejected BOLEH dibuka
+    if (!$kategori || !in_array($kategori['status'], ['pending', 'rejected'])) {
+        throw new \CodeIgniter\Exceptions\PageNotFoundException(
+            'Kategori tidak ditemukan'
+        );
     }
+
+    $bidangId = $this->request->getGet('bidang');
+    $keyword  = $this->request->getGet('q');
+
+    $builder = $this->dokumenModel
+        ->select('dk.id, dk.judul, dk.file_path, dk.updated_at, b.nama_bidang')
+        ->from('dokumen_kinerja dk')
+        ->join('bidang b', 'b.id = dk.unit_asal_id', 'left')
+        ->where('dk.kategori_id', $kategoriId)
+        ->where('dk.status', 'archived')
+        ->groupBy('dk.id')
+        ->orderBy('dk.updated_at', 'DESC');
+
+    if ($bidangId) {
+        $builder->where('dk.unit_asal_id', $bidangId);
+    }
+
+    if ($keyword) {
+        $builder->like('dk.judul', $keyword);
+    }
+
+    return view('admin/dokumen_tidak_tervalidasi/dokumen', [
+        'title'    => 'Dokumen Tidak Tervalidasi',
+        'kategori' => $kategori,
+        'dokumen'  => $builder->findAll(),
+        'bidang'   => $this->bidangModel->findAll()
+    ]);
+}
+
 }

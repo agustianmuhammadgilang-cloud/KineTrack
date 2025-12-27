@@ -91,23 +91,30 @@ class PengajuanKategori extends BaseController
         return redirect()->back()->with('error', 'Pengajuan sudah diproses');
     }
 
-    // 🔥 BUAT KATEGORI DENGAN STATUS REJECTED
-    $this->kategoriModel->insert([
-        'nama_kategori' => $pengajuan['nama_kategori'],
-        'deskripsi'     => $pengajuan['deskripsi'],
-        'status'        => 'rejected',
-        'created_by'    => session()->get('user_id')
+    // 🔑 CARI KATEGORI YANG SUDAH DIBUAT STAFF
+    $kategori = $this->kategoriModel
+        ->where('nama_kategori', $pengajuan['nama_kategori'])
+        ->first();
+
+    if (!$kategori) {
+        return redirect()->back()->with('error', 'Kategori tidak ditemukan');
+    }
+
+    // ✅ UPDATE STATUS KATEGORI (BUKAN INSERT)
+    $this->kategoriModel->update($kategori['id'], [
+        'status' => 'rejected'
     ]);
 
-    // update status pengajuan
+    // update histori pengajuan
     $this->pengajuanModel->update($id, [
         'status'   => 'rejected',
         'admin_id' => session()->get('user_id')
     ]);
 
     return redirect()->back()
-        ->with('success', 'Pengajuan ditolak (kategori tetap tersedia untuk staff)');
+        ->with('success', 'Pengajuan ditolak');
 }
+
 
 
 }
