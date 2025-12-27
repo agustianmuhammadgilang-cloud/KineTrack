@@ -320,39 +320,17 @@ public function unit()
     }
 
     $bidangId = session()->get('bidang_id');
-    $bidang   = $this->bidangModel->find($bidangId);
-
-    if (!$bidang) {
+    if (!$bidangId) {
         return redirect()->back();
     }
 
-    // =========================
-    // KETUA PRODI
-    // =========================
-    if ($bidang['parent_id'] !== null) {
-
-        $dokumen = $this->dokumenModel
-            ->where('unit_asal_id', $bidangId)
-            ->where('scope', 'unit') // 🔥 FILTER KUNCI
-            ->orderBy('created_at', 'DESC')
-            ->findAll();
-    }
-    // =========================
-    // KETUA JURUSAN
-    // =========================
-    else {
-
-        $dokumen = $this->dokumenModel
-            ->where('unit_jurusan_id', $bidangId)
-            ->where('scope', 'unit') // 🔥 FILTER KUNCI
-            ->orderBy('created_at', 'DESC')
-            ->findAll();
-    }
+    $dokumen = $this->dokumenModel->getDokumenUnit($bidangId);
 
     return view('atasan/dokumen/unit', [
         'dokumen' => $dokumen
     ]);
 }
+
 
 public function public()
 {
@@ -360,25 +338,10 @@ public function public()
         return redirect()->back()->with('error', 'Akses tidak diizinkan');
     }
 
-    $table = $this->dokumenModel->getTable(); // dokumen_kinerja
-
-    $data['dokumen'] = $this->dokumenModel
-        ->select("
-            {$table}.*,
-            bidang.nama_bidang AS nama_unit,
-            kategori_dokumen.nama_kategori
-        ")
-        ->join('bidang', "bidang.id = {$table}.unit_jurusan_id", 'left')
-        ->join('kategori_dokumen', "kategori_dokumen.id = {$table}.kategori_id", 'left')
-        ->where("{$table}.scope", 'public')
-        ->where("{$table}.status", 'archived')
-        ->orderBy("{$table}.created_at", 'DESC')
-        ->findAll();
+    $data['dokumen'] = $this->dokumenModel->getDokumenPublic();
 
     return view('atasan/dokumen/public', $data);
 }
-
-
 
 
 }
