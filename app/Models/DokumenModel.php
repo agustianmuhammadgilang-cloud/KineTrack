@@ -27,15 +27,75 @@ class DokumenModel extends Model
     protected $useTimestamps = true;
 
     /**
+     * =========================================
+     * BASE QUERY (SESUAI STRUKTUR DATABASE)
+     * =========================================
+     */
+    private function baseSelect()
+{
+    return $this->select([
+            'dokumen_kinerja.*',
+            'users.nama                     AS nama_pengirim',
+            'jabatan.nama_jabatan           AS nama_jabatan',
+            'bidang.nama_bidang             AS nama_unit',
+            'kategori_dokumen.nama_kategori AS nama_kategori'
+        ])
+        ->join('users', 'users.id = dokumen_kinerja.created_by')
+        ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
+        ->join('bidang', 'bidang.id = users.bidang_id', 'left')
+        // 🔥 INI KUNCI NYA
+        ->join('kategori_dokumen', 'kategori_dokumen.id = dokumen_kinerja.kategori_id', 'left');
+}
+
+
+    /**
      * ============================
      * DOKUMEN MILIK STAFF
      * ============================
      */
     public function getByStaff($userId)
     {
-        return $this->where('created_by', $userId)
-                    ->orderBy('created_at', 'DESC')
-                    ->findAll();
+        return $this->baseSelect()
+            ->where('dokumen_kinerja.created_by', $userId)
+            ->orderBy('dokumen_kinerja.created_at', 'DESC')
+            ->findAll();
+    }
+
+    /**
+     * ============================
+     * DOKUMEN UNIT (STAFF & ATASAN)
+     * ============================
+     */
+    public function getDokumenUnit($unitId)
+{
+    return $this->baseSelect()
+        ->where('dokumen_kinerja.scope', 'unit')
+        ->groupStart()
+            ->where('dokumen_kinerja.unit_asal_id', $unitId)
+            ->orWhere('dokumen_kinerja.unit_jurusan_id', $unitId)
+        ->groupEnd()
+        ->whereIn('dokumen_kinerja.status', [
+            'pending_kaprodi',
+            'pending_kajur',
+            'archived'
+        ])
+        ->orderBy('dokumen_kinerja.created_at', 'DESC')
+        ->findAll();
+}
+
+
+    /**
+     * ============================
+     * DOKUMEN PUBLIK
+     * ============================
+     */
+    public function getDokumenPublic()
+    {
+        return $this->baseSelect()
+            ->where('dokumen_kinerja.scope', 'public')
+            ->where('dokumen_kinerja.status', 'archived')
+            ->orderBy('dokumen_kinerja.created_at', 'DESC')
+            ->findAll();
     }
 
     /**
@@ -45,10 +105,11 @@ class DokumenModel extends Model
      */
     public function getPendingKaprodi($prodiId)
     {
-        return $this->where('status', 'pending_kaprodi')
-                    ->where('unit_asal_id', $prodiId)
-                    ->orderBy('created_at', 'DESC')
-                    ->findAll();
+        return $this->baseSelect()
+            ->where('dokumen_kinerja.status', 'pending_kaprodi')
+            ->where('dokumen_kinerja.unit_asal_id', $prodiId)
+            ->orderBy('dokumen_kinerja.created_at', 'DESC')
+            ->findAll();
     }
 
     /**
@@ -58,15 +119,16 @@ class DokumenModel extends Model
      */
     public function getPendingKajur($jurusanId)
     {
-        return $this->where('status', 'pending_kajur')
-                    ->where('unit_jurusan_id', $jurusanId)
-                    ->orderBy('created_at', 'DESC')
-                    ->findAll();
+        return $this->baseSelect()
+            ->where('dokumen_kinerja.status', 'pending_kajur')
+            ->where('dokumen_kinerja.unit_jurusan_id', $jurusanId)
+            ->orderBy('dokumen_kinerja.created_at', 'DESC')
+            ->findAll();
     }
 
     /**
      * ============================
-     * APPROVE OLEH KAPRODI
+     * APPROVE KAPRODI
      * ============================
      */
     public function approveKaprodi($dokumenId)
@@ -86,7 +148,7 @@ class DokumenModel extends Model
 
     /**
      * ============================
-     * APPROVE OLEH KAJUR
+     * APPROVE KAJUR
      * ============================
      */
     public function approveKajur($dokumenId)
@@ -117,15 +179,13 @@ class DokumenModel extends Model
             return false;
         }
 
-        if ($dokumen['status'] === 'pending_kaprodi') {
-            $status = 'rejected_kaprodi';
-        }
-        elseif ($dokumen['status'] === 'pending_kajur') {
-            $status = 'rejected_kajur';
-        }
-        else {
-            return false;
-        }
+        $status = match ($dokumen['status']) {
+            'pending_kaprodi' => 'rejected_kaprodi',
+            'pending_kajur'   => 'rejected_kajur',
+            default           => null
+        };
+
+        if (!$status) return false;
 
         return $this->update($dokumenId, [
             'status'           => $status,

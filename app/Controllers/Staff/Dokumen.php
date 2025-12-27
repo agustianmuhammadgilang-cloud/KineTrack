@@ -264,14 +264,12 @@ public function unit()
     // Tentukan unit jurusan
     $unitJurusan = $bidangUser['parent_id'] ?? $bidangUser['id'];
 
-    $data['dokumen'] = $this->dokumenModel
-        ->where('unit_jurusan_id', $unitJurusan)
-        ->where('scope', 'unit')
-        ->orderBy('created_at', 'DESC')
-        ->findAll();
+    // 🔥 WAJIB PAKAI METHOD MODEL
+    $data['dokumen'] = $this->dokumenModel->getDokumenUnit($unitJurusan);
 
     return view('staff/dokumen/unit', $data);
 }
+
 
 public function public()
 {
@@ -279,23 +277,11 @@ public function public()
         return redirect()->to('/login');
     }
 
-    $table = $this->dokumenModel->getTable(); // dokumen_kinerja
-
-    $data['dokumen'] = $this->dokumenModel
-        ->select("
-            {$table}.*,
-            bidang.nama_bidang AS nama_unit,
-            kategori_dokumen.nama_kategori
-        ")
-        ->join('bidang', "bidang.id = {$table}.unit_jurusan_id", 'left')
-        ->join('kategori_dokumen', "kategori_dokumen.id = {$table}.kategori_id", 'left')
-        ->where("{$table}.scope", 'public')
-        ->where("{$table}.status", 'archived')
-        ->orderBy("{$table}.created_at", 'DESC')
-        ->findAll();
+    $data['dokumen'] = $this->dokumenModel->getDokumenPublic();
 
     return view('staff/dokumen/public', $data);
 }
+
 
 
 }
