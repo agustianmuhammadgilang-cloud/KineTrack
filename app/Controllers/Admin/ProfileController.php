@@ -87,6 +87,36 @@ if ($ttd && $ttd->isValid() && !$ttd->hasMoved()) {
 
         // UPDATE DATA USER
         $userModel->update($userId, $updateData);
+        $changed = [];
+
+if ($updateData['nama'] !== $admin['nama']) {
+    $changed[] = 'nama';
+}
+
+if ($updateData['email'] !== $admin['email']) {
+    $changed[] = 'email';
+}
+
+if (!empty($passwordBaru)) {
+    $changed[] = 'password';
+}
+
+if (isset($updateData['foto'])) {
+    $changed[] = 'foto profil';
+}
+
+if (isset($updateData['ttd_digital'])) {
+    $changed[] = 'TTD digital';
+}
+if (!empty($changed)) {
+    log_activity(
+        'update_profile',
+        'Memperbarui profil admin: ' . implode(', ', $changed),
+        'users',
+        $userId
+    );
+}
+
 
         // UPDATE SESSION LAINNYA
         session()->set('nama', $updateData['nama']);

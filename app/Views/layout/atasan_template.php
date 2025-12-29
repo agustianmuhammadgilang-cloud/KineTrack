@@ -167,6 +167,16 @@ function fileUpload() {
             <svg class="sidebar-icon"><use href="#chart-bar"/></svg>
             <span>Dashboard</span>
         </a>
+        <!-- LOG AKTIVITAS -->
+<a href="<?= base_url('atasan/activity-log') ?>"
+   class="sidebar-link <?= service('uri')->getSegment(2)=='activity-log' ? 'active':'' ?>">
+    <svg class="sidebar-icon">
+        <use href="#clock"/>
+    </svg>
+    <span>Log Aktivitas</span>
+</a>
+
+
 
         <!-- ISI PENGUKURAN KINERJA -->
         <a href="<?= base_url('atasan/task') ?>"
@@ -254,6 +264,11 @@ function fileUpload() {
   <symbol id="folder" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7h4l2 3h10v11H3V7z"/></symbol>
   <symbol id="chart-pie" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 2v20M2 11h20"/></symbol>
   <symbol id="arrow-left-on-rectangle" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 17l-5-5 5-5M21 12H9"/></symbol>
+  <symbol id="clock" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z" />
+</symbol>
+
 </svg>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -36,10 +36,19 @@ class TahunAnggaran extends BaseController
             return redirect()->back()->withInput()->with('error', 'Tahun sudah ada!');
         }
 
-        $this->model->insert([
-            'tahun'  => $tahun,
-            'status' => $status
-        ]);
+        $tahunId = $this->model->insert([
+        'tahun'  => $tahun,
+        'status' => $status
+    ]);
+
+    // ✅ LOG
+    log_activity(
+        'create_tahun',
+        'Menambahkan tahun anggaran ' . $tahun,
+        'tahun_anggaran',
+        $tahunId
+    );
+
 
         return redirect()->to('/admin/tahun')->with('success', 'Tahun berhasil ditambahkan');
     }
@@ -55,29 +64,57 @@ class TahunAnggaran extends BaseController
     $tahun  = $this->request->getPost('tahun');
     $status = $this->request->getPost('status');
 
-    // 🔥 Validasi: Cek apakah tahun sudah ada di data lain (selain yg sedang diedit)
+    // 🔥 Validasi: Cek apakah tahun sudah ada di data lain
     $existing = $this->model
         ->where('tahun', $tahun)
         ->where('id !=', $id)
         ->first();
 
     if ($existing) {
-        return redirect()->back()->withInput()->with('error', 'Tahun sudah tersedia!');
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Tahun sudah tersedia!');
     }
 
-    // Logika update asli (tidak diubah)
+    // Update status (aktif / nonaktif)
     $this->model->update($id, [
         'tahun'  => $tahun,
         'status' => $status,
     ]);
 
-    return redirect()->to('/admin/tahun')->with('success', 'Tahun berhasil diupdate');
+    // ✅ LOG AKTIVITAS (JELAS & AUDITABLE)
+    $statusText = $status === 'active'
+        ? 'Mengaktifkan tahun anggaran ' . $tahun
+        : 'Menonaktifkan tahun anggaran ' . $tahun;
+
+    log_activity(
+        'update_tahun_status',
+        $statusText,
+        'tahun_anggaran',
+        $id
+    );
+
+    return redirect()->to('/admin/tahun')
+        ->with('success', 'Status tahun anggaran berhasil diperbarui');
 }
 
 
+
     public function delete($id)
-    {
-        $this->model->delete($id);
-        return redirect()->to('/admin/tahun')->with('success', 'Tahun berhasil dihapus');
-    }
+{
+    $tahun = $this->model->find($id);
+
+    $this->model->delete($id);
+
+    // ✅ LOG
+    log_activity(
+        'delete_tahun',
+        'Menghapus tahun anggaran ' . $tahun['tahun'],
+        'tahun_anggaran',
+        $id
+    );
+
+    return redirect()->to('/admin/tahun')->with('success', 'Tahun berhasil dihapus');
+}
+
 }

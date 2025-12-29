@@ -141,6 +141,7 @@ $routes->get('admin/bidang-select', 'Admin\BidangDetail::select', ['filter' => '
 // STAFF
 $routes->group('staff', ['filter' => 'auth'], function($routes) {
     $routes->get('/', 'Staff\Dashboard::index');  
+    $routes->get('activity-logs', 'Staff\ActivityLogController::index');
     $routes->get('dashboard', 'Staff\Dashboard::index');
     $routes->get('laporan', 'Staff\Laporan::index');
     $routes->get('laporan/create', 'Staff\Laporan::create');
@@ -287,6 +288,7 @@ $routes->group('atasan', ['filter' => 'auth'], function ($routes) {
     $routes->get('/', 'Atasan\Dashboard::index');
     $routes->get('profile', 'Atasan\Profile::index');
     $routes->post('profile/update', 'Atasan\Profile::update');
+     $routes->get('activity-log', 'Atasan\ActivityLogController::index');
 
     // =====================
     // LAPORAN
@@ -351,4 +353,6 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
 
     $routes->get('dokumen-tidak-tervalidasi', 'Admin\DokumenTidakTervalidasi::kategori');
     $routes->get('dokumen-tidak-tervalidasi/(:num)', 'Admin\DokumenTidakTervalidasi::dokumen/$1');
+    $routes->get('activity-logs', 'Admin\ActivityLogController::index');
+
 });

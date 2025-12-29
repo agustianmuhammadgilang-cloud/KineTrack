@@ -71,6 +71,16 @@ class PengajuanKategori extends BaseController
         'admin_id' => session()->get('user_id')
     ]);
 
+    // =====================
+    // LOG AKTIVITAS ADMIN
+    // =====================
+    log_activity(
+        'approve_pengajuan_kategori',
+        'Menyetujui pengajuan kategori dokumen: ' . $kategori['nama_kategori'],
+        'kategori_dokumen',
+        $kategori['id']
+    );
+
     return redirect()->back()
         ->with('success', 'Kategori berhasil divalidasi');
 }
@@ -110,6 +120,17 @@ class PengajuanKategori extends BaseController
         'status'   => 'rejected',
         'admin_id' => session()->get('user_id')
     ]);
+
+
+    // =====================
+    // LOG AKTIVITAS ADMIN
+    // =====================
+    log_activity(
+        'reject_pengajuan_kategori',
+        'Menolak pengajuan kategori dokumen: ' . $kategori['nama_kategori'],
+        'kategori_dokumen',
+        $kategori['id']
+    );
 
     return redirect()->back()
         ->with('success', 'Pengajuan ditolak');

@@ -97,6 +97,14 @@ class TaskController extends BaseController
         ];
     }
 
+    log_activity(
+    'view_task_list',
+    'Melihat daftar tugas pengukuran kinerja (mode atasan)',
+    'task_pengukuran',
+    null
+);
+
+
         return view('atasan/task/index', [
             'tasksGrouped' => $result
         ]);
@@ -140,6 +148,14 @@ class TaskController extends BaseController
         if (!$twInfo['is_open']) {
             return $this->failTwClosed();
         }
+
+        log_activity(
+    'open_pengukuran_form',
+    "Membuka form pengukuran indikator {$pic['nama_indikator']} TW {$tw} Tahun {$pic['tahun']} (oleh atasan)",
+    'indikator_kinerja',
+    $indikatorId
+);
+
 
         return view('atasan/task/input', [
             'indikator_id' => $indikatorId,
@@ -214,6 +230,17 @@ class TaskController extends BaseController
         'file_dukung'  => json_encode($uploaded)
     ]);
 
+    $indikator = $this->indikatorModel->find($indikatorId);
+$targetTw = $indikator['target_tw' . $tw] ?? null;
+
+log_activity(
+    'submit_pengukuran',
+    "Mengisi pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$this->tahunModel->find($pic['tahun_id'])['tahun']} dengan realisasi {$realisasi} dari target {$targetTw} (oleh atasan)",
+    'pengukuran_kinerja',
+    $indikatorId
+);
+
+
     $this->notifModel->insert([
         'user_id' => 1,
         'message' => "PIC mengisi pengukuran indikator ID $indikatorId pada TW $tw.",
@@ -250,6 +277,15 @@ class TaskController extends BaseController
     $indikator = $this->indikatorModel->find($indikatorId);
     $target = $indikator['target_tw' . $tw];
     $percent = $target > 0 ? ($measure['realisasi'] / $target) * 100 : 0;
+
+
+log_activity(
+    'view_pengukuran_progress',
+    "Melihat progress pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$this->tahunModel->find($tahunId)['tahun']} (oleh atasan)",
+    'pengukuran_kinerja',
+    $indikatorId
+);
+
 
     return view('atasan/task/progress', [
         'measure' => $measure,
@@ -304,6 +340,23 @@ class TaskController extends BaseController
     $dompdf->render();
 
     $attachment = ($mode === 'download');
+
+    log_activity(
+    'view_pengukuran_report',
+    "Melihat laporan pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$this->tahunModel->find($tahunId)['tahun']} (oleh atasan)",
+    'pengukuran_kinerja',
+    $indikatorId
+);
+if ($mode === 'download') {
+    log_activity(
+        'download_pengukuran_report',
+        "Mengunduh laporan pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$this->tahunModel->find($tahunId)['tahun']} (oleh atasan)",
+        'pengukuran_kinerja',
+        $indikatorId
+    );
+}
+
+
 
     return $dompdf->stream(
         "Report_{$indikator['nama_indikator']}_TW{$tw}.pdf",

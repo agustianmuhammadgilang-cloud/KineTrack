@@ -97,26 +97,45 @@ class DokumenTervalidasi extends BaseController
      * ================================
      */
     public function updateKategori($dokumenId)
-    {
-        $dokumen = $this->dokumenModel->find($dokumenId);
-        if (!$dokumen) {
-            return redirect()->back()->with('error', 'Dokumen tidak ditemukan');
-        }
-
-        $kategoriId = $this->request->getPost('kategori_id');
-        $kategori   = $this->kategoriModel->find($kategoriId);
-
-        if (!$kategori) {
-            return redirect()->back()->with('error', 'Kategori tidak valid');
-        }
-
-        $this->dokumenModel->update($dokumenId, [
-            'kategori_id' => $kategoriId
-        ]);
-
-        return redirect()->back()->with(
-            'success',
-            'Kategori dokumen berhasil diperbarui'
-        );
+{
+    $dokumen = $this->dokumenModel->find($dokumenId);
+    if (!$dokumen) {
+        return redirect()->back()->with('error', 'Dokumen tidak ditemukan');
     }
+
+    $kategoriLama = $this->kategoriModel->find($dokumen['kategori_id']);
+
+    $kategoriIdBaru = $this->request->getPost('kategori_id');
+    $kategoriBaru   = $this->kategoriModel->find($kategoriIdBaru);
+
+    if (!$kategoriBaru) {
+        return redirect()->back()->with('error', 'Kategori tidak valid');
+    }
+
+    // 🔒 Optional: cegah update sia-sia
+    if ($dokumen['kategori_id'] == $kategoriIdBaru) {
+        return redirect()->back()->with('info', 'Dokumen sudah berada di kategori tersebut');
+    }
+
+    // UPDATE KATEGORI
+    $this->dokumenModel->update($dokumenId, [
+        'kategori_id' => $kategoriIdBaru
+    ]);
+
+    // ✅ LOG AKTIVITAS (KRITIKAL)
+    log_activity(
+        'update_dokumen_kategori',
+        'Memindahkan dokumen "' . $dokumen['judul'] . 
+        '" dari kategori "' . ($kategoriLama['nama_kategori'] ?? '-') . 
+        '" ke "' . $kategoriBaru['nama_kategori'] . '"',
+        'dokumen_kinerja',
+        $dokumenId
+    );
+
+    return redirect()->back()->with(
+        'success',
+        'Kategori dokumen berhasil diperbarui'
+    );
+}
+
 }

@@ -130,6 +130,17 @@
     Dashboard
 </a>
 
+<!-- Log Aktivitas -->
+<a href="<?= base_url('admin/activity-logs') ?>"
+   class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition
+   <?= (service('uri')->getSegment(2) == 'activity-logs') ? 'bg-white/20 font-semibold' : '' ?>">
+    <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
+        <use href="#activity-log" />
+    </svg>
+    Log Aktivitas
+</a>
+
+
 
         <!-- Manajemen Users -->
         <div 
@@ -498,6 +509,18 @@ LHE
     <path d="M12 12v9M6 16h12" 
         stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
 </symbol>
+
+<svg style="display:none;">
+    <symbol id="activity-log" viewBox="0 0 24 24">
+        <path d="M3 3v18h18" stroke="currentColor" stroke-width="2" fill="none"/>
+        <polyline points="7,14 10,11 13,14 18,9"
+                  stroke="currentColor" stroke-width="2" fill="none"/>
+        <circle cx="7" cy="14" r="1" fill="currentColor"/>
+        <circle cx="10" cy="11" r="1" fill="currentColor"/>
+        <circle cx="13" cy="14" r="1" fill="currentColor"/>
+        <circle cx="18" cy="9" r="1" fill="currentColor"/>
+    </symbol>
+</svg>
 
 
 

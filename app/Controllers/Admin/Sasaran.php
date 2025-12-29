@@ -72,7 +72,15 @@ class Sasaran extends BaseController
         'nama_sasaran' => $namaSasaran,
     ];
 
-    $this->model->insert($data);
+    $sasaranId = $this->model->insert($data);
+
+// ✅ LOG AKTIVITAS ADMIN
+log_activity(
+    'create_sasaran',
+    'Menambahkan sasaran strategis: ' . $namaSasaran,
+    'sasaran',
+    $sasaranId
+);
 
     return redirect()->to('/admin/sasaran')
         ->with('success', 'Sasaran Strategis berhasil ditambahkan');
@@ -126,6 +134,13 @@ class Sasaran extends BaseController
     ];
 
     $this->model->update($id, $data);
+    // ✅ LOG AKTIVITAS ADMIN
+log_activity(
+    'update_sasaran',
+    'Mengubah sasaran strategis: ' . $namaSasaran,
+    'sasaran',
+    $id
+);
 
     return redirect()->to('/admin/sasaran')
         ->with('success', 'Sasaran Strategis berhasil diperbarui');
@@ -138,7 +153,17 @@ class Sasaran extends BaseController
     public function delete($id)
     {
         $this->model->delete($id);
+        $sasaran = $this->model->find($id); // ambil dulu untuk deskripsi
 
+$this->model->delete($id);
+
+// ✅ LOG AKTIVITAS ADMIN
+log_activity(
+    'delete_sasaran',
+    'Menghapus sasaran strategis: ' . ($sasaran['nama_sasaran'] ?? ''),
+    'sasaran',
+    $id
+);
         return redirect()->to('/admin/sasaran')
             ->with('success', 'Sasaran Strategis berhasil dihapus');
     }
