@@ -98,6 +98,19 @@ class PicController extends BaseController
             'jabatan_id'   => $user['jabatan_id']
         ]);
 
+        $assignedUserIds[] = $userId; // ✅ PENTING
+        // LOG AKTIVITAS ADMIN
+        if (!empty($assignedUserIds)) {
+    log_activity(
+        'assign_pic',
+        'Menetapkan PIC indikator kepada ' . count($assignedUserIds) . ' pegawai',
+        'indikator',
+        $indikatorId
+    );
+}
+
+
+
         // SIMPAN NOTIFIKASI KE STAFF
         $this->notifModel->insert([
             'user_id' => $userId,

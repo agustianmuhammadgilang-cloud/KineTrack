@@ -94,25 +94,36 @@ class TwController extends BaseController
      * Admin membuka / mengunci TW (manual override)
      */
     public function toggle($id)
-    {
-        $tw = $this->twModel->find($id);
+{
+    $tw = $this->twModel->find($id);
 
-        if (!$tw) {
-            return redirect()->back()->with('alert', [
-                'type' => 'error',
-                'title' => 'Error',
-                'message' => 'Data TW tidak ditemukan!'
-            ]);
-        }
-
-        $this->twModel->update($id, [
-            'is_open' => $tw['is_open'] ? 0 : 1
-        ]);
-
+    if (!$tw) {
         return redirect()->back()->with('alert', [
-            'type' => 'success',
-            'title' => 'Berhasil',
-            'message' => 'Status TW berhasil diperbarui.'
+            'type' => 'error',
+            'title' => 'Error',
+            'message' => 'Data TW tidak ditemukan!'
         ]);
     }
+
+    $newStatus = $tw['is_open'] ? 0 : 1;
+
+    $this->twModel->update($id, [
+        'is_open' => $newStatus
+    ]);
+
+    // 🔥 LOG AKTIVITAS
+    log_activity(
+        'toggle_triwulan',
+        'Mengubah status TW ' . $tw['tw'] . ' menjadi ' . ($newStatus ? 'TERBUKA' : 'TERKUNCI'),
+        'tw_settings',
+        $id
+    );
+
+    return redirect()->back()->with('alert', [
+        'type' => 'success',
+        'title' => 'Berhasil',
+        'message' => 'Status TW berhasil diperbarui.'
+    ]);
+}
+
 }

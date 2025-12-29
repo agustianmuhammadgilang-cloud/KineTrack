@@ -38,11 +38,19 @@ class Bidang extends BaseController
             return redirect()->back()->withInput()->with('error', 'Harap pilih Jurusan induk untuk Prodi.');
         }
 
-        $model->insert([
-            'nama_bidang' => $nama_bidang,
-            'jenis_unit'  => $jenis_unit,
-            'parent_id'   => $jenis_unit === 'prodi' ? $parent_id : null
-        ]);
+        $id = $model->insert([
+    'nama_bidang' => $nama_bidang,
+    'jenis_unit'  => $jenis_unit,
+    'parent_id'   => $jenis_unit === 'prodi' ? $parent_id : null
+]);
+
+log_activity(
+    'create_bidang',
+    'Menambahkan unit kerja: ' . $nama_bidang,
+    'bidang',
+    $id
+);
+
 
         return redirect()->to('/admin/bidang')->with('success', 'Unit Kerja berhasil ditambahkan');
     }
@@ -70,10 +78,18 @@ class Bidang extends BaseController
         }
 
         $model->update($id, [
-            'nama_bidang' => $nama_bidang,
-            'jenis_unit'  => $jenis_unit,
-            'parent_id'   => $jenis_unit === 'prodi' ? $parent_id : null
-        ]);
+    'nama_bidang' => $nama_bidang,
+    'jenis_unit'  => $jenis_unit,
+    'parent_id'   => $jenis_unit === 'prodi' ? $parent_id : null
+]);
+
+log_activity(
+    'update_bidang',
+    'Mengubah unit kerja: ' . $nama_bidang,
+    'bidang',
+    $id
+);
+
 
         return redirect()->to('/admin/bidang')->with('success', 'Unit Kerja berhasil diupdate');
     }
@@ -81,7 +97,16 @@ class Bidang extends BaseController
     public function delete($id)
     {
         $model = new BidangModel();
-        $model->delete($id);
+        $bidang = $model->find($id);
+$model->delete($id);
+
+log_activity(
+    'delete_bidang',
+    'Menghapus unit kerja: ' . ($bidang['nama_bidang'] ?? 'unknown'),
+    'bidang',
+    $id
+);
+
 
         return redirect()->to('/admin/bidang')->with('success', 'Unit Kerja berhasil dihapus');
     }

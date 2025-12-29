@@ -175,6 +175,14 @@ function fileUpload() {
         <span>Dashboard</span>
     </a>
 
+    <!-- LOG AKTIVITAS -->
+<a href="<?= base_url('staff/activity-logs') ?>"
+   class="sidebar-link <?= service('uri')->getSegment(2)=='activity-logs' ? 'active':'' ?>">
+    <svg class="sidebar-icon"><use href="#clock"/></svg>
+    <span>Log Aktivitas</span>
+</a>
+
+
     <!-- ISI PENGUKURAN KINERJA -->
     <a href="<?= base_url('staff/task') ?>"
        class="sidebar-link <?= service('uri')->getSegment(2)=='task' ? 'active':'' ?>">
@@ -290,6 +298,11 @@ $seg3 = $uri->getTotalSegments() >= 3 ? $uri->getSegment(3) : ''; // aman
   <symbol id="chart-pie" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 2v20M2 11h20"/></symbol>
   <symbol id="arrow-left-on-rectangle" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 17l-5-5 5-5M21 12H9"/></symbol>
   <symbol id="check-badge" viewBox="0 0 24 24">
+    <symbol id="clock" viewBox="0 0 24 24">
+  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+  <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" fill="none"/>
+</symbol>
+
     <path 
         stroke="#ffffff"
         fill="none"

@@ -72,6 +72,13 @@ class Login extends BaseController
             'logged_in'  => true
         ]);
 
+
+        log_activity(
+    'login',
+    'Login ke sistem'
+);
+
+
         // Redirect sesuai role
         switch ($user['role']) {
             case 'admin':

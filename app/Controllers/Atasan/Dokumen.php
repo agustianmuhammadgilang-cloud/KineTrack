@@ -57,6 +57,14 @@ class Dokumen extends BaseController
                 ->findAll();
         }
 
+        log_activity(
+    'view_dokumen_masuk',
+    'Melihat daftar dokumen masuk untuk direview',
+    'dokumen',
+    null
+);
+
+
         return view('atasan/dokumen/index', [
             'dokumen' => $dokumen
         ]);
@@ -78,6 +86,14 @@ class Dokumen extends BaseController
         if (!$this->canReview($dokumen)) {
             return redirect()->back()->with('error', 'Anda tidak berhak mereview dokumen ini');
         }
+
+        log_activity(
+    'review_dokumen',
+    "Membuka review dokumen '{$dokumen['judul']}'",
+    'dokumen',
+    $dokumen['id']
+);
+
 
         return view('atasan/dokumen/review', [
             'dokumen' => $dokumen
@@ -140,6 +156,14 @@ class Dokumen extends BaseController
         return redirect()->back()->with('error', 'Status dokumen tidak valid');
     }
 
+    log_activity(
+    'approve_dokumen',
+    "Menyetujui dokumen '{$dokumen['judul']}' dari unit {$dokumen['unit_asal_id']} (scope {$dokumen['scope']})",
+    'dokumen',
+    $dokumen['id']
+);
+
+
     return redirect()->to('/atasan/dokumen')
         ->with('success', 'Dokumen berhasil disetujui');
 }
@@ -194,6 +218,13 @@ class Dokumen extends BaseController
             'catatan'          => $catatan
         ]);
     }
+    log_activity(
+    'reject_dokumen',
+    "Menolak dokumen '{$dokumen['judul']}' dengan catatan penolakan",
+    'dokumen',
+    $dokumen['id']
+);
+
 
     return redirect()->to('/atasan/dokumen')
         ->with('success', 'Dokumen berhasil ditolak');
@@ -304,6 +335,14 @@ class Dokumen extends BaseController
             ->findAll();
     }
 
+    log_activity(
+    'view_dokumen_arsip',
+    'Melihat arsip dokumen kinerja',
+    'dokumen',
+    null
+);
+
+
     return view('atasan/dokumen/arsip', $data);
 }
 
@@ -326,6 +365,13 @@ public function unit()
 
     $dokumen = $this->dokumenModel->getDokumenUnit($bidangId);
 
+    log_activity(
+    'view_dokumen_unit',
+    'Melihat dokumen unit (read-only)',
+    'dokumen',
+    null
+);
+
     return view('atasan/dokumen/unit', [
         'dokumen' => $dokumen
     ]);
@@ -339,6 +385,13 @@ public function public()
     }
 
     $data['dokumen'] = $this->dokumenModel->getDokumenPublic();
+
+    log_activity(
+    'view_dokumen_public',
+    'Melihat dokumen publik',
+    'dokumen',
+    null
+);
 
     return view('atasan/dokumen/public', $data);
 }

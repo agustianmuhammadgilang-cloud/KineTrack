@@ -22,6 +22,13 @@ class PengajuanKategori extends BaseController
      */
     public function create()
     {
+        log_activity(
+    'open_pengajuan_kategori',
+    'Membuka form pengajuan kategori dokumen',
+    'kategori_dokumen',
+    null
+);
+
         return view('staff/kategori/ajukan');
     }
 
@@ -72,6 +79,14 @@ $this->pengajuanModel->insert([
     'pengaju_user_id' => $userId,
     'status'          => 'pending' // 🔑 BUKAN approved_auto
 ]);
+
+log_activity(
+    'submit_pengajuan_kategori',
+    "Mengajukan kategori dokumen baru: {$nama}",
+    'kategori_dokumen',
+    null
+);
+
 
 
     return redirect()->to('/staff/dokumen/create')

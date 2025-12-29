@@ -38,6 +38,12 @@ class Dokumen extends BaseController
             ->orderBy('created_at', 'DESC')
             ->findAll();
 
+            log_activity(
+    'view_dokumen_list',
+    'Melihat daftar dokumen kinerja pribadi'
+);
+
+
         return view('staff/dokumen/index', $data);
     }
 
@@ -48,6 +54,11 @@ class Dokumen extends BaseController
      */
 public function create()
 {
+    log_activity(
+    'open_upload_dokumen_form',
+    'Membuka form upload dokumen kinerja'
+);
+
     return view('staff/dokumen/create', [
         'kategori' => $this->kategoriModel->getUntukFormStaff()
     ]);
@@ -105,18 +116,32 @@ public function create()
 
 
     // ✅ kategori_id DISIMPAN
-    $this->dokumenModel->insert([
-        'judul'            => $this->request->getPost('judul'),
-        'deskripsi'        => $this->request->getPost('deskripsi'),
-        'kategori_id'      => $kategoriId, // ⬅️ INI KUNCI
-        'scope'            => $scope,
-        'file_path'        => $newName,
-        'created_by'       => $userId,
-        'unit_asal_id'     => $unitAsal,
-        'unit_jurusan_id'  => $unitJurusan,
-        'status'           => $status,
-        'current_reviewer' => $reviewer,
-    ]);
+    $dokumenId = $this->dokumenModel->insert([
+    'judul'            => $this->request->getPost('judul'),
+    'deskripsi'        => $this->request->getPost('deskripsi'),
+    'kategori_id'      => $kategoriId,
+    'scope'            => $scope,
+    'file_path'        => $newName,
+    'created_by'       => $userId,
+    'unit_asal_id'     => $unitAsal,
+    'unit_jurusan_id'  => $unitJurusan,
+    'status'           => $status,
+    'current_reviewer' => $reviewer,
+]);
+
+// ✅ LOG AKTIVITAS STAFF Dokumen
+$kategori = $this->kategoriModel->find($kategoriId);
+
+log_activity(
+    'upload_dokumen',
+    'Mengunggah dokumen "' . $this->request->getPost('judul') .
+    '" kategori ' . ($kategori['nama_kategori'] ?? '-') .
+    ' dengan scope ' . $scope,
+    'dokumen',
+    $dokumenId
+);
+
+
 
     return redirect()->to('/staff/dokumen')
         ->with('success', 'Dokumen berhasil dikirim');
@@ -141,6 +166,14 @@ public function create()
         if (!$dokumen) {
             return redirect()->back()->with('error', 'Dokumen tidak dapat direvisi');
         }
+
+        log_activity(
+    'open_resubmit_dokumen_form',
+    'Membuka form revisi dokumen "' . $dokumen['judul'] . '"',
+    'dokumen',
+    $dokumen['id']
+);
+
 
         return view('staff/dokumen/resubmit', [
             'dokumen'  => $dokumen,
@@ -197,6 +230,13 @@ public function create()
             'catatan'          => null,
             'updated_at'       => date('Y-m-d H:i:s'),
         ]);
+        log_activity(
+    'resubmit_dokumen',
+    'Mengirim revisi dokumen "' . $dokumen['judul'] . '"',
+    'dokumen',
+    $id
+);
+
 
         return redirect()->to('/staff/dokumen')
             ->with('success', 'Dokumen berhasil dikirim ulang');
@@ -220,6 +260,11 @@ public function create()
             ->where('status', 'archived')
             ->orderBy('updated_at', 'DESC')
             ->findAll();
+            log_activity(
+    'view_dokumen_arsip',
+    'Melihat arsip dokumen kinerja'
+);
+
 
         return view('staff/dokumen/arsip', $data);
     }
@@ -266,6 +311,10 @@ public function unit()
 
     // 🔥 WAJIB PAKAI METHOD MODEL
     $data['dokumen'] = $this->dokumenModel->getDokumenUnit($unitJurusan);
+    log_activity(
+    'view_dokumen_unit',
+    'Melihat dokumen unit kerja'
+);
 
     return view('staff/dokumen/unit', $data);
 }
@@ -278,6 +327,10 @@ public function public()
     }
 
     $data['dokumen'] = $this->dokumenModel->getDokumenPublic();
+    log_activity(
+    'view_dokumen_public',
+    'Melihat dokumen publik'
+);
 
     return view('staff/dokumen/public', $data);
 }

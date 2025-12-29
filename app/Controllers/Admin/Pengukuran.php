@@ -192,6 +192,21 @@ public function store()
             $data['pengukuran_map'] = [];
         }
 
+        if ($tahunId && $tw) {
+
+    $tahunData = $this->tahunModel->find($tahunId);
+    $tahun = $tahunData ? $tahunData['tahun'] : '-';
+
+    log_activity(
+        'view_pengukuran',
+        "Melihat output pengukuran kinerja Triwulan $tw Tahun Anggaran $tahun",
+        'pengukuran_kinerja',
+        $tahunId
+    );
+}
+
+
+
         return view('admin/pengukuran/output', $data);
     }
 
@@ -234,6 +249,15 @@ public function detail($indikator_id, $tahun_id, $tw)
     ->where('pengukuran_kinerja.triwulan', $tw)
     ->orderBy('pengukuran_kinerja.updated_at', 'DESC') // 🔥 FIX
     ->findAll();
+
+
+    log_activity(
+    'view_detail_pengukuran',
+    "Melihat detail pengukuran indikator ID $indikator_id TW $tw tahun anggaran ID $tahun_id",
+    'indikator_kinerja',
+    $indikator_id
+);
+
 
 
     // =============================
@@ -384,6 +408,14 @@ public function export($tahunId, $tw)
         }
     }
 
+    log_activity(
+    'export_pengukuran_excel',
+    "Mengekspor pengukuran kinerja ke Excel TW $tw tahun anggaran ID $tahunId",
+    'pengukuran_kinerja',
+    $tahunId
+);
+
+
     // =============== 6. OUTPUT FILE ===============
     $fileName = "Output_Pengukuran_Tahun{$tahunId}_TW{$tw}.xlsx";
 
@@ -459,6 +491,14 @@ public function update($id)
 
     $this->pengukuranModel->update($id, $save);
 
+    log_activity(
+    'update_pengukuran',
+    "Mengubah data pengukuran kinerja ID $id (hasil input staff)",
+    'pengukuran_kinerja',
+    $id
+);
+
+
     return redirect()->to(
     base_url('admin/pengukuran/detail/'
         . $row['indikator_id'] . '/'
@@ -491,6 +531,13 @@ public function delete($id)
 
 
     $this->pengukuranModel->delete($id);
+    log_activity(
+    'delete_pengukuran',
+    "Menghapus data pengukuran kinerja ID $id",
+    'pengukuran_kinerja',
+    $id
+);
+
 
     return redirect()->back()->with('success', 'Data berhasil dihapus');
 }
@@ -520,7 +567,17 @@ public function exportPdf($id)
     $dompdf->setPaper('A4', 'portrait');
     $dompdf->render();
 
+    log_activity(
+    'export_pengukuran_pdf',
+    "Mengekspor PDF pengukuran kinerja ID $id",
+    'pengukuran_kinerja',
+    $id
+);
+
     $dompdf->stream("Pengukuran_{$data['id']}.pdf", ['Attachment' => true]);
+
+    
+
 }
 
 
@@ -567,6 +624,14 @@ public function report($tahunId, $tw)
         'data'  => $data
     ]);
 
+    log_activity(
+    'export_laporan_pengukuran',
+    "Mengekspor laporan pengukuran kinerja TW $tw tahun anggaran ID $tahunId",
+    'pengukuran_kinerja',
+    $tahunId
+);
+
+
     return pdf_create($html, "Laporan-Pengukuran-TW-$tw-{$tahun['tahun']}");
 }
 
@@ -599,6 +664,14 @@ public function deleteFile($pengukuranId, $fileIndex)
     $this->pengukuranModel->update($pengukuranId, [
         'file_dukung' => json_encode(array_values($files))
     ]);
+
+    log_activity(
+    'delete_file_pengukuran',
+    "Menghapus file pendukung pengukuran ID $pengukuranId",
+    'pengukuran_kinerja',
+    $pengukuranId
+);
+
 
     return redirect()->back()->with('success', 'File berhasil dihapus.');
 }

@@ -95,6 +95,14 @@ class Indikator extends BaseController
         'target_tw3'     => $this->request->getPost('target_tw3'),
         'target_tw4'     => $this->request->getPost('target_tw4'),
     ]);
+    $indikatorId = $this->model->getInsertID();
+
+log_activity(
+    'create_indikator',
+    'Menambahkan indikator: ' . $nama,
+    'indikator_kinerja',
+    $indikatorId
+);
 
     return redirect()->to('/admin/indikator')
         ->with('success','Indikator berhasil ditambahkan');
@@ -140,6 +148,13 @@ class Indikator extends BaseController
         'target_tw3'     => $this->request->getPost('target_tw3'),
         'target_tw4'     => $this->request->getPost('target_tw4'),
     ]);
+    //logaktivitaus update
+    log_activity(
+    'update_indikator',
+    'Memperbarui indikator: ' . $nama,
+    'indikator_kinerja',
+    $id
+);
 
     return redirect()->to('/admin/indikator')
         ->with('success','Indikator berhasil diperbarui');
@@ -148,8 +163,19 @@ class Indikator extends BaseController
 
     public function delete($id)
     {
-        $this->model->delete($id);
-        return redirect()->to('/admin/indikator')->with('success','Dihapus');
+        $indikator = $this->model->find($id);
+$this->model->delete($id);
+
+log_activity(
+    'delete_indikator',
+    'Menghapus indikator: ' . ($indikator['nama_indikator'] ?? '-'),
+    'indikator_kinerja',
+    $id
+);
+
+return redirect()->to('/admin/indikator')
+    ->with('success','Dihapus');
+
     }
 
     public function getNextKode()

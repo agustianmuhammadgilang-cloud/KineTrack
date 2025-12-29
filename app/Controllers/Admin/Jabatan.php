@@ -25,10 +25,17 @@ class Jabatan extends BaseController
     $defaultRole = $this->detectDefaultRole($namaJabatan);
 
     $model = new JabatanModel();
-    $model->insert([
-        'nama_jabatan' => $namaJabatan,
-        'default_role' => $defaultRole
-    ]);
+    $id = $model->insert([
+    'nama_jabatan' => $namaJabatan,
+    'default_role' => $defaultRole
+]);
+
+log_activity(
+    'create_jabatan',
+    'Menambahkan jabatan: ' . $namaJabatan,
+    'jabatan',
+    $id
+);
 
     return redirect()->to('/admin/jabatan')
         ->with('success', 'Jabatan berhasil ditambahkan (role default: '.$defaultRole.')');
@@ -52,13 +59,34 @@ class Jabatan extends BaseController
         'default_role' => $defaultRole
     ]);
 
+    log_activity(
+    'update_jabatan',
+    'Mengubah jabatan: ' . $namaJabatan,
+    'jabatan',
+    $id
+);
+
     return redirect()->to('/admin/jabatan')
         ->with('success', 'Jabatan berhasil diupdate (role default: '.$defaultRole.')');
 }
     public function delete($id)
     {
         $model = new JabatanModel();
-        $model->delete($id);
+        $jabatan = $model->find($id);
+
+if ($jabatan) {
+    log_activity(
+        'delete_jabatan',
+        'Menghapus jabatan: ' . $jabatan['nama_jabatan'],
+        'jabatan',
+        $id
+    );
+}
+
+$model->delete($id);
+
+
+        
 
         return redirect()->to('/admin/jabatan')->with('success', 'Data berhasil dihapus');
     }

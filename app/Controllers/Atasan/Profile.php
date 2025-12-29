@@ -16,23 +16,51 @@ class Profile extends BaseController
     }
 
     public function update()
-    {
-        $model = new UserModel();
-        $id = session('user_id');
+{
+    $model = new UserModel();
+    $id = session('user_id');
 
-        $input = [
-            'nama'  => $this->request->getPost('nama'),
-            'email' => $this->request->getPost('email')
-        ];
+    $oldUser = $model->find($id); // ambil data lama buat log
 
-        // jika password diisi, update
-        $password = $this->request->getPost('password');
-        if ($password) {
-            $input['password'] = password_hash($password, PASSWORD_DEFAULT);
-        }
+    $input = [
+        'nama'  => $this->request->getPost('nama'),
+        'email' => $this->request->getPost('email')
+    ];
 
-        $model->update($id, $input);
+    $password = $this->request->getPost('password');
+    $passwordChanged = false;
 
-        return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
+    if ($password) {
+        $input['password'] = password_hash($password, PASSWORD_DEFAULT);
+        $passwordChanged = true;
     }
+
+    $model->update($id, $input);
+
+    // =========================
+    // LOG AKTIVITAS
+    // =========================
+    $changes = [];
+
+    if ($oldUser['nama'] !== $input['nama']) {
+        $changes[] = "nama";
+    }
+
+    if ($oldUser['email'] !== $input['email']) {
+        $changes[] = "email";
+    }
+
+    if ($passwordChanged) {
+        $changes[] = "password";
+    }
+
+    log_activity(
+        'update_profile',
+        'Memperbarui profil akun (' . implode(', ', $changes) . ')',
+        'user',
+        $id
+    );
+
+    return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
+}
 }

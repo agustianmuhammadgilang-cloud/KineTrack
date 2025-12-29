@@ -59,14 +59,26 @@ class User extends BaseController
     }
 
     // 3️⃣ Simpan user (ROLE AUTO)
-    $this->userModel->insert([
-        'nama'       => $nama,
-        'email'      => $email,
-        'jabatan_id' => $jabatan_id,
-        'bidang_id'  => $bidang_id,
-        'role'       => $jabatan['default_role'], // 🔥 AUTO
-        'password'   => password_hash('123456', PASSWORD_DEFAULT)
-    ]);
+    $userId = $this->userModel->insert([
+    'nama'       => $nama,
+    'email'      => $email,
+    'jabatan_id' => $jabatan_id,
+    'bidang_id'  => $bidang_id,
+    'role'       => $jabatan['default_role'],
+    'password'   => password_hash('123456', PASSWORD_DEFAULT)
+]);
+
+    // ✅ LOG AKTIVITAS ADMIN
+log_activity(
+    'create_user',
+    'Menambahkan user baru: ' . $nama,
+    'users',
+    $userId
+);
+
+
+
+
 
     return redirect()->to('/admin/users')
         ->with('success', 'User berhasil ditambahkan. Password default: 123456');
@@ -122,15 +134,37 @@ class User extends BaseController
         'role'       => $jabatan['default_role'] // 🔥 AUTO
     ]);
 
+    log_activity(
+    'update_user',
+    'Mengubah data user: ' . $nama,
+    'users',
+    $id
+);
+
+
     return redirect()->to('/admin/users')->with('success', 'User berhasil diupdate.');
 }
 
 
     public function delete($id)
-    {
+{
+    $user = $this->userModel->find($id);
+
+    if ($user) {
         $this->userModel->delete($id);
-        return redirect()->to('/admin/users')->with('success', 'User berhasil dihapus.');
+
+        log_activity(
+            'delete_user',
+            'Menghapus user: ' . $user['nama'],
+            'users',
+            $id
+        );
     }
+
+    return redirect()->to('/admin/users')
+        ->with('success', 'User berhasil dihapus.');
+}
+
 
     // Endpoint Ajax untuk cek duplicate
     public function checkDuplicate()
