@@ -4,11 +4,11 @@ namespace App\Controllers\Staff;
 
 use App\Controllers\BaseController;
 use App\Models\ActivityLogModel;
-
+// Controller untuk mengelola log aktivitas staff
 class ActivityLogController extends BaseController
 {
     protected $logModel;
-
+    // Konstruktor untuk inisialisasi model log aktivitas
     public function __construct()
     {
         $this->logModel = new ActivityLogModel();

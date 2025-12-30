@@ -11,7 +11,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
-
+// Controller untuk mengelola pengukuran kinerja
 class Pengukuran extends BaseController
 {
     protected $tahunModel;
@@ -75,9 +75,6 @@ class Pengukuran extends BaseController
     // ================================================================
     // SIMPAN BULK INPUT
     // ================================================================
-    // ================================================================
-// SIMPAN BULK INPUT (ADMIN)
-// ================================================================
 public function store()
 {
     $tahunId = $this->request->getPost('tahun_id');
@@ -105,7 +102,7 @@ public function store()
             ->where('triwulan', $tw)
             ->first();
 
-        // 🔒 JIKA SUDAH ADA → JANGAN DITIMPA
+        //  JIKA SUDAH ADA → JANGAN DITIMPA
         if ($existing) {
             continue;
         }
@@ -196,7 +193,7 @@ public function store()
 
     $tahunData = $this->tahunModel->find($tahunId);
     $tahun = $tahunData ? $tahunData['tahun'] : '-';
-
+// LOG AKTIVITAS
     log_activity(
         'view_pengukuran',
         "Melihat output pengukuran kinerja Triwulan $tw Tahun Anggaran $tahun",
@@ -250,7 +247,7 @@ public function detail($indikator_id, $tahun_id, $tw)
     ->orderBy('pengukuran_kinerja.updated_at', 'DESC') // 🔥 FIX
     ->findAll();
 
-
+// LOG AKTIVITAS    
     log_activity(
     'view_detail_pengukuran',
     "Melihat detail pengukuran indikator ID $indikator_id TW $tw tahun anggaran ID $tahun_id",
@@ -275,7 +272,9 @@ public function detail($indikator_id, $tahun_id, $tw)
 
 
 
-
+// ================================================================
+// EXPORT EXCEL SELURUH DATA PENGUKURAN PADA TRI WULAN & TAHUN TERPILIH
+// ================================================================
 public function export($tahunId, $tw)
 {
     // =============== 1. AMBIL DATA INDIKATOR ===============
@@ -407,7 +406,7 @@ public function export($tahunId, $tw)
             $writer->writeSheetRow($sheetName, $row);
         }
     }
-
+    // ================= LOG AKTIVITAS =================
     log_activity(
     'export_pengukuran_excel',
     "Mengekspor pengukuran kinerja ke Excel TW $tw tahun anggaran ID $tahunId",
@@ -490,7 +489,7 @@ public function update($id)
 
 
     $this->pengukuranModel->update($id, $save);
-
+// LOG AKTIVITAS
     log_activity(
     'update_pengukuran',
     "Mengubah data pengukuran kinerja ID $id (hasil input staff)",
@@ -531,6 +530,7 @@ public function delete($id)
 
 
     $this->pengukuranModel->delete($id);
+// LOG AKTIVITAS
     log_activity(
     'delete_pengukuran',
     "Menghapus data pengukuran kinerja ID $id",
@@ -566,7 +566,7 @@ public function exportPdf($id)
     $dompdf->loadHtml($html);
     $dompdf->setPaper('A4', 'portrait');
     $dompdf->render();
-
+// LOG AKTIVITAS
     log_activity(
     'export_pengukuran_pdf',
     "Mengekspor PDF pengukuran kinerja ID $id",
@@ -580,7 +580,9 @@ public function exportPdf($id)
 
 }
 
-
+// ================================================================
+// REPORT PDF SELURUH DATA PENGUKURAN PADA TRI WULAN & TAHUN TERPILIH
+// ================================================================
 public function report($tahunId, $tw)
 {
     helper('dompdf');
@@ -623,7 +625,7 @@ public function report($tahunId, $tw)
         'tw'    => $tw,
         'data'  => $data
     ]);
-
+// LOG AKTIVITAS
     log_activity(
     'export_laporan_pengukuran',
     "Mengekspor laporan pengukuran kinerja TW $tw tahun anggaran ID $tahunId",
@@ -635,7 +637,9 @@ public function report($tahunId, $tw)
     return pdf_create($html, "Laporan-Pengukuran-TW-$tw-{$tahun['tahun']}");
 }
 
-
+// ================================================================
+// DELETE FILE DUKUNG
+// ================================================================
 public function deleteFile($pengukuranId, $fileIndex)
 {
     $record = $this->pengukuranModel->find($pengukuranId);
@@ -664,7 +668,7 @@ public function deleteFile($pengukuranId, $fileIndex)
     $this->pengukuranModel->update($pengukuranId, [
         'file_dukung' => json_encode(array_values($files))
     ]);
-
+// LOG AKTIVITAS
     log_activity(
     'delete_file_pengukuran',
     "Menghapus file pendukung pengukuran ID $pengukuranId",

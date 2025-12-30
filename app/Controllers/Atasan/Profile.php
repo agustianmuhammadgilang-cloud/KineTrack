@@ -4,9 +4,11 @@ namespace App\Controllers\Atasan;
 
 use App\Controllers\BaseController;
 use App\Models\UserModel;
+// Controller untuk mengelola profil atasan 
 
 class Profile extends BaseController
 {
+    // Menampilkan halaman profil
     public function index()
     {
         $model = new UserModel();
@@ -14,7 +16,7 @@ class Profile extends BaseController
 
         return view('atasan/profile', $data);
     }
-
+// Memperbarui profil
     public function update()
 {
     $model = new UserModel();

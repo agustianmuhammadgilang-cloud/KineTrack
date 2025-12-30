@@ -6,7 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\UserModel;
 use App\Models\JabatanModel;
 use App\Models\BidangModel;
-
+// Controller untuk mengelola user
 class User extends BaseController
 {
     protected $userModel;
@@ -15,7 +15,7 @@ class User extends BaseController
     {
         $this->userModel = new UserModel();
     }
-
+// Menampilkan daftar user
     public function index()
     {
         $data['users'] = $this->userModel
@@ -26,14 +26,14 @@ class User extends BaseController
 
         return view('admin/users/index', $data);
     }
-
+// Menampilkan form untuk menambahkan user baru
     public function create()
     {
         $data['jabatan'] = (new JabatanModel())->findAll();
         $data['bidang']  = (new BidangModel())->findAll();
         return view('admin/users/create', $data);
     }
-
+// Menyimpan user baru
     public function store()
 {
     $nama       = $this->request->getPost('nama');
@@ -41,7 +41,7 @@ class User extends BaseController
     $jabatan_id = $this->request->getPost('jabatan_id');
     $bidang_id  = $this->request->getPost('bidang_id');
 
-    // 1️⃣ Cek duplikat
+    // Cek duplikat
     $existing = $this->userModel
         ->where('nama', $nama)
         ->orWhere('email', $email)
@@ -51,14 +51,14 @@ class User extends BaseController
         return redirect()->back()->withInput()->with('error', 'Akun dengan nama atau email ini sudah terdaftar!');
     }
 
-    // 2️⃣ Ambil jabatan → tentukan role
+    //  Ambil jabatan → tentukan role
     $jabatan = (new JabatanModel())->find($jabatan_id);
 
     if (!$jabatan || empty($jabatan['default_role'])) {
         return redirect()->back()->withInput()->with('error', 'Jabatan tidak valid atau belum memiliki role sistem.');
     }
 
-    // 3️⃣ Simpan user (ROLE AUTO)
+    //  Simpan user (ROLE AUTO)
     $userId = $this->userModel->insert([
     'nama'       => $nama,
     'email'      => $email,
@@ -68,7 +68,7 @@ class User extends BaseController
     'password'   => password_hash('123456', PASSWORD_DEFAULT)
 ]);
 
-    // ✅ LOG AKTIVITAS ADMIN
+    //  LOG AKTIVITAS ADMIN
 log_activity(
     'create_user',
     'Menambahkan user baru: ' . $nama,
@@ -84,7 +84,7 @@ log_activity(
         ->with('success', 'User berhasil ditambahkan. Password default: 123456');
 }
 
-
+// Menampilkan form untuk mengedit user
     public function edit($id)
     {
         $userModel   = $this->userModel;
@@ -97,7 +97,7 @@ log_activity(
 
         return view('admin/users/edit', $data);
     }
-
+// Memperbarui user
     public function update($id)
 {
     $nama       = $this->request->getPost('nama');
@@ -105,7 +105,7 @@ log_activity(
     $jabatan_id = $this->request->getPost('jabatan_id');
     $bidang_id  = $this->request->getPost('bidang_id');
 
-    // 1️⃣ Cek duplikat kecuali diri sendiri
+    //  Cek duplikat kecuali diri sendiri
     $existing = $this->userModel
         ->where('id !=', $id)
         ->groupStart()
@@ -118,14 +118,14 @@ log_activity(
         return redirect()->back()->withInput()->with('error', 'Akun dengan nama atau email ini sudah terdaftar!');
     }
 
-    // 2️⃣ Ambil role dari jabatan
+    // Ambil role dari jabatan
     $jabatan = (new JabatanModel())->find($jabatan_id);
 
     if (!$jabatan || empty($jabatan['default_role'])) {
         return redirect()->back()->withInput()->with('error', 'Jabatan tidak valid atau belum memiliki role sistem.');
     }
 
-    // 3️⃣ Update user
+    //  Update user
     $this->userModel->update($id, [
         'nama'       => $nama,
         'email'      => $email,
@@ -133,7 +133,7 @@ log_activity(
         'bidang_id'  => $bidang_id,
         'role'       => $jabatan['default_role'] // 🔥 AUTO
     ]);
-
+// LOG AKTIVITAS
     log_activity(
     'update_user',
     'Mengubah data user: ' . $nama,
@@ -145,7 +145,7 @@ log_activity(
     return redirect()->to('/admin/users')->with('success', 'User berhasil diupdate.');
 }
 
-
+// Menghapus user
     public function delete($id)
 {
     $user = $this->userModel->find($id);

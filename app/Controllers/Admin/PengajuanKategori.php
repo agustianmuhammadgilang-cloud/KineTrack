@@ -5,7 +5,7 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\PengajuanKategoriModel;
 use App\Models\KategoriDokumenModel;
-
+// Controller untuk mengelola pengajuan kategori dokumen
 class PengajuanKategori extends BaseController
 {
     protected $pengajuanModel;
@@ -16,7 +16,9 @@ class PengajuanKategori extends BaseController
         $this->pengajuanModel = new PengajuanKategoriModel();
         $this->kategoriModel  = new KategoriDokumenModel();
     }
-
+// ============================
+// LIST PENGAJUAN KATEGORI
+// ============================
     public function index()
     {
         $data['pengajuan'] = array_map(function ($row) {
@@ -51,7 +53,7 @@ class PengajuanKategori extends BaseController
         return redirect()->back()->with('error', 'Pengajuan sudah diproses');
     }
 
-    // 🔑 cari kategori existing
+    //  cari kategori existing
     $kategori = $this->kategoriModel
         ->where('nama_kategori', $pengajuan['nama_kategori'])
         ->first();
@@ -60,7 +62,7 @@ class PengajuanKategori extends BaseController
         return redirect()->back()->with('error', 'Kategori tidak ditemukan');
     }
 
-    // ✅ AKTIFKAN kategori
+    //  AKTIFKAN kategori
     $this->kategoriModel->update($kategori['id'], [
         'status' => 'aktif'
     ]);
@@ -101,7 +103,7 @@ class PengajuanKategori extends BaseController
         return redirect()->back()->with('error', 'Pengajuan sudah diproses');
     }
 
-    // 🔑 CARI KATEGORI YANG SUDAH DIBUAT STAFF
+    //  CARI KATEGORI YANG SUDAH DIBUAT STAFF
     $kategori = $this->kategoriModel
         ->where('nama_kategori', $pengajuan['nama_kategori'])
         ->first();
@@ -110,7 +112,7 @@ class PengajuanKategori extends BaseController
         return redirect()->back()->with('error', 'Kategori tidak ditemukan');
     }
 
-    // ✅ UPDATE STATUS KATEGORI (BUKAN INSERT)
+    //  UPDATE STATUS KATEGORI (BUKAN INSERT)
     $this->kategoriModel->update($kategori['id'], [
         'status' => 'rejected'
     ]);

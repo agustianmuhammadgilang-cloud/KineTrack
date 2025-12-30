@@ -4,7 +4,7 @@ namespace App\Controllers\Atasan;
 
 use App\Controllers\BaseController;
 use App\Models\ActivityLogModel;
-
+// Controller untuk menampilkan log aktivitas atasan
 class ActivityLogController extends BaseController
 {
     protected $logModel;
@@ -13,7 +13,7 @@ class ActivityLogController extends BaseController
     {
         $this->logModel = new ActivityLogModel();
     }
-
+// Menampilkan daftar log aktivitas atasan
     public function index()
     {
         // proteksi role

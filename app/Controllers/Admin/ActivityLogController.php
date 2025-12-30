@@ -5,6 +5,8 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\ActivityLogModel;
 
+
+// Controller untuk mengelola log aktivitas admin
 class ActivityLogController extends BaseController
 {
     protected $activityLogModel;
@@ -13,7 +15,7 @@ class ActivityLogController extends BaseController
     {
         $this->activityLogModel = new ActivityLogModel();
     }
-
+// Menampilkan daftar log aktivitas
     public function index()
     {
         // Proteksi role (WAJIB)

@@ -11,7 +11,7 @@ use App\Models\TahunAnggaranModel;
 use App\Models\NotificationModel;
 use Dompdf\Dompdf;
 use Dompdf\Options;
-
+// Controller untuk mengelola tugas pengukuran kinerja oleh atasan
 class TaskController extends BaseController
 {
     protected $picModel;
@@ -96,7 +96,7 @@ class TaskController extends BaseController
             'pengukuran' => $measurements
         ];
     }
-
+// LOG AKTIVITAS    
     log_activity(
     'view_task_list',
     'Melihat daftar tugas pengukuran kinerja (mode atasan)',
@@ -148,7 +148,7 @@ class TaskController extends BaseController
         if (!$twInfo['is_open']) {
             return $this->failTwClosed();
         }
-
+// LOG AKTIVITAS
         log_activity(
     'open_pengukuran_form',
     "Membuka form pengukuran indikator {$pic['nama_indikator']} TW {$tw} Tahun {$pic['tahun']} (oleh atasan)",
@@ -232,7 +232,7 @@ class TaskController extends BaseController
 
     $indikator = $this->indikatorModel->find($indikatorId);
 $targetTw = $indikator['target_tw' . $tw] ?? null;
-
+// LOG AKTIVITAS
 log_activity(
     'submit_pengukuran',
     "Mengisi pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$this->tahunModel->find($pic['tahun_id'])['tahun']} dengan realisasi {$realisasi} dari target {$targetTw} (oleh atasan)",
@@ -278,7 +278,7 @@ log_activity(
     $target = $indikator['target_tw' . $tw];
     $percent = $target > 0 ? ($measure['realisasi'] / $target) * 100 : 0;
 
-
+// LOG AKTIVITAS
 log_activity(
     'view_pengukuran_progress',
     "Melihat progress pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$this->tahunModel->find($tahunId)['tahun']} (oleh atasan)",
@@ -340,7 +340,7 @@ log_activity(
     $dompdf->render();
 
     $attachment = ($mode === 'download');
-
+// LOG AKTIVITAS
     log_activity(
     'view_pengukuran_report',
     "Melihat laporan pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$this->tahunModel->find($tahunId)['tahun']} (oleh atasan)",
@@ -348,6 +348,7 @@ log_activity(
     $indikatorId
 );
 if ($mode === 'download') {
+    // LOG AKTIVITAS
     log_activity(
         'download_pengukuran_report',
         "Mengunduh laporan pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$this->tahunModel->find($tahunId)['tahun']} (oleh atasan)",

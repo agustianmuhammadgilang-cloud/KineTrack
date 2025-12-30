@@ -5,7 +5,7 @@ namespace App\Controllers\Atasan;
 use App\Controllers\BaseController;
 use App\Models\LaporanModel;
 use App\Models\UserModel;
-
+//Tidak Berfungsi
 class Laporan extends BaseController
 {
     public function index()

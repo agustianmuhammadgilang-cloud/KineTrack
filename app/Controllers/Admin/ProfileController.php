@@ -4,9 +4,10 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\UserModel;
-
+// Controller untuk mengelola profil admin
 class ProfileController extends BaseController
 {
+    // Menampilkan halaman profil admin                                                                                                                                 
     public function index()
     {
         $userId = session()->get('user_id');
@@ -16,7 +17,7 @@ class ProfileController extends BaseController
 
         return view('admin/profile/index', $data);
     }
-
+// Memperbarui profil admin
     public function update()
     {
         $userId = session()->get('user_id');

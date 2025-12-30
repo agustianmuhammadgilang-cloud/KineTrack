@@ -6,7 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\BidangModel;
 use App\Models\UserModel;
 use App\Models\LaporanModel;
-
+// Controller untuk menampilkan detail bidang dan pegawai di dalamnya
 class BidangDetail extends BaseController
 {
     protected $bidangModel;

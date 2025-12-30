@@ -9,7 +9,7 @@ use App\Models\SasaranModel;
 use App\Models\IndikatorModel;
 use App\Models\UserModel;
 use App\Models\NotificationModel;
-
+// Controller untuk mengelola PIC indikator kinerja
 class PicController extends BaseController
 {
     protected $picModel;
@@ -22,7 +22,7 @@ class PicController extends BaseController
         $this->userModel = new UserModel();
         $this->notifModel = new NotificationModel();
     }
-
+// Menampilkan daftar PIC indikator
     public function index()
     {
         $data['pic_list'] = $this->picModel
@@ -35,7 +35,7 @@ class PicController extends BaseController
 
         return view('admin/pic/index', $data);
     }
-
+// Menampilkan form untuk menambahkan PIC baru
     public function create()
     {
         $data['tahun'] = (new TahunAnggaranModel())
@@ -44,13 +44,13 @@ class PicController extends BaseController
 
         return view('admin/pic/create', $data);
     }
-
+// Menyimpan PIC baru
    public function store()
 {
     $indikatorId = $this->request->getPost('indikator_id');
     $tahunId     = $this->request->getPost('tahun_id');
     $sasaranId   = $this->request->getPost('sasaran_id');
-    $userList    = $this->request->getPost('pegawai') ?? []; // tetap aman
+    $userList    = $this->request->getPost('pegawai') ?? []; 
 
     $successUsers = [];
     $skippedUsers = [];
@@ -98,7 +98,7 @@ class PicController extends BaseController
             'jabatan_id'   => $user['jabatan_id']
         ]);
 
-        $assignedUserIds[] = $userId; // ✅ PENTING
+        $assignedUserIds[] = $userId; // PENTING
         // LOG AKTIVITAS ADMIN
         if (!empty($assignedUserIds)) {
     log_activity(
