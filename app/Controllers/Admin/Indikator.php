@@ -6,7 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\IndikatorModel;
 use App\Models\SasaranModel;
 use App\Models\TahunAnggaranModel;
-
+// Controller untuk mengelola indikator kinerja
 class Indikator extends BaseController
 {
     protected $model;
@@ -19,7 +19,7 @@ class Indikator extends BaseController
         $this->sasaran = new SasaranModel();
         $this->tahun   = new TahunAnggaranModel();
     }
-
+// Menampilkan daftar indikator
     public function index()
     {
         $data['indikator'] = $this->model
@@ -31,7 +31,7 @@ class Indikator extends BaseController
 
         return view('admin/indikator/index', $data);
     }
-
+// Menampilkan form untuk membuat indikator baru
     public function create()
 {
     // Ambil semua data sasaran
@@ -65,7 +65,7 @@ class Indikator extends BaseController
 }
 
 
-
+// Menyimpan indikator baru
     public function store()
 {
     $sasaranId = $this->request->getPost('sasaran_id');
@@ -96,7 +96,7 @@ class Indikator extends BaseController
         'target_tw4'     => $this->request->getPost('target_tw4'),
     ]);
     $indikatorId = $this->model->getInsertID();
-
+//logaktivitaus create
 log_activity(
     'create_indikator',
     'Menambahkan indikator: ' . $nama,
@@ -108,7 +108,7 @@ log_activity(
         ->with('success','Indikator berhasil ditambahkan');
 }
 
-
+// Menampilkan form untuk mengedit indikator
     public function edit($id)
     {
         $data['indikator'] = $this->model->find($id);
@@ -117,7 +117,7 @@ log_activity(
                                            ->findAll();
         return view('admin/indikator/edit', $data);
     }
-
+// Memperbarui indikator
     public function update($id)
 {
     $sasaranId = $this->request->getPost('sasaran_id');
@@ -160,12 +160,12 @@ log_activity(
         ->with('success','Indikator berhasil diperbarui');
 }
 
-
+// Menghapus indikator
     public function delete($id)
     {
         $indikator = $this->model->find($id);
 $this->model->delete($id);
-
+//logaktivitaus delete
 log_activity(
     'delete_indikator',
     'Menghapus indikator: ' . ($indikator['nama_indikator'] ?? '-'),
@@ -177,7 +177,7 @@ return redirect()->to('/admin/indikator')
     ->with('success','Dihapus');
 
     }
-
+// Mendapatkan kode indikator berikutnya berdasarkan sasaran_id
     public function getNextKode()
 {
     $sasaranId = $this->request->getGet('sasaran_id');
@@ -200,7 +200,7 @@ return redirect()->to('/admin/indikator')
         'nextKode' => 'IK-' . str_pad($nextNum, 2, '0', STR_PAD_LEFT)
     ]);
 }
-
+// Mendapatkan kode indikator berdasarkan sasaran_id (untuk keperluan lain)
     public function getKode($sasaran_id)
 {
     $last = $this->model

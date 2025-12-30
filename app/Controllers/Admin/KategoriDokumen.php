@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\KategoriDokumenModel;
-
+// Controller untuk mengelola kategori dokumen
 class KategoriDokumen extends BaseController
 {
     protected $kategoriModel;
@@ -51,7 +51,7 @@ class KategoriDokumen extends BaseController
 
     $kategoriId = $this->kategoriModel->insert($data);
 
-    // ✅ LOG AKTIVITAS
+    // LOG AKTIVITAS
     log_activity(
         'create_kategori_dokumen',
         "Menambahkan kategori dokumen '{$data['nama_kategori']}'",
@@ -93,7 +93,7 @@ class KategoriDokumen extends BaseController
 
         $this->kategoriModel->update($id, $dataBaru);
 
-        // ✅ LOG AKTIVITAS
+        //LOG AKTIVITAS
     log_activity(
         'update_kategori_dokumen',
         'Memperbarui kategori dokumen dari "' . $kategoriLama['nama_kategori'] .
@@ -128,7 +128,7 @@ class KategoriDokumen extends BaseController
         'status' => $statusBaru
     ]);
 
-    // ✅ LOG AKTIVITAS
+    //LOG AKTIVITAS
     log_activity(
         'toggle_kategori_dokumen',
         'Mengubah status kategori dokumen "' . $kategori['nama_kategori'] .

@@ -1,4 +1,4 @@
-<?= $this->extend('layout/admin_template') ?>
+<?= $this->extend('layout/admin_template') ?> 
 <?= $this->section('content') ?>
 
 <div class="max-w-7xl mx-auto space-y-8">

@@ -5,7 +5,7 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\TwModel;
 use App\Models\TahunAnggaranModel;
-
+// Controller untuk mengelola Triwulan (TW)
 class TwController extends BaseController
 {
     protected $twModel;
@@ -49,7 +49,7 @@ class TwController extends BaseController
     }
 }
 
-
+// Menampilkan daftar TW untuk setiap tahun anggaran
     public function index()
     {
         $tahunList = $this->tahunModel
@@ -111,7 +111,7 @@ class TwController extends BaseController
         'is_open' => $newStatus
     ]);
 
-    // 🔥 LOG AKTIVITAS
+    //  LOG AKTIVITAS
     log_activity(
         'toggle_triwulan',
         'Mengubah status TW ' . $tw['tw'] . ' menjadi ' . ($newStatus ? 'TERBUKA' : 'TERKUNCI'),

@@ -5,7 +5,7 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\SasaranModel;
 use App\Models\TahunAnggaranModel;
-
+// Controller untuk mengelola sasaran strategis
 class Sasaran extends BaseController
 {
     protected $model;
@@ -74,7 +74,7 @@ class Sasaran extends BaseController
 
     $sasaranId = $this->model->insert($data);
 
-// ✅ LOG AKTIVITAS ADMIN
+// LOG AKTIVITAS ADMIN
 log_activity(
     'create_sasaran',
     'Menambahkan sasaran strategis: ' . $namaSasaran,
@@ -134,7 +134,7 @@ log_activity(
     ];
 
     $this->model->update($id, $data);
-    // ✅ LOG AKTIVITAS ADMIN
+    // LOG AKTIVITAS ADMIN
 log_activity(
     'update_sasaran',
     'Mengubah sasaran strategis: ' . $namaSasaran,
@@ -157,7 +157,7 @@ log_activity(
 
 $this->model->delete($id);
 
-// ✅ LOG AKTIVITAS ADMIN
+//  LOG AKTIVITAS ADMIN
 log_activity(
     'delete_sasaran',
     'Menghapus sasaran strategis: ' . ($sasaran['nama_sasaran'] ?? ''),
@@ -167,7 +167,7 @@ log_activity(
         return redirect()->to('/admin/sasaran')
             ->with('success', 'Sasaran Strategis berhasil dihapus');
     }
-
+// Mendapatkan daftar triwulan berdasarkan tahun yang dipilih
     public function getTriwulan()
 {
     $tahunId = $this->request->getGet('tahun_id');
@@ -181,7 +181,6 @@ log_activity(
 
     return $this->response->setJSON($result);
 }
-
 public function getKode($tahunId)
 {
     $model = new SasaranModel();
@@ -201,5 +200,7 @@ public function getKode($tahunId)
         'kode' => "SS-{$newNumber}"
     ]);
 }
+
+// Mendapatkan kode sasaran baru berdasarkan tahun yang dipilih
 
 }

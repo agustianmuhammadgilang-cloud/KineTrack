@@ -6,7 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\DokumenModel;
 use App\Models\KategoriDokumenModel;
 use App\Models\BidangModel;
-
+// Controller untuk mengelola dokumen tidak tervalidasi
 class DokumenTidakTervalidasi extends BaseController
 {
     protected $dokumenModel;

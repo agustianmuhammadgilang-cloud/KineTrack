@@ -5,7 +5,7 @@ namespace App\Controllers\Atasan;
 use App\Controllers\BaseController;
 use App\Models\DokumenModel;
 use App\Models\BidangModel;
-
+// Controller untuk mengelola dokumen oleh atasan (kaprodi/kajur)
 class Dokumen extends BaseController
 {
     protected $dokumenModel;
@@ -56,7 +56,7 @@ class Dokumen extends BaseController
                 ->orderBy('created_at', 'DESC')
                 ->findAll();
         }
-
+// LOG AKTIVITAS
         log_activity(
     'view_dokumen_masuk',
     'Melihat daftar dokumen masuk untuk direview',
@@ -144,7 +144,7 @@ class Dokumen extends BaseController
             'updated_at'       => date('Y-m-d H:i:s'),
         ];
 
-        // 🔥 Dokumen public → auto publish
+        //  Dokumen public → auto publish
         if ($dokumen['scope'] === 'public') {
             $updateData['published_at'] = date('Y-m-d H:i:s');
         }
@@ -155,7 +155,7 @@ class Dokumen extends BaseController
     else {
         return redirect()->back()->with('error', 'Status dokumen tidak valid');
     }
-
+// LOG AKTIVITAS
     log_activity(
     'approve_dokumen',
     "Menyetujui dokumen '{$dokumen['judul']}' dari unit {$dokumen['unit_asal_id']} (scope {$dokumen['scope']})",
@@ -218,6 +218,7 @@ class Dokumen extends BaseController
             'catatan'          => $catatan
         ]);
     }
+    // LOG AKTIVITAS
     log_activity(
     'reject_dokumen',
     "Menolak dokumen '{$dokumen['judul']}' dengan catatan penolakan",
@@ -276,7 +277,7 @@ class Dokumen extends BaseController
     }
 
     /**
-     * 🔥 DOKUMEN PUBLIC
+     *  DOKUMEN PUBLIC
      * Kajur BOLEH review SEMUA dokumen public
      * di jurusannya (lintas prodi)
      */
@@ -285,7 +286,7 @@ class Dokumen extends BaseController
     }
 
     /**
-     * 🔒 DOKUMEN NON-PUBLIC (unit / personal)
+     *  DOKUMEN NON-PUBLIC (unit / personal)
      * Tetap ketat
      */
     return $dokumen['unit_jurusan_id'] == $bidangUser['id'];
@@ -334,7 +335,7 @@ class Dokumen extends BaseController
             ->orderBy('updated_at', 'DESC')
             ->findAll();
     }
-
+// LOG AKTIVITAS
     log_activity(
     'view_dokumen_arsip',
     'Melihat arsip dokumen kinerja',
@@ -364,7 +365,7 @@ public function unit()
     }
 
     $dokumen = $this->dokumenModel->getDokumenUnit($bidangId);
-
+// LOG AKTIVITAS
     log_activity(
     'view_dokumen_unit',
     'Melihat dokumen unit (read-only)',
@@ -377,7 +378,7 @@ public function unit()
     ]);
 }
 
-
+//
 public function public()
 {
     if (session()->get('role') !== 'atasan') {
@@ -385,7 +386,7 @@ public function public()
     }
 
     $data['dokumen'] = $this->dokumenModel->getDokumenPublic();
-
+// LOG AKTIVITAS
     log_activity(
     'view_dokumen_public',
     'Melihat dokumen publik',

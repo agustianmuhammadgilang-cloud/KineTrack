@@ -7,7 +7,7 @@ use App\Models\UserModel;
 use App\Models\JabatanModel;
 use App\Models\BidangModel;
 use App\Models\NotificationModel;
-
+// Controller untuk menampilkan dashboard admin
 class Dashboard extends BaseController
 {
     protected $notifModel;
@@ -16,7 +16,7 @@ class Dashboard extends BaseController
     {
         $this->notifModel = new NotificationModel();
     }
-
+// Menampilkan halaman dashboard
     public function index()
     {
         $user    = new UserModel();

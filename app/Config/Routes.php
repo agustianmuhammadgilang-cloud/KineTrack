@@ -21,67 +21,75 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     // Dashboard
     $routes->get('/', 'Admin\Dashboard::index');
 
-    // Jabatan
+    // Kelola Jabatan 
     $routes->get('jabatan', 'Admin\Jabatan::index');
     $routes->get('jabatan/create', 'Admin\Jabatan::create');
     $routes->post('jabatan/store', 'Admin\Jabatan::store');
     $routes->get('jabatan/edit/(:num)', 'Admin\Jabatan::edit/$1');
     $routes->post('jabatan/update/(:num)', 'Admin\Jabatan::update/$1');
     $routes->get('jabatan/delete/(:num)', 'Admin\Jabatan::delete/$1');
+    // Kelola Jabatan 
 
-    // Bidang CRUD
+    // Kelola Unit Kerja
     $routes->get('bidang', 'Admin\Bidang::index');
     $routes->get('bidang/create', 'Admin\Bidang::create');
     $routes->post('bidang/store', 'Admin\Bidang::store');
     $routes->get('bidang/edit/(:num)', 'Admin\Bidang::edit/$1');
     $routes->post('bidang/update/(:num)', 'Admin\Bidang::update/$1');
     $routes->get('bidang/delete/(:num)', 'Admin\Bidang::delete/$1');
+    // Kelola Unit Kerja
 
-    // Users
+    // Kelola Users
     $routes->get('users', 'Admin\User::index');
     $routes->get('users/create', 'Admin\User::create');
     $routes->post('users/store', 'Admin\User::store');
     $routes->get('users/edit/(:num)', 'Admin\User::edit/$1');
     $routes->post('users/update/(:num)', 'Admin\User::update/$1');
     $routes->get('users/delete/(:num)', 'Admin\User::delete/$1');
+    // Kelola Users
 
-    // MASTER: TAHUN
+    // Kelola MASTER: TAHUN
     $routes->get('tahun', 'Admin\TahunAnggaran::index');
     $routes->get('tahun/create', 'Admin\TahunAnggaran::create');
     $routes->post('tahun/store', 'Admin\TahunAnggaran::store');
     $routes->get('tahun/edit/(:num)', 'Admin\TahunAnggaran::edit/$1');
     $routes->post('tahun/update/(:num)', 'Admin\TahunAnggaran::update/$1');
     $routes->get('tahun/delete/(:num)', 'Admin\TahunAnggaran::delete/$1');
+    // Kelola MASTER: TAHUN
 
-    // MASTER: SASARAN
+    // Kelola MASTER: SASARAN
     $routes->get('sasaran', 'Admin\Sasaran::index');
     $routes->get('sasaran/create', 'Admin\Sasaran::create');
     $routes->post('sasaran/store', 'Admin\Sasaran::store');
     $routes->get('sasaran/edit/(:num)', 'Admin\Sasaran::edit/$1');
     $routes->post('sasaran/update/(:num)', 'Admin\Sasaran::update/$1');
     $routes->get('sasaran/delete/(:num)', 'Admin\Sasaran::delete/$1');
+    // Kelola MASTER: SASARAN
 
-    // MASTER: INDIKATOR
+    // Kelola MASTER: INDIKATOR
     $routes->get('indikator', 'Admin\Indikator::index');
     $routes->get('indikator/create', 'Admin\Indikator::create');
     $routes->post('indikator/store', 'Admin\Indikator::store');
     $routes->get('indikator/edit/(:num)', 'Admin\Indikator::edit/$1');
     $routes->post('indikator/update/(:num)', 'Admin\Indikator::update/$1');
     $routes->get('indikator/delete/(:num)', 'Admin\Indikator::delete/$1');
+    // Kelola MASTER: INDIKATOR
 
-    // INPUT PENGUKURAN
+    // Kelola INPUT PENGUKURAN
     $routes->get('pengukuran', 'Admin\Pengukuran::index'); // pilih tahun & TW
     $routes->post('pengukuran/load', 'Admin\Pengukuran::load'); // ajax ambil indikator
     $routes->post('pengukuran/store', 'Admin\Pengukuran::store'); // simpan bulk
+    // Kelola INPUT PENGUKURAN
 
-    // OUTPUT PENGUKURAN
+    // Kelola OUTPUT PENGUKURAN
     $routes->get('pengukuran/output', 'Admin\Pengukuran::output'); // tampil tabel output
     $routes->get('pengukuran/export/(:num)/(:num)', 'Admin\Pengukuran::export/$1/$2'); // export
     // ==== Tambahkan ini (REPORT PDF) ====
     $routes->get('pengukuran/output/report/(:num)/(:num)', 'Admin\Pengukuran::report/$1/$2');
     $routes->get('pengukuran/output/detail/(:num)/(:num)/(:num)', 'Admin\Pengukuran::detail/$1/$2/$3');
+    // Kelola OUTPUT PENGUKURAN
 
-    // Profile
+    // Kelola Profile
     $routes->get('profile', 'Admin\ProfileController::index');
     $routes->post('profile/update', 'Admin\ProfileController::update');
     $routes->post('profile/password', 'Admin\ProfileController::updatePassword');
@@ -90,7 +98,8 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
 
     $routes->get('pengajuan-kategori/approve/(:num)', 'Admin\PengajuanKategori::approve/$1');
     $routes->get('pengajuan-kategori/reject/(:num)', 'Admin\PengajuanKategori::reject/$1');
-
+    // Kelola Profile
+    
 
     // DOKUMEN TERVALIDASI
     // LEVEL 1 — KATEGORI
@@ -126,8 +135,9 @@ $routes->post(
     'admin/dokumen-tervalidasi/update-kategori/(:num)',
     'Admin\DokumenTervalidasi::updateKategori/$1'
 );
+    // DOKUMEN TERVALIDASI
 
-// ADMIN - DETAIL BIDANG
+// ADMIN - DETAIL BIDANG Tidak Berfungsi
 $routes->group('admin/bidang', ['filter' => 'auth'], function($routes) {
 
     $routes->get('detail/export/bidang/(:num)', 'Admin\BidangDetail::exportBidang/$1');
@@ -137,9 +147,12 @@ $routes->group('admin/bidang', ['filter' => 'auth'], function($routes) {
 });
 
 $routes->get('admin/bidang-select', 'Admin\BidangDetail::select', ['filter' => 'auth']);
+// ADMIN - DETAIL BIDANG Tidak Berfungsi
+
 
 // STAFF
 $routes->group('staff', ['filter' => 'auth'], function($routes) {
+    // Dashboard & Laporan Activity Log
     $routes->get('/', 'Staff\Dashboard::index');  
     $routes->get('activity-logs', 'Staff\ActivityLogController::index');
     $routes->get('dashboard', 'Staff\Dashboard::index');
@@ -147,13 +160,14 @@ $routes->group('staff', ['filter' => 'auth'], function($routes) {
     $routes->get('laporan/create', 'Staff\Laporan::create');
     $routes->post('laporan/store', 'Staff\Laporan::store');
     // Progress & Report
-$routes->get('task/progress/(:num)/(:num)', 'Staff\TaskController::progress/$1/$2');
-$routes->get('task/report/(:num)/(:num)', 'Staff\TaskController::report/$1/$2');
+    $routes->get('task/progress/(:num)/(:num)', 'Staff\TaskController::progress/$1/$2');
+    $routes->get('task/report/(:num)/(:num)', 'Staff\TaskController::report/$1/$2');
     $routes->get('laporan/rejected/(:num)', 'Staff\Laporan::rejected/$1');
     $routes->post('laporan/resubmit/(:num)', 'Staff\Laporan::resubmit/$1');
+    // Profile
     $routes->get('profile', 'Staff\Profile::index');
     $routes->post('profile/update', 'Staff\Profile::update');
-
+    // Pengajuan Kategori Dokumen
     $routes->get('kategori/ajukan', 'Staff\PengajuanKategori::create');
     $routes->post('kategori/ajukan/store', 'Staff\PengajuanKategori::store');
 
@@ -163,20 +177,24 @@ $routes->get('task/report/(:num)/(:num)', 'Staff\TaskController::report/$1/$2');
 $routes->get('atasan', 'Atasan\Dashboard::index', ['filter' => 'auth']);
 
 $routes->group('atasan', ['filter' => 'auth'], function($routes){
+    // Profile
     $routes->get('profile', 'Atasan\Profile::index');
     $routes->post('profile/update', 'Atasan\Profile::update');
+    //laporan
     $routes->get('laporan', 'Atasan\Laporan::index');
     $routes->get('laporan/detail/(:num)', 'Atasan\Laporan::detail/$1');
     $routes->get('laporan/approve/(:num)', 'Atasan\Laporan::approve/$1');
     $routes->post('laporan/reject/(:num)', 'Atasan\Laporan::reject/$1');
+    //notifications
     $routes->get('notifications/pending-count', 'Atasan\Notifications::pendingCount');
     $routes->get('notifications/list', 'Atasan\Notifications::list');
 });
-
+// =============================
+// AJAX ROUTES
+// Admin SASARAN & INDIKATOR - AJAX
 $routes->get('admin/indikator/getKode/(:num)', 'Admin\Indikator::getKode/$1');
 $routes->get('admin/sasaran/getKode/(:num)', 'Admin\Sasaran::getKode/$1');
-
-
+// Admin PIC - AJAX
 $routes->get('admin/pic/getSasaran', 'Admin\PicController::getSasaran');
 $routes->get('admin/pic/getIndikator', 'Admin\PicController::getIndikator');
 $routes->get('admin/pic/getJabatan', 'Admin\PicController::getJabatan');
@@ -223,6 +241,7 @@ $routes->post('notifications/mark-all', 'Notifications::markAll');
 $routes->get('notifications/pending-count', 'Notifications::pendingTaskCount');
 
 $routes->group('admin/pengukuran', function($routes) {
+    // CRUD Pengukuran
     $routes->get('edit/(:num)', 'Admin\Pengukuran::edit/$1');
     $routes->post('update/(:num)', 'Admin\Pengukuran::update/$1');
     $routes->get('delete/(:num)', 'Admin\Pengukuran::delete/$1');
@@ -234,16 +253,19 @@ $routes->group('admin/pengukuran', function($routes) {
 
 
 $routes->group('admin/tw', ['namespace' => 'App\Controllers\Admin'], function($routes){
+    // TW Controller
     $routes->get('/', 'TwController::index');
     $routes->get('toggle/(:num)', 'TwController::toggle/$1');
 });
 
 $routes->get(
+    // Report Pengukuran
     'admin/pengukuran/output/report/(:num)/(:num)/(:segment)',
     'Admin\Pengukuran::report/$1/$2/$3'
 );
 
 $routes->get(
+    // Report Task Staff
     'staff/task/report/(:num)/(:num)/(:segment)',
     'Staff\TaskController::report/$1/$2/$3'
 );
@@ -334,11 +356,15 @@ $routes->group('atasan', ['filter' => 'auth'], function ($routes) {
 
 });
 
-
+// =======================
+// ADMIN ROUTES (FINAL)
+// =======================
 $routes->post('admin/users/delete/(:num)', 'Admin\User::delete/$1');
 
 $routes->group('admin', ['filter' => 'auth'], function ($routes) {
 
+    // =====================
+    // KATEGORI DOKUMEN
     $routes->get('kategori-dokumen', 'Admin\KategoriDokumen::index');
     $routes->get('kategori-dokumen/create', 'Admin\KategoriDokumen::create');
     $routes->post('kategori-dokumen/store', 'Admin\KategoriDokumen::store');
@@ -347,12 +373,18 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->post('kategori-dokumen/update/(:num)', 'Admin\KategoriDokumen::update/$1');
 
     $routes->get('kategori-dokumen/toggle/(:num)', 'Admin\KategoriDokumen::toggleStatus/$1');
+    // =====================
+    // DOKUMEN
+    // =====================
 
     $routes->get('dokumen-tervalidasi', 'Admin\DokumenTervalidasi::kategori');
     $routes->get('dokumen-tervalidasi/(:num)', 'Admin\DokumenTervalidasi::dokumen/$1');
 
     $routes->get('dokumen-tidak-tervalidasi', 'Admin\DokumenTidakTervalidasi::kategori');
     $routes->get('dokumen-tidak-tervalidasi/(:num)', 'Admin\DokumenTidakTervalidasi::dokumen/$1');
+    // =====================
+    // ACTIVITY LOG
+    // =====================
     $routes->get('activity-logs', 'Admin\ActivityLogController::index');
 
 });

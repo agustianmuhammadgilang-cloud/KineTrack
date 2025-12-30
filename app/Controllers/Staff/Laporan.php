@@ -6,27 +6,29 @@ use App\Controllers\BaseController;
 use App\Models\LaporanModel;
 use App\Models\UserModel;
 
+// Controller untuk mengelola laporan staff
 class Laporan extends BaseController
 {
-    
+    // Menampilkan halaman daftar laporan
     public function index()
 {
+    // Ambil model laporan dan user
     $laporanModel = new LaporanModel();
     $userModel = new UserModel();
 
-    // Ambil data lengkap staff
+    // Ambil data staff yang sedang login
     $staff = $userModel
         ->select('users.*, jabatan.nama_jabatan, bidang.nama_bidang')
         ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
         ->join('bidang', 'bidang.id = users.bidang_id', 'left')
         ->find(session('user_id'));
 
-    // Ambil semua laporan milik staff
+    // Ambil laporan milik staff yang sedang login
     $data = [
         'staff' => $staff,
         'laporan' => $laporanModel->where('user_id', session('user_id'))->findAll()
     ];
-
+    // Hitung jumlah tugas pending untuk notifikasi
     helper('globalcount');
 $data['pending_task_count'] = getPendingTaskCount(session('user_id'));
 
@@ -34,12 +36,12 @@ $data['pending_task_count'] = getPendingTaskCount(session('user_id'));
     return view('staff/laporan/index', $data);
 }
 
-
+    // Menampilkan form tambah laporan
     public function create()
     {
         return view('staff/laporan/create');
     }
-
+    // Menyimpan laporan baru
     public function store()
     {
         $model = new LaporanModel();
@@ -72,7 +74,7 @@ $data['pending_task_count'] = getPendingTaskCount(session('user_id'));
 
         
     }
-
+    // Menampilkan detail laporan ditolak
     public function rejected($id)
 {
     $model = new LaporanModel();
@@ -95,7 +97,7 @@ $data['pending_task_count'] = getPendingTaskCount(session('user_id'));
 
     
 }
-
+// Mengirim ulang laporan yang ditolak
 public function resubmit($id)
 {
     $model = new LaporanModel();

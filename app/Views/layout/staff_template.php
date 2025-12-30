@@ -230,7 +230,7 @@ $seg3 = $uri->getTotalSegments() >= 3 ? $uri->getSegment(3) : ''; // aman
 
     <a href="<?= base_url('staff/kategori/ajukan') ?>"
        class="submenu-link <?= $seg3=='ajukan' ? 'active':'' ?>">
-        Pengajuan Dokumen
+        Pengajuan Kategori Dokumen
     </a>
 
     <a href="<?= base_url('staff/dokumen/arsip') ?>"

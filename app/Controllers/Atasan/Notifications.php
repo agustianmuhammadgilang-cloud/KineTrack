@@ -5,7 +5,7 @@ namespace App\Controllers\Atasan;
 use App\Controllers\BaseController;
 use App\Models\LaporanModel;
 use App\Models\UserModel;
-
+// Controller untuk mengelola notifikasi laporan untuk atasan
 class Notifications extends BaseController
 {
     /**

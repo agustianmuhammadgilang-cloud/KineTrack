@@ -6,10 +6,11 @@ use App\Controllers\BaseController;
 use App\Models\PengajuanKategoriModel;
 use App\Models\KategoriDokumenModel;
 
+// Controller untuk mengelola pengajuan kategori dokumen oleh staff
 class PengajuanKategori extends BaseController
 {
     protected $pengajuanModel;
-
+    // Konstruktor untuk inisialisasi model pengajuan kategori
     public function __construct()
     {
         $this->pengajuanModel = new PengajuanKategoriModel();
@@ -22,6 +23,7 @@ class PengajuanKategori extends BaseController
      */
     public function create()
     {
+        // Catat aktivitas membuka form pengajuan
         log_activity(
     'open_pengajuan_kategori',
     'Membuka form pengajuan kategori dokumen',
@@ -54,7 +56,7 @@ public function store()
 
     $kategoriModel = new KategoriDokumenModel();
 
-    // 🔥 CEGAH DUPLIKASI NAMA
+    // CEK APAKAH KATEGORI SUDAH ADA
     $exists = $kategoriModel
         ->where('LOWER(nama_kategori)', strtolower($nama))
         ->first();
@@ -64,22 +66,22 @@ public function store()
             ->with('error', 'Kategori sudah ada dan bisa langsung digunakan');
     }
 
-    // ✅ LANGSUNG BUAT KATEGORI (BELUM TERVALIDASI)
+    // SIMPAN KATEGORI DENGAN STATUS PENDING
     $kategoriModel->insert([
         'nama_kategori' => $nama,
         'deskripsi'     => $this->request->getPost('deskripsi'),
-        'status'        => 'pending', // ⬅️ KUNCI
+        'status'        => 'pending', 
         'created_by'    => $userId
     ]);
 
-    // (opsional) simpan histori pengajuan
+    // SIMPAN PENGAJUAN UNTUK TRACKING
 $this->pengajuanModel->insert([
     'nama_kategori'   => $nama,
     'deskripsi'       => $this->request->getPost('deskripsi'),
     'pengaju_user_id' => $userId,
-    'status'          => 'pending' // 🔑 BUKAN approved_auto
+    'status'          => 'pending' 
 ]);
-
+// LOG AKTIVITAS PENGAJUAN
 log_activity(
     'submit_pengajuan_kategori',
     "Mengajukan kategori dokumen baru: {$nama}",

@@ -1,5 +1,6 @@
 <?php 
 
+// Helper untuk mendapatkan path SVG ikon Heroicons outline berdasarkan nama
 function heroicons_outline($name) {
     $path = [
         'users' => '<path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5m-5 0a3 3 0 11-6 0m6 0a3 3 0 01-6 0m-6 0h5m-5 0a3 3 0 106 0m-6 0a3 3 0 006 0m6-10a4 4 0 11-8 0 4 4 0 018 0z"/>',

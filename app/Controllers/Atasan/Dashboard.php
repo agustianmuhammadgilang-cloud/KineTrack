@@ -5,9 +5,10 @@ namespace App\Controllers\Atasan;
 use App\Controllers\BaseController;
 use App\Models\LaporanModel;
 use App\Models\UserModel;
-
+// Controller untuk menampilkan dashboard atasan
 class Dashboard extends BaseController
 {
+    // Menampilkan halaman dashboard
    public function index()
 {
     $laporanModel = new LaporanModel();

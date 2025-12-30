@@ -4,9 +4,10 @@ namespace App\Controllers\Auth;
 
 use App\Controllers\BaseController;
 use App\Models\UserModel;
-
+// Controller untuk mengelola proses login
 class Login extends BaseController
 {
+    // Menampilkan halaman login
     public function index()
 {
     // Buat captcha
@@ -20,7 +21,7 @@ class Login extends BaseController
     ]);
 }
 
-
+    // Proses login
     public function process()
     {
         $session = session();
@@ -72,7 +73,7 @@ class Login extends BaseController
             'logged_in'  => true
         ]);
 
-
+        // LOG AKTIVITAS
         log_activity(
     'login',
     'Login ke sistem'
@@ -89,7 +90,7 @@ class Login extends BaseController
                 return redirect()->to('/staff/dashboard');
         }
     }
-
+    // Proses logout
     public function logout()
     {
         session()->destroy();

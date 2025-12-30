@@ -5,17 +5,19 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\NotificationModel;
 
+// Controller untuk mengelola notifikasi
 class Notifications extends BaseController
 {
     protected $notif;
 
+    // Konstruktor untuk inisialisasi model notifikasi
     public function __construct()
     {
         $this->notif = new NotificationModel();
     }
 
     // ========================================================
-    // 1. Jumlah notifikasi BELUM dibaca
+    // Jumlah notifikasi BELUM dibaca
     // ========================================================
     public function unreadCount()
     {
@@ -31,7 +33,7 @@ class Notifications extends BaseController
     }
 
     // ========================================================
-    // 2. List notifikasi terbaru
+    // List notifikasi terbaru
     // ========================================================
     public function list($limit = 10)
     {
@@ -60,7 +62,7 @@ class Notifications extends BaseController
     }
 
     // ========================================================
-    // 3. Tandai satu notifikasi sebagai read
+    // Tandai satu notifikasi sebagai read
     //    (JS memanggil mark/{id})
     // ========================================================
     public function mark($id)
@@ -79,7 +81,7 @@ class Notifications extends BaseController
     }
 
     // ========================================================
-    // 4. Tandai semua sebagai read  (JS memanggil mark-all)
+    // Tandai semua sebagai read  (JS memanggil mark-all)
     // ========================================================
     public function markAll()
     {
@@ -95,7 +97,7 @@ class Notifications extends BaseController
     }
 
     // ========================================================
-    // 5. Notifikasi terbaru — untuk toast
+    // Notifikasi terbaru — untuk toast
     // ========================================================
     public function latest()
     {

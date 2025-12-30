@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\TahunAnggaranModel;
-
+// Controller untuk mengelola tahun anggaran
 class TahunAnggaran extends BaseController
 {
     protected $model;
@@ -13,18 +13,18 @@ class TahunAnggaran extends BaseController
     {
         $this->model = new TahunAnggaranModel();
     }
-
+// Menampilkan daftar tahun anggaran
     public function index()
     {
         $data['tahun'] = $this->model->orderBy('tahun', 'DESC')->findAll();
         return view('admin/tahun/index', $data);
     }
-
+// Menampilkan form untuk menambahkan tahun anggaran baru
     public function create()
     {
         return view('admin/tahun/create');
     }
-
+// Menyimpan tahun anggaran baru
     public function store()
     {
         $tahun  = $this->request->getPost('tahun');
@@ -41,7 +41,7 @@ class TahunAnggaran extends BaseController
         'status' => $status
     ]);
 
-    // ✅ LOG
+    // LOG AKTIVITAS ADMIN
     log_activity(
         'create_tahun',
         'Menambahkan tahun anggaran ' . $tahun,
@@ -52,13 +52,13 @@ class TahunAnggaran extends BaseController
 
         return redirect()->to('/admin/tahun')->with('success', 'Tahun berhasil ditambahkan');
     }
-
+// Menampilkan form untuk mengedit tahun anggaran
     public function edit($id)
     {
         $data['tahun'] = $this->model->find($id);
         return view('admin/tahun/edit', $data);
     }
-
+// Memperbarui tahun anggaran
     public function update($id)
 {
     $tahun  = $this->request->getPost('tahun');
@@ -82,7 +82,7 @@ class TahunAnggaran extends BaseController
         'status' => $status,
     ]);
 
-    // ✅ LOG AKTIVITAS (JELAS & AUDITABLE)
+    // LOG AKTIVITAS (JELAS & AUDITABLE)
     $statusText = $status === 'active'
         ? 'Mengaktifkan tahun anggaran ' . $tahun
         : 'Menonaktifkan tahun anggaran ' . $tahun;
@@ -99,14 +99,14 @@ class TahunAnggaran extends BaseController
 }
 
 
-
+// Menghapus tahun anggaran
     public function delete($id)
 {
     $tahun = $this->model->find($id);
 
     $this->model->delete($id);
 
-    // ✅ LOG
+    // LOG
     log_activity(
         'delete_tahun',
         'Menghapus tahun anggaran ' . $tahun['tahun'],

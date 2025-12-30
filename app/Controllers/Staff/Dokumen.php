@@ -6,13 +6,13 @@ use App\Controllers\BaseController;
 use App\Models\DokumenModel;
 use App\Models\BidangModel;
 use App\Models\KategoriDokumenModel;
-
+// Controller untuk mengelola dokumen kinerja staff
 class Dokumen extends BaseController
 {
     protected $dokumenModel;
     protected $bidangModel;
     protected $kategoriModel;
-
+    // Konstruktor untuk inisialisasi model dokumen, bidang, dan kategori
     public function __construct()
     {
         $this->dokumenModel  = new DokumenModel();
@@ -27,17 +27,18 @@ class Dokumen extends BaseController
      */
     public function index()
     {
+        // Ambil dokumen milik staff yang sedang login
         $userId = session()->get('user_id');
-
+        // Cek jika user tidak login
         if (!$userId) {
             return redirect()->to('/login');
         }
-
+        // Ambil dokumen
         $data['dokumen'] = $this->dokumenModel
             ->where('created_by', $userId)
             ->orderBy('created_at', 'DESC')
             ->findAll();
-
+            // LOG AKTIVITAS STAFF Dokumen
             log_activity(
     'view_dokumen_list',
     'Melihat daftar dokumen kinerja pribadi'
@@ -54,6 +55,7 @@ class Dokumen extends BaseController
      */
 public function create()
 {
+    // LOG AKTIVITAS STAFF Dokumen
     log_activity(
     'open_upload_dokumen_form',
     'Membuka form upload dokumen kinerja'
@@ -81,30 +83,31 @@ public function create()
         return redirect()->to('/login');
     }
 
-    // 🔴 WAJIB
+    // Validasi kategori
     if (!$kategoriId) {
         return redirect()->back()->with('error', 'Kategori wajib dipilih');
     }
-
+    // Validasi file
     $file = $this->request->getFile('file');
     if (!$file || !$file->isValid()) {
         return redirect()->back()->with('error', 'File tidak valid');
     }
-
+    // Tentukan alur berdasarkan unit kerja
     $bidangUser = $this->bidangModel->find($bidangId);
-
+    // Jika unit kerja adalah prodi
     if ($bidangUser['parent_id'] !== null) {
         $unitAsal    = $bidangUser['id'];
         $unitJurusan = $bidangUser['parent_id'];
         $status      = 'pending_kaprodi';
         $reviewer    = 'kaprodi';
+        // Jika unit kerja adalah jurusan
     } else {
         $unitAsal    = $bidangUser['id'];
         $unitJurusan = $bidangUser['id'];
         $status      = 'pending_kajur';
         $reviewer    = 'kajur';
     }
-
+    // Upload file
     $newName = $file->getRandomName();
     $file->move('uploads/dokumen', $newName);
     $scopeInput = $this->request->getPost('scope');
@@ -115,7 +118,7 @@ public function create()
 
 
 
-    // ✅ kategori_id DISIMPAN
+    // Simpan data dokumen
     $dokumenId = $this->dokumenModel->insert([
     'judul'            => $this->request->getPost('judul'),
     'deskripsi'        => $this->request->getPost('deskripsi'),
@@ -129,9 +132,9 @@ public function create()
     'current_reviewer' => $reviewer,
 ]);
 
-// ✅ LOG AKTIVITAS STAFF Dokumen
+// Ambil nama kategori untuk log
 $kategori = $this->kategoriModel->find($kategoriId);
-
+// LOG AKTIVITAS STAFF Dokumen
 log_activity(
     'upload_dokumen',
     'Mengunggah dokumen "' . $this->request->getPost('judul') .
@@ -155,18 +158,19 @@ log_activity(
      */
     public function resubmit($id)
     {
+        // Ambil dokumen milik user yang berstatus ditolak
         $userId = session()->get('user_id');
-
+        // Cek jika user tidak login
         $dokumen = $this->dokumenModel
             ->where('id', $id)
             ->where('created_by', $userId)
             ->whereIn('status', ['rejected_kaprodi', 'rejected_kajur'])
             ->first();
-
+        // Cek jika dokumen tidak ditemukan atau tidak boleh direvisi
         if (!$dokumen) {
             return redirect()->back()->with('error', 'Dokumen tidak dapat direvisi');
         }
-
+        // LOG AKTIVITAS STAFF Dokumen
         log_activity(
     'open_resubmit_dokumen_form',
     'Membuka form revisi dokumen "' . $dokumen['judul'] . '"',
@@ -188,29 +192,31 @@ log_activity(
      */
     public function processResubmit($id)
     {
+        // Ambil dokumen milik user yang berstatus ditolak
         $userId   = session()->get('user_id');
         $bidangId = session()->get('bidang_id');
-
+        // Cek jika user tidak login
         $dokumen = $this->dokumenModel
             ->where('id', $id)
             ->where('created_by', $userId)
             ->first();
-
+        // Cek jika dokumen tidak ditemukan atau tidak boleh direvisi
         if (!$dokumen) {
             return redirect()->back()->with('error', 'Dokumen tidak ditemukan');
         }
-
+        // Validasi file
         $file = $this->request->getFile('file');
         if (!$file || !$file->isValid()) {
             return redirect()->back()->with('error', 'File tidak valid');
         }
-
+        // Tentukan alur berdasarkan unit kerja
         $bidangUser = $this->bidangModel->find($bidangId);
 
-        // Tentukan ulang alur (TIDAK DIUBAH)
+        // Jika unit kerja adalah prodi
         if ($bidangUser['parent_id'] !== null) {
             $status   = 'pending_kaprodi';
             $reviewer = 'kaprodi';
+            // Jika unit kerja adalah jurusan
         } else {
             $status   = 'pending_kajur';
             $reviewer = 'kajur';
@@ -230,6 +236,7 @@ log_activity(
             'catatan'          => null,
             'updated_at'       => date('Y-m-d H:i:s'),
         ]);
+        // LOG AKTIVITAS STAFF Dokumen
         log_activity(
     'resubmit_dokumen',
     'Mengirim revisi dokumen "' . $dokumen['judul'] . '"',
@@ -260,6 +267,7 @@ log_activity(
             ->where('status', 'archived')
             ->orderBy('updated_at', 'DESC')
             ->findAll();
+            // LOG AKTIVITAS STAFF Dokumen
             log_activity(
     'view_dokumen_arsip',
     'Melihat arsip dokumen kinerja'
@@ -275,12 +283,13 @@ log_activity(
  */
 public function personal()
 {
+    // Ambil dokumen personal milik staff yang sedang login
     $userId = session()->get('user_id');
-
+    // Cek jika user tidak login
     if (!$userId) {
         return redirect()->to('/login');
     }
-
+    // Ambil dokumen
     $data['dokumen'] = $this->dokumenModel
         ->where('created_by', $userId)
         ->where('scope', 'personal') // asumsi dari pilihan saat create
@@ -297,20 +306,22 @@ public function personal()
  */
 public function unit()
 {
+    // Ambil dokumen unit kerja milik staff yang sedang login
     $userId   = session()->get('user_id');
     $bidangId = session()->get('bidang_id');
-
+    // Cek jika user tidak login
     if (!$userId || !$bidangId) {
         return redirect()->to('/login');
     }
-
+    // Tentukan alur berdasarkan unit kerja
     $bidangUser = $this->bidangModel->find($bidangId);
 
-    // Tentukan unit jurusan
+    // Jika unit kerja adalah prodi
     $unitJurusan = $bidangUser['parent_id'] ?? $bidangUser['id'];
 
-    // 🔥 WAJIB PAKAI METHOD MODEL
+    // Ambil dokumen
     $data['dokumen'] = $this->dokumenModel->getDokumenUnit($unitJurusan);
+    // LOG AKTIVITAS STAFF Dokumen
     log_activity(
     'view_dokumen_unit',
     'Melihat dokumen unit kerja'
@@ -319,14 +330,18 @@ public function unit()
     return view('staff/dokumen/unit', $data);
 }
 
-
+// ============================
+// DOKUMEN PUBLIC
+// ============================
 public function public()
 {
+    // Cek jika user tidak login
     if (!session()->get('user_id')) {
         return redirect()->to('/login');
     }
-
+    // Ambil dokumen publik
     $data['dokumen'] = $this->dokumenModel->getDokumenPublic();
+    // LOG AKTIVITAS STAFF Dokumen
     log_activity(
     'view_dokumen_public',
     'Melihat dokumen publik'

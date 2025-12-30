@@ -3,21 +3,23 @@
 use App\Models\ActivityLogModel;
 use CodeIgniter\I18n\Time;
 
+// Helper untuk mencatat log aktivitas
 if (!function_exists('log_activity')) {
-
+    // Fungsi untuk mencatat log aktivitas
     function log_activity(
         string $action,
         string $description,
         string $subjectType = null,
         int $subjectId = null
     ) {
+        // Ambil session
         $session = session();
 
-        // Harus login
+        // Pastikan ada user yang login
         if (!$session->has('user_id')) {
             return false;
         }
-
+        // Simpan log aktivitas ke database
         $logModel = new ActivityLogModel();
 
         return $logModel->insert([

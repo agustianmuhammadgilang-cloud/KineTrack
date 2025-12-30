@@ -9,19 +9,20 @@ use App\Models\TwModel;
  */
 function getTwStatus(int $tahunId, int $tw): array
 {
+    // Ambil data dari database
     $model = new TwModel();
     $row = $model->where('tahun_id', $tahunId)
                  ->where('tw', $tw)
                  ->first();
-
+    // Jika tidak ditemukan, anggap closed
     if (!$row) {
         return ['is_open' => false, 'source' => 'unknown'];
     }
-
+    // Cek status buka/tutup
     $isOpenDB = (int)$row['is_open'] === 1;
     $autoMode = (int)$row['auto_mode'] === 1;
 
-    // Hitung TW otomatis berdasarkan bulan
+    // Hitung TW berjalan
     $currentMonth = (int) date('n');
     $currentTw = ceil($currentMonth / 3);
 

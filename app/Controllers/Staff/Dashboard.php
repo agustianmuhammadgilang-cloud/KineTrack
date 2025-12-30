@@ -5,10 +5,13 @@ namespace App\Controllers\Staff;
 use App\Controllers\BaseController;
 use App\Models\LaporanModel;
 
+// Controller untuk mengelola dashboard staff
 class Dashboard extends BaseController
 {
+    // Menampilkan halaman dashboard
     public function index()
     {
+        // Statistik laporan staff
         $laporanModel = new LaporanModel();
         $userId = session('user_id');
 
@@ -43,7 +46,7 @@ class Dashboard extends BaseController
             'weekly'   => $weekly,
             'monthly'  => $monthly,
         ];
-
+        // Ambil notifikasi unread
         $notifModel = new \App\Models\NotificationModel();
         $data['notifikasi'] = $notifModel
         ->where('user_id', session()->get('user_id'))
@@ -54,7 +57,7 @@ class Dashboard extends BaseController
         foreach ($data['notifikasi'] as $n) {
     $notifModel->update($n['id'], ['status' => 'read']);
 }
-
+// Hitung pending task count
 helper('globalcount');
 $data['pending_task_count'] = getPendingTaskCount(session('user_id'));
 
