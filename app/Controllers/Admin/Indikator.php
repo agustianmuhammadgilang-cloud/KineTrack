@@ -94,6 +94,7 @@ class Indikator extends BaseController
         'target_tw2'     => $this->request->getPost('target_tw2'),
         'target_tw3'     => $this->request->getPost('target_tw3'),
         'target_tw4'     => $this->request->getPost('target_tw4'),
+        'mode'           => $this->request->getPost('mode'),
     ]);
     $indikatorId = $this->model->getInsertID();
 //logaktivitaus create

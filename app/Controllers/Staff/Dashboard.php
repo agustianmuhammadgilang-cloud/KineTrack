@@ -3,65 +3,66 @@
 namespace App\Controllers\Staff;
 
 use App\Controllers\BaseController;
-use App\Models\LaporanModel;
+use App\Models\TahunAnggaranModel;
+use App\Models\TwModel;
+use App\Models\PicModel;
+use App\Models\PengukuranModel;
+use App\Models\DokumenModel;
+use App\Models\NotificationModel;
 
-// Controller untuk mengelola dashboard staff
 class Dashboard extends BaseController
 {
-    // Menampilkan halaman dashboard
     public function index()
     {
-        // Statistik laporan staff
-        $laporanModel = new LaporanModel();
         $userId = session('user_id');
 
-        // Total laporan diterima
-        $approved = $laporanModel->where('user_id', $userId)
-                                 ->where('status', 'approved')
-                                 ->countAllResults();
+        // 1. Tahun Anggaran Aktif
+        $tahunModel = new TahunAnggaranModel();
+        $tahunAktif = $tahunModel
+            ->where('status', 'active')
+            ->first();
 
-        // Total laporan ditolak
-        $rejected = $laporanModel->where('user_id', $userId)
-                                 ->where('status', 'rejected')
-                                 ->countAllResults();
+        // 2. Triwulan Aktif
+        $twModel = new TwModel();
+        $twAktif = $twModel
+            ->where('is_open', 1)
+            ->first();
 
-        // Progress
-        $total = $approved + $rejected;
-        $progress = ($total > 0) ? round(($approved / $total) * 100) : 0;
+        // 3. Total PIC Aktif
+        $picModel = new PicModel();
+        $totalPicAktif = $picModel
+            ->where('user_id', $userId)
+            ->countAllResults();
 
-        // Ambil grafik harian bulan ini
-        $daily = $laporanModel->getDailyData($userId);
+        // 4. Indikator Belum 100%
+        // $pengukuranModel = new PengukuranModel();
+        // $indikatorBelumSelesai = $pengukuranModel
+        //     ->where('user_id', $userId)
+        //     ->where('progress <', 100)
+        //     ->countAllResults();
 
-        // Ambil grafik mingguan
-        $weekly = $laporanModel->getWeeklyData($userId);
+        // 5. Dokumen Perlu Revisi
+        $dokumenModel = new DokumenModel();
+        $dokumenRevisi = $dokumenModel
+            ->where('created_by', $userId)
+            ->whereIn('status', ['rejected_kaprodi', 'rejected_kajur'])
+            ->countAllResults();
 
-        // Ambil grafik bulanan
-        $monthly = $laporanModel->getMonthlyData($userId);
+        // 6. Notifikasi Unread
+        $notifModel = new NotificationModel();
+        $notifikasi = $notifModel
+            ->where('user_id', $userId)
+            ->where('status', 'unread')
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
 
-        $data = [
-            'approved' => $approved,
-            'rejected' => $rejected,
-            'progress' => $progress,
-            'daily'    => $daily,
-            'weekly'   => $weekly,
-            'monthly'  => $monthly,
-        ];
-        // Ambil notifikasi unread
-        $notifModel = new \App\Models\NotificationModel();
-        $data['notifikasi'] = $notifModel
-        ->where('user_id', session()->get('user_id'))
-        ->where('status', 'unread')
-        ->orderBy('created_at', 'DESC')
-        ->findAll();
-
-        foreach ($data['notifikasi'] as $n) {
-    $notifModel->update($n['id'], ['status' => 'read']);
-}
-// Hitung pending task count
-helper('globalcount');
-$data['pending_task_count'] = getPendingTaskCount(session('user_id'));
-
-
-        return view('staff/dashboard', $data);
+        return view('staff/dashboard', [
+            'tahunAktif'            => $tahunAktif,
+            'twAktif'               => $twAktif,
+            'totalPicAktif'         => $totalPicAktif,
+            // 'indikatorBelumSelesai' => $indikatorBelumSelesai,
+            'dokumenRevisi'         => $dokumenRevisi,
+            'notifikasi'            => $notifikasi,
+        ]);
     }
 }

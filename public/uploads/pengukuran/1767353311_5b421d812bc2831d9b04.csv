@@ -1,0 +1,1566 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Waktu pembuatan: 02 Jan 2026 pada 11.43
+-- Versi server: 10.4.32-MariaDB
+-- Versi PHP: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `kinetrack4`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `activity_logs`
+--
+
+CREATE TABLE `activity_logs` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `role` enum('admin','atasan','staff') NOT NULL,
+  `action` varchar(50) NOT NULL,
+  `description` text NOT NULL,
+  `subject_type` varchar(50) DEFAULT NULL,
+  `subject_id` int(10) UNSIGNED DEFAULT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `user_agent` text DEFAULT NULL,
+  `created_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `activity_logs`
+--
+
+INSERT INTO `activity_logs` (`id`, `user_id`, `role`, `action`, `description`, `subject_type`, `subject_id`, `ip_address`, `user_agent`, `created_at`) VALUES
+(1, 1, 'admin', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-29 10:07:36'),
+(2, 2, 'staff', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-29 10:09:36'),
+(3, 1, 'admin', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-29 10:11:33'),
+(4, 2, 'staff', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-29 10:56:49'),
+(5, 2, 'staff', 'view_profile', 'Melihat halaman profil pribadi', 'user', 2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-29 10:59:32'),
+(6, 61, 'atasan', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-29 10:59:55'),
+(7, 64, 'staff', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-29 11:15:15'),
+(8, 1, 'admin', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', '2025-12-29 11:16:27'),
+(9, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 3025', 'pengukuran_kinerja', 56, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', '2025-12-29 13:33:57'),
+(10, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 53 TW 1 tahun anggaran ID 56', 'indikator_kinerja', 53, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', '2025-12-29 13:34:08'),
+(11, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 3025', 'pengukuran_kinerja', 56, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0', '2025-12-29 13:34:11'),
+(12, 1, 'admin', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:48:37'),
+(13, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 3025', 'pengukuran_kinerja', 56, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:51:10'),
+(14, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 53 TW 1 tahun anggaran ID 56', 'indikator_kinerja', 53, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:51:11'),
+(15, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 3025', 'pengukuran_kinerja', 56, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:51:13'),
+(16, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 3 Tahun Anggaran 3025', 'pengukuran_kinerja', 56, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:51:15'),
+(17, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 53 TW 3 tahun anggaran ID 56', 'indikator_kinerja', 53, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:51:17'),
+(18, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 3 Tahun Anggaran 3025', 'pengukuran_kinerja', 56, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:51:19'),
+(19, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 4 Tahun Anggaran 3025', 'pengukuran_kinerja', 56, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:51:20'),
+(20, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 53 TW 4 tahun anggaran ID 56', 'indikator_kinerja', 53, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:51:21'),
+(21, 1, 'admin', 'update_pengukuran', 'Mengubah data pengukuran kinerja ID 84 (hasil input staff)', 'pengukuran_kinerja', 84, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:51:42'),
+(22, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 53 TW 4 tahun anggaran ID 56', 'indikator_kinerja', 53, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:51:42'),
+(23, 64, 'staff', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:52:06'),
+(24, 1, 'admin', 'create_sasaran', 'Menambahkan sasaran strategis: ada', 'sasaran', 45, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:52:26'),
+(25, 1, 'admin', 'create_indikator', 'Menambahkan indikator: p', 'indikator_kinerja', 54, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:53:51'),
+(26, 1, 'admin', 'assign_pic', 'Menetapkan PIC indikator kepada 1 pegawai', 'indikator', 54, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:54:06'),
+(27, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:54:14'),
+(28, 1, 'admin', 'toggle_triwulan', 'Mengubah status TW 2 menjadi TERKUNCI', 'tw_settings', 162, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:54:51'),
+(29, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:54:54'),
+(30, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator p TW 4 Tahun 3025', 'indikator_kinerja', 54, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:55:06'),
+(31, 64, 'staff', 'upload_file_pengukuran', 'Mengunggah 1 file pendukung pengukuran indikator p TW 4 Tahun 3025', 'pengukuran_kinerja', 54, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:55:28'),
+(32, 64, 'staff', 'submit_pengukuran', 'Mengisi pengukuran indikator p TW 4 Tahun 3025 dengan realisasi 23 dari target 25', 'pengukuran_kinerja', 54, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:55:28'),
+(33, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:55:28'),
+(34, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 4 Tahun Anggaran 3025', 'pengukuran_kinerja', 56, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:55:42'),
+(35, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 54 TW 4 tahun anggaran ID 56', 'indikator_kinerja', 54, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:55:44'),
+(36, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:56:01'),
+(37, 64, 'staff', 'view_pengukuran_progress', 'Melihat progress pengukuran indikator p TW 4 Tahun 3025', 'pengukuran_kinerja', 54, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:56:03'),
+(38, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:56:06'),
+(39, 1, 'admin', 'update_pengukuran', 'Mengubah data pengukuran kinerja ID 88 (hasil input staff)', 'pengukuran_kinerja', 88, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:56:12'),
+(40, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 54 TW 4 tahun anggaran ID 56', 'indikator_kinerja', 54, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:56:12'),
+(41, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:56:15'),
+(42, 64, 'staff', 'view_pengukuran_report', 'Melihat laporan pengukuran indikator p TW 4 Tahun 3025', 'pengukuran_kinerja', 54, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:56:20'),
+(43, 64, 'staff', 'view_profile', 'Melihat halaman profil pribadi', 'user', 64, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:56:29'),
+(44, 64, 'staff', 'upload_ttd_digital', 'Mengunggah atau memperbarui tanda tangan digital', 'user', 64, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:56:43'),
+(45, 64, 'staff', 'update_profile', 'Memperbarui data profil (nama dan email)', 'user', 64, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:56:43'),
+(46, 64, 'staff', 'view_profile', 'Melihat halaman profil pribadi', 'user', 64, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:56:43'),
+(47, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:56:46'),
+(48, 64, 'staff', 'view_profile', 'Melihat halaman profil pribadi', 'user', 64, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:56:50'),
+(49, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:56:59'),
+(50, 64, 'staff', 'view_pengukuran_report', 'Melihat laporan pengukuran indikator p TW 4 Tahun 3025', 'pengukuran_kinerja', 54, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:57:01'),
+(51, 64, 'staff', 'view_dokumen_list', 'Melihat daftar dokumen kinerja pribadi', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:58:05'),
+(52, 64, 'staff', 'open_upload_dokumen_form', 'Membuka form upload dokumen kinerja', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:58:07'),
+(53, 64, 'staff', 'upload_dokumen', 'Mengunggah dokumen \"es kiko\" kategori Anggaran dengan scope personal', 'dokumen', 11, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:58:36'),
+(54, 64, 'staff', 'view_dokumen_list', 'Melihat daftar dokumen kinerja pribadi', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:58:36'),
+(55, 61, 'atasan', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:59:26'),
+(56, 62, 'atasan', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 12:59:57'),
+(57, 62, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja (mode atasan)', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:05'),
+(58, 62, 'atasan', 'view_dokumen_masuk', 'Melihat daftar dokumen masuk untuk direview', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:06'),
+(59, 62, 'atasan', 'review_dokumen', 'Membuka review dokumen \'es kiko\'', 'dokumen', 11, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:08'),
+(60, 62, 'atasan', 'approve_dokumen', 'Menyetujui dokumen \'es kiko\' dari unit 14 (scope personal)', 'dokumen', 11, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:09'),
+(61, 62, 'atasan', 'view_dokumen_masuk', 'Melihat daftar dokumen masuk untuk direview', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:09'),
+(62, 61, 'atasan', 'view_dokumen_masuk', 'Melihat daftar dokumen masuk untuk direview', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:13'),
+(63, 61, 'atasan', 'review_dokumen', 'Membuka review dokumen \'es kiko\'', 'dokumen', 11, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:15'),
+(64, 61, 'atasan', 'approve_dokumen', 'Menyetujui dokumen \'es kiko\' dari unit 14 (scope personal)', 'dokumen', 11, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:16'),
+(65, 61, 'atasan', 'view_dokumen_masuk', 'Melihat daftar dokumen masuk untuk direview', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:16'),
+(66, 64, 'staff', 'view_dokumen_list', 'Melihat daftar dokumen kinerja pribadi', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:36'),
+(67, 64, 'staff', 'open_upload_dokumen_form', 'Membuka form upload dokumen kinerja', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:37'),
+(68, 64, 'staff', 'upload_dokumen', 'Mengunggah dokumen \"es kiko_2\" kategori Laporan dengan scope unit', 'dokumen', 12, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:53'),
+(69, 64, 'staff', 'view_dokumen_list', 'Melihat daftar dokumen kinerja pribadi', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:54'),
+(70, 62, 'atasan', 'view_dokumen_masuk', 'Melihat daftar dokumen masuk untuk direview', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:57'),
+(71, 62, 'atasan', 'review_dokumen', 'Membuka review dokumen \'es kiko_2\'', 'dokumen', 12, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:58'),
+(72, 62, 'atasan', 'approve_dokumen', 'Menyetujui dokumen \'es kiko_2\' dari unit 14 (scope unit)', 'dokumen', 12, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:59'),
+(73, 62, 'atasan', 'view_dokumen_masuk', 'Melihat daftar dokumen masuk untuk direview', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:00:59'),
+(74, 61, 'atasan', 'view_dokumen_masuk', 'Melihat daftar dokumen masuk untuk direview', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:02'),
+(75, 61, 'atasan', 'review_dokumen', 'Membuka review dokumen \'es kiko_2\'', 'dokumen', 12, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:03'),
+(76, 61, 'atasan', 'approve_dokumen', 'Menyetujui dokumen \'es kiko_2\' dari unit 14 (scope unit)', 'dokumen', 12, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:04'),
+(77, 61, 'atasan', 'view_dokumen_masuk', 'Melihat daftar dokumen masuk untuk direview', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:04'),
+(78, 61, 'atasan', 'view_dokumen_unit', 'Melihat dokumen unit (read-only)', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:06'),
+(79, 61, 'atasan', 'view_dokumen_public', 'Melihat dokumen publik', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:08'),
+(80, 61, 'atasan', 'view_dokumen_masuk', 'Melihat daftar dokumen masuk untuk direview', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:10'),
+(81, 61, 'atasan', 'view_dokumen_unit', 'Melihat dokumen unit (read-only)', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:11'),
+(82, 62, 'atasan', 'view_dokumen_masuk', 'Melihat daftar dokumen masuk untuk direview', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:13'),
+(83, 62, 'atasan', 'view_dokumen_unit', 'Melihat dokumen unit (read-only)', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:14'),
+(84, 62, 'atasan', 'view_dokumen_public', 'Melihat dokumen publik', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:16'),
+(85, 62, 'atasan', 'view_dokumen_unit', 'Melihat dokumen unit (read-only)', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:17'),
+(86, 64, 'staff', 'view_dokumen_unit', 'Melihat dokumen unit kerja', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:22'),
+(87, 64, 'staff', 'view_dokumen_public', 'Melihat dokumen publik', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:24'),
+(88, 64, 'staff', 'open_upload_dokumen_form', 'Membuka form upload dokumen kinerja', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:38'),
+(89, 64, 'staff', 'upload_dokumen', 'Mengunggah dokumen \"es kiko_3\" kategori Zona dengan scope public', 'dokumen', 13, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:54'),
+(90, 64, 'staff', 'view_dokumen_list', 'Melihat daftar dokumen kinerja pribadi', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:54'),
+(91, 62, 'atasan', 'view_dokumen_unit', 'Melihat dokumen unit (read-only)', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:55'),
+(92, 62, 'atasan', 'view_dokumen_masuk', 'Melihat daftar dokumen masuk untuk direview', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:57'),
+(93, 62, 'atasan', 'review_dokumen', 'Membuka review dokumen \'es kiko_3\'', 'dokumen', 13, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:01:59'),
+(94, 62, 'atasan', 'approve_dokumen', 'Menyetujui dokumen \'es kiko_3\' dari unit 14 (scope public)', 'dokumen', 13, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:02:00'),
+(95, 62, 'atasan', 'view_dokumen_masuk', 'Melihat daftar dokumen masuk untuk direview', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:02:00'),
+(96, 64, 'staff', 'view_dokumen_list', 'Melihat daftar dokumen kinerja pribadi', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:02:04'),
+(97, 61, 'atasan', 'view_dokumen_masuk', 'Melihat daftar dokumen masuk untuk direview', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:02:07'),
+(98, 61, 'atasan', 'review_dokumen', 'Membuka review dokumen \'es kiko_3\'', 'dokumen', 13, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:02:09'),
+(99, 61, 'atasan', 'approve_dokumen', 'Menyetujui dokumen \'es kiko_3\' dari unit 14 (scope public)', 'dokumen', 13, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:02:10'),
+(100, 61, 'atasan', 'view_dokumen_masuk', 'Melihat daftar dokumen masuk untuk direview', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:02:10'),
+(101, 64, 'staff', 'view_dokumen_list', 'Melihat daftar dokumen kinerja pribadi', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:02:12'),
+(102, 64, 'staff', 'view_dokumen_public', 'Melihat dokumen publik', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:02:14'),
+(103, 62, 'atasan', 'view_dokumen_public', 'Melihat dokumen publik', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:02:18'),
+(104, 61, 'atasan', 'view_dokumen_public', 'Melihat dokumen publik', 'dokumen', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:02:21'),
+(105, 64, 'staff', 'view_dokumen_unit', 'Melihat dokumen unit kerja', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:31:39'),
+(106, 64, 'staff', 'view_dokumen_unit', 'Melihat dokumen unit kerja', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:31:44'),
+(107, 64, 'staff', 'view_dokumen_public', 'Melihat dokumen publik', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 13:32:34'),
+(108, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 14:47:06'),
+(109, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator Jumlah Program Kerja Sama Internasional TW 4 Tahun 2026', 'indikator_kinerja', 50, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 14:47:09'),
+(110, 1, 'admin', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 18:58:01'),
+(111, 1, 'admin', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:24:25'),
+(112, 1, 'admin', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:24:47'),
+(113, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 9090', 'tahun_anggaran', 8, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:36:46'),
+(114, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 10000', 'tahun_anggaran', 25, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:37:00'),
+(115, 1, 'admin', 'update_tahun_status', 'Menonaktifkan tahun anggaran 10000', 'tahun_anggaran', 25, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:37:11'),
+(116, 1, 'admin', 'update_tahun_status', 'Menonaktifkan tahun anggaran 9090', 'tahun_anggaran', 8, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:37:15'),
+(117, 1, 'admin', 'update_tahun_status', 'Menonaktifkan tahun anggaran 3025', 'tahun_anggaran', 56, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:37:20'),
+(118, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 10', 'tahun_anggaran', 31, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:37:35'),
+(119, 1, 'admin', 'update_tahun_status', 'Menonaktifkan tahun anggaran 10', 'tahun_anggaran', 31, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:37:47'),
+(120, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 3025', 'tahun_anggaran', 56, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:41:30'),
+(121, 1, 'admin', 'create_tahun', 'Menambahkan dan mengaktifkan tahun anggaran 1', 'tahun_anggaran', 57, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:45:31'),
+(122, 1, 'admin', 'create_tahun', 'Menambahkan dan mengaktifkan tahun anggaran 2', 'tahun_anggaran', 58, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:45:38'),
+(123, 1, 'admin', 'update_tahun', 'Memperbarui tahun anggaran 1 menjadi ACTIVE', 'tahun_anggaran', 57, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:45:43'),
+(124, 1, 'admin', 'update_tahun', 'Memperbarui tahun anggaran 2 menjadi ACTIVE', 'tahun_anggaran', 58, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:45:50'),
+(125, 1, 'admin', 'update_tahun', 'Memperbarui tahun anggaran 2 menjadi ACTIVE', 'tahun_anggaran', 58, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:47:11'),
+(126, 1, 'admin', 'update_tahun_status', 'Menonaktifkan tahun anggaran 2', 'tahun_anggaran', 58, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:49:19'),
+(127, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 1', 'tahun_anggaran', 57, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:51:39'),
+(128, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 3015', 'tahun_anggaran', 49, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:52:32'),
+(129, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 1', 'tahun_anggaran', 57, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:53:53'),
+(130, 1, 'admin', 'create_sasaran', 'Menambahkan sasaran strategis: ada', 'sasaran', 46, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:54:01'),
+(131, 1, 'admin', 'create_sasaran', 'Menambahkan sasaran strategis: adaaa', 'sasaran', 47, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:54:43'),
+(132, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 3025', 'tahun_anggaran', 56, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:55:23'),
+(133, 1, 'admin', 'update_tahun_status', 'Menonaktifkan tahun anggaran 1', 'tahun_anggaran', 57, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:55:28'),
+(134, 1, 'admin', 'create_sasaran', 'Menambahkan sasaran strategis: g a ada', 'sasaran', 48, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:56:10'),
+(135, 1, 'admin', 'create_indikator', 'Menambahkan indikator: aaa', 'indikator_kinerja', 55, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:57:45'),
+(136, 1, 'admin', 'assign_pic', 'Menetapkan PIC indikator kepada 1 pegawai', 'indikator', 55, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:57:59'),
+(137, 64, 'staff', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:58:47'),
+(138, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:58:50'),
+(139, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator aaa TW 4 Tahun 3025', 'indikator_kinerja', 55, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:58:56'),
+(140, 64, 'staff', 'upload_file_pengukuran', 'Mengunggah 1 file pendukung pengukuran indikator aaa TW 4 Tahun 3025', 'pengukuran_kinerja', 55, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:59:09'),
+(141, 64, 'staff', 'submit_pengukuran', 'Mengisi pengukuran indikator aaa TW 4 Tahun 3025 dengan realisasi 10 dari target 25', 'pengukuran_kinerja', 55, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:59:09'),
+(142, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:59:09'),
+(143, 64, 'staff', 'view_pengukuran_progress', 'Melihat progress pengukuran indikator aaa TW 4 Tahun 3025', 'pengukuran_kinerja', 55, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:59:15'),
+(144, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 19:59:17'),
+(145, 1, 'admin', 'update_tahun', 'Memperbarui tahun anggaran 3025 menjadi ACTIVE', 'tahun_anggaran', 56, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:00:00'),
+(146, 1, 'admin', 'update_tahun_status', 'Menonaktifkan tahun anggaran 3025', 'tahun_anggaran', 56, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:00:51'),
+(147, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 1', 'tahun_anggaran', 57, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:01:05'),
+(148, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 2', 'tahun_anggaran', 58, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:07:51'),
+(149, 1, 'admin', 'create_sasaran', 'Menambahkan sasaran strategis: p', 'sasaran', 49, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:08:03'),
+(150, 1, 'admin', 'create_indikator', 'Menambahkan indikator: c', 'indikator_kinerja', 56, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:08:26'),
+(151, 1, 'admin', 'assign_pic', 'Menetapkan PIC indikator kepada 1 pegawai', 'indikator', 56, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:10:03'),
+(152, 1, 'admin', 'create_tahun', 'Menambahkan dan mengaktifkan tahun anggaran 2025', 'tahun_anggaran', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:19:46'),
+(153, 1, 'admin', 'update_tahun_status', 'Menonaktifkan tahun anggaran 2025', 'tahun_anggaran', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:19:58'),
+(154, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 2025', 'tahun_anggaran', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:20:09'),
+(155, 1, 'admin', 'create_tahun', 'Menambahkan dan mengaktifkan tahun anggaran 2026', 'tahun_anggaran', 2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:20:15'),
+(156, 1, 'admin', 'create_sasaran', 'Menambahkan sasaran strategis: adalah', 'sasaran', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:20:28'),
+(157, 1, 'admin', 'create_indikator', 'Menambahkan indikator: pecel lele', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:21:01'),
+(158, 1, 'admin', 'assign_pic', 'Menetapkan PIC indikator kepada 1 pegawai', 'indikator', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:21:37'),
+(159, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:21:44'),
+(160, 1, 'admin', 'toggle_triwulan', 'Mengubah status TW 3 menjadi TERBUKA', 'tw_settings', 7, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:21:55'),
+(161, 1, 'admin', 'toggle_triwulan', 'Mengubah status TW 2 menjadi TERBUKA', 'tw_settings', 6, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:21:56'),
+(162, 1, 'admin', 'toggle_triwulan', 'Mengubah status TW 1 menjadi TERBUKA', 'tw_settings', 5, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:21:58'),
+(163, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:22:00'),
+(164, 1, 'admin', 'toggle_triwulan', 'Mengubah status TW 1 menjadi TERKUNCI', 'tw_settings', 5, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:22:02'),
+(165, 1, 'admin', 'toggle_triwulan', 'Mengubah status TW 2 menjadi TERKUNCI', 'tw_settings', 6, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:22:03'),
+(166, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:22:07'),
+(167, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator pecel lele TW 4 Tahun 2026', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:22:08'),
+(168, 64, 'staff', 'upload_file_pengukuran', 'Mengunggah 1 file pendukung pengukuran indikator pecel lele TW 4 Tahun 2026', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:22:18'),
+(169, 64, 'staff', 'submit_pengukuran', 'Mengisi pengukuran indikator pecel lele TW 4 Tahun 2026 dengan realisasi 25 dari target 25', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:22:18'),
+(170, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:22:19'),
+(171, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 4 Tahun Anggaran 2026', 'pengukuran_kinerja', 2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:22:27'),
+(172, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 1 TW 4 tahun anggaran ID 2', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:22:28'),
+(173, 1, 'admin', 'toggle_triwulan', 'Mengubah status TW 2 menjadi TERBUKA', 'tw_settings', 6, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:29:02'),
+(174, 1, 'admin', 'toggle_triwulan', 'Mengubah status TW 1 menjadi TERBUKA', 'tw_settings', 5, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:29:03'),
+(175, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:29:07'),
+(176, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator pecel lele TW 3 Tahun 2026', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:29:09'),
+(177, 64, 'staff', 'upload_file_pengukuran', 'Mengunggah 1 file pendukung pengukuran indikator pecel lele TW 3 Tahun 2026', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:29:21'),
+(178, 64, 'staff', 'submit_pengukuran', 'Mengisi pengukuran indikator pecel lele TW 3 Tahun 2026 dengan realisasi 25 dari target 25', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:29:21'),
+(179, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:29:22'),
+(180, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator pecel lele TW 2 Tahun 2026', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:29:24'),
+(181, 64, 'staff', 'upload_file_pengukuran', 'Mengunggah 1 file pendukung pengukuran indikator pecel lele TW 2 Tahun 2026', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:29:35'),
+(182, 64, 'staff', 'submit_pengukuran', 'Mengisi pengukuran indikator pecel lele TW 2 Tahun 2026 dengan realisasi 25 dari target 25', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:29:35'),
+(183, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:29:35'),
+(184, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator pecel lele TW 1 Tahun 2026', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:29:37'),
+(185, 64, 'staff', 'upload_file_pengukuran', 'Mengunggah 1 file pendukung pengukuran indikator pecel lele TW 1 Tahun 2026', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:29:51'),
+(186, 64, 'staff', 'submit_pengukuran', 'Mengisi pengukuran indikator pecel lele TW 1 Tahun 2026 dengan realisasi 23 dari target 25', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:29:52'),
+(187, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:29:52'),
+(188, 1, 'admin', 'create_indikator', 'Menambahkan indikator: ccc', 'indikator_kinerja', 2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:30:24'),
+(189, 1, 'admin', 'create_indikator', 'Menambahkan indikator: pee', 'indikator_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:59:03'),
+(190, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2026', 'pengukuran_kinerja', 2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:59:29'),
+(191, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 3 TW 1 tahun anggaran ID 2', 'indikator_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:59:31'),
+(192, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2026', 'pengukuran_kinerja', 2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 20:59:34'),
+(193, 1, 'admin', 'assign_pic', 'Menetapkan PIC indikator kepada 1 pegawai', 'indikator', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 21:00:17'),
+(194, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 21:00:21'),
+(195, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator pee TW 4 Tahun 2026', 'indikator_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 21:00:22'),
+(196, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 21:00:25'),
+(197, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator pee TW 1 Tahun 2026', 'indikator_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 21:00:26'),
+(198, 64, 'staff', 'upload_file_pengukuran', 'Mengunggah 1 file pendukung pengukuran indikator pee TW 1 Tahun 2026', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 21:00:38');
+INSERT INTO `activity_logs` (`id`, `user_id`, `role`, `action`, `description`, `subject_type`, `subject_id`, `ip_address`, `user_agent`, `created_at`) VALUES
+(199, 64, 'staff', 'submit_pengukuran', 'Mengisi pengukuran indikator pee TW 1 Tahun 2026 dengan realisasi 15 dari target 15', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 21:00:38'),
+(200, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 21:00:38'),
+(201, 1, 'admin', 'create_indikator', 'Menambahkan indikator: ax', 'indikator_kinerja', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 21:04:29'),
+(202, 1, 'admin', 'create_indikator', 'Menambahkan indikator: ac', 'indikator_kinerja', 5, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 21:04:57'),
+(203, 1, 'admin', 'create_indikator', 'Menambahkan indikator: z', 'indikator_kinerja', 6, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 21:05:50'),
+(204, 1, 'admin', 'create_indikator', 'Menambahkan indikator: m', 'indikator_kinerja', 7, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-30 21:26:19'),
+(205, 1, 'admin', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 07:07:27'),
+(206, 1, 'admin', 'create_tahun', 'Menambahkan dan mengaktifkan tahun anggaran 2027', 'tahun_anggaran', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 07:09:36'),
+(207, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 2025', 'tahun_anggaran', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 07:09:47'),
+(208, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 2027', 'tahun_anggaran', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 07:10:01'),
+(209, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 2026', 'tahun_anggaran', 2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 07:27:52'),
+(210, 1, 'admin', 'create_sasaran', 'Menambahkan sasaran strategis: anggaran', 'sasaran', 2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 07:28:10'),
+(211, 1, 'admin', 'create_indikator', 'Menambahkan indikator: ada', 'indikator_kinerja', 8, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 07:31:51'),
+(212, 1, 'admin', 'create_sasaran', 'Menambahkan sasaran strategis: algies', 'sasaran', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 07:57:20'),
+(213, 1, 'admin', 'create_tahun', 'Menambahkan dan mengaktifkan tahun anggaran 2025', 'tahun_anggaran', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:21:25'),
+(214, 1, 'admin', 'create_sasaran', 'Menambahkan sasaran strategis: Meningkatkan Kualitas Pembelajaran', 'sasaran', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:22:36'),
+(215, 1, 'admin', 'create_sasaran', 'Menambahkan sasaran strategis: Meningkatkan Penelitian dan Publikasi', 'sasaran', 2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:22:51'),
+(216, 1, 'admin', 'create_sasaran', 'Menambahkan sasaran strategis: Peningkatan Layanan Administrasi dan Kepuasan Mahasiswa', 'sasaran', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:23:03'),
+(217, 1, 'admin', 'create_indikator', 'Menambahkan indikator: Persentase kehadiran dosen', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:23:46'),
+(218, 1, 'admin', 'create_indikator', 'Menambahkan indikator: Tingkat kelulusan mahasiswa per semester', 'indikator_kinerja', 2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:24:10'),
+(219, 1, 'admin', 'create_indikator', 'Menambahkan indikator: Hasil evaluasi kepuasan mahasiswa terhadap metode pembelajaran', 'indikator_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:24:40'),
+(220, 1, 'admin', 'create_indikator', 'Menambahkan indikator: Jumlah publikasi ilmiah dosen di jurnal terakreditasi', 'indikator_kinerja', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:25:38'),
+(221, 1, 'admin', 'create_indikator', 'Menambahkan indikator: Jumlah penelitian kolaboratif dengan industri atau lembaga lain', 'indikator_kinerja', 5, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:26:01'),
+(222, 1, 'admin', 'create_indikator', 'Menambahkan indikator: Rata-rata sitasi penelitian dosen per publikasi', 'indikator_kinerja', 6, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:26:45'),
+(223, 1, 'admin', 'assign_pic', 'Menetapkan PIC indikator kepada 1 pegawai', 'indikator', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:27:29'),
+(224, 64, 'staff', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:27:43'),
+(225, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:27:46'),
+(226, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator Hasil evaluasi kepuasan mahasiswa terhadap metode pembelajaran TW 4 Tahun 2025', 'indikator_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:27:47'),
+(227, 64, 'staff', 'upload_file_pengukuran', 'Mengunggah 1 file pendukung pengukuran indikator Hasil evaluasi kepuasan mahasiswa terhadap metode pembelajaran TW 4 Tahun 2025', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:28:05'),
+(228, 64, 'staff', 'submit_pengukuran', 'Mengisi pengukuran indikator Hasil evaluasi kepuasan mahasiswa terhadap metode pembelajaran TW 4 Tahun 2025 dengan realisasi 15 dari target 20', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:28:05'),
+(229, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:28:05'),
+(230, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 4 Tahun Anggaran 2025', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:28:12'),
+(231, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 1 TW 4 tahun anggaran ID 1', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:28:15'),
+(232, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 4 Tahun Anggaran 2025', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:28:17'),
+(233, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 2 TW 4 tahun anggaran ID 1', 'indikator_kinerja', 2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:28:20'),
+(234, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 4 Tahun Anggaran 2025', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:28:22'),
+(235, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 3 TW 4 tahun anggaran ID 1', 'indikator_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:28:28'),
+(236, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 4 Tahun Anggaran 2025', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:28:34'),
+(237, 1, 'admin', 'assign_pic', 'Menetapkan PIC indikator kepada 1 pegawai', 'indikator', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:29:33'),
+(238, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:29:35'),
+(239, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator Jumlah publikasi ilmiah dosen di jurnal terakreditasi TW 4 Tahun 2025', 'indikator_kinerja', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:29:37'),
+(240, 64, 'staff', 'upload_file_pengukuran', 'Mengunggah 1 file pendukung pengukuran indikator Jumlah publikasi ilmiah dosen di jurnal terakreditasi TW 4 Tahun 2025', 'pengukuran_kinerja', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:29:57'),
+(241, 64, 'staff', 'submit_pengukuran', 'Mengisi pengukuran indikator Jumlah publikasi ilmiah dosen di jurnal terakreditasi TW 4 Tahun 2025 dengan realisasi 10 dari target 10', 'pengukuran_kinerja', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:29:57'),
+(242, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:29:58'),
+(243, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 4 Tahun Anggaran 2025', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:30:04'),
+(244, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 5 TW 4 tahun anggaran ID 1', 'indikator_kinerja', 5, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:30:11'),
+(245, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 4 Tahun Anggaran 2025', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:30:13'),
+(246, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 4 TW 4 tahun anggaran ID 1', 'indikator_kinerja', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:30:14'),
+(247, 1, 'admin', 'toggle_triwulan', 'Mengubah status TW 3 menjadi TERBUKA', 'tw_settings', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:30:46'),
+(248, 1, 'admin', 'toggle_triwulan', 'Mengubah status TW 2 menjadi TERBUKA', 'tw_settings', 2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:30:47'),
+(249, 1, 'admin', 'toggle_triwulan', 'Mengubah status TW 1 menjadi TERBUKA', 'tw_settings', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:30:48'),
+(250, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:30:50'),
+(251, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator Jumlah publikasi ilmiah dosen di jurnal terakreditasi TW 3 Tahun 2025', 'indikator_kinerja', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:30:52'),
+(252, 64, 'staff', 'upload_file_pengukuran', 'Mengunggah 1 file pendukung pengukuran indikator Jumlah publikasi ilmiah dosen di jurnal terakreditasi TW 3 Tahun 2025', 'pengukuran_kinerja', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:31:05'),
+(253, 64, 'staff', 'submit_pengukuran', 'Mengisi pengukuran indikator Jumlah publikasi ilmiah dosen di jurnal terakreditasi TW 3 Tahun 2025 dengan realisasi 20 dari target 20', 'pengukuran_kinerja', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:31:05'),
+(254, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:31:06'),
+(255, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator Jumlah publikasi ilmiah dosen di jurnal terakreditasi TW 2 Tahun 2025', 'indikator_kinerja', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:31:07'),
+(256, 64, 'staff', 'upload_file_pengukuran', 'Mengunggah 1 file pendukung pengukuran indikator Jumlah publikasi ilmiah dosen di jurnal terakreditasi TW 2 Tahun 2025', 'pengukuran_kinerja', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:31:19'),
+(257, 64, 'staff', 'submit_pengukuran', 'Mengisi pengukuran indikator Jumlah publikasi ilmiah dosen di jurnal terakreditasi TW 2 Tahun 2025 dengan realisasi 35 dari target 35', 'pengukuran_kinerja', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:31:19'),
+(258, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:31:19'),
+(259, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator Jumlah publikasi ilmiah dosen di jurnal terakreditasi TW 1 Tahun 2025', 'indikator_kinerja', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:31:40'),
+(260, 64, 'staff', 'upload_file_pengukuran', 'Mengunggah 1 file pendukung pengukuran indikator Jumlah publikasi ilmiah dosen di jurnal terakreditasi TW 1 Tahun 2025', 'pengukuran_kinerja', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:31:52'),
+(261, 64, 'staff', 'submit_pengukuran', 'Mengisi pengukuran indikator Jumlah publikasi ilmiah dosen di jurnal terakreditasi TW 1 Tahun 2025 dengan realisasi 25 dari target 25', 'pengukuran_kinerja', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:31:52'),
+(262, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 08:31:52'),
+(263, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 09:10:35'),
+(264, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 09:11:20'),
+(265, 64, 'staff', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 09:15:44'),
+(266, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 09:25:42'),
+(267, 61, 'atasan', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 09:41:57'),
+(268, 1, 'admin', 'assign_pic', 'Menetapkan PIC indikator kepada 1 pegawai', 'indikator', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 09:45:46'),
+(269, 61, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 09:46:02'),
+(270, 1, 'admin', 'assign_pic', 'Menetapkan PIC indikator kepada 1 pegawai', 'indikator', 5, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 09:46:44'),
+(271, 1, 'admin', 'assign_pic', 'Menetapkan PIC indikator kepada 1 pegawai', 'indikator', 2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 09:47:12'),
+(272, 61, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 09:47:44'),
+(273, 61, 'atasan', 'open_pengukuran_form', 'Membuka form pengukuran indikator Persentase kehadiran dosen TW 1 Tahun 2025', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 09:47:48'),
+(274, 61, 'atasan', 'upload_file_pengukuran', 'Mengunggah 1 file pendukung pengukuran indikator Persentase kehadiran dosen TW 1 Tahun 2025', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 09:48:14'),
+(275, 61, 'atasan', 'submit_pengukuran', 'Mengisi pengukuran indikator Persentase kehadiran dosen TW 1 Tahun 2025 dengan realisasi 10 dari target 20', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 09:48:14'),
+(276, 61, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 09:48:14'),
+(277, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2025', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 09:48:44'),
+(278, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 1 TW 1 tahun anggaran ID 1', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 09:48:47'),
+(279, 61, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 10:27:15'),
+(280, 61, 'atasan', 'open_pengukuran_form', 'Membuka form pengukuran indikator Tingkat kelulusan mahasiswa per semester TW 4 Tahun 2025', 'indikator_kinerja', 2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 10:27:16'),
+(281, 1, 'admin', 'update_tahun_status', 'Menonaktifkan tahun anggaran 2025', 'tahun_anggaran', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 11:18:36'),
+(282, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 2025', 'tahun_anggaran', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 11:18:48'),
+(283, 61, 'atasan', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:21:55'),
+(284, 61, 'atasan', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:22:45'),
+(285, 64, 'staff', 'view_profile', 'Melihat halaman profil pribadi', 'user', 64, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:22:57'),
+(286, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:23:05'),
+(287, 1, 'admin', 'assign_pic', 'Menetapkan PIC indikator kepada 1 pegawai', 'indikator', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:23:18'),
+(288, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 4 Tahun Anggaran 2025', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:23:22'),
+(289, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 1 TW 4 tahun anggaran ID 1', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:23:24'),
+(290, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 4 Tahun Anggaran 2025', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:23:26'),
+(291, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2025', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:23:31'),
+(292, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 1 TW 1 tahun anggaran ID 1', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:23:32'),
+(293, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2025', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:23:35'),
+(294, 61, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja (mode atasan)', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:23:38'),
+(295, 61, 'atasan', 'open_pengukuran_form', 'Membuka form pengukuran indikator Persentase kehadiran dosen TW 4 Tahun 2025 (oleh atasan)', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:23:42'),
+(296, 61, 'atasan', 'submit_pengukuran', 'Mengisi pengukuran indikator Persentase kehadiran dosen TW 4 Tahun 2025 dengan realisasi 20 dari target 20 (oleh atasan)', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:23:54'),
+(297, 61, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja (mode atasan)', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:23:55'),
+(298, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2025', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:23:58'),
+(299, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 1 TW 1 tahun anggaran ID 1', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:24:00'),
+(300, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2025', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:24:02'),
+(301, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 4 Tahun Anggaran 2025', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:24:04'),
+(302, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 1 TW 4 tahun anggaran ID 1', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:24:05'),
+(303, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:24:10'),
+(304, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator Persentase kehadiran dosen TW 4 Tahun 2025', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:24:12'),
+(305, 64, 'staff', 'upload_file_pengukuran', 'Mengunggah 1 file pendukung pengukuran indikator Persentase kehadiran dosen TW 4 Tahun 2025', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:24:28'),
+(306, 64, 'staff', 'submit_pengukuran', 'Mengisi pengukuran indikator Persentase kehadiran dosen TW 4 Tahun 2025 dengan realisasi 15 dari target 20', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:24:28'),
+(307, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:24:28'),
+(308, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 1 TW 4 tahun anggaran ID 1', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:24:55'),
+(309, 1, 'admin', 'assign_pic', 'Menetapkan PIC indikator kepada 1 pegawai', 'indikator', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:25:58'),
+(310, 62, 'atasan', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:26:15'),
+(311, 62, 'atasan', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:26:28'),
+(312, 62, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja (mode atasan)', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:26:35'),
+(313, 62, 'atasan', 'open_pengukuran_form', 'Membuka form pengukuran indikator Persentase kehadiran dosen TW 4 Tahun 2025 (oleh atasan)', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:26:37'),
+(314, 62, 'atasan', 'submit_pengukuran', 'Mengisi pengukuran indikator Persentase kehadiran dosen TW 4 Tahun 2025 dengan realisasi 14 dari target 20 (oleh atasan)', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:26:49'),
+(315, 62, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja (mode atasan)', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 12:26:49'),
+(316, 1, 'admin', 'update_tahun_status', 'Menonaktifkan tahun anggaran 2025', 'tahun_anggaran', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:26:29'),
+(317, 1, 'admin', 'create_tahun', 'Menambahkan dan mengaktifkan tahun anggaran 2026', 'tahun_anggaran', 2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:26:47'),
+(318, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 2025', 'tahun_anggaran', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:26:54'),
+(319, 1, 'admin', 'create_tahun', 'Menambahkan dan mengaktifkan tahun anggaran 2027', 'tahun_anggaran', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:27:19'),
+(320, 1, 'admin', 'update_tahun_status', 'Menonaktifkan tahun anggaran 2027', 'tahun_anggaran', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:37:30'),
+(321, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 2027', 'tahun_anggaran', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:38:09'),
+(322, 1, 'admin', 'create_sasaran', 'Menambahkan sasaran strategis: repan', 'sasaran', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:38:29'),
+(323, 1, 'admin', 'create_sasaran', 'Menambahkan sasaran strategis: gilang', 'sasaran', 5, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:38:40'),
+(324, 1, 'admin', 'create_sasaran', 'Menambahkan sasaran strategis: algies', 'sasaran', 6, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:38:47'),
+(325, 1, 'admin', 'create_sasaran', 'Menambahkan sasaran strategis: arief', 'sasaran', 7, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:38:54'),
+(326, 1, 'admin', 'create_indikator', 'Menambahkan indikator: adalah', 'indikator_kinerja', 7, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:41:15'),
+(327, 1, 'admin', 'assign_pic', 'Menetapkan PIC indikator kepada 1 pegawai', 'indikator', 7, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:43:23'),
+(328, 1, 'admin', 'assign_pic', 'Menetapkan PIC indikator kepada 1 pegawai', 'indikator', 7, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:43:48'),
+(329, 62, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja (mode atasan)', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:43:54'),
+(330, 62, 'atasan', 'open_pengukuran_form', 'Membuka form pengukuran indikator adalah TW 4 Tahun 2027 (oleh atasan)', 'indikator_kinerja', 7, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:43:58'),
+(331, 62, 'atasan', 'submit_pengukuran', 'Mengisi pengukuran indikator adalah TW 4 Tahun 2027 dengan realisasi 25 dari target 25 (oleh atasan)', 'pengukuran_kinerja', 7, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:44:11'),
+(332, 62, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja (mode atasan)', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:44:12'),
+(333, 1, 'admin', 'create_indikator', 'Menambahkan indikator: apalah', 'indikator_kinerja', 8, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:45:48'),
+(334, 1, 'admin', 'create_indikator', 'Menambahkan indikator: p', 'indikator_kinerja', 9, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:53:25'),
+(335, 1, 'admin', 'assign_pic', 'Menetapkan PIC indikator kepada 1 pegawai', 'indikator', 9, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:53:39'),
+(336, 61, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja (mode atasan)', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:53:43'),
+(337, 61, 'atasan', 'open_pengukuran_form', 'Membuka form pengukuran indikator p TW 4 Tahun 2027 (oleh atasan)', 'indikator_kinerja', 9, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:53:46'),
+(338, 1, 'admin', 'toggle_triwulan', 'Mengubah status TW 1 menjadi TERBUKA', 'tw_settings', 9, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:53:55'),
+(339, 61, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja (mode atasan)', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:53:58'),
+(340, 61, 'atasan', 'open_pengukuran_form', 'Membuka form pengukuran indikator p TW 1 Tahun 2027 (oleh atasan)', 'indikator_kinerja', 9, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:54:01'),
+(341, 61, 'atasan', 'submit_pengukuran', 'Mengisi pengukuran indikator p TW 1 Tahun 2027 dengan realisasi 30 dari target 30 (oleh atasan)', 'pengukuran_kinerja', 9, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:54:15'),
+(342, 61, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja (mode atasan)', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 13:54:15'),
+(343, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2027', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:16:36'),
+(344, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 7 TW 1 tahun anggaran ID 3', 'indikator_kinerja', 7, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:16:37'),
+(345, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2027', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:16:39'),
+(346, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 8 TW 1 tahun anggaran ID 3', 'indikator_kinerja', 8, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:16:40'),
+(347, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2027', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:16:41'),
+(348, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 4 Tahun Anggaran 2027', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:16:44'),
+(349, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 7 TW 4 tahun anggaran ID 3', 'indikator_kinerja', 7, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:16:45'),
+(350, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 4 Tahun Anggaran 2027', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:16:51'),
+(351, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 8 TW 4 tahun anggaran ID 3', 'indikator_kinerja', 8, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:16:54'),
+(352, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 4 Tahun Anggaran 2027', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:16:56'),
+(353, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 9 TW 4 tahun anggaran ID 3', 'indikator_kinerja', 9, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:16:57'),
+(354, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 4 Tahun Anggaran 2027', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:16:59'),
+(355, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 3 Tahun Anggaran 2027', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:17:01'),
+(356, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 2 Tahun Anggaran 2027', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:17:02'),
+(357, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 7 TW 2 tahun anggaran ID 3', 'indikator_kinerja', 7, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:17:03'),
+(358, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 2 Tahun Anggaran 2027', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:17:05'),
+(359, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2027', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:17:06'),
+(360, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 7 TW 1 tahun anggaran ID 3', 'indikator_kinerja', 7, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:17:07'),
+(361, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2027', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:17:08'),
+(362, 1, 'admin', 'view_detail_pengukuran', 'Melihat detail pengukuran indikator ID 9 TW 1 tahun anggaran ID 3', 'indikator_kinerja', 9, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:17:10'),
+(363, 1, 'admin', 'view_pengukuran', 'Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2027', 'pengukuran_kinerja', 3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2025-12-31 14:17:15'),
+(364, 1, 'admin', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 08:54:02'),
+(365, 1, 'admin', 'toggle_triwulan', 'Mengubah status TW 4 menjadi TERKUNCI', 'tw_settings', 12, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 08:54:12'),
+(366, 1, 'admin', 'create_tahun', 'Menambahkan dan mengaktifkan tahun anggaran 3030', 'tahun_anggaran', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 08:55:07'),
+(367, 1, 'admin', 'create_tahun', 'Menambahkan dan mengaktifkan tahun anggaran 2028', 'tahun_anggaran', 5, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 08:55:46'),
+(368, 1, 'admin', 'create_tahun', 'Menambahkan dan mengaktifkan tahun anggaran 2029', 'tahun_anggaran', 6, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 08:56:03'),
+(369, 1, 'admin', 'create_tahun', 'Menambahkan dan mengaktifkan tahun anggaran 2030', 'tahun_anggaran', 7, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 08:56:19'),
+(370, 1, 'admin', 'create_tahun', 'Menambahkan dan mengaktifkan tahun anggaran 2031', 'tahun_anggaran', 8, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 08:56:39'),
+(371, 1, 'admin', 'toggle_triwulan', 'Mengubah status TW 4 menjadi TERKUNCI', 'tw_settings', 32, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 08:56:48'),
+(372, 1, 'admin', 'create_tahun', 'Menambahkan dan mengaktifkan tahun anggaran 2032', 'tahun_anggaran', 9, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 08:57:00'),
+(373, 1, 'admin', 'create_tahun', 'Menambahkan dan mengaktifkan tahun anggaran 2033', 'tahun_anggaran', 10, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 08:57:16'),
+(374, 1, 'admin', 'create_tahun', 'Menambahkan dan mengaktifkan tahun anggaran 2034', 'tahun_anggaran', 11, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 08:57:38'),
+(375, 1, 'admin', 'create_tahun', 'Menambahkan tahun anggaran 2035', 'tahun_anggaran', 12, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 08:58:43'),
+(376, 1, 'admin', 'create_tahun', 'Menambahkan tahun anggaran 2036', 'tahun_anggaran', 13, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 08:58:57'),
+(377, 1, 'admin', 'create_tahun', 'Menambahkan tahun anggaran 2037', 'tahun_anggaran', 14, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 08:59:13'),
+(378, 1, 'admin', 'update_tahun_status', 'Menonaktifkan tahun anggaran 2037', 'tahun_anggaran', 14, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 09:08:10'),
+(379, 1, 'admin', 'update_tahun_status', 'Menonaktifkan tahun anggaran 2036', 'tahun_anggaran', 13, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 09:08:14'),
+(380, 1, 'admin', 'update_tahun_status', 'Menonaktifkan tahun anggaran 2035', 'tahun_anggaran', 12, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 09:08:19'),
+(381, 1, 'admin', 'update_tahun_status', 'Menonaktifkan tahun anggaran 2034', 'tahun_anggaran', 11, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 09:08:26'),
+(382, 1, 'admin', 'create_tahun', 'Menambahkan tahun anggaran 2038 dan mengaktifkannya', 'tahun_anggaran', 15, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 09:08:35'),
+(383, 1, 'admin', 'create_tahun', 'Menambahkan tahun anggaran 2039 dan mengaktifkannya', 'tahun_anggaran', 16, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 09:08:50'),
+(384, 1, 'admin', 'create_tahun', 'Menambahkan tahun anggaran 2040 dan mengaktifkannya', 'tahun_anggaran', 17, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 09:09:46');
+INSERT INTO `activity_logs` (`id`, `user_id`, `role`, `action`, `description`, `subject_type`, `subject_id`, `ip_address`, `user_agent`, `created_at`) VALUES
+(385, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 3030', 'tahun_anggaran', 4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 09:10:06'),
+(386, 1, 'admin', 'toggle_triwulan', 'Mengubah status TW 1 menjadi TERBUKA', 'tw_settings', 13, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 09:10:13'),
+(387, 1, 'admin', 'toggle_triwulan', 'Mengubah status TW 4 menjadi TERKUNCI', 'tw_settings', 16, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 09:10:16'),
+(388, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 2040', 'tahun_anggaran', 17, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 09:10:22'),
+(389, 1, 'admin', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 17:10:00'),
+(390, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 2026', 'tahun_anggaran', 2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 17:10:29'),
+(391, 1, 'admin', 'update_tahun_status', 'Mengaktifkan tahun anggaran 2025', 'tahun_anggaran', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 17:10:43'),
+(392, 61, 'atasan', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 17:12:52'),
+(393, 61, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja (mode atasan)', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 17:12:54'),
+(394, 61, 'atasan', 'open_pengukuran_form', 'Membuka form pengukuran indikator Persentase kehadiran dosen TW 2 Tahun 2025 (oleh atasan)', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 17:13:19'),
+(395, 61, 'atasan', 'submit_pengukuran', 'Mengisi pengukuran indikator Persentase kehadiran dosen TW 2 Tahun 2025 dengan realisasi 20 dari target 20 (oleh atasan)', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 17:13:29'),
+(396, 61, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja (mode atasan)', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 17:13:30'),
+(397, 61, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja (mode atasan)', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 17:13:33'),
+(398, 61, 'atasan', 'open_pengukuran_form', 'Membuka form pengukuran indikator Persentase kehadiran dosen TW 3 Tahun 2025 (oleh atasan)', 'indikator_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 17:14:03'),
+(399, 61, 'atasan', 'submit_pengukuran', 'Mengisi pengukuran indikator Persentase kehadiran dosen TW 3 Tahun 2025 dengan realisasi 10 dari target 20 (oleh atasan)', 'pengukuran_kinerja', 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 17:14:15'),
+(400, 61, 'atasan', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja (mode atasan)', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-01 17:14:15'),
+(401, 1, 'admin', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-02 16:58:03'),
+(402, 1, 'admin', 'create_indikator', 'Menambahkan indikator: ada', 'indikator_kinerja', 10, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-02 17:20:07'),
+(403, 1, 'admin', 'assign_pic', 'Menetapkan PIC indikator kepada 1 pegawai', 'indikator', 10, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-02 17:20:22'),
+(404, 64, 'staff', 'login', 'Login ke sistem', NULL, NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-02 17:20:41'),
+(405, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-02 17:20:52'),
+(406, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator ada TW 4 Tahun 2025', 'indikator_kinerja', 10, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-02 17:21:01'),
+(407, 64, 'staff', 'upload_file_pengukuran', 'Mengunggah 1 file pendukung pengukuran indikator ada TW 4 Tahun 2025', 'pengukuran_kinerja', 10, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-02 17:21:13'),
+(408, 64, 'staff', 'submit_pengukuran', 'Mengisi pengukuran indikator ada TW 4 Tahun 2025 dengan realisasi 100 dari target 100', 'pengukuran_kinerja', 10, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-02 17:21:13'),
+(409, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-02 17:21:13'),
+(410, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-02 17:21:50'),
+(411, 64, 'staff', 'open_pengukuran_form', 'Membuka form pengukuran indikator ada TW 3 Tahun 2025', 'indikator_kinerja', 10, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-02 17:21:52'),
+(412, 64, 'staff', 'upload_file_pengukuran', 'Mengunggah 1 file pendukung pengukuran indikator ada TW 3 Tahun 2025', 'pengukuran_kinerja', 10, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-02 17:22:07'),
+(413, 64, 'staff', 'submit_pengukuran', 'Mengisi pengukuran indikator ada TW 3 Tahun 2025 dengan realisasi 75 dari target 75', 'pengukuran_kinerja', 10, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-02 17:22:07'),
+(414, 64, 'staff', 'view_task_list', 'Melihat daftar tugas pengukuran kinerja yang ditugaskan', 'task_pengukuran', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36', '2026-01-02 17:22:07');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `bidang`
+--
+
+CREATE TABLE `bidang` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `nama_bidang` varchar(100) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `jenis_unit` enum('jurusan','prodi') NOT NULL,
+  `parent_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `bidang`
+--
+
+INSERT INTO `bidang` (`id`, `nama_bidang`, `created_at`, `updated_at`, `jenis_unit`, `parent_id`) VALUES
+(1, 'Teknik Sipil', NULL, NULL, 'jurusan', NULL),
+(2, 'Teknik Mesin', NULL, NULL, 'jurusan', NULL),
+(3, 'Teknik Refrigerasi dan Tata Udara', NULL, NULL, 'jurusan', NULL),
+(4, 'D3-Teknik Konstruksi Sipil', NULL, NULL, 'prodi', 1),
+(5, 'D3-Teknik Konstruksi Gedung', NULL, NULL, 'prodi', 1),
+(6, 'D3 Teknik Aeronautika', NULL, NULL, 'prodi', 2),
+(7, 'D-3 Teknik Mesin', NULL, NULL, 'prodi', 2),
+(8, 'D-3 Teknik Pendingin dan Tata Udara', NULL, NULL, 'prodi', 3),
+(9, 'D-4 Teknik Pendingin dan Tata Udara', NULL, NULL, 'prodi', 3),
+(10, 'Teknik Konversi Energi', NULL, NULL, 'jurusan', NULL),
+(11, 'D-3 Teknik Konversi Energi', NULL, NULL, 'prodi', 10),
+(12, 'D-4 Teknologi Pembangkit Tenaga Listrik ', NULL, NULL, 'prodi', 10),
+(13, 'Teknik Komputer dan Informatika', NULL, NULL, 'jurusan', NULL),
+(14, 'D-3 Teknik Informatika', NULL, NULL, 'prodi', 13),
+(15, 'D-4 Teknik Informatika', NULL, NULL, 'prodi', 13);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `dokumen_kinerja`
+--
+
+CREATE TABLE `dokumen_kinerja` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `judul` varchar(255) NOT NULL,
+  `deskripsi` text DEFAULT NULL,
+  `kategori_id` int(10) UNSIGNED DEFAULT NULL,
+  `scope` enum('personal','unit','public') NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `created_by` int(10) UNSIGNED NOT NULL,
+  `unit_asal_id` int(10) UNSIGNED NOT NULL,
+  `unit_jurusan_id` int(10) UNSIGNED NOT NULL,
+  `status` enum('pending_kaprodi','rejected_kaprodi','approved_kaprodi','pending_kajur','rejected_kajur','archived') NOT NULL,
+  `current_reviewer` enum('kaprodi','kajur') NOT NULL,
+  `catatan` text DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `published_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `dokumen_kinerja`
+--
+
+INSERT INTO `dokumen_kinerja` (`id`, `judul`, `deskripsi`, `kategori_id`, `scope`, `file_path`, `created_by`, `unit_asal_id`, `unit_jurusan_id`, `status`, `current_reviewer`, `catatan`, `created_at`, `updated_at`, `published_at`) VALUES
+(1, 'anggaran polban', '2025', 1, 'personal', '1766807570_9b4f17a9355a72c2b6b8.jpeg', 64, 14, 13, 'archived', '', NULL, '2025-12-27 03:52:50', '2025-12-27 04:23:31', NULL),
+(2, 'anggaran_2', 'ada', 1, 'unit', '1766807597_d98db85ea63c9d218651.jpg', 64, 14, 13, 'archived', '', NULL, '2025-12-27 03:53:17', '2025-12-27 03:56:29', NULL),
+(3, 'anggaran_3', 'ada', 1, 'public', '1766807743_2641e5dcf43fd36983b1.jpg', 64, 14, 13, 'archived', '', NULL, '2025-12-27 03:55:43', '2025-12-27 03:56:28', '2025-12-27 03:56:28'),
+(4, 'zona_1', 'ada', 2, 'personal', '1766807972_7b5513b534f79cfb4340.jpg', 64, 14, 13, 'archived', '', NULL, '2025-12-27 03:59:32', '2025-12-27 04:01:54', NULL),
+(5, 'zona_2', 'ada', 2, 'unit', '1766807989_abc89c51c5539f4add57.jpg', 64, 14, 13, 'archived', '', NULL, '2025-12-27 03:59:49', '2025-12-27 04:00:58', NULL),
+(6, 'zona_3', 'ada', 2, 'public', '1766808004_ffa7d6039ec74a63fedc.jpg', 64, 14, 13, 'archived', '', NULL, '2025-12-27 04:00:04', '2025-12-27 04:00:56', '2025-12-27 04:00:56'),
+(7, 'laporan_1', 'ada', 3, 'personal', '1766808151_5bae0f7bd708cbdd82cb.jpg', 64, 14, 13, 'archived', '', NULL, '2025-12-27 04:02:31', '2025-12-27 04:02:49', NULL),
+(8, 'laporan_2', 'ada', 3, 'unit', '1766808206_96d85c5c9bfee12365ab.jpg', 64, 14, 13, 'archived', '', NULL, '2025-12-27 04:03:26', '2025-12-27 04:04:11', NULL),
+(9, 'laporan_3', 'ada', 3, 'public', '1766808223_8e57a53f6f6e4c7cd5b8.jpg', 64, 14, 13, 'archived', '', NULL, '2025-12-27 04:03:43', '2025-12-27 04:04:08', '2025-12-27 04:04:08'),
+(10, 'laporan_4', 'ada', 3, 'personal', '1766809928_728872b7181ba2de3928.jpg', 63, 13, 13, 'archived', '', NULL, '2025-12-27 04:32:08', '2025-12-27 04:32:14', NULL),
+(11, 'es kiko', 'ada', 1, 'personal', '1767074316_948448824ea785e57669.jpg', 64, 14, 13, 'archived', '', NULL, '2025-12-30 12:58:36', '2025-12-30 13:00:16', NULL),
+(12, 'es kiko_2', 'ada', 3, 'unit', '1767074453_77834035300d8ae09b9c.jpg', 64, 14, 13, 'archived', '', NULL, '2025-12-30 13:00:53', '2025-12-30 13:01:04', NULL),
+(13, 'es kiko_3', 'ada', 2, 'public', '1767074514_03d5803c3b0b7df8210c.jpg', 64, 14, 13, 'archived', '', NULL, '2025-12-30 13:01:54', '2025-12-30 13:02:10', '2025-12-30 13:02:10');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `indikator_kinerja`
+--
+
+CREATE TABLE `indikator_kinerja` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `sasaran_id` int(11) UNSIGNED NOT NULL,
+  `kode_indikator` varchar(80) DEFAULT NULL,
+  `nama_indikator` text NOT NULL,
+  `satuan` varchar(50) DEFAULT NULL,
+  `target_pk` double DEFAULT NULL,
+  `target_tw1` double DEFAULT NULL,
+  `target_tw2` double DEFAULT NULL,
+  `target_tw3` double DEFAULT NULL,
+  `target_tw4` double DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `indikator_kinerja`
+--
+
+INSERT INTO `indikator_kinerja` (`id`, `sasaran_id`, `kode_indikator`, `nama_indikator`, `satuan`, `target_pk`, `target_tw1`, `target_tw2`, `target_tw3`, `target_tw4`, `created_at`, `updated_at`) VALUES
+(1, 1, 'IK-01', 'Persentase kehadiran dosen', '%', 80, 20, 20, 20, 20, '2025-12-31 08:23:46', '2025-12-31 08:23:46'),
+(2, 1, 'IK-02', 'Tingkat kelulusan mahasiswa per semester', '%', 120, 30, 30, 30, 30, '2025-12-31 08:24:10', '2025-12-31 08:24:10'),
+(3, 1, 'IK-03', 'Hasil evaluasi kepuasan mahasiswa terhadap metode pembelajaran', '%', 50, 10, 10, 10, 20, '2025-12-31 08:24:40', '2025-12-31 08:24:40'),
+(4, 2, 'IK-01', 'Jumlah publikasi ilmiah dosen di jurnal terakreditasi', '%', 90, 25, 35, 20, 10, '2025-12-31 08:25:38', '2025-12-31 08:25:38'),
+(5, 2, 'IK-02', 'Jumlah penelitian kolaboratif dengan industri atau lembaga lain', '%', 60, 25, 20, 5, 10, '2025-12-31 08:26:01', '2025-12-31 08:26:01'),
+(6, 2, 'IK-03', 'Rata-rata sitasi penelitian dosen per publikasi', 'dokumentasi', 40, 20, 10, 5, 5, '2025-12-31 08:26:45', '2025-12-31 08:26:45'),
+(7, 4, 'IK-01', 'adalah', '%', 100, 25, 25, 25, 25, '2025-12-31 13:41:15', '2025-12-31 13:41:15'),
+(8, 4, 'IK-02', 'apalah', '%', 100, 25, 25, 25, 25, '2025-12-31 13:45:48', '2025-12-31 13:45:48'),
+(9, 5, 'IK-01', 'p', '%', 90, 30, 25, 15, 20, '2025-12-31 13:53:25', '2025-12-31 13:53:25'),
+(10, 3, 'IK-01', 'ada', '%', 100, 25, 50, 75, 100, '2026-01-02 17:20:07', '2026-01-02 17:20:07');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `jabatan`
+--
+
+CREATE TABLE `jabatan` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `nama_jabatan` varchar(100) NOT NULL,
+  `default_role` enum('staff','atasan') NOT NULL,
+  `bidang_id` int(10) UNSIGNED NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `jabatan`
+--
+
+INSERT INTO `jabatan` (`id`, `nama_jabatan`, `default_role`, `bidang_id`, `created_at`, `updated_at`) VALUES
+(1, 'Ketua Jurusan', 'atasan', 0, '2025-12-16 09:57:40', '2025-12-16 09:57:40'),
+(2, 'Ketua Prodi', 'atasan', 0, '2025-12-16 09:57:40', '2025-12-16 09:57:40'),
+(3, 'Staff Jurusan', 'staff', 0, '2025-12-16 09:57:40', '2025-12-16 09:57:40'),
+(4, 'Staff Prodi', 'staff', 0, '2025-12-16 09:57:40', '2025-12-16 09:57:40'),
+(6, 'Ketua BLU', 'atasan', 0, NULL, NULL),
+(8, 'Staff BLU', 'staff', 0, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `kategori_dokumen`
+--
+
+CREATE TABLE `kategori_dokumen` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `nama_kategori` varchar(100) NOT NULL,
+  `deskripsi` text DEFAULT NULL,
+  `status` enum('aktif','pending','rejected','nonaktif') NOT NULL,
+  `created_by` int(10) UNSIGNED NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `kategori_dokumen`
+--
+
+INSERT INTO `kategori_dokumen` (`id`, `nama_kategori`, `deskripsi`, `status`, `created_by`, `created_at`, `updated_at`) VALUES
+(1, 'Anggaran', '2025', 'aktif', 1, '2025-12-27 03:52:12', '2025-12-27 03:52:12'),
+(2, 'Zona', 'adalah', 'aktif', 64, '2025-12-27 03:58:25', '2025-12-27 04:01:34'),
+(3, 'Laporan', 'ada', 'rejected', 64, '2025-12-27 04:02:15', '2025-12-27 04:03:01');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `laporan`
+--
+
+CREATE TABLE `laporan` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `judul` varchar(255) NOT NULL,
+  `deskripsi` text NOT NULL,
+  `tanggal` date NOT NULL,
+  `file_bukti` varchar(255) DEFAULT NULL,
+  `status` enum('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+  `catatan_atasan` text DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `migrations`
+--
+
+CREATE TABLE `migrations` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `version` varchar(255) NOT NULL,
+  `class` varchar(255) NOT NULL,
+  `group` varchar(255) NOT NULL,
+  `namespace` varchar(255) NOT NULL,
+  `time` int(11) NOT NULL,
+  `batch` int(11) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `migrations`
+--
+
+INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`, `batch`) VALUES
+(1, '2025-11-17-040430', 'App\\Database\\Migrations\\CreateUsersTable', 'default', 'App', 1763352305, 1),
+(2, '2025-11-17-053422', 'App\\Database\\Migrations\\CreateJabatanTable', 'default', 'App', 1763358743, 2),
+(3, '2025-11-17-053600', 'App\\Database\\Migrations\\CreateBidangTable', 'default', 'App', 1763358743, 2),
+(4, '2025-11-17-060919', 'App\\Database\\Migrations\\CreateLaporanTable', 'default', 'App', 1763360135, 3),
+(5, '2025-11-19-062428', 'App\\Database\\Migrations\\CreateTahunAnggaran', 'default', 'App', 1763533882, 4),
+(6, '2025-11-19-062531', 'App\\Database\\Migrations\\CreateSasaranStrategis', 'default', 'App', 1763533882, 4),
+(7, '2025-11-19-062559', 'App\\Database\\Migrations\\CreateIndikatorKinerja', 'default', 'App', 1763533882, 4),
+(8, '2025-11-19-062627', 'App\\Database\\Migrations\\CreatePengukuranKinerja', 'default', 'App', 1763533882, 4),
+(9, '2025-11-21-013130', 'App\\Database\\Migrations\\CreatePicIndikator', 'default', 'App', 1763690455, 5),
+(10, '2025-11-21-024013', 'App\\Database\\Migrations\\AddBidangIdToJabatan', 'default', 'App', 1763692835, 6),
+(11, '2025-12-08-065907', 'App\\Database\\Migrations\\CreateTwSettings', 'default', 'App', 1765179940, 7),
+(12, '2025-12-08-075854', 'App\\Database\\Migrations\\AddAutoModeTw', 'default', 'App', 1765180753, 8),
+(13, '2025-12-27-031401', 'App\\Database\\Migrations\\CreateActivityLogsTable', 'default', 'App', 1766977320, 9);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `meta` text DEFAULT NULL,
+  `status` enum('unread','read') NOT NULL DEFAULT 'unread',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `user_id`, `message`, `meta`, `status`, `created_at`) VALUES
+(1, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 4.', '{\"indikator_id\":\"1\",\"tahun_id\":\"4\",\"sasaran_id\":\"1\"}', 'read', '2025-12-08 07:45:14'),
+(2, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 5.', '{\"indikator_id\":\"2\",\"tahun_id\":\"5\",\"sasaran_id\":\"2\"}', 'read', '2025-12-08 07:53:24'),
+(3, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 6.', '{\"indikator_id\":\"3\",\"tahun_id\":\"6\",\"sasaran_id\":\"3\"}', 'read', '2025-12-08 08:33:19'),
+(4, 1, 'PIC telah mengisi pengukuran indikator ID 3 pada TW 1.', NULL, 'read', '2025-12-08 08:41:49'),
+(5, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 6.', '{\"indikator_id\":\"3\",\"tahun_id\":\"6\",\"sasaran_id\":\"3\"}', 'read', '2025-12-09 00:54:51'),
+(6, 1, 'PIC telah mengisi pengukuran indikator ID 3 pada TW 1.', NULL, 'read', '2025-12-09 00:58:28'),
+(7, 1, 'PIC telah mengisi pengukuran indikator ID 3 pada TW 2.', NULL, 'read', '2025-12-09 01:00:11'),
+(8, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 7.', '{\"indikator_id\":\"4\",\"tahun_id\":\"7\",\"sasaran_id\":\"4\"}', 'read', '2025-12-09 01:12:51'),
+(9, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 7.', '{\"indikator_id\":\"8\",\"tahun_id\":\"7\",\"sasaran_id\":\"4\"}', 'read', '2025-12-09 01:37:39'),
+(10, 1, 'PIC telah mengisi pengukuran indikator ID 8 pada TW 3.', NULL, 'read', '2025-12-09 01:38:10'),
+(11, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 8.', '{\"indikator_id\":\"9\",\"tahun_id\":\"8\",\"sasaran_id\":\"5\"}', 'read', '2025-12-09 01:45:58'),
+(12, 1, 'PIC telah mengisi pengukuran indikator ID 9 pada TW 2.', NULL, 'read', '2025-12-09 01:47:09'),
+(13, 1, 'PIC telah mengisi pengukuran indikator ID 9 pada TW 4.', NULL, 'read', '2025-12-09 02:07:33'),
+(14, 1, 'PIC telah mengisi pengukuran indikator ID 9 pada TW 2.', NULL, 'read', '2025-12-09 02:11:44'),
+(15, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 9.', '{\"indikator_id\":\"10\",\"tahun_id\":\"9\",\"sasaran_id\":\"6\"}', 'read', '2025-12-09 02:13:56'),
+(16, 1, 'PIC telah mengisi pengukuran indikator ID 10 pada TW 2.', NULL, 'read', '2025-12-09 02:14:37'),
+(17, 1, 'PIC telah mengisi pengukuran indikator ID 10 pada TW 4.', NULL, 'read', '2025-12-09 02:27:54'),
+(18, 1, 'PIC telah mengisi pengukuran indikator ID 9 pada TW 4.', NULL, 'read', '2025-12-09 02:34:31'),
+(19, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 10.', '{\"indikator_id\":\"11\",\"tahun_id\":\"10\",\"sasaran_id\":\"7\"}', 'read', '2025-12-09 04:06:01'),
+(20, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 11.', '{\"indikator_id\":\"12\",\"tahun_id\":\"11\",\"sasaran_id\":\"8\"}', 'read', '2025-12-09 04:10:26'),
+(21, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 12.', '{\"indikator_id\":\"13\",\"tahun_id\":\"12\",\"sasaran_id\":\"9\"}', 'read', '2025-12-09 04:53:04'),
+(22, 1, 'PIC telah mengisi pengukuran indikator ID 13 pada TW 1.', NULL, 'read', '2025-12-09 04:53:51'),
+(23, 1, 'PIC telah mengisi pengukuran indikator ID 9 pada TW 4.', NULL, 'read', '2025-12-09 04:56:14'),
+(24, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 13.', '{\"indikator_id\":\"14\",\"tahun_id\":\"13\",\"sasaran_id\":\"10\"}', 'read', '2025-12-09 04:59:09'),
+(25, 1, 'PIC telah mengisi pengukuran indikator ID 14 pada TW 3.', NULL, 'read', '2025-12-09 04:59:39'),
+(26, 12, 'Anda mendapatkan tugas baru untuk indikator tahun 14.', '{\"indikator_id\":\"15\",\"tahun_id\":\"14\",\"sasaran_id\":\"11\"}', 'read', '2025-12-09 06:06:33'),
+(27, 13, 'Anda mendapatkan tugas baru untuk indikator tahun 16.', '{\"indikator_id\":\"16\",\"tahun_id\":\"16\",\"sasaran_id\":\"12\"}', 'read', '2025-12-09 07:19:32'),
+(28, 1, 'PIC mengisi pengukuran indikator ID 16 pada TW 3.', NULL, 'read', '2025-12-09 07:20:50'),
+(29, 1, 'PIC mengisi pengukuran indikator ID 16 pada TW 4.', NULL, 'read', '2025-12-09 07:41:07'),
+(30, 13, 'Anda mendapatkan tugas baru untuk indikator tahun 18.', '{\"indikator_id\":\"17\",\"tahun_id\":\"18\",\"sasaran_id\":\"13\"}', 'read', '2025-12-09 07:51:35'),
+(31, 13, 'Anda mendapatkan tugas baru untuk indikator tahun 18.', '{\"indikator_id\":\"18\",\"tahun_id\":\"18\",\"sasaran_id\":\"13\"}', 'read', '2025-12-09 07:51:57'),
+(32, 13, 'Anda mendapatkan tugas baru untuk indikator tahun 18.', '{\"indikator_id\":\"19\",\"tahun_id\":\"18\",\"sasaran_id\":\"14\"}', 'read', '2025-12-09 07:52:16'),
+(33, 13, 'Anda mendapatkan tugas baru untuk indikator tahun 18.', '{\"indikator_id\":\"20\",\"tahun_id\":\"18\",\"sasaran_id\":\"14\"}', 'read', '2025-12-09 07:52:32'),
+(34, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 19.', '{\"indikator_id\":\"21\",\"tahun_id\":\"19\",\"sasaran_id\":\"15\"}', 'read', '2025-12-10 00:24:57'),
+(35, 1, 'PIC mengisi pengukuran indikator ID 21 pada TW 2.', NULL, 'read', '2025-12-10 00:26:21'),
+(36, 1, 'PIC mengisi pengukuran indikator ID 21 pada TW 4.', NULL, 'read', '2025-12-10 00:27:24'),
+(37, 14, 'Anda mendapatkan tugas baru untuk indikator tahun 18.', '{\"indikator_id\":\"22\",\"tahun_id\":\"18\",\"sasaran_id\":\"16\"}', 'read', '2025-12-10 01:05:52'),
+(38, 1, 'PIC mengisi pengukuran indikator ID 22 pada TW 4.', NULL, 'read', '2025-12-10 01:08:26'),
+(39, 1, 'PIC mengisi pengukuran indikator ID 22 pada TW 2.', NULL, 'read', '2025-12-10 01:09:54'),
+(40, 14, 'Anda mendapatkan tugas baru untuk indikator tahun 20.', '{\"indikator_id\":\"23\",\"tahun_id\":\"20\",\"sasaran_id\":\"17\"}', 'read', '2025-12-10 02:18:44'),
+(41, 1, 'PIC mengisi pengukuran indikator ID 23 pada TW 3.', NULL, 'read', '2025-12-10 02:22:57'),
+(42, 14, 'Anda mendapatkan tugas baru untuk indikator tahun 22.', '{\"indikator_id\":\"24\",\"tahun_id\":\"22\",\"sasaran_id\":\"20\"}', 'read', '2025-12-10 03:08:58'),
+(43, 14, 'Anda mendapatkan tugas baru untuk indikator tahun 23.', '{\"indikator_id\":\"25\",\"tahun_id\":\"23\",\"sasaran_id\":\"21\"}', 'read', '2025-12-10 03:16:43'),
+(44, 14, 'Anda mendapatkan tugas baru untuk indikator tahun 26.', '{\"indikator_id\":\"26\",\"tahun_id\":\"26\",\"sasaran_id\":\"22\"}', 'read', '2025-12-10 03:28:48'),
+(45, 1, 'PIC mengisi pengukuran indikator ID 26 pada TW 2.', NULL, 'read', '2025-12-10 03:30:26'),
+(46, 1, 'PIC mengisi pengukuran indikator ID 26 pada TW 4.', NULL, 'read', '2025-12-10 03:31:11'),
+(47, 14, 'Anda mendapatkan tugas baru untuk indikator tahun 20.', '{\"indikator_id\":\"27\",\"tahun_id\":\"20\",\"sasaran_id\":\"17\"}', 'read', '2025-12-10 06:58:57'),
+(48, 14, 'Anda mendapatkan tugas baru untuk indikator tahun 20.', '{\"indikator_id\":\"28\",\"tahun_id\":\"20\",\"sasaran_id\":\"17\"}', 'read', '2025-12-10 07:00:10'),
+(49, 1, 'PIC mengisi pengukuran indikator ID 28 pada TW 3.', NULL, 'read', '2025-12-10 07:01:39'),
+(50, 16, 'Anda mendapatkan tugas baru untuk indikator tahun 38.', '{\"indikator_id\":\"29\",\"tahun_id\":\"38\",\"sasaran_id\":\"23\"}', 'read', '2025-12-10 08:01:26'),
+(51, 1, 'PIC mengisi pengukuran indikator ID 29 pada TW 3.', NULL, 'read', '2025-12-10 08:02:34'),
+(52, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 39.', '{\"indikator_id\":\"30\",\"tahun_id\":\"39\",\"sasaran_id\":\"24\"}', 'read', '2025-12-11 00:30:03'),
+(53, 1, 'PIC mengisi pengukuran indikator ID 30 pada TW 4.', NULL, 'read', '2025-12-11 00:30:58'),
+(54, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 10.', '{\"indikator_id\":\"31\",\"tahun_id\":\"10\",\"sasaran_id\":\"7\"}', 'read', '2025-12-11 03:29:19'),
+(55, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 10.', '{\"indikator_id\":\"32\",\"tahun_id\":\"10\",\"sasaran_id\":\"7\"}', 'read', '2025-12-11 03:30:33'),
+(56, 1, 'PIC mengisi pengukuran indikator ID 32 pada TW 4.', NULL, 'read', '2025-12-11 03:31:30'),
+(57, 1, 'PIC mengisi pengukuran indikator ID 30 pada TW 2.', NULL, 'read', '2025-12-11 05:35:54'),
+(58, 16, 'Anda mendapatkan tugas baru untuk indikator tahun 10.', '{\"indikator_id\":\"32\",\"tahun_id\":\"10\",\"sasaran_id\":\"7\"}', 'read', '2025-12-11 07:11:44'),
+(59, 1, 'PIC mengisi pengukuran indikator ID 32 pada TW 2.', NULL, 'read', '2025-12-11 07:12:40'),
+(60, 1, 'PIC mengisi pengukuran indikator ID 32 pada TW 3.', NULL, 'read', '2025-12-11 07:13:25'),
+(61, 16, 'Anda mendapatkan tugas baru untuk indikator tahun 41.', '{\"indikator_id\":\"33\",\"tahun_id\":\"41\",\"sasaran_id\":\"25\"}', 'read', '2025-12-11 08:23:52'),
+(62, 1, 'PIC mengisi pengukuran indikator ID 33 pada TW 2.', NULL, 'read', '2025-12-11 08:28:08'),
+(63, 1, 'PIC mengisi pengukuran indikator ID 33 pada TW 3.', NULL, 'read', '2025-12-11 08:29:58'),
+(64, 1, 'PIC mengisi pengukuran indikator ID 33 pada TW 4.', NULL, 'read', '2025-12-12 01:48:53'),
+(65, 17, 'Anda mendapatkan tugas baru untuk indikator tahun 42.', '{\"indikator_id\":\"35\",\"tahun_id\":\"42\",\"sasaran_id\":\"27\"}', 'read', '2025-12-12 03:12:42'),
+(66, 1, 'PIC mengisi pengukuran indikator ID 35 pada TW 2.', NULL, 'read', '2025-12-12 03:14:27'),
+(67, 1, 'PIC mengisi pengukuran indikator ID 35 pada TW 4.', NULL, 'read', '2025-12-12 03:16:00'),
+(68, 17, 'Anda mendapatkan tugas baru untuk indikator tahun 44.', '{\"indikator_id\":\"36\",\"tahun_id\":\"44\",\"sasaran_id\":\"28\"}', 'read', '2025-12-12 08:13:14'),
+(69, 1, 'PIC mengisi pengukuran indikator ID 36 pada TW 4.', NULL, 'read', '2025-12-12 08:17:29'),
+(70, 17, 'Anda mendapatkan tugas baru untuk indikator tahun 44.', '{\"indikator_id\":\"37\",\"tahun_id\":\"44\",\"sasaran_id\":\"28\"}', 'read', '2025-12-12 08:38:08'),
+(71, 1, 'PIC mengisi pengukuran indikator ID 37 pada TW 3.', NULL, 'read', '2025-12-12 08:40:30'),
+(72, 1, 'PIC mengisi pengukuran indikator ID 37 pada TW 2.', NULL, 'read', '2025-12-12 08:40:53'),
+(73, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 8.', '{\"indikator_id\":\"38\",\"tahun_id\":\"8\",\"sasaran_id\":\"29\"}', 'read', '2025-12-15 00:39:44'),
+(74, 3, 'Anda mendapatkan tugas baru untuk indikator tahun 8.', '{\"indikator_id\":\"38\",\"tahun_id\":\"8\",\"sasaran_id\":\"29\"}', 'unread', '2025-12-15 00:39:44'),
+(75, 1, 'PIC mengisi pengukuran indikator ID 38 pada TW 1.', NULL, 'read', '2025-12-15 00:40:48'),
+(76, 1, 'PIC mengisi pengukuran indikator ID 31 pada TW 4.', NULL, 'read', '2025-12-15 01:52:25'),
+(77, 13, 'Anda mendapatkan tugas baru untuk indikator tahun 45.', '{\"indikator_id\":\"39\",\"tahun_id\":\"45\",\"sasaran_id\":\"30\"}', 'read', '2025-12-15 05:26:52'),
+(78, 1, 'PIC mengisi pengukuran indikator ID 39 pada TW 2.', NULL, 'read', '2025-12-15 05:29:31'),
+(79, 1, 'PIC mengisi pengukuran indikator ID 39 pada TW 4.', NULL, 'read', '2025-12-15 05:29:53'),
+(80, 17, 'Anda mendapatkan tugas baru untuk indikator tahun 45.', '{\"indikator_id\":\"39\",\"tahun_id\":\"45\",\"sasaran_id\":\"30\"}', 'read', '2025-12-15 05:33:27'),
+(81, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 46.', '{\"indikator_id\":\"40\",\"tahun_id\":\"46\",\"sasaran_id\":\"31\"}', 'read', '2025-12-15 06:40:38'),
+(82, 13, 'Anda mendapatkan tugas baru untuk indikator tahun 46.', '{\"indikator_id\":\"40\",\"tahun_id\":\"46\",\"sasaran_id\":\"31\"}', 'read', '2025-12-15 06:40:38'),
+(83, 1, 'PIC mengisi pengukuran indikator ID 40 pada TW 3.', NULL, 'read', '2025-12-15 06:43:00'),
+(84, 1, 'PIC mengisi pengukuran indikator ID 40 pada TW 3.', NULL, 'read', '2025-12-15 06:44:32'),
+(85, 1, 'PIC mengisi pengukuran indikator ID 40 pada TW 4.', NULL, 'read', '2025-12-15 06:46:58'),
+(86, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 46.', '{\"indikator_id\":\"41\",\"tahun_id\":\"46\",\"sasaran_id\":\"31\"}', 'read', '2025-12-15 06:56:21'),
+(87, 1, 'PIC mengisi pengukuran indikator ID 41 pada TW 4.', NULL, 'read', '2025-12-14 23:56:44'),
+(88, 1, 'PIC mengisi pengukuran indikator ID 31 pada TW 2.', NULL, 'read', '2025-12-15 06:57:58'),
+(89, 1, 'PIC mengisi pengukuran indikator ID 31 pada TW 3.', NULL, 'read', '2025-12-15 06:58:44'),
+(90, 19, 'Anda mendapatkan tugas baru untuk indikator tahun 47.', '{\"indikator_id\":\"42\",\"tahun_id\":\"47\",\"sasaran_id\":\"32\"}', 'read', '2025-12-15 07:00:55'),
+(91, 1, 'PIC mengisi pengukuran indikator ID 42 pada TW 4.', NULL, 'read', '2025-12-15 07:01:38'),
+(92, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 47.', '{\"indikator_id\":\"42\",\"tahun_id\":\"47\",\"sasaran_id\":\"32\"}', 'read', '2025-12-15 07:04:01'),
+(93, 2, 'Anda mendapatkan tugas baru untuk indikator tahun 3.', '{\"indikator_id\":\"43\",\"tahun_id\":\"3\",\"sasaran_id\":\"33\"}', 'read', '2025-12-16 00:41:15'),
+(94, 13, 'Anda mendapatkan tugas baru untuk indikator tahun 3.', '{\"indikator_id\":\"43\",\"tahun_id\":\"3\",\"sasaran_id\":\"33\"}', 'unread', '2025-12-16 00:41:15'),
+(95, 1, 'PIC mengisi pengukuran indikator ID 43 pada TW 4.', NULL, 'read', '2025-12-16 00:42:32'),
+(96, 1, 'PIC mengisi pengukuran indikator ID 43 pada TW 4.', NULL, 'read', '2025-12-16 00:43:08'),
+(97, 23, 'Anda mendapatkan tugas baru untuk indikator tahun 3.', '{\"indikator_id\":\"43\",\"tahun_id\":\"3\",\"sasaran_id\":\"33\"}', 'read', '2025-12-16 03:11:36'),
+(98, 24, 'Anda mendapatkan tugas baru untuk indikator tahun 3.', '{\"indikator_id\":\"43\",\"tahun_id\":\"3\",\"sasaran_id\":\"33\"}', 'read', '2025-12-16 03:11:36'),
+(99, 1, 'PIC mengisi pengukuran indikator ID 43 pada TW 4.', NULL, 'read', '2025-12-16 03:12:07'),
+(100, 1, 'PIC mengisi pengukuran indikator ID 43 pada TW 4.', NULL, 'read', '2025-12-16 03:13:28'),
+(101, 34, 'Anda mendapatkan tugas baru untuk indikator tahun 48.', '{\"indikator_id\":\"44\",\"tahun_id\":\"48\",\"sasaran_id\":\"34\"}', 'read', '2025-12-17 00:07:48'),
+(102, 1, 'PIC mengisi pengukuran indikator ID 44 pada TW 3.', NULL, 'read', '2025-12-17 00:08:59'),
+(103, 55, 'Anda mendapatkan tugas baru untuk indikator tahun 49.', '{\"indikator_id\":\"45\",\"tahun_id\":\"49\",\"sasaran_id\":\"35\"}', 'read', '2025-12-18 00:16:19'),
+(104, 1, 'PIC mengisi pengukuran indikator ID 45 pada TW 4.', NULL, 'read', '2025-12-18 00:17:17'),
+(105, 1, 'PIC mengisi pengukuran indikator ID 45 pada TW 3.', NULL, 'read', '2025-12-18 00:17:47'),
+(106, 49, 'Anda mendapatkan tugas baru untuk indikator tahun 50.', '{\"indikator_id\":\"46\",\"tahun_id\":\"50\",\"sasaran_id\":\"36\"}', 'read', '2025-12-18 02:47:54'),
+(107, 51, 'Anda mendapatkan tugas baru untuk indikator tahun 50.', '{\"indikator_id\":\"46\",\"tahun_id\":\"50\",\"sasaran_id\":\"36\"}', 'read', '2025-12-18 02:47:54'),
+(108, 1, 'PIC mengisi pengukuran indikator ID 46 pada TW 4.', NULL, 'read', '2025-12-18 02:49:37'),
+(109, 1, 'PIC mengisi pengukuran indikator ID 46 pada TW 2.', NULL, 'read', '2025-12-18 02:49:52'),
+(110, 1, 'PIC mengisi pengukuran indikator ID 46 pada TW 4.', NULL, 'read', '2025-12-18 02:51:27'),
+(111, 49, 'Anda mendapatkan tugas baru untuk indikator tahun 51.', '{\"indikator_id\":\"47\",\"tahun_id\":\"51\",\"sasaran_id\":\"37\"}', 'read', '2025-12-18 04:21:13'),
+(112, 51, 'Anda mendapatkan tugas baru untuk indikator tahun 51.', '{\"indikator_id\":\"47\",\"tahun_id\":\"51\",\"sasaran_id\":\"37\"}', 'read', '2025-12-18 04:21:13'),
+(113, 1, 'PIC mengisi pengukuran indikator ID 47 pada TW 4.', NULL, 'read', '2025-12-18 04:22:30'),
+(114, 1, 'PIC mengisi pengukuran indikator ID 47 pada TW 3.', NULL, 'read', '2025-12-18 04:22:45'),
+(115, 1, 'PIC mengisi pengukuran indikator ID 47 pada TW 4.', NULL, 'read', '2025-12-18 04:23:07'),
+(116, 1, 'PIC mengisi pengukuran indikator ID 47 pada TW 3.', NULL, 'read', '2025-12-18 06:59:13'),
+(117, 56, 'Anda mendapatkan tugas baru untuk indikator tahun 52.', '{\"indikator_id\":\"48\",\"tahun_id\":\"52\",\"sasaran_id\":\"38\"}', 'read', '2025-12-19 02:57:00'),
+(118, 57, 'Anda mendapatkan tugas baru untuk indikator tahun 52.', '{\"indikator_id\":\"48\",\"tahun_id\":\"52\",\"sasaran_id\":\"38\"}', 'read', '2025-12-19 02:57:32'),
+(119, 1, 'PIC mengisi pengukuran indikator ID 48 pada TW 4.', NULL, 'read', '2025-12-19 02:58:51'),
+(120, 1, 'PIC mengisi pengukuran indikator ID 48 pada TW 2.', NULL, 'read', '2025-12-19 02:59:08'),
+(121, 58, 'Anda mendapatkan tugas baru untuk indikator tahun 52.', '{\"indikator_id\":\"48\",\"tahun_id\":\"52\",\"sasaran_id\":\"38\"}', 'read', '2025-12-19 03:07:02'),
+(122, 1, 'PIC mengisi pengukuran indikator ID 48 pada TW 4.', NULL, 'read', '2025-12-19 03:08:08'),
+(123, 1, 'PIC mengisi pengukuran indikator ID 48 pada TW 2.', NULL, 'read', '2025-12-19 03:30:13'),
+(124, 53, 'Anda mendapatkan tugas baru untuk indikator tahun 52.', '{\"indikator_id\":\"49\",\"tahun_id\":\"52\",\"sasaran_id\":\"39\"}', 'unread', '2025-12-19 04:27:14'),
+(125, 55, 'Anda mendapatkan tugas baru untuk indikator tahun 52.', '{\"indikator_id\":\"49\",\"tahun_id\":\"52\",\"sasaran_id\":\"39\"}', 'unread', '2025-12-19 04:27:14'),
+(126, 56, 'Anda mendapatkan tugas baru untuk indikator tahun 52.', '{\"indikator_id\":\"49\",\"tahun_id\":\"52\",\"sasaran_id\":\"39\"}', 'read', '2025-12-19 04:27:50'),
+(127, 1, 'PIC mengisi pengukuran indikator ID 49 pada TW 4.', NULL, 'read', '2025-12-19 04:28:12'),
+(128, 57, 'Anda mendapatkan tugas baru untuk indikator tahun 52.', '{\"indikator_id\":\"49\",\"tahun_id\":\"52\",\"sasaran_id\":\"39\"}', 'read', '2025-12-19 04:28:44'),
+(129, 1, 'PIC mengisi pengukuran indikator ID 49 pada TW 2.', NULL, 'read', '2025-12-19 05:43:00'),
+(130, 1, 'PIC mengisi pengukuran indikator ID 49 pada TW 3.', NULL, 'read', '2025-12-19 05:43:19'),
+(131, 1, 'PIC mengisi pengukuran indikator ID 48 pada TW 4.', NULL, 'read', '2025-12-19 05:50:51'),
+(132, 64, 'Anda mendapatkan tugas baru untuk indikator tahun 55.', '{\"indikator_id\":\"50\",\"tahun_id\":\"55\",\"sasaran_id\":\"40\"}', 'read', '2025-12-19 07:07:15'),
+(133, 62, 'Anda mendapatkan tugas baru untuk indikator tahun 55.', '{\"indikator_id\":\"50\",\"tahun_id\":\"55\",\"sasaran_id\":\"40\"}', 'unread', '2025-12-19 07:07:27'),
+(134, 1, 'PIC mengisi pengukuran indikator ID 50 pada TW 3.', NULL, 'read', '2025-12-19 07:12:58'),
+(135, 1, 'PIC mengisi pengukuran indikator ID 50 pada TW 3.', NULL, 'read', '2025-12-19 07:13:26'),
+(136, 61, 'Anda mendapatkan tugas baru untuk indikator tahun 55.', '{\"indikator_id\":\"50\",\"tahun_id\":\"55\",\"sasaran_id\":\"40\"}', 'read', '2025-12-19 07:15:23'),
+(137, 63, 'Anda mendapatkan tugas baru untuk indikator tahun 55.', '{\"indikator_id\":\"50\",\"tahun_id\":\"55\",\"sasaran_id\":\"40\"}', 'read', '2025-12-19 07:15:23'),
+(138, 1, 'PIC mengisi pengukuran indikator ID 50 pada TW 4.', NULL, 'read', '2025-12-19 07:15:45'),
+(139, 1, 'PIC mengisi pengukuran indikator ID 50 pada TW 4.', NULL, 'read', '2025-12-19 07:16:00'),
+(140, 1, 'PIC mengisi pengukuran indikator ID 50 pada TW 2.', NULL, 'read', '2025-12-19 08:07:25'),
+(141, 61, 'Anda mendapatkan tugas baru untuk indikator tahun 55.', '{\"indikator_id\":\"52\",\"tahun_id\":\"55\",\"sasaran_id\":\"41\"}', 'read', '2025-12-22 01:13:37'),
+(142, 63, 'Anda mendapatkan tugas baru untuk indikator tahun 55.', '{\"indikator_id\":\"52\",\"tahun_id\":\"55\",\"sasaran_id\":\"41\"}', 'read', '2025-12-22 01:13:37'),
+(143, 1, 'PIC mengisi pengukuran indikator ID 52 pada TW 2.', NULL, 'read', '2025-12-22 01:17:13'),
+(144, 1, 'PIC mengisi pengukuran indikator ID 52 pada TW 2.', NULL, 'read', '2025-12-22 01:17:17'),
+(145, 61, 'Anda mendapatkan tugas baru untuk indikator tahun 56.', '{\"indikator_id\":\"53\",\"tahun_id\":\"56\",\"sasaran_id\":\"44\"}', 'read', '2025-12-27 02:10:42'),
+(146, 62, 'Anda mendapatkan tugas baru untuk indikator tahun 56.', '{\"indikator_id\":\"53\",\"tahun_id\":\"56\",\"sasaran_id\":\"44\"}', 'unread', '2025-12-27 02:10:42'),
+(147, 63, 'Anda mendapatkan tugas baru untuk indikator tahun 56.', '{\"indikator_id\":\"53\",\"tahun_id\":\"56\",\"sasaran_id\":\"44\"}', 'read', '2025-12-27 02:10:42'),
+(148, 64, 'Anda mendapatkan tugas baru untuk indikator tahun 56.', '{\"indikator_id\":\"53\",\"tahun_id\":\"56\",\"sasaran_id\":\"44\"}', 'read', '2025-12-27 02:10:42'),
+(149, 1, 'PIC mengisi pengukuran indikator ID 53 pada TW 4.', NULL, 'read', '2025-12-27 02:12:24'),
+(150, 1, 'PIC mengisi pengukuran indikator ID 53 pada TW 4.', NULL, 'read', '2025-12-27 02:13:01'),
+(151, 1, 'PIC mengisi pengukuran indikator ID 53 pada TW 2.', NULL, 'read', '2025-12-27 02:14:30'),
+(152, 1, 'PIC mengisi pengukuran indikator ID 53 pada TW 2.', NULL, 'read', '2025-12-27 02:14:57'),
+(153, 64, 'Anda mendapatkan tugas baru untuk indikator tahun 56.', '{\"indikator_id\":\"54\",\"tahun_id\":\"56\",\"sasaran_id\":\"45\"}', 'read', '2025-12-30 05:54:06'),
+(154, 1, 'PIC mengisi pengukuran indikator ID 54 pada TW 4.', NULL, 'read', '2025-12-30 05:55:28'),
+(155, 64, 'Anda mendapatkan tugas baru untuk indikator tahun 56.', '{\"indikator_id\":\"55\",\"tahun_id\":\"56\",\"sasaran_id\":\"48\"}', 'read', '2025-12-30 12:57:59'),
+(156, 1, 'PIC mengisi pengukuran indikator ID 55 pada TW 4.', NULL, 'unread', '2025-12-30 12:59:09'),
+(157, 64, 'Anda mendapatkan tugas baru untuk indikator tahun 58.', '{\"indikator_id\":\"56\",\"tahun_id\":\"58\",\"sasaran_id\":\"49\"}', 'read', '2025-12-30 13:10:03'),
+(158, 64, 'Anda mendapatkan tugas baru untuk indikator tahun 2.', '{\"indikator_id\":\"1\",\"tahun_id\":\"2\",\"sasaran_id\":\"1\"}', 'read', '2025-12-30 13:21:37'),
+(159, 1, 'PIC mengisi pengukuran indikator ID 1 pada TW 4.', NULL, 'unread', '2025-12-30 13:22:18'),
+(160, 1, 'PIC mengisi pengukuran indikator ID 1 pada TW 3.', NULL, 'unread', '2025-12-30 13:29:21'),
+(161, 1, 'PIC mengisi pengukuran indikator ID 1 pada TW 2.', NULL, 'unread', '2025-12-30 13:29:35'),
+(162, 1, 'PIC mengisi pengukuran indikator ID 1 pada TW 1.', NULL, 'unread', '2025-12-30 13:29:52'),
+(163, 64, 'Anda mendapatkan tugas baru untuk indikator tahun 2.', '{\"indikator_id\":\"3\",\"tahun_id\":\"2\",\"sasaran_id\":\"1\"}', 'read', '2025-12-30 14:00:17'),
+(164, 1, 'PIC mengisi pengukuran indikator ID 3 pada TW 1.', NULL, 'unread', '2025-12-30 14:00:38'),
+(165, 64, 'Anda mendapatkan tugas baru untuk indikator tahun 1.', '{\"indikator_id\":\"3\",\"tahun_id\":\"1\",\"sasaran_id\":\"1\"}', 'read', '2025-12-31 01:27:29'),
+(166, 1, 'PIC mengisi pengukuran indikator ID 3 pada TW 4.', NULL, 'unread', '2025-12-31 01:28:05'),
+(167, 64, 'Anda mendapatkan tugas baru untuk indikator tahun 1.', '{\"indikator_id\":\"4\",\"tahun_id\":\"1\",\"sasaran_id\":\"2\"}', 'read', '2025-12-31 01:29:33'),
+(168, 1, 'PIC mengisi pengukuran indikator ID 4 pada TW 4.', NULL, 'unread', '2025-12-31 01:29:57'),
+(169, 1, 'PIC mengisi pengukuran indikator ID 4 pada TW 3.', NULL, 'unread', '2025-12-31 01:31:05'),
+(170, 1, 'PIC mengisi pengukuran indikator ID 4 pada TW 2.', NULL, 'unread', '2025-12-31 01:31:19'),
+(171, 1, 'PIC mengisi pengukuran indikator ID 4 pada TW 1.', NULL, 'unread', '2025-12-31 01:31:52'),
+(172, 61, 'Anda mendapatkan tugas baru untuk indikator tahun 1.', '{\"indikator_id\":\"1\",\"tahun_id\":\"1\",\"sasaran_id\":\"1\"}', 'read', '2025-12-31 02:45:46'),
+(173, 61, 'Anda mendapatkan tugas baru untuk indikator tahun 1.', '{\"indikator_id\":\"5\",\"tahun_id\":\"1\",\"sasaran_id\":\"2\"}', 'read', '2025-12-31 02:46:44'),
+(174, 61, 'Anda mendapatkan tugas baru untuk indikator tahun 1.', '{\"indikator_id\":\"2\",\"tahun_id\":\"1\",\"sasaran_id\":\"1\"}', 'read', '2025-12-31 02:47:12'),
+(175, 1, 'PIC mengisi pengukuran indikator ID 1 pada TW 1.', NULL, 'unread', '2025-12-31 02:48:14'),
+(176, 64, 'Anda mendapatkan tugas baru untuk indikator tahun 1.', '{\"indikator_id\":\"1\",\"tahun_id\":\"1\",\"sasaran_id\":\"1\"}', 'read', '2025-12-31 05:23:18'),
+(177, 1, 'PIC mengisi pengukuran indikator ID 1 pada TW 4.', NULL, 'unread', '2025-12-31 05:23:54'),
+(178, 1, 'PIC mengisi pengukuran indikator ID 1 pada TW 4.', NULL, 'unread', '2025-12-31 05:24:28'),
+(179, 62, 'Anda mendapatkan tugas baru untuk indikator tahun 1.', '{\"indikator_id\":\"1\",\"tahun_id\":\"1\",\"sasaran_id\":\"1\"}', 'unread', '2025-12-31 05:25:58'),
+(180, 1, 'PIC mengisi pengukuran indikator ID 1 pada TW 4.', NULL, 'unread', '2025-12-31 05:26:49'),
+(181, 64, 'Anda mendapatkan tugas baru untuk indikator tahun 3.', '{\"indikator_id\":\"7\",\"tahun_id\":\"3\",\"sasaran_id\":\"4\"}', 'read', '2025-12-31 06:43:23'),
+(182, 62, 'Anda mendapatkan tugas baru untuk indikator tahun 3.', '{\"indikator_id\":\"7\",\"tahun_id\":\"3\",\"sasaran_id\":\"4\"}', 'unread', '2025-12-31 06:43:48'),
+(183, 1, 'PIC mengisi pengukuran indikator ID 7 pada TW 4.', NULL, 'unread', '2025-12-31 06:44:11'),
+(184, 61, 'Anda mendapatkan tugas baru untuk indikator tahun 3.', '{\"indikator_id\":\"9\",\"tahun_id\":\"3\",\"sasaran_id\":\"5\"}', 'unread', '2025-12-31 06:53:39'),
+(185, 1, 'PIC mengisi pengukuran indikator ID 9 pada TW 1.', NULL, 'unread', '2025-12-31 06:54:15'),
+(186, 1, 'PIC mengisi pengukuran indikator ID 1 pada TW 2.', NULL, 'unread', '2026-01-01 10:13:29'),
+(187, 1, 'PIC mengisi pengukuran indikator ID 1 pada TW 3.', NULL, 'unread', '2026-01-01 10:14:15'),
+(188, 64, 'Anda mendapatkan tugas baru untuk indikator tahun 1.', '{\"indikator_id\":\"10\",\"tahun_id\":\"1\",\"sasaran_id\":\"3\"}', 'read', '2026-01-02 10:20:22'),
+(189, 1, 'PIC mengisi pengukuran indikator ID 10 pada TW 4.', NULL, 'unread', '2026-01-02 10:21:13'),
+(190, 1, 'PIC mengisi pengukuran indikator ID 10 pada TW 3.', NULL, 'unread', '2026-01-02 10:22:07');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `pengajuan_kategori_dokumen`
+--
+
+CREATE TABLE `pengajuan_kategori_dokumen` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `nama_kategori` varchar(100) NOT NULL,
+  `deskripsi` text DEFAULT NULL,
+  `pengaju_user_id` int(10) UNSIGNED NOT NULL,
+  `status` enum('pending','approved','rejected') DEFAULT 'pending',
+  `admin_id` int(10) UNSIGNED DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `pengajuan_kategori_dokumen`
+--
+
+INSERT INTO `pengajuan_kategori_dokumen` (`id`, `nama_kategori`, `deskripsi`, `pengaju_user_id`, `status`, `admin_id`, `created_at`, `updated_at`) VALUES
+(1, 'Zona', 'adalah', 64, 'approved', 1, '2025-12-27 03:58:25', '2025-12-27 04:01:34'),
+(2, 'Laporan', 'ada', 64, 'rejected', 1, '2025-12-27 04:02:15', '2025-12-27 04:03:01');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `pengukuran_kinerja`
+--
+
+CREATE TABLE `pengukuran_kinerja` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `indikator_id` int(11) UNSIGNED NOT NULL,
+  `tahun_id` int(11) UNSIGNED NOT NULL,
+  `triwulan` tinyint(1) NOT NULL DEFAULT 1,
+  `user_id` int(11) UNSIGNED DEFAULT NULL,
+  `realisasi` double DEFAULT NULL,
+  `progress` text DEFAULT NULL,
+  `kendala` text DEFAULT NULL,
+  `strategi` text DEFAULT NULL,
+  `file_dukung` text DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `pic_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `pengukuran_kinerja`
+--
+
+INSERT INTO `pengukuran_kinerja` (`id`, `indikator_id`, `tahun_id`, `triwulan`, `user_id`, `realisasi`, `progress`, `kendala`, `strategi`, `file_dukung`, `created_by`, `created_at`, `updated_at`, `pic_id`) VALUES
+(1, 3, 1, 4, 64, 15, 'ada', 'ada', 'ada', '[\"1767144485_a0e1f3eaf015207a8184.jpg\"]', NULL, '2025-12-31 08:28:05', '2025-12-31 08:28:05', 0),
+(2, 4, 1, 4, 64, 10, 'ada', 'ada', 'ada', '[\"1767144597_f8e15575f06fa8798e4b.jpg\"]', NULL, '2025-12-31 08:29:57', '2025-12-31 08:29:57', 0),
+(3, 4, 1, 3, 64, 20, 'ada', 'ada', 'ada', '[\"1767144665_0efb76b3b657c6c69515.jpg\"]', NULL, '2025-12-31 08:31:05', '2025-12-31 08:31:05', 0),
+(4, 4, 1, 2, 64, 35, 'ada', 'ada', 'ada', '[\"1767144679_c1c0695cd36e24d3b98a.jpg\"]', NULL, '2025-12-31 08:31:19', '2025-12-31 08:31:19', 0),
+(5, 4, 1, 1, 64, 25, 'ada', 'ada', 'ada', '[\"1767144712_4f0968595c44ec6cc5d4.jpg\"]', NULL, '2025-12-31 08:31:52', '2025-12-31 08:31:52', 0),
+(6, 1, 1, 1, 61, 10, 'ya', 'oke', 'sip', '[\"1767149294_e30c13c22650b3b33620.jpg\"]', NULL, '2025-12-31 09:48:14', '2025-12-31 09:48:14', 0),
+(7, 1, 1, 4, 61, 20, 'ada', 'ada', 'ada', '[\"1767158634_0ab13302cab97bb56093.jpg\"]', NULL, '2025-12-31 12:23:54', '2025-12-31 12:23:54', 0),
+(8, 1, 1, 4, 64, 15, 'ada', 'ada', 'ada', '[\"1767158668_dd164c1380160f0caea6.jpg\"]', NULL, '2025-12-31 12:24:28', '2025-12-31 12:24:28', 0),
+(9, 1, 1, 4, 62, 14, 'ada', 'ada', 'ada', '[\"1767158809_3c51f1ca5f9bff0116fe.jpg\"]', NULL, '2025-12-31 12:26:49', '2025-12-31 12:26:49', 0),
+(10, 7, 3, 4, 62, 25, 'ada', 'ada', 'ada', '[\"1767163451_ccae7deb49b71b44b37d.jpg\"]', NULL, '2025-12-31 13:44:11', '2025-12-31 13:44:11', 0),
+(11, 9, 3, 1, 61, 30, 'ada', 'ada', 'ada', '[\"1767164055_6416295c32fbc126f49e.jpg\"]', NULL, '2025-12-31 13:54:15', '2025-12-31 13:54:15', 0),
+(12, 1, 1, 2, 61, 20, 'ada', 'ada', 'ada', '[\"1767262409_92461cbaeb7a1a149c4d.jpg\"]', NULL, '2026-01-01 17:13:29', '2026-01-01 17:13:29', 0),
+(13, 1, 1, 3, 61, 10, 'ada', 'ada', 'ada', '[\"1767262455_bd77fa7257833553ed25.jpg\"]', NULL, '2026-01-01 17:14:15', '2026-01-01 17:14:15', 0),
+(14, 10, 1, 4, 64, 100, 'ada', 'ada', 'ada', '[\"1767349273_c6a0bf04eb6cdb9e56b8.jpg\"]', NULL, '2026-01-02 17:21:13', '2026-01-02 17:21:13', 0),
+(15, 10, 1, 3, 64, 75, 'ada', 'ada', 'ada', '[\"1767349327_27b7da964a8927b51d86.jpg\"]', NULL, '2026-01-02 17:22:07', '2026-01-02 17:22:07', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `pic_indikator`
+--
+
+CREATE TABLE `pic_indikator` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `indikator_id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `tahun_id` int(11) UNSIGNED NOT NULL,
+  `sasaran_id` int(11) UNSIGNED NOT NULL,
+  `bidang_id` int(11) UNSIGNED NOT NULL,
+  `jabatan_id` int(11) UNSIGNED NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `pic_indikator`
+--
+
+INSERT INTO `pic_indikator` (`id`, `indikator_id`, `user_id`, `tahun_id`, `sasaran_id`, `bidang_id`, `jabatan_id`, `created_at`, `updated_at`) VALUES
+(1, 3, 64, 1, 1, 14, 4, '2025-12-31 08:27:29', '2025-12-31 08:27:29'),
+(2, 4, 64, 1, 2, 14, 4, '2025-12-31 08:29:33', '2025-12-31 08:29:33'),
+(3, 1, 61, 1, 1, 13, 1, '2025-12-31 09:45:46', '2025-12-31 09:45:46'),
+(4, 5, 61, 1, 2, 13, 1, '2025-12-31 09:46:44', '2025-12-31 09:46:44'),
+(5, 2, 61, 1, 1, 13, 1, '2025-12-31 09:47:12', '2025-12-31 09:47:12'),
+(6, 1, 64, 1, 1, 14, 4, '2025-12-31 12:23:18', '2025-12-31 12:23:18'),
+(7, 1, 62, 1, 1, 14, 2, '2025-12-31 12:25:58', '2025-12-31 12:25:58'),
+(8, 7, 64, 3, 4, 14, 4, '2025-12-31 13:43:23', '2025-12-31 13:43:23'),
+(9, 7, 62, 3, 4, 14, 2, '2025-12-31 13:43:48', '2025-12-31 13:43:48'),
+(10, 9, 61, 3, 5, 13, 1, '2025-12-31 13:53:39', '2025-12-31 13:53:39'),
+(11, 10, 64, 1, 3, 14, 4, '2026-01-02 17:20:22', '2026-01-02 17:20:22');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `sasaran_strategis`
+--
+
+CREATE TABLE `sasaran_strategis` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `tahun_id` int(11) UNSIGNED NOT NULL,
+  `kode_sasaran` varchar(50) DEFAULT NULL,
+  `nama_sasaran` text NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `triwulan` tinyint(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `sasaran_strategis`
+--
+
+INSERT INTO `sasaran_strategis` (`id`, `tahun_id`, `kode_sasaran`, `nama_sasaran`, `created_at`, `updated_at`, `triwulan`) VALUES
+(1, 1, 'SS-01', 'Meningkatkan Kualitas Pembelajaran', '2025-12-31 08:22:36', '2025-12-31 08:22:36', NULL),
+(2, 1, 'SS-02', 'Meningkatkan Penelitian dan Publikasi', '2025-12-31 08:22:51', '2025-12-31 08:22:51', NULL),
+(3, 1, 'SS-03', 'Peningkatan Layanan Administrasi dan Kepuasan Mahasiswa', '2025-12-31 08:23:03', '2025-12-31 08:23:03', NULL),
+(4, 3, 'SS-01', 'repan', '2025-12-31 13:38:29', '2025-12-31 13:38:29', NULL),
+(5, 3, 'SS-02', 'gilang', '2025-12-31 13:38:40', '2025-12-31 13:38:40', NULL),
+(6, 3, 'SS-03', 'algies', '2025-12-31 13:38:47', '2025-12-31 13:38:47', NULL),
+(7, 3, 'SS-04', 'arief', '2025-12-31 13:38:54', '2025-12-31 13:38:54', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tahun_anggaran`
+--
+
+CREATE TABLE `tahun_anggaran` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `tahun` int(4) NOT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'inactive',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `tahun_anggaran`
+--
+
+INSERT INTO `tahun_anggaran` (`id`, `tahun`, `status`, `created_at`, `updated_at`) VALUES
+(1, 2025, 'active', '2025-12-31 08:21:25', '2026-01-01 17:10:43'),
+(2, 2026, 'inactive', '2025-12-31 13:26:47', '2026-01-01 17:10:43'),
+(3, 2027, 'inactive', '2025-12-31 13:27:19', '2026-01-01 17:10:43'),
+(4, 3030, 'inactive', '2026-01-01 08:55:07', '2026-01-01 17:10:43'),
+(5, 2028, 'inactive', '2026-01-01 08:55:46', '2026-01-01 17:10:43'),
+(6, 2029, 'inactive', '2026-01-01 08:56:03', '2026-01-01 17:10:43'),
+(7, 2030, 'inactive', '2026-01-01 08:56:19', '2026-01-01 17:10:43'),
+(8, 2031, 'inactive', '2026-01-01 08:56:39', '2026-01-01 17:10:43'),
+(9, 2032, 'inactive', '2026-01-01 08:57:00', '2026-01-01 17:10:43'),
+(10, 2033, 'inactive', '2026-01-01 08:57:16', '2026-01-01 17:10:43'),
+(11, 2034, 'inactive', '2026-01-01 08:57:38', '2026-01-01 17:10:43'),
+(12, 2035, 'inactive', '2026-01-01 08:58:43', '2026-01-01 17:10:43'),
+(13, 2036, 'inactive', '2026-01-01 08:58:57', '2026-01-01 17:10:43'),
+(14, 2037, 'inactive', '2026-01-01 08:59:13', '2026-01-01 17:10:43'),
+(15, 2038, 'inactive', '2026-01-01 09:08:35', '2026-01-01 17:10:43'),
+(16, 2039, 'inactive', '2026-01-01 09:08:50', '2026-01-01 17:10:43'),
+(17, 2040, 'inactive', '2026-01-01 09:09:46', '2026-01-01 17:10:43');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tw_settings`
+--
+
+CREATE TABLE `tw_settings` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `tahun_id` int(10) UNSIGNED NOT NULL,
+  `tw` tinyint(4) NOT NULL,
+  `is_open` tinyint(1) NOT NULL DEFAULT 0,
+  `auto_mode` tinyint(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `tw_settings`
+--
+
+INSERT INTO `tw_settings` (`id`, `tahun_id`, `tw`, `is_open`, `auto_mode`) VALUES
+(1, 1, 1, 1, 1),
+(2, 1, 2, 1, 1),
+(3, 1, 3, 1, 1),
+(4, 1, 4, 1, 1),
+(5, 2, 1, 1, 1),
+(6, 2, 2, 1, 1),
+(7, 2, 3, 1, 1),
+(8, 2, 4, 1, 1),
+(9, 3, 1, 1, 1),
+(10, 3, 2, 0, 1),
+(11, 3, 3, 0, 1),
+(12, 3, 4, 0, 1),
+(13, 4, 1, 1, 1),
+(14, 4, 2, 0, 1),
+(15, 4, 3, 0, 1),
+(16, 4, 4, 0, 1),
+(21, 6, 1, 0, 1),
+(22, 6, 2, 0, 1),
+(23, 6, 3, 0, 1),
+(24, 6, 4, 1, 1),
+(25, 7, 1, 0, 1),
+(26, 7, 2, 0, 1),
+(27, 7, 3, 0, 1),
+(28, 7, 4, 1, 1),
+(29, 8, 1, 1, 1),
+(30, 8, 2, 0, 1),
+(31, 8, 3, 0, 1),
+(32, 8, 4, 0, 1),
+(41, 11, 1, 0, 1),
+(42, 11, 2, 0, 1),
+(43, 11, 3, 0, 1),
+(44, 11, 4, 1, 1),
+(73, 19, 1, 0, 1),
+(74, 19, 2, 1, 1),
+(75, 19, 3, 0, 1),
+(76, 19, 4, 0, 1),
+(113, 41, 1, 0, 1),
+(114, 41, 2, 1, 1),
+(115, 41, 3, 1, 1),
+(116, 41, 4, 1, 1),
+(117, 42, 1, 1, 1),
+(118, 42, 2, 1, 1),
+(119, 42, 3, 0, 1),
+(120, 42, 4, 1, 1),
+(121, 44, 1, 0, 1),
+(122, 44, 2, 1, 1),
+(123, 44, 3, 1, 1),
+(124, 44, 4, 1, 1),
+(125, 45, 1, 0, 1),
+(126, 45, 2, 1, 1),
+(127, 45, 3, 0, 1),
+(128, 45, 4, 1, 1),
+(129, 46, 1, 0, 1),
+(130, 46, 2, 0, 1),
+(131, 46, 3, 1, 1),
+(132, 46, 4, 1, 1),
+(137, 48, 1, 0, 1),
+(138, 48, 2, 0, 1),
+(139, 48, 3, 1, 1),
+(140, 48, 4, 1, 1),
+(141, 49, 1, 0, 1),
+(142, 49, 2, 0, 1),
+(143, 49, 3, 1, 1),
+(144, 49, 4, 1, 1),
+(145, 50, 1, 0, 1),
+(146, 50, 2, 1, 1),
+(147, 50, 3, 0, 1),
+(148, 50, 4, 1, 1),
+(149, 51, 1, 0, 1),
+(150, 51, 2, 0, 1),
+(151, 51, 3, 1, 1),
+(152, 51, 4, 1, 1),
+(153, 52, 1, 0, 1),
+(154, 52, 2, 1, 1),
+(155, 52, 3, 1, 1),
+(156, 52, 4, 1, 1),
+(157, 55, 1, 0, 1),
+(158, 55, 2, 1, 1),
+(159, 55, 3, 1, 1),
+(160, 55, 4, 1, 1),
+(161, 56, 1, 0, 1),
+(162, 56, 2, 0, 1),
+(163, 56, 3, 0, 1),
+(164, 56, 4, 1, 1),
+(165, 5, 1, 1, 1),
+(166, 5, 2, 0, 1),
+(167, 5, 3, 0, 1),
+(168, 5, 4, 0, 1),
+(169, 9, 1, 1, 1),
+(170, 9, 2, 0, 1),
+(171, 9, 3, 0, 1),
+(172, 9, 4, 0, 1),
+(173, 10, 1, 1, 1),
+(174, 10, 2, 0, 1),
+(175, 10, 3, 0, 1),
+(176, 10, 4, 0, 1),
+(177, 12, 1, 1, 1),
+(178, 12, 2, 0, 1),
+(179, 12, 3, 0, 1),
+(180, 12, 4, 0, 1),
+(181, 13, 1, 1, 1),
+(182, 13, 2, 0, 1),
+(183, 13, 3, 0, 1),
+(184, 13, 4, 0, 1),
+(185, 14, 1, 1, 1),
+(186, 14, 2, 0, 1),
+(187, 14, 3, 0, 1),
+(188, 14, 4, 0, 1),
+(189, 15, 1, 1, 1),
+(190, 15, 2, 0, 1),
+(191, 15, 3, 0, 1),
+(192, 15, 4, 0, 1),
+(193, 16, 1, 1, 1),
+(194, 16, 2, 0, 1),
+(195, 16, 3, 0, 1),
+(196, 16, 4, 0, 1),
+(197, 17, 1, 1, 1),
+(198, 17, 2, 0, 1),
+(199, 17, 3, 0, 1),
+(200, 17, 4, 0, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `jabatan_id` int(10) UNSIGNED DEFAULT NULL,
+  `bidang_id` int(10) UNSIGNED DEFAULT NULL,
+  `role` enum('admin','atasan','staff') NOT NULL DEFAULT 'staff',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `foto` varchar(255) DEFAULT NULL,
+  `ttd_digital` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `users`
+--
+
+INSERT INTO `users` (`id`, `nama`, `email`, `password`, `jabatan_id`, `bidang_id`, `role`, `created_at`, `updated_at`, `foto`, `ttd_digital`) VALUES
+(1, 'Administrator', 'admin@kinetrack.test', '$2y$10$3APCDYJvzF1L6raWEXXRRu5u8RRTJQN0mRZiKdUhk1bRUtFMgf4xO', NULL, NULL, 'admin', NULL, NULL, NULL, NULL),
+(2, 'repan', 'repan@gmail.com', '$2y$10$CmwJ/.NzystCHqqFmu6pNO8La3rh6tGGLky5mublaxe3ecuYqAWwO', 1, 1, 'staff', NULL, NULL, NULL, '1765767898_c9c550356fa28e5a5fa3.jpg'),
+(3, 'Arief Maulana', 'arief@gmail.com', '$2y$10$gWcvnWrUcLtstXuKRp/Pb.zdfxWqb3DMxmE3W67va0I9GW3itsiS6', 1, 1, 'staff', NULL, NULL, NULL, NULL),
+(4, 'Agung Setiawan', 'agung@gmail.com', '$2y$10$4L5ryPZqsQgISbtw54VYHuOgYo1tRm5vYYlKgleS8kiBH9yqnsRfy', 1, 1, 'staff', NULL, NULL, NULL, NULL),
+(5, 'Adit', 'adit@gmail.com', '$2y$10$QI9FXjRJu/ARX6sSrP2/ZO8BCPRX2vmIHKv0eM/Gbq5osrfy7.IM2', 1, 1, 'staff', NULL, NULL, NULL, NULL),
+(6, 'bp adi', 'adi@gmail.com', '$2y$10$49rFqGt2IZUiAkYRHWipUuKl2CQ/PowBVPnOHGT6lH1hwjdUw7ijq', 1, 1, 'admin', NULL, NULL, '1765773346_34870709c0be07590196.jpg', 'ttd_admin_6.jpg'),
+(7, 'Wihendra', 'hendra@gmail.com', '$2y$10$bNpHLltjQs.Da/QOL5c2IObD2BuEjlysVOmRrUNg809/8fLBGVpxy', 1, 1, 'staff', NULL, NULL, NULL, NULL),
+(8, 'Ahmad', 'ahmad@gmail.com', '$2y$10$GFHVST2Xpz2pwVROuqosJ.P.7NNXTqzsn7PSkrPy9rzrloVy1Lmya', 1, 1, 'staff', NULL, NULL, NULL, NULL),
+(9, 'Nabil', 'nabil@gmail.com', '$2y$10$jmVvTFwH80hukv/yzQIsCOy/Kf0Ua8m4fHkkLDhVhi.tCGdx2YCpm', 1, 1, 'staff', NULL, NULL, NULL, NULL),
+(10, 'Muhammad Farel Titansyah', 'farel@gmail.com', '$2y$10$QQeIovUzmJl4YIfs4bEydO61XijPB5SFy/t2cUGkqsVj4B.Y2/BpC', 1, 1, 'staff', NULL, NULL, NULL, NULL),
+(11, 'Nurul', 'nurul@gmail.com', '$2y$10$CtUzn4pmq6gZHSgc5kLjlOHh0Xdd6Ci1dulb2sEs0ds1Z3fGAsiBi', 1, 2, 'staff', NULL, NULL, NULL, NULL),
+(12, 'Toni ', 'toni@gmail.com', '$2y$10$TpbziTcYxRaNRA65G64HGu0u.w8HUt0Mgse0KtjLSLVo2axzz4Nle', 1, 1, 'staff', NULL, NULL, NULL, NULL),
+(13, 'dedy', 'dedy@gmail.com', '$2y$10$EmcmpctZasdyQQNm.Abpeeh3ronv1ILHjx8mjCjZrTe3FlEVMrxva', 1, 1, 'staff', NULL, NULL, NULL, '1765776631_c237f6fe4df2cc0ca169.jpg'),
+(14, 'Sandi', 'sandi@gmail.com', '$2y$10$MuOqEFOYJ65MBkS/bU0xYuUxZ1/YlegbA2xnknvTVCbXyjs5GBxU2', 1, 1, 'staff', NULL, NULL, NULL, NULL),
+(16, 'pak tantan', 'tantan@gmail.com', '$2y$10$AtlBM31Yw8eJn0AJTljha.ego9nxq/HVuC3yR/uXUSQtTWL5/qwtS', 1, 1, 'staff', NULL, NULL, NULL, NULL),
+(17, 'arga', 'arga@gmail.com', '$2y$10$dow6Oq1vxs/MM6MOKdDCMO/C4BVoYkWwzgUUKFS3dJocai7Jd/PLe', 1, 1, 'staff', NULL, NULL, NULL, '1765776816_d96e9432961c3f81e9ac.jpg'),
+(18, 'Jordan', 'jordan@gmail.com', '$2y$10$kz4RRjYsu9bxqSMlxs5cv.lJLKSajrVCJmQ1bbcee0raGK59R57x2', 1, 1, 'admin', NULL, NULL, '1765773928_c264cb1432fcbd27f9f2.jpg', 'ttd_admin_18.jpg'),
+(19, 'a', 'a@gmail.com', '$2y$10$ilC//XjbrtkUGkl6H2TEKu0m95tK9q6O98x6YMqZhCvCAKkRQSg0S', 1, 1, 'staff', NULL, NULL, NULL, NULL),
+(20, 'Andi', 'andi@polban.ac.id', '$2y$10$S61X/sazbJI48HOb3V4t1uT2Cgo5LYX1hRbMW.5PnYONwNB2SEh8m', 1, 1, 'staff', NULL, NULL, NULL, NULL),
+(21, 'Aldo', 'aldo@polban.ac.id', '$2y$10$K3k1lvdWv27Wjrs7tWGR6uEJVNGBs6HDxe3pJs2OVJCwPl.cA8sym', 1, 2, 'atasan', NULL, NULL, NULL, NULL),
+(24, 'Deni', 'deni@polban.ac.id', '$2y$10$2UlSP7fI4Q03JBU2NO6s5ecQmu9QuRGQ9L5QxML5mfFDyIagZawTi', 3, 1, 'staff', NULL, NULL, NULL, NULL),
+(31, 'ketua_jurusan', 'ketua_jurusan@gmail.com', '$2y$10$raHFX9x35wVd0eNhnZDX9OSHkwuxPKU1jIB3oYabj0m9.QYSX7KlS', 1, 1, 'atasan', NULL, NULL, NULL, NULL),
+(32, 'ketua_prodi', 'ketua_prodi@gmail.com', '$2y$10$GE.a.A8Z45c7.EDn/jBVnOvnrVLlR3Jjc3KCFYK7qRDN7PRq5t4oG', 2, 4, 'atasan', NULL, NULL, NULL, NULL),
+(34, 'staff_prodi', 'staff_prodi@gmail.com', '$2y$10$fIphnzxeDI7Jy9sPzNEzoes7PpDXemW70IWWh76lXnk8KpkWCT4Fu', 4, 4, 'staff', NULL, NULL, NULL, NULL),
+(35, 'aaaa', 'aaaa@gmail.com', '$2y$10$MLwyeOFoVew4RcFxoUk5LujXsxULycpGPZHK9kfkUEw.5oo/W68UG', 1, 1, 'atasan', NULL, NULL, NULL, NULL),
+(37, 'elis', 'elis@gmail.com', '$2y$10$pWnUtCKxcx/WgjZLgh57dOcC6Kl6eqKFtNkOUmZRTnkLq4lZsAksG', 4, 4, 'staff', NULL, NULL, NULL, NULL),
+(41, 'B', 'B@gmail.com', '$2y$10$.GziKBOcr1VdrxKplQVw3.tKqxeOw2sV7fGWC/TgytVR3M4ehqnj.', 6, 8, 'atasan', NULL, NULL, NULL, NULL),
+(42, 'C', 'C@gmail.com', '$2y$10$3IXot7/HzvtTl2x1enaur.Ew59QX0UbIYi3Ih02pW3./RONmkSZwq', 8, 8, 'staff', NULL, NULL, NULL, NULL),
+(43, 'D', 'D@gmail.com', '$2y$10$9.gb9D8oQaS7veP/cs69aOjYrOD6NDrYc2hMiKpxGlFkryCL3PUHy', 1, 3, 'atasan', NULL, NULL, NULL, NULL),
+(46, 'E', 'E@gmail.com', '$2y$10$9bzQgrrHVbbtwvoPmjBSGuHfeI6da36c1PyzKBLHKSZUBW3FPCPWC', 2, 12, 'atasan', NULL, NULL, NULL, NULL),
+(47, 'R', 'R@gmail.com', '$2y$10$5MIw7j1gTOfrKJtdN.0GZOxraEIHyiS8ESyZaMZ7JZnLkzVrnVpMe', 4, 12, 'staff', NULL, NULL, NULL, NULL),
+(48, 'ABC', 'ABC@gmail.com', '$2y$10$336j5v3UEW9ZvhKFCtie5OxHm4lX.Skp.ri8up9NwDpuH0509DYOa', 1, 10, 'atasan', NULL, NULL, NULL, NULL),
+(49, 'ABCD', 'ABCD@gmail.com', '$2y$10$iSYc6SPuwZzNkKJbfdbR.OV2V4D/G.nIjtVyWGygHVvXondGyD46y', 3, 10, 'staff', NULL, NULL, NULL, NULL),
+(50, 'ABCDE', 'ABCDE@gmail.com', '$2y$10$bdNugX9f6Bgiprd1dBaTee9vBITCA62CHh6aan25RSdoQDgiJ8ivG', 2, 11, 'atasan', NULL, NULL, NULL, NULL),
+(51, 'ABCDEF', 'ABCDEF@gmail.com', '$2y$10$Mm/yyBdoU2EyxeKhfO6qauqNg/GhcK5ncSqT0LIfaarMI4jhZMJvC', 4, 11, 'staff', NULL, NULL, NULL, NULL),
+(52, 'Ketua jurusan', 'ketuajurusan@gmail.com', '$2y$10$PAgxwNjVBoRQKELqVTQcBuiZ8cHFcfrpNhriXD62dHQ92KRBVFD8W', 1, 1, 'atasan', NULL, NULL, NULL, NULL),
+(53, 'Ketua prodi', 'Ketuaprodi@gmail.com', '$2y$10$ma2Hq7HhbIqxK8DCaDaXVOjuxysEWjDLKauoUedUqOCahOnJMNES.', 2, 4, 'atasan', NULL, NULL, NULL, NULL),
+(54, 'Staff jurusan', 'staffjurusan@gmail.com', '$2y$10$XVOr1XvmUPYKfUoCaFvrh.pr2LRdfF2f7RdYcGWZdaHhEj666wzdC', 3, 1, 'staff', NULL, NULL, NULL, NULL),
+(55, 'staff prodi', 'staffprodi@gmail.com', '$2y$10$BgjRZWP05HGd3ZBTqBQsOe0FPzXS9XzpFB6B.CtdznLo5MkonXWXi', 4, 4, 'staff', NULL, NULL, NULL, NULL),
+(56, 'StaffProdi', 'P@gmail.com', '$2y$10$e28Pv87W6Debh1AJCvMoXeDBsFUuuUIWeRY3eEqvKCmTA4cfjmfD2', 4, 6, 'staff', NULL, NULL, NULL, '1766113172_7e6123a48687b7eb8f70.jpg'),
+(57, 'KetuaProdi', 'OO@gmail.com', '$2y$10$s8kNzCUNIsE5znXIBFKuh./jd9PpkmpzKEgY7s8L0d3bLa5gRqihq', 2, 6, 'atasan', NULL, NULL, NULL, NULL),
+(58, 'StaffJurusan', 'I@gmail.com', '$2y$10$lVvaByCd2p43yIRXJ0NIuO/lrv3FPV31DPTx0wc82/UC0im5oRcbO', 3, 2, 'staff', NULL, NULL, NULL, NULL),
+(59, 'KetuaJurusan', 'U@gmail.com', '$2y$10$aQlKisMmiOnTrDEosESv3O7g514AdJyCUKU.Gr/1Q.fbEbIXTBcbq', 1, 2, 'atasan', NULL, NULL, NULL, NULL),
+(60, 'aa', 'aa@gmail.com', '$2y$10$nGird6ee/HLiphr.KBA0zubn/PYCQcXxmtWUm2epqavHhKqS1IEeu', 1, 1, 'atasan', NULL, NULL, NULL, NULL),
+(61, 'Repan_4444', 'repan123@gmail.com', '$2y$10$uLoc0HocD.kTjB3AaOMGEeSrkmjRgwlab2sbN0iYsbKtpLrFsXNOu', 1, 13, 'atasan', NULL, NULL, NULL, NULL),
+(62, 'Gilang_444', 'gilang123@gmail.com', '$2y$10$3RQRl.kstzQ9kp4HYSv8XuiesmJ1CpVDrj0CA7FUKjqcdc1g2kM.S', 2, 14, 'atasan', NULL, NULL, NULL, NULL),
+(63, 'Arief_4444', 'arief123@gmail.com', '$2y$10$ECrxl7M87Huy4k3mWU6YXu5NRqS7TvKHJADfqHigmTMFNdqzwTa7u', 3, 13, 'staff', NULL, NULL, NULL, '1766366319_105bffade0bbc9bfa4ea.jpg'),
+(64, 'Algies_4444', 'algies123@gmail.com', '$2y$10$WwJNMViFIWfGPOvgAyumxOE0xGeitNfJ0klZ4NqTEr1I58/EXR896', 4, 14, 'staff', NULL, NULL, NULL, '1767074203_caa1b937c886a3c51469.jpg');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indeks untuk tabel `activity_logs`
+--
+ALTER TABLE `activity_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `created_at` (`created_at`);
+
+--
+-- Indeks untuk tabel `bidang`
+--
+ALTER TABLE `bidang`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `dokumen_kinerja`
+--
+ALTER TABLE `dokumen_kinerja`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_dokumen_user` (`created_by`),
+  ADD KEY `fk_dokumen_unit_asal` (`unit_asal_id`),
+  ADD KEY `fk_dokumen_unit_jurusan` (`unit_jurusan_id`);
+
+--
+-- Indeks untuk tabel `indikator_kinerja`
+--
+ALTER TABLE `indikator_kinerja`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `indikator_kinerja_sasaran_id_foreign` (`sasaran_id`);
+
+--
+-- Indeks untuk tabel `jabatan`
+--
+ALTER TABLE `jabatan`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `kategori_dokumen`
+--
+ALTER TABLE `kategori_dokumen`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `laporan`
+--
+ALTER TABLE `laporan`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `laporan_user_id_foreign` (`user_id`);
+
+--
+-- Indeks untuk tabel `migrations`
+--
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `status` (`status`);
+
+--
+-- Indeks untuk tabel `pengajuan_kategori_dokumen`
+--
+ALTER TABLE `pengajuan_kategori_dokumen`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `pengukuran_kinerja`
+--
+ALTER TABLE `pengukuran_kinerja`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pengukuran_kinerja_indikator_id_foreign` (`indikator_id`),
+  ADD KEY `pengukuran_kinerja_tahun_id_foreign` (`tahun_id`);
+
+--
+-- Indeks untuk tabel `pic_indikator`
+--
+ALTER TABLE `pic_indikator`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_pic_indikator` (`user_id`,`indikator_id`,`tahun_id`),
+  ADD KEY `pic_indikator_tahun_id_foreign` (`tahun_id`),
+  ADD KEY `pic_indikator_sasaran_id_foreign` (`sasaran_id`),
+  ADD KEY `pic_indikator_bidang_id_foreign` (`bidang_id`),
+  ADD KEY `pic_indikator_jabatan_id_foreign` (`jabatan_id`),
+  ADD KEY `idx_user_id` (`user_id`),
+  ADD KEY `idx_indikator_id` (`indikator_id`);
+
+--
+-- Indeks untuk tabel `sasaran_strategis`
+--
+ALTER TABLE `sasaran_strategis`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sasaran_strategis_tahun_id_foreign` (`tahun_id`);
+
+--
+-- Indeks untuk tabel `tahun_anggaran`
+--
+ALTER TABLE `tahun_anggaran`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `tw_settings`
+--
+ALTER TABLE `tw_settings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `tw_settings_tahun_id_foreign` (`tahun_id`);
+
+--
+-- Indeks untuk tabel `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- AUTO_INCREMENT untuk tabel yang dibuang
+--
+
+--
+-- AUTO_INCREMENT untuk tabel `activity_logs`
+--
+ALTER TABLE `activity_logs`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=415;
+
+--
+-- AUTO_INCREMENT untuk tabel `bidang`
+--
+ALTER TABLE `bidang`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT untuk tabel `dokumen_kinerja`
+--
+ALTER TABLE `dokumen_kinerja`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT untuk tabel `indikator_kinerja`
+--
+ALTER TABLE `indikator_kinerja`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT untuk tabel `jabatan`
+--
+ALTER TABLE `jabatan`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT untuk tabel `kategori_dokumen`
+--
+ALTER TABLE `kategori_dokumen`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT untuk tabel `laporan`
+--
+ALTER TABLE `laporan`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT untuk tabel `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=191;
+
+--
+-- AUTO_INCREMENT untuk tabel `pengajuan_kategori_dokumen`
+--
+ALTER TABLE `pengajuan_kategori_dokumen`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT untuk tabel `pengukuran_kinerja`
+--
+ALTER TABLE `pengukuran_kinerja`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT untuk tabel `pic_indikator`
+--
+ALTER TABLE `pic_indikator`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT untuk tabel `sasaran_strategis`
+--
+ALTER TABLE `sasaran_strategis`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT untuk tabel `tahun_anggaran`
+--
+ALTER TABLE `tahun_anggaran`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT untuk tabel `tw_settings`
+--
+ALTER TABLE `tw_settings`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=201;
+
+--
+-- AUTO_INCREMENT untuk tabel `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+
+--
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+--
+
+--
+-- Ketidakleluasaan untuk tabel `activity_logs`
+--
+ALTER TABLE `activity_logs`
+  ADD CONSTRAINT `activity_logs_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Ketidakleluasaan untuk tabel `dokumen_kinerja`
+--
+ALTER TABLE `dokumen_kinerja`
+  ADD CONSTRAINT `fk_dokumen_unit_asal` FOREIGN KEY (`unit_asal_id`) REFERENCES `bidang` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_dokumen_unit_jurusan` FOREIGN KEY (`unit_jurusan_id`) REFERENCES `bidang` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_dokumen_user` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `indikator_kinerja`
+--
+ALTER TABLE `indikator_kinerja`
+  ADD CONSTRAINT `indikator_kinerja_sasaran_id_foreign` FOREIGN KEY (`sasaran_id`) REFERENCES `sasaran_strategis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `laporan`
+--
+ALTER TABLE `laporan`
+  ADD CONSTRAINT `laporan_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `pengukuran_kinerja`
+--
+ALTER TABLE `pengukuran_kinerja`
+  ADD CONSTRAINT `pengukuran_kinerja_indikator_id_foreign` FOREIGN KEY (`indikator_id`) REFERENCES `indikator_kinerja` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pengukuran_kinerja_tahun_id_foreign` FOREIGN KEY (`tahun_id`) REFERENCES `tahun_anggaran` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `pic_indikator`
+--
+ALTER TABLE `pic_indikator`
+  ADD CONSTRAINT `pic_indikator_bidang_id_foreign` FOREIGN KEY (`bidang_id`) REFERENCES `bidang` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pic_indikator_indikator_id_foreign` FOREIGN KEY (`indikator_id`) REFERENCES `indikator_kinerja` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pic_indikator_jabatan_id_foreign` FOREIGN KEY (`jabatan_id`) REFERENCES `jabatan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pic_indikator_sasaran_id_foreign` FOREIGN KEY (`sasaran_id`) REFERENCES `sasaran_strategis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pic_indikator_tahun_id_foreign` FOREIGN KEY (`tahun_id`) REFERENCES `tahun_anggaran` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pic_indikator_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `sasaran_strategis`
+--
+ALTER TABLE `sasaran_strategis`
+  ADD CONSTRAINT `sasaran_strategis_tahun_id_foreign` FOREIGN KEY (`tahun_id`) REFERENCES `tahun_anggaran` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `tw_settings`
+--
+ALTER TABLE `tw_settings`
+  ADD CONSTRAINT `tw_settings_tahun_id_foreign` FOREIGN KEY (`tahun_id`) REFERENCES `tahun_anggaran` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

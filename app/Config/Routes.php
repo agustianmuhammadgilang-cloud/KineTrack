@@ -118,7 +118,6 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
 
 
 
-  
 });
 
 $routes->get(
@@ -387,4 +386,73 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     // =====================
     $routes->get('activity-logs', 'Admin\ActivityLogController::index');
 
+    // Log arsip
+    $routes->get('activity-logs/archive', 'Admin\ActivityLogArchiveController::index');
+    // Backup & Restore
+    $routes->post('activity-logs/archive/backup', 'Admin\ActivityLogArchiveController::backup');
+$routes->post('activity-logs/archive/restore', 'Admin\ActivityLogArchiveController::restore');
+//Log Schedule
+$routes->get('activity-logs/schedule', 'Admin\ActivityLogScheduleController::index');
+$routes->post('activity-logs/schedule', 'Admin\ActivityLogScheduleController::update');
+// Log Backup & Restore
+$routes->get('activity-logs/backup', 'Admin\ActivityLogBackupController::index');
+$routes->post('activity-logs/backup/run', 'Admin\ActivityLogBackupController::backup');
+$routes->post('activity-logs/backup/restore', 'Admin\ActivityLogBackupController::restore');
+// Log Cleanup
+$routes->get('activity-logs/cleanup', 'Admin\LogCleanupController::index');
+$routes->post('activity-logs/cleanup/run', 'Admin\LogCleanupController::run');
+// Log Backup Download
+$routes->get('activity-logs/backup/download/(:any)', 'Admin\ActivityLogBackupController::download/$1');
+
 });
+// ==========================
+// GRAFIK KINERJA - ADMIN
+// ==========================
+$routes->group('admin/grafik', ['filter' => 'auth'], function($routes) {
+
+    // LEVEL 1 — Grafik Tahun
+    $routes->get('/', 'Admin\GrafikKinerja::index');
+
+    // LEVEL 2 — Grafik Sasaran per Tahun
+    $routes->get('sasaran/(:num)', 'Admin\GrafikKinerja::sasaran/$1');
+
+    // LEVEL 3 — Grafik Indikator per Sasaran
+    $routes->get('indikator/(:num)/(:num)', 'Admin\GrafikKinerja::indikator/$1/$2');
+
+    // LEVEL 4 — Grafik Triwulan per Indikator
+    $routes->get('triwulan/(:num)', 'Admin\GrafikKinerja::triwulan/$1');
+});
+
+// STAFF
+$routes->group('staff/grafik', ['filter' => 'auth'], function($routes) {
+
+    // LEVEL 1 — Grafik Tahun
+    $routes->get('/', 'Staff\GrafikKinerja::index');
+
+    // LEVEL 2 — Grafik Sasaran
+    $routes->get('sasaran/(:num)', 'Staff\GrafikKinerja::sasaran/$1');
+
+    // LEVEL 3 — Grafik Indikator
+    $routes->get('indikator/(:num)/(:num)', 'Staff\GrafikKinerja::indikator/$1/$2');
+
+    // LEVEL 4 — Grafik Triwulan
+    $routes->get('triwulan/(:num)', 'Staff\GrafikKinerja::triwulan/$1');
+});
+
+
+// ATASAN
+$routes->group('atasan/grafik', ['filter' => 'auth'], function($routes) {
+
+    // LEVEL 1 — Grafik Tahun
+    $routes->get('/', 'Atasan\GrafikKinerja::index');
+
+    // LEVEL 2 — Grafik Sasaran
+    $routes->get('sasaran/(:num)', 'Atasan\GrafikKinerja::sasaran/$1');
+
+    // LEVEL 3 — Grafik Indikator
+    $routes->get('indikator/(:num)/(:num)', 'Atasan\GrafikKinerja::indikator/$1/$2');
+
+    // LEVEL 4 — Grafik Triwulan
+    $routes->get('triwulan/(:num)', 'Atasan\GrafikKinerja::triwulan/$1');
+});
+

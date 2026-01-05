@@ -8,7 +8,7 @@ class IndikatorModel extends Model
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'sasaran_id','kode_indikator','nama_indikator','satuan',
-        'target_pk','target_tw1','target_tw2','target_tw3','target_tw4'
+        'target_pk','target_tw1','target_tw2','target_tw3','target_tw4','mode'
     ];
     protected $returnType = 'array';
     protected $useTimestamps = true;
