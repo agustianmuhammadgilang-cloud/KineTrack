@@ -109,7 +109,20 @@
 
 
 <body class="bg-gray-100">
+    <?php
+$segments = service('uri')->getSegments();
 
+/**
+ * Mapping aman (0-based array)
+ * /admin/activity-logs
+ * [0] => admin
+ * [1] => activity-logs
+ * [2] => archive | backup | restore | cleanup | schedule
+ */
+$seg1 = $segments[0] ?? null;
+$seg2 = $segments[1] ?? null;
+$seg3 = $segments[2] ?? null;
+?>
 <!-- Sidebar -->
 <div class="fixed top-0 left-0 h-full w-64 bg-[var(--polban-blue)] text-white flex flex-col shadow-lg">
 
@@ -129,19 +142,6 @@
     </svg>
     Dashboard
 </a>
-
-<!-- Log Aktivitas -->
-<a href="<?= base_url('admin/activity-logs') ?>"
-   class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition
-   <?= (service('uri')->getSegment(2) == 'activity-logs') ? 'bg-white/20 font-semibold' : '' ?>">
-    <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
-        <use href="#activity-log" />
-    </svg>
-    Log Aktivitas
-</a>
-
-
-
         <!-- Manajemen Users -->
         <div 
             x-data="{
@@ -364,6 +364,86 @@ LHE
     </svg>
     Pengukuran Kinerja
 </a>
+<!-- Manajemen Log Aktivitas -->
+<div 
+    x-data="{
+        open: JSON.parse(localStorage.getItem('dropdownLog')) ?? false,
+        toggle() {
+            this.open = !this.open;
+            localStorage.setItem('dropdownLog', this.open);
+        }
+    }"
+    x-init="$watch('open', v => localStorage.setItem('dropdownLog', v))"
+>
+    <!-- Menu Induk -->
+    <button @click="toggle()"
+        class="w-full flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition
+        <?= ($seg2 === 'activity-logs') ? 'bg-white/20 font-semibold' : '' ?>">
+        
+        <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
+            <use href="#clipboard-list" />
+        </svg>
+
+        <span class="flex-1 text-left">Manajemen Log Aktivitas</span>
+
+        <svg :class="open ? 'rotate-90' : ''"
+            class="w-4 h-4 transition-transform text-white" fill="none" stroke="currentColor">
+            <path stroke-width="2" d="M6 9l6 6 6-6"/>
+        </svg>
+    </button>
+
+    <!-- Sub Menu -->
+    <div x-show="open" x-transition class="ml-10 flex flex-col mt-1 space-y-1">
+
+        <!-- Log Aktif -->
+        <a href="<?= base_url('admin/activity-logs') ?>"
+           class="px-4 py-2 rounded hover:bg-white/10 transition
+           <?= ($seg2 === 'activity-logs' && $seg3 === null) ? 'bg-white/20 font-semibold' : '' ?>">
+            Log Aktif
+        </a>
+
+        <!-- Penjadwalan -->
+        <a href="<?= base_url('admin/activity-logs/schedule') ?>"
+           class="px-4 py-2 rounded hover:bg-white/10 transition
+           <?= ($seg3 === 'schedule') ? 'bg-white/20 font-semibold' : '' ?>">
+            Log Schedule
+        </a>
+
+        <!-- Log Arsip -->
+        <a href="<?= base_url('admin/activity-logs/archive') ?>"
+           class="px-4 py-2 rounded hover:bg-white/10 transition
+           <?= ($seg3 === 'archive') ? 'bg-white/20 font-semibold' : '' ?>">
+            Log Arsip
+        </a>
+
+        
+
+        <!-- Backup & Restore -->
+        <a href="<?= base_url('admin/activity-logs/backup') ?>"
+           class="px-4 py-2 rounded hover:bg-white/10 transition
+           <?= ($seg3 === 'backup') ? 'bg-white/20 font-semibold' : '' ?>">
+            Log Backup & Restore
+        </a>
+
+        <!-- Cleanup -->
+        <a href="<?= base_url('admin/activity-logs/cleanup') ?>"
+           class="px-4 py-2 rounded hover:bg-red-500/20 text-red-300 hover:text-red-200 transition
+           <?= ($seg3 === 'cleanup') ? 'bg-red-500/30 font-semibold' : '' ?>">
+            Log Pembersihan 
+        </a>
+
+    </div>
+</div>
+
+<a href="<?= base_url('admin/grafik') ?>"
+   class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition
+   <?= (service('uri')->getSegment(2) == 'grafik') ? 'bg-white/20 font-semibold' : '' ?>">
+
+    <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
+        <use href="#chart-bar" />
+    </svg>
+    Grafik Kinerja
+</a>
 
 
 <!-- Profil -->
@@ -397,6 +477,12 @@ LHE
 
 <!-- Icons -->
 <svg style="display:none;">
+    <symbol id="clipboard-list" viewBox="0 0 24 24">
+    <path stroke="currentColor" stroke-width="2" fill="none"
+          d="M9 5h6m-6 4h6m-6 4h6M7 3h10a2 2 0 0 1 2 2v14
+             a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/>
+</symbol>
+
   <symbol id="chart-bar" viewBox="0 0 24 24">
     <path stroke="currentColor" fill="none" stroke-width="2" d="M3 3v18h18"/>
   </symbol>

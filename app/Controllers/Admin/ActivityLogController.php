@@ -4,9 +4,6 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\ActivityLogModel;
-
-
-// Controller untuk mengelola log aktivitas admin
 class ActivityLogController extends BaseController
 {
     protected $activityLogModel;
@@ -15,19 +12,41 @@ class ActivityLogController extends BaseController
     {
         $this->activityLogModel = new ActivityLogModel();
     }
-// Menampilkan daftar log aktivitas
+
+    /**
+     * Menampilkan log aktivitas (ADMIN ONLY)
+     */
     public function index()
+{
+    if (session()->get('role') !== 'admin') {
+        return redirect()->back()->with('error', 'Akses ditolak');
+    }
+
+    // Kita ambil 100 data terbaru agar monitoring lebih luas
+    $limit = 100; 
+
+    $data = [
+        'title' => 'Manajemen Log Aktivitas',
+        // Pastikan fungsi di model ini menerima parameter $limit
+        'logs'  => $this->activityLogModel->getAllLogsWithUser($limit), 
+    ];
+
+    return view('admin/activity_logs/index', $data);
+}
+
+    /**
+     * Log milik user sendiri (staff / atasan)
+     * Controller ini tetap bisa dipakai kalau nanti dipisah role
+     */
+    public function myLogs()
     {
-        // Proteksi role (WAJIB)
-        if (session()->get('role') !== 'admin') {
-            return redirect()->back();
-        }
+        $userId = session()->get('user_id');
 
         $data = [
-            'title' => 'Log Aktivitas',
-            'logs' => $this->activityLogModel->getAllLogsWithUser(50),
+            'title' => 'Log Aktivitas Saya',
+            'logs'  => $this->activityLogModel->getLogsByUser($userId, 50),
         ];
 
-        return view('admin/activity_logs/index', $data);
+        return view('admin/activity_logs/my_logs', $data);
     }
 }
