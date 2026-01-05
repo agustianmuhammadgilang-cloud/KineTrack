@@ -1,151 +1,118 @@
 <?= $this->extend('layout/staff_template') ?>
 <?= $this->section('content') ?>
 
-<div class="p-4 sm:p-6 md:p-8 transition-all duration-300 dark:bg-gray-900">
+<div class="min-h-screen bg-gray-50 px-6 py-8">
 
-    <h3 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100">
-        Dashboard Kinerja Saya
-    </h3>
+    <!-- HEADER -->
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold text-gray-800">
+            Dashboard Kinerja Saya
+        </h1>
+        <p class="text-sm text-gray-500 mt-1">
+            Ringkasan tugas, dokumen, dan status kinerja Anda
+        </p>
 
-    <!-- STATISTIC CARDS -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+        <div class="mt-4 flex flex-wrap gap-2 text-sm">
+            <?php if (!empty($tahunAktif)): ?>
+                <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                    Tahun <?= esc($tahunAktif['tahun']) ?>
+                </span>
+            <?php endif; ?>
 
-        <!-- Diterima (Biru) -->
-        <div class="group bg-blue-500 dark:bg-blue-600 shadow-md rounded-2xl p-6 text-center text-white transform transition-all hover:scale-105 hover:shadow-2xl relative overflow-hidden">
-            <div class="absolute right-3 top-3 opacity-20 group-hover:opacity-50">
-                <svg class="w-10 h-10 sm:w-12 sm:h-12" fill="none">
-                    <?= heroicons_outline('check-circle') ?>
+            <?php if (!empty($twAktif)): ?>
+                <span class="px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
+                    TW <?= esc($twAktif['tw']) ?> • AKTIF
+                </span>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- SUMMARY CARDS -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+
+        <!-- TUGAS PIC -->
+        <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm flex items-start justify-between">
+            <div>
+                <p class="text-sm text-gray-500">Tugas PIC Aktif</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2">
+                    <?= esc($totalPicAktif ?? 0) ?>
+                </h3>
+                <p class="text-xs text-gray-500 mt-1">
+                    Indikator yang menjadi tanggung jawab Anda
+                </p>
+                <a href="<?= site_url('staff/task') ?>"
+                   class="inline-block mt-4 text-sm font-medium text-blue-600 hover:underline">
+                    Lihat daftar tugas →
+                </a>
+            </div>
+
+            <!-- HEROICON -->
+            <div class="p-3 rounded-lg bg-blue-50 text-blue-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M9 12h6m-6 4h6M7 8h10M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
             </div>
-            <h5 class="font-semibold mb-1">Diterima</h5>
-            <h2 class="text-3xl font-bold mt-1"><?= $approved ?></h2>
         </div>
 
-        <!-- Ditolak (Kuning) -->
-        <div class="group bg-yellow-400 dark:bg-yellow-500 shadow-md rounded-2xl p-6 text-center text-white transform transition-all hover:scale-105 hover:shadow-2xl relative overflow-hidden">
-            <div class="absolute right-3 top-3 opacity-20 group-hover:opacity-50">
-                <svg class="w-10 h-10 sm:w-12 sm:h-12" fill="none">
-                    <?= heroicons_outline('x-circle') ?>
-                </svg>
+        <!-- DOKUMEN REVISI -->
+        <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm flex items-start justify-between">
+            <div>
+                <p class="text-sm text-gray-500">Dokumen Perlu Revisi</p>
+                <h3 class="text-3xl font-bold text-red-600 mt-2">
+                    <?= esc($dokumenRevisi ?? 0) ?>
+                </h3>
+                <p class="text-xs text-gray-500 mt-1">
+                    Dokumen yang ditolak dan perlu diperbaiki
+                </p>
+                <a href="<?= site_url('staff/dokumen') ?>"
+                   class="inline-block mt-4 text-sm font-medium text-red-600 hover:underline">
+                    Lihat dokumen →
+                </a>
             </div>
-            <h5 class="font-semibold mb-1">Ditolak</h5>
-            <h2 class="text-3xl font-bold mt-1"><?= $rejected ?></h2>
-        </div>
 
-        <!-- Progress (Orange) -->
-        <div class="group bg-orange-500 dark:bg-orange-600 shadow-md rounded-2xl p-6 text-center text-white transform transition-all hover:scale-105 hover:shadow-2xl relative overflow-hidden">
-            <div class="absolute right-3 top-3 opacity-20 group-hover:opacity-50">
-                <svg class="w-10 h-10 sm:w-12 sm:h-12" fill="none">
-                    <?= heroicons_outline('trending-up') ?>
+            <!-- HEROICON -->
+            <div class="p-3 rounded-lg bg-red-50 text-red-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M12 9v3m0 4h.01M10.29 3.86L1.82 18a1.5 1.5 0 001.29 2.25h17.78a1.5 1.5 0 001.29-2.25L13.71 3.86a1.5 1.5 0 00-2.42 0z"/>
                 </svg>
-            </div>
-            <h5 class="font-semibold mb-1">Progress</h5>
-            <h2 class="text-3xl font-bold mt-1"><?= $progress ?>%</h2>
-            <div class="w-full bg-white/30 rounded-full h-4 mt-3 overflow-hidden">
-                <div class="h-4 bg-white" style="width: <?= $progress ?>%"></div>
             </div>
         </div>
 
     </div>
 
-    <!-- GRAFIK -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- QUICK ACTION -->
+    <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+        <h4 class="font-semibold text-gray-800 mb-4">
+            Aksi Cepat
+        </h4>
 
-        <!-- Grafik Harian -->
-        <div class="bg-white dark:bg-gray-800 shadow-md rounded-2xl p-6 transition hover:shadow-xl">
-            <h6 class="font-semibold mb-4 text-gray-700 dark:text-gray-200">Grafik Harian</h6>
-            <div class="w-full overflow-x-auto h-72">
-                <canvas id="dailyChart"></canvas>
-            </div>
+        <div class="flex flex-wrap gap-4">
+            <a href="<?= site_url('staff/task') ?>"
+               class="px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition">
+                Isi Pengukuran
+            </a>
+
+            <a href="<?= site_url('staff/dokumen/create') ?>"
+               class="px-5 py-2.5 rounded-lg bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition">
+                Upload Dokumen
+            </a>
+
+            <a href="<?= site_url('staff/dokumen') ?>"
+               class="px-5 py-2.5 rounded-lg bg-gray-100 text-gray-800 text-sm font-medium hover:bg-gray-200 transition">
+                Dokumen Saya
+            </a>
         </div>
-
-        <!-- Grafik Mingguan -->
-        <div class="bg-white dark:bg-gray-800 shadow-md rounded-2xl p-6 transition hover:shadow-xl">
-            <h6 class="font-semibold mb-4 text-gray-700 dark:text-gray-200">Grafik Mingguan</h6>
-            <div class="w-full overflow-x-auto h-72">
-                <canvas id="weeklyChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Grafik Bulanan -->
-        <div class="bg-white dark:bg-gray-800 shadow-md rounded-2xl p-6 lg:col-span-2 transition hover:shadow-xl">
-            <h6 class="font-semibold mb-4 text-gray-700 dark:text-gray-200">Grafik Bulanan</h6>
-            <div class="w-full overflow-x-auto h-80">
-                <canvas id="monthlyChart"></canvas>
-            </div>
-        </div>
-
     </div>
 
-    <!-- Footer -->
-    <p class="text-center text-gray-500 dark:text-gray-400 mt-6 sm:mt-8 text-xs sm:text-sm">
-        © <?= date('Y') ?> KINETRACK — Politeknik Negeri Bandung.
+    <!-- FOOTER -->
+    <p class="text-center text-xs text-gray-400 mt-12">
+        © <?= date('Y') ?> KINETRACK — Politeknik Negeri Bandung
     </p>
 
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const dailyLabels = <?= json_encode(array_column($daily, 'tgl')) ?>;
-    const dailyData = <?= json_encode(array_column($daily, 'total')) ?>;
-
-    const weeklyLabels = <?= json_encode(array_column($weekly, 'minggu')) ?>;
-    const weeklyData = <?= json_encode(array_column($weekly, 'total')) ?>;
-
-    const monthlyLabels = <?= json_encode(array_column($monthly, 'bulan')) ?>;
-    const monthlyData = <?= json_encode(array_column($monthly, 'total')) ?>;
-
-    const chartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-            x: { ticks: { maxRotation: 45, minRotation: 0 } },
-            y: { beginAtZero: true }
-        }
-    };
-
-    new Chart(document.getElementById('dailyChart'), {
-        type: 'line',
-        data: {
-            labels: dailyLabels,
-            datasets: [{
-                label: 'Laporan per Hari',
-                data: dailyData,
-                borderColor: '#3B82F6',
-                backgroundColor: '#3B82F666',
-                tension: 0.3,
-                fill: true
-            }]
-        },
-        options: chartOptions
-    });
-
-    new Chart(document.getElementById('weeklyChart'), {
-        type: 'bar',
-        data: {
-            labels: weeklyLabels,
-            datasets: [{
-                label: 'Laporan per Minggu',
-                data: weeklyData,
-                backgroundColor: '#FBBF24' // Kuning
-            }]
-        },
-        options: chartOptions
-    });
-
-    new Chart(document.getElementById('monthlyChart'), {
-        type: 'bar',
-        data: {
-            labels: monthlyLabels,
-            datasets: [{
-                label: 'Laporan per Bulan',
-                data: monthlyData,
-                backgroundColor: '#F97316' // Orange
-            }]
-        },
-        options: chartOptions
-    });
-</script>
 
 <?= $this->endSection() ?>

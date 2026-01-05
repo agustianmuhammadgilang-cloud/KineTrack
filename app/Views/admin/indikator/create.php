@@ -75,6 +75,8 @@
             <div id="hintPK" class="text-xs text-gray-500 mt-1"></div>
         </div>
 
+        <input type="hidden" name="mode" id="modeInput" value="non">
+
         <hr class="my-4">
 
         <!-- ===================== MODE INPUT (di bawah Target PK) ===================== -->
@@ -167,29 +169,31 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function setMode(m) {
         mode = m;
+        document.getElementById("modeInput").value = mode;
+
         if (mode === "non") {
-            btnNon.classList.remove("bg-gray-300","text-gray-700");
-            btnNon.classList.add("bg-green-600","text-white");
+        btnNon.classList.remove("bg-gray-300","text-gray-700");
+        btnNon.classList.add("bg-green-600","text-white");
 
-            btnAkm.classList.remove("bg-green-600","text-white");
-            btnAkm.classList.add("bg-gray-300","text-gray-700");
+        btnAkm.classList.remove("bg-green-600","text-white");
+        btnAkm.classList.add("bg-gray-300","text-gray-700");
 
-            notifMode.innerText = "Mode: NON-AKUMULATIF";
-        } else {
-            btnAkm.classList.remove("bg-gray-300","text-gray-700");
-            btnAkm.classList.add("bg-green-600","text-white");
+        notifMode.innerText = "Mode: NON-AKUMULATIF";
+    } else {
+        btnAkm.classList.remove("bg-gray-300","text-gray-700");
+        btnAkm.classList.add("bg-green-600","text-white");
 
-            btnNon.classList.remove("bg-green-600","text-white");
-            btnNon.classList.add("bg-gray-300","text-gray-700");
+        btnNon.classList.remove("bg-green-600","text-white");
+        btnNon.classList.add("bg-gray-300","text-gray-700");
 
-            notifMode.innerText = "Mode: AKUMULATIF";
-        }
-        // revalidate on mode change
-        revalidateAndRender();
+        notifMode.innerText = "Mode: AKUMULATIF";
     }
 
+    revalidateAndRender();
+    }
+
+    btnAkm.addEventListener("click", () => setMode("akumulatif"));
     btnNon.addEventListener("click", () => setMode("non"));
-    btnAkm.addEventListener("click", () => setMode("akm"));
     setMode("non");
 
     /* ---------- SATUAN & PK BEHAVIOR ---------- */
