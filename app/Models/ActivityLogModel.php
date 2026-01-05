@@ -12,6 +12,7 @@ class ActivityLogModel extends Model
 
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
+    protected $useTimestamps    = false; // Log hanya INSERT
 
     protected $allowedFields = [
         'user_id',
@@ -23,13 +24,19 @@ class ActivityLogModel extends Model
         'ip_address',
         'user_agent',
         'created_at',
+        'is_restored',
+        'restored_at',
+        'restored_from_backup',
     ];
 
-    // Log hanya INSERT, tidak pernah UPDATE
-    protected $useTimestamps = false;
+    /**
+     * ===============================
+     * ADMIN METHODS
+     * ===============================
+     */
 
     /**
-     * Ambil log untuk ADMIN (semua data)
+     * Ambil semua log (ADMIN)
      */
     public function getAllLogs($limit = 20)
     {
@@ -38,7 +45,23 @@ class ActivityLogModel extends Model
     }
 
     /**
-     * Ambil log untuk user tertentu (staff / atasan)
+     * Ambil semua log + nama user (ADMIN)
+     */
+    public function getAllLogsWithUser($limit = 100)
+{
+    return $this->select('activity_logs.*, users.nama')
+        ->join('users', 'users.id = activity_logs.user_id', 'left')
+        ->orderBy('COALESCE(activity_logs.restored_at, activity_logs.created_at)', 'DESC', false)
+        ->findAll($limit);
+}
+    /**
+     * ===============================
+     * USER METHODS
+     * ===============================
+     */
+
+    /**
+     * Ambil log milik user tertentu (staff / atasan)
      */
     public function getLogsByUser($userId, $limit = 20)
     {
@@ -46,13 +69,36 @@ class ActivityLogModel extends Model
                     ->orderBy('created_at', 'DESC')
                     ->findAll($limit);
     }
-    public function getAllLogsWithUser($limit = 50)
-{
-    return $this->select('activity_logs.*, users.nama')
-                ->join('users', 'users.id = activity_logs.user_id', 'left')
-                ->orderBy('activity_logs.created_at', 'DESC')
-                ->findAll($limit);
-}
 
+    /**
+     * ===============================
+     * ACTIVITY LOG MANAGEMENT
+     * ===============================
+     */
 
+    /**
+     * Ambil log yang lebih dari X bulan
+     * Dipakai untuk archive & cleanup
+     */
+    public function getLogsOlderThanMonths($months)
+    {
+        return $this->where(
+                        'created_at <',
+                        date('Y-m-d H:i:s', strtotime("-{$months} months"))
+                    )
+                    ->findAll();
+    }
+
+    /**
+     * Hapus log lebih dari X bulan (ADMIN)
+     * Pastikan dipanggil setelah backup
+     */
+    public function deleteLogsOlderThanMonths($months)
+    {
+        return $this->where(
+                        'created_at <',
+                        date('Y-m-d H:i:s', strtotime("-{$months} months"))
+                    )
+                    ->delete();
+    }
 }
