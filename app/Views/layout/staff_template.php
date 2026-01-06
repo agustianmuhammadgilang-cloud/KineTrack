@@ -324,168 +324,120 @@ $seg3 = $uri->getTotalSegments() >= 3 ? $uri->getSegment(3) : ''; // aman
 
 </svg>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    let lastNotifId = localStorage.getItem("lastNotifId_atasan") ?? 0;
+
+    async function checkNewNotif() {
+        const res = await fetch("<?= base_url('notifications/latest') ?>");
+        const notif = await res.json();
+
+        if (!notif || !notif.id) return;
+
+        if (notif.id != lastNotifId) {
+            lastNotifId = notif.id;
+            localStorage.setItem("lastNotifId_atasan", notif.id);
+
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                timer: 8000,
+                showConfirmButton: false,
+                icon: 'info',
+                title: notif.message
+            });
+        }
+    }
+
+    async function refreshBadge() {
+        const res = await fetch("<?= base_url('notifications/unread-count') ?>");
+        const data = await res.json();
+
+        const badge = document.getElementById('notifBadge');
+        if (!badge) return;
+
+        if (data.count > 0) {
+            badge.innerText = data.count;
+            badge.classList.remove("hidden");
+        } else {
+            badge.classList.add("hidden");
+        }
+    }
+
+    async function loadDropdown() {
+        const list = document.getElementById("notifList");
+        if (!list) return;
+
+        const res = await fetch("<?= base_url('notifications/list/10') ?>");
+        const data = await res.json();
+
+        list.innerHTML = "";
+
+        data.forEach(n => {
+            const li = document.createElement("li");
+            li.className = "px-4 py-2 hover:bg-gray-100 cursor-pointer";
+
+            li.innerHTML = `
+                <div class="${n.status === 'unread' ? 'font-semibold text-blue-600' : ''}">
+                    ${n.message}
+                </div>
+                <div class="text-xs text-gray-500">${n.created_at}</div>
+            `;
+
+            li.onclick = () => markAsRead(n.id, n);
+            list.appendChild(li);
+        });
+    }
+
+    async function markAsRead(id, n) {
+        await fetch("<?= base_url('notifications/mark') ?>/" + id, { method: "POST" });
+        refreshBadge();
+        loadDropdown();
+
+        Swal.fire({
+            title: "Detail Notifikasi",
+            text: n.message,
+            icon: "info"
+        });
+    }
+
+    window.markAllNotif = async () => {
+        await fetch("<?= base_url('notifications/mark-all') ?>", { method: "POST" });
+        refreshBadge();
+        loadDropdown();
+    };
+
+    setInterval(() => {
+        checkNewNotif();
+        refreshBadge();
+        loadDropdown();
+    }, 6000);
+
+    checkNewNotif();
+    refreshBadge();
+    loadDropdown();
+});
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 <?php if (session()->getFlashdata('alert')): 
-    $a = session()->getFlashdata('alert'); ?>
+    $alert = session()->getFlashdata('alert');
+?>
 <script>
-  Swal.fire({
-    toast: true, position: 'top-end', showConfirmButton:false, timer:4000,
-    icon: '<?= esc($a['type']) ?>', title: '<?= esc($a['title']) ?>', text: '<?= esc($a['message']) ?>'
-  });
-</script>
-<?php endif; ?>
-
-<script>
-function loadStaffNotif() {
-    fetch("<?= base_url('staff/notifications/list') ?>")
-        .then(res => res.json())
-        .then(data => {
-            const unread = data.filter(n => n.is_read == 0).length;
-
-            // Update badge task sidebar
-            const badge = document.querySelector('#task-badge');
-
-            if (badge) {
-                if (unread > 0) {
-                    badge.innerHTML = unread;
-                    badge.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
-                }
-            }
-        });
-}
-
-// polling setiap 5 detik
-setInterval(loadStaffNotif, 5000);
-loadStaffNotif();
-</script>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  const badge = document.getElementById('notif-badge');
-  const menu = document.getElementById('notif-menu');
-  const bell = document.getElementById('notif-bell');
-  const listEl = document.getElementById('notif-list');
-  const markAllBtn = document.getElementById('notif-mark-all');
-
-  async function fetchCount(){
-    try {
-      const res = await fetch('<?= base_url('notifications/unread-count') ?>');
-      if(!res.ok) throw 0;
-      const j = await res.json();
-      const c = j.count ?? 0;
-      if (c > 0) {
-        badge.textContent = c;
-        badge.classList.remove('hidden');
-      } else {
-        badge.classList.add('hidden');
-      }
-    } catch(e) {
-      // ignore
-    }
-  }
-
-  async function fetchList(){
-    try {
-      const res = await fetch('<?= base_url('notifications/list') ?>');
-      if(!res.ok) return;
-      const arr = await res.json();
-      listEl.innerHTML = '';
-      if (arr.length === 0) {
-        listEl.innerHTML = '<div class="p-3 text-sm text-gray-600">Tidak ada notifikasi</div>';
-        return;
-      }
-      for (const n of arr) {
-        const date = new Date(n.created_at);
-        const meta = n.meta ? JSON.parse(n.meta) : null;
-        const item = document.createElement('div');
-        item.className = 'p-3 border-b hover:bg-gray-50 flex justify-between items-start';
-        item.innerHTML = `
-            <div class="text-sm">
-              <div class="font-medium text-gray-800">${escapeHtml(n.message)}</div>
-              <div class="text-xs text-gray-500 mt-1">${date.toLocaleString()}</div>
-            </div>
-            <div class="ml-2">
-              <button data-id="${n.id}" class="notif-mark-read text-xs text-blue-600">Tandai</button>
-            </div>
-        `;
-        listEl.appendChild(item);
-      }
-
-      // attach mark buttons
-      document.querySelectorAll('.notif-mark-read').forEach(btn=>{
-        btn.addEventListener('click', async (e)=>{
-          const id = btn.getAttribute('data-id');
-          await fetch('<?= base_url('notifications/mark') ?>/' + id, { method:'POST' });
-          await fetchCount();
-          await fetchList();
-        });
-      });
-
-    } catch(e){}
-  }
-
-  // toggle menu
-  bell?.addEventListener('click', async (ev) => {
-    menu.classList.toggle('hidden');
-    if (!menu.classList.contains('hidden')) {
-      await fetchList();
-      // optional: mark all read on open? we keep manual
-    }
-  });
-
-  markAllBtn?.addEventListener('click', async ()=>{
-    await fetch('<?= base_url('notifications/mark-all') ?>', { method: 'POST' });
-    await fetchCount();
-    await fetchList();
-  });
-
-  // poll every 12s
-  fetchCount();
-  setInterval(fetchCount, 12000);
-
-  // safe escape function
-  function escapeHtml(str){
-    if(!str) return '';
-    return String(str).replace(/[&<>"'`=\/]/g, function(s){
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;'}[s];
+document.addEventListener("DOMContentLoaded", function () {
+    Swal.fire({
+        icon: "<?= esc($alert['type']) ?>",
+        title: "<?= esc($alert['title']) ?>",
+        text: "<?= esc($alert['message']) ?>",
+        timer: 3000,
+        showConfirmButton: false
     });
-  }
 });
-
-async function fetchPending(){
-  try {
-    const res = await fetch('<?= base_url('notifications/pending-count') ?>');
-    const j = await res.json();
-    const el = document.getElementById('task-badge');
-    if (j.count > 0) {
-      el.textContent = j.count;
-      el.classList.remove('hidden');
-    } else {
-      el.classList.add('hidden');
-    }
-  } catch(e){}
-}
-fetchPending();
-setInterval(fetchPending, 12000);
-
-</script>
-
-<?php if (!empty($notifikasi)): ?>
-<script>
-<?php foreach($notifikasi as $n): ?>
-Swal.fire({
-    toast: true,
-    position: 'top-end',
-    icon: 'info',
-    title: <?= json_encode($n['message']) ?>,
-    showConfirmButton: false,
-    timer: 3500
-});
-<?php endforeach; ?>
 </script>
 <?php endif; ?>
+
 </body>
 </html>

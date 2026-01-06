@@ -3,66 +3,50 @@
 namespace App\Controllers\Atasan;
 
 use App\Controllers\BaseController;
-use App\Models\Staff\GrafikKinerjaModel;
+use App\Models\GrafikKinerjaStaffModel;
 
 class GrafikKinerja extends BaseController
 {
-    protected $grafikModel;
-    protected $userId;
+    protected $model;
 
     public function __construct()
     {
-        $this->grafikModel = new GrafikKinerjaModel();
-        $this->userId     = session()->get('user_id');
+        $this->model = new GrafikKinerjaStaffModel();
     }
 
-    /* ===============================
-       STEP 1 — GRAFIK TAHUN
-       =============================== */
     public function index()
     {
-        $grafikTahun = $this->grafikModel->getGrafikTahun($this->userId);
+        $userId = session()->get('user_id');
 
-        // urutkan kiri → kanan (tahun lama → baru)
-        $grafikTahun = array_reverse($grafikTahun);
+        $tahunAktif = $this->model->getTahunAktif();
+        $listTahun  = $this->model->getListTahun();
+        $indikator  = $this->model->getIndikatorByTahun($tahunAktif['id'], $userId);
 
         return view('atasan/grafik/index', [
-            'grafikTahun' => $grafikTahun
+            'tahunAktif' => $tahunAktif,
+            'listTahun'  => $listTahun,
+            'indikator'  => $indikator
         ]);
     }
 
-    /* ===============================
-       STEP 2 — GRAFIK SASARAN
-       =============================== */
-    public function sasaran($tahunId)
+    public function dataIndikator($tahunId)
     {
-        return view('atasan/grafik/sasaran', [
-            'sasaran' => $this->grafikModel->getGrafikSasaran($tahunId, $this->userId),
-            'tahunId' => $tahunId
-        ]);
+        $userId = session()->get('user_id');
+
+        return $this->response->setJSON(
+            $this->model->getIndikatorByTahun($tahunId, $userId)
+        );
     }
 
-    /* ===============================
-       STEP 3 — GRAFIK INDIKATOR
-       =============================== */
-    public function indikator($sasaranId, $tahunId)
-    {
-        return view('atasan/grafik/indikator', [
-            'indikator' => $this->grafikModel->getGrafikIndikator($sasaranId, $this->userId),
-            'sasaranId' => $sasaranId,
-            'tahunId'   => $tahunId
-        ]);
-    }
-
-    /* ===============================
-       STEP 4 — GRAFIK TRIWULAN
-       =============================== */
     public function triwulan($indikatorId)
     {
-        $data = $this->grafikModel->getGrafikTriwulan($indikatorId, $this->userId);
+        $userId = session()->get('user_id');
+
+        // 🔑 PAKAI METHOD LAMA (BENAR)
+        $data = $this->model->getGrafikTriwulan($indikatorId, $userId);
 
         if (!$data) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data tidak ditemukan');
+            throw new \CodeIgniter\Exceptions\PageNotFoundException();
         }
 
         return view('atasan/grafik/triwulan', $data);

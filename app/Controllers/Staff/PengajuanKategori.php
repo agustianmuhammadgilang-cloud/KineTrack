@@ -5,15 +5,18 @@ namespace App\Controllers\Staff;
 use App\Controllers\BaseController;
 use App\Models\PengajuanKategoriModel;
 use App\Models\KategoriDokumenModel;
+use App\Models\NotificationModel;
 
 // Controller untuk mengelola pengajuan kategori dokumen oleh staff
 class PengajuanKategori extends BaseController
 {
     protected $pengajuanModel;
+    protected $notifModel;
     // Konstruktor untuk inisialisasi model pengajuan kategori
     public function __construct()
     {
         $this->pengajuanModel = new PengajuanKategoriModel();
+        $this->notifModel = new NotificationModel();
     }
 
     /**
@@ -88,6 +91,34 @@ log_activity(
     'kategori_dokumen',
     null
 );
+
+$this->notifModel->insert([
+    'user_id' => $userId,
+    'message' => 'Pengajuan kategori "' . $nama . '" berhasil dikirim dan menunggu persetujuan admin.',
+    'meta' => json_encode([
+        'type' => 'pengajuan_kategori',
+        'status' => 'pending'
+    ]),
+    'status' => 'unread',
+    'created_at' => date('Y-m-d H:i:s')
+]);
+
+$adminList = model('UserModel')
+    ->where('role', 'admin')
+    ->findAll();
+
+foreach ($adminList as $admin) {
+    $this->notifModel->insert([
+        'user_id' => $admin['id'],
+        'message' => 'Pengajuan kategori baru "' . $nama . '" menunggu persetujuan.',
+        'meta' => json_encode([
+            'type' => 'pengajuan_kategori',
+            'pengaju_id' => $userId
+        ]),
+        'status' => 'unread',
+        'created_at' => date('Y-m-d H:i:s')
+    ]);
+}
 
 
 

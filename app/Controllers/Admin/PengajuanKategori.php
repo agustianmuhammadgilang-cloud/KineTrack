@@ -5,16 +5,19 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\PengajuanKategoriModel;
 use App\Models\KategoriDokumenModel;
+use App\Models\NotificationModel;
 // Controller untuk mengelola pengajuan kategori dokumen
 class PengajuanKategori extends BaseController
 {
     protected $pengajuanModel;
     protected $kategoriModel;
+    protected $notifModel;
 
     public function __construct()
     {
         $this->pengajuanModel = new PengajuanKategoriModel();
         $this->kategoriModel  = new KategoriDokumenModel();
+        $this->notifModel     = new NotificationModel();
     }
 // ============================
 // LIST PENGAJUAN KATEGORI
@@ -83,8 +86,30 @@ class PengajuanKategori extends BaseController
         $kategori['id']
     );
 
-    return redirect()->back()
-        ->with('success', 'Kategori berhasil divalidasi');
+    $this->notifModel->insert([
+    'user_id' => $pengajuan['pengaju_user_id'],
+    'message' => 'Pengajuan kategori "' . $pengajuan['nama_kategori'] . '" telah disetujui dan siap digunakan.',
+    'meta' => json_encode([
+        'type' => 'pengajuan_kategori',
+        'status' => 'approved'
+    ]),
+    'status' => 'unread',
+    'created_at' => date('Y-m-d H:i:s')
+]);
+
+$this->notifModel->insert([
+    'user_id' => session()->get('user_id'),
+    'message' => 'Anda berhasil menyetujui pengajuan kategori "' . $pengajuan['nama_kategori'] . '".',
+    'meta' => json_encode([
+        'type' => 'pengajuan_kategori',
+        'action' => 'approve'
+    ]),
+    'status' => 'unread',
+    'created_at' => date('Y-m-d H:i:s')
+]);
+
+
+    return redirect()->back();
 }
 
 
@@ -134,8 +159,31 @@ class PengajuanKategori extends BaseController
         $kategori['id']
     );
 
-    return redirect()->back()
-        ->with('success', 'Pengajuan ditolak');
+    $this->notifModel->insert([
+    'user_id' => $pengajuan['pengaju_user_id'],
+    'message' => 'Pengajuan kategori "' . $pengajuan['nama_kategori'] . '" ditolak oleh admin.',
+    'meta' => json_encode([
+        'type' => 'pengajuan_kategori',
+        'status' => 'rejected'
+    ]),
+    'status' => 'unread',
+    'created_at' => date('Y-m-d H:i:s')
+]);
+
+
+$this->notifModel->insert([
+    'user_id' => session()->get('user_id'),
+    'message' => 'Anda berhasil menolak pengajuan kategori "' . $pengajuan['nama_kategori'] . '".',
+    'meta' => json_encode([
+        'type' => 'pengajuan_kategori',
+        'action' => 'reject'
+    ]),
+    'status' => 'unread',
+    'created_at' => date('Y-m-d H:i:s')
+]);
+
+
+    return redirect()->back();
 }
 
 

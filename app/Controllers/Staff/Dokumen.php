@@ -6,18 +6,21 @@ use App\Controllers\BaseController;
 use App\Models\DokumenModel;
 use App\Models\BidangModel;
 use App\Models\KategoriDokumenModel;
+use App\Models\NotificationModel;
 // Controller untuk mengelola dokumen kinerja staff
 class Dokumen extends BaseController
 {
     protected $dokumenModel;
     protected $bidangModel;
     protected $kategoriModel;
+    protected $notifModel;
     // Konstruktor untuk inisialisasi model dokumen, bidang, dan kategori
     public function __construct()
     {
         $this->dokumenModel  = new DokumenModel();
         $this->bidangModel   = new BidangModel();
         $this->kategoriModel = new KategoriDokumenModel();
+        $this->notifModel    = new NotificationModel();
     }
 
     /**
@@ -144,6 +147,62 @@ log_activity(
     $dokumenId
 );
 
+$this->notifModel->insert([
+    'user_id' => $userId,
+    'message' => 'Dokumen "' . $this->request->getPost('judul') . '" berhasil dikirim dan menunggu persetujuan.',
+    'meta'    => json_encode([
+        'dokumen_id' => $dokumenId,
+        'type'       => 'dokumen'
+    ]),
+    'status'  => 'unread',
+    'created_at' => date('Y-m-d H:i:s')
+]);
+
+// ===============================
+if ($reviewer === 'kaprodi') {
+    // cari KETUA PRODI
+    $atasanList = model('UserModel')
+        ->where('role', 'atasan')
+        ->where('bidang_id', $unitAsal) // PRODI
+        ->findAll();
+
+    $pesan = 'Dokumen baru "' . $this->request->getPost('judul') . '" menunggu persetujuan Ketua Prodi.';
+} else {
+    // cari KETUA JURUSAN
+    $atasanList = model('UserModel')
+        ->where('role', 'atasan')
+        ->where('bidang_id', $unitJurusan) // JURUSAN
+        ->findAll();
+
+    $pesan = 'Dokumen baru "' . $this->request->getPost('judul') . '" menunggu persetujuan Ketua Jurusan.';
+}
+
+foreach ($atasanList as $atasan) {
+    $this->notifModel->insert([
+        'user_id' => $atasan['id'],
+        'message' => $pesan,
+        'meta'    => json_encode([
+            'dokumen_id' => $dokumenId,
+            'type'       => 'upload'
+        ]),
+        'status'     => 'unread',
+        'created_at' => date('Y-m-d H:i:s')
+    ]);
+}
+
+
+    foreach ($atasanList as $atasan) {
+        $this->notifModel->insert([
+            'user_id' => $atasan['id'],
+            'message' => 'Dokumen baru "' . $this->request->getPost('judul') . '" telah diajukan dan menunggu persetujuan Anda.',
+            'meta'    => json_encode([
+                'dokumen_id' => $dokumenId,
+                'type'       => 'upload'
+            ]),
+            'status'  => 'unread',
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+    }
 
 
     return redirect()->to('/staff/dokumen')
@@ -227,15 +286,15 @@ log_activity(
         $file->move('uploads/dokumen', $newName);
 
         $this->dokumenModel->update($id, [
-            'judul'            => $this->request->getPost('judul'),
-            'deskripsi'        => $this->request->getPost('deskripsi'),
-            'kategori_id'      => $this->request->getPost('kategori_id'),
-            'file_path'        => $newName,
-            'status'           => $status,
-            'current_reviewer' => $reviewer,
-            'catatan'          => null,
-            'updated_at'       => date('Y-m-d H:i:s'),
-        ]);
+    'judul'            => $this->request->getPost('judul'),
+    'deskripsi'        => $this->request->getPost('deskripsi'),
+    'file_path'        => $newName,
+    'status'           => $status,
+    'current_reviewer' => $reviewer,
+    'catatan'          => null,
+    'updated_at'       => date('Y-m-d H:i:s'),
+]);
+
         // LOG AKTIVITAS STAFF Dokumen
         log_activity(
     'resubmit_dokumen',
@@ -243,6 +302,61 @@ log_activity(
     'dokumen',
     $id
 );
+
+$this->notifModel->insert([
+    'user_id' => $userId,
+    'message' => 'Revisi dokumen "' . $dokumen['judul'] . '" berhasil dikirim ulang.',
+    'meta'    => json_encode([
+        'dokumen_id' => $id,
+        'type'       => 'dokumen'
+    ]),
+    'status'  => 'unread',
+    'created_at' => date('Y-m-d H:i:s')
+]);
+
+ // ===============================
+    // NOTIF KE ATASAN (REVISI)
+    // ===============================
+if ($reviewer === 'kaprodi') {
+    $atasanList = model('UserModel')
+        ->where('role', 'atasan')
+        ->where('bidang_id', $bidangUser['id']) // PRODI
+        ->findAll();
+
+    $pesan = 'Revisi dokumen "' . $dokumen['judul'] . '" menunggu peninjauan Ketua Prodi.';
+} else {
+    $atasanList = model('UserModel')
+        ->where('role', 'atasan')
+        ->where('bidang_id', $bidangUser['id']) // JURUSAN
+        ->findAll();
+
+    $pesan = 'Revisi dokumen "' . $dokumen['judul'] . '" menunggu peninjauan Ketua Jurusan.';
+}
+
+foreach ($atasanList as $atasan) {
+    $this->notifModel->insert([
+        'user_id' => $atasan['id'],
+        'message' => $pesan,
+        'meta'    => json_encode([
+            'dokumen_id' => $id,
+            'type'       => 'resubmit'
+        ]),
+        'status'     => 'unread',
+        'created_at' => date('Y-m-d H:i:s')
+    ]);
+
+    
+        $this->notifModel->insert([
+            'user_id' => $atasan['id'],
+            'message' => 'Revisi dokumen "' . $dokumen['judul'] . '" telah diajukan dan menunggu peninjauan ulang.',
+            'meta'    => json_encode([
+                'dokumen_id' => $id,
+                'type'       => 'resubmit'
+            ]),
+            'status'  => 'unread',
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+}
 
 
         return redirect()->to('/staff/dokumen')
