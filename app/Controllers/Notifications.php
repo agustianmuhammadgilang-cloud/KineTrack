@@ -5,12 +5,10 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\NotificationModel;
 
-// Controller untuk mengelola notifikasi
 class Notifications extends BaseController
 {
     protected $notif;
 
-    // Konstruktor untuk inisialisasi model notifikasi
     public function __construct()
     {
         $this->notif = new NotificationModel();
@@ -22,28 +20,34 @@ class Notifications extends BaseController
     public function unreadCount()
     {
         $userId = session('user_id');
-        if (!$userId) return $this->response->setJSON(['count' => 0]);
+        if (!$userId) {
+            return $this->response->setJSON(['count' => 0]);
+        }
 
         $count = $this->notif
             ->where('user_id', $userId)
             ->where('status', 'unread')
             ->countAllResults();
 
-        return $this->response->setJSON(['count' => (int)$count]);
+        return $this->response->setJSON(['count' => (int) $count]);
     }
 
     // ========================================================
-    // List notifikasi terbaru
+    // List notifikasi
     // ========================================================
     public function list($limit = 10)
     {
         $userId = session('user_id');
-        if (!$userId) return $this->response->setJSON([]);
+        if (!$userId) {
+            return $this->response->setJSON([]);
+        }
+
+        $role = session('role'); // admin / staff / atasan
 
         $data = $this->notif
             ->where('user_id', $userId)
             ->orderBy('id', 'DESC')
-            ->limit((int)$limit)
+            ->limit((int) $limit)
             ->findAll();
 
         foreach ($data as &$row) {
@@ -53,7 +57,14 @@ class Notifications extends BaseController
                 $m = json_decode($row['meta'], true);
 
                 if (!empty($m['pengukuran_id'])) {
-                    $row['url'] = base_url("admin/pengukuran/detail/" . $m['pengukuran_id']);
+                    // Tentukan URL berdasarkan ROLE
+                    if ($role === 'admin') {
+                        $row['url'] = base_url("admin/pengukuran/detail/" . $m['pengukuran_id']);
+                    } elseif ($role === 'staff') {
+                        $row['url'] = base_url("staff/pengukuran");
+                    } elseif ($role === 'atasan') {
+                        $row['url'] = base_url("atasan/pengukuran");
+                    }
                 }
             }
         }
@@ -63,16 +74,21 @@ class Notifications extends BaseController
 
     // ========================================================
     // Tandai satu notifikasi sebagai read
-    //    (JS memanggil mark/{id})
     // ========================================================
     public function mark($id)
     {
         $userId = session('user_id');
-        if (!$userId) return $this->response->setStatusCode(401)->setBody('Unauthenticated');
+        if (!$userId) {
+            return $this->response
+                ->setStatusCode(401)
+                ->setJSON(['error' => 'Unauthenticated']);
+        }
 
         $notif = $this->notif->find($id);
         if (!$notif || $notif['user_id'] != $userId) {
-            return $this->response->setStatusCode(404)->setBody('Not found');
+            return $this->response
+                ->setStatusCode(404)
+                ->setJSON(['error' => 'Not found']);
         }
 
         $this->notif->update($id, ['status' => 'read']);
@@ -81,11 +97,14 @@ class Notifications extends BaseController
     }
 
     // ========================================================
-    // Tandai semua sebagai read  (JS memanggil mark-all)
+    // Tandai semua sebagai read
     // ========================================================
     public function markAll()
     {
         $userId = session('user_id');
+        if (!$userId) {
+            return $this->response->setJSON(['ok' => false]);
+        }
 
         $this->notif
             ->where('user_id', $userId)
@@ -97,12 +116,16 @@ class Notifications extends BaseController
     }
 
     // ========================================================
-    // Notifikasi terbaru — untuk toast
+    // Notifikasi terbaru (TOAST)
     // ========================================================
     public function latest()
     {
         $userId = session('user_id');
-        if (!$userId) return $this->response->setJSON([]);
+        if (!$userId) {
+            return $this->response->setJSON([]);
+        }
+
+        $role = session('role');
 
         $n = $this->notif
             ->where('user_id', $userId)
@@ -116,7 +139,13 @@ class Notifications extends BaseController
                 $m = json_decode($n['meta'], true);
 
                 if (!empty($m['pengukuran_id'])) {
-                    $n['url'] = base_url("admin/pengukuran/detail/" . $m['pengukuran_id']);
+                    if ($role === 'admin') {
+                        $n['url'] = base_url("admin/pengukuran/detail/" . $m['pengukuran_id']);
+                    } elseif ($role === 'staff') {
+                        $n['url'] = base_url("staff/pengukuran");
+                    } elseif ($role === 'atasan') {
+                        $n['url'] = base_url("atasan/pengukuran");
+                    }
                 }
             }
         }

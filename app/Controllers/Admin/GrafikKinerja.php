@@ -17,51 +17,35 @@ class GrafikKinerja extends BaseController
     /* ===============================
        STEP 1 — GRAFIK TAHUN (INDEX)
        =============================== */
-    public function index()
+public function index()
 {
-    $grafikTahun = $this->grafikModel->getGrafikTahun();
+    $listTahun  = $this->grafikModel->getListTahun();
+    $tahunAktif = $this->grafikModel->getTahunAktif();
 
-    // biar kiri → kanan (lama → aktif)
-    $grafikTahun = array_reverse($grafikTahun);
-
-    return view('admin/grafik/index', [
-        'grafikTahun' => $grafikTahun
-    ]);
-}
-
-
-
-    /* ===============================
-       STEP 2 — GRAFIK SASARAN
-       =============================== */
-    public function sasaran($tahunId)
-    {
-        $sasaran = $this->grafikModel->getGrafikSasaran($tahunId);
-
-        return view('admin/grafik/sasaran', [
-            'sasaran' => $sasaran,
-            'tahunId' => $tahunId
-        ]);
+    if (!$tahunAktif) {
+        throw new \RuntimeException('Tahun aktif tidak ditemukan');
     }
 
-    /* ===============================
-       STEP 3 — GRAFIK INDIKATOR
-       =============================== */
-public function indikator($sasaranId, $tahunId)
-{
-    $indikator = $this->grafikModel->getGrafikIndikator($sasaranId);
+    $indikator = $this->grafikModel
+        ->getGrafikIndikatorByTahun($tahunAktif['id']);
 
-    return view('admin/grafik/indikator', [
-        'indikator' => $indikator,
-        'sasaranId' => $sasaranId,
-        'tahunId'   => $tahunId
+    return view('admin/grafik/index', [
+        'listTahun'  => $listTahun,
+        'tahunAktif' => $tahunAktif,
+        'indikator'  => $indikator
     ]);
 }
 
+public function dataIndikator($tahunId)
+{
+    $data = $this->grafikModel->getGrafikIndikatorByTahun($tahunId);
+
+    return $this->response->setJSON($data);
+}
 
 
     /* ===============================
-       STEP 4 — GRAFIK TRIWULAN
+       STEP 2 — GRAFIK TRIWULAN
        =============================== */
     public function triwulan($indikatorId)
     {

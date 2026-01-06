@@ -1,0 +1,84 @@
+{
+    "meta": {
+        "type": "ARCHIVE_BACKUP",
+        "total_records": 5,
+        "period": {
+            "from": "2025-11-05",
+            "to": "2025-11-05"
+        },
+        "created_at": "2026-01-05 08:39:36",
+        "created_by": "Administrator"
+    },
+    "data": [
+        {
+            "id": "1",
+            "user_id": "1",
+            "role": "admin",
+            "action": "login",
+            "description": "Login ke sistem",
+            "subject_type": null,
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-11-05 08:37:50",
+            "archived_at": "2026-01-05 08:38:12",
+            "nama": "Administrator"
+        },
+        {
+            "id": "2",
+            "user_id": "2",
+            "role": "staff",
+            "action": "login",
+            "description": "Login ke sistem",
+            "subject_type": null,
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-11-05 08:37:50",
+            "archived_at": "2026-01-05 08:38:12",
+            "nama": "repan"
+        },
+        {
+            "id": "3",
+            "user_id": "1",
+            "role": "admin",
+            "action": "login",
+            "description": "Login ke sistem",
+            "subject_type": null,
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-11-05 08:37:50",
+            "archived_at": "2026-01-05 08:38:12",
+            "nama": "Administrator"
+        },
+        {
+            "id": "4",
+            "user_id": "2",
+            "role": "staff",
+            "action": "login",
+            "description": "Login ke sistem",
+            "subject_type": null,
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-11-05 08:37:50",
+            "archived_at": "2026-01-05 08:38:12",
+            "nama": "repan"
+        },
+        {
+            "id": "5",
+            "user_id": "2",
+            "role": "staff",
+            "action": "view_profile",
+            "description": "Melihat halaman profil pribadi",
+            "subject_type": "user",
+            "subject_id": "2",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-11-05 08:37:50",
+            "archived_at": "2026-01-05 08:38:12",
+            "nama": "repan"
+        }
+    ]
+}

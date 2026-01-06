@@ -14,143 +14,88 @@ class GrafikKinerjaModel extends Model
     }
 
     /* =====================================================
-       STEP 1 — GRAFIK TAHUN
-       ===================================================== */
-    public function getGrafikTahun()
-    {
-        return $this->db->query("
-            SELECT
-                ta.id AS tahun_id,
-                ta.tahun,
-                ta.status,
-                COALESCE(
-                    (SUM(ind.realisasi) / NULLIF(SUM(ind.target),0)) * 100,
-                    0
-                ) AS progres
-            FROM tahun_anggaran ta
+   AMBIL TAHUN AKTIF
+   ===================================================== */
+public function getTahunAktif()
+{
+    return $this->db->table('tahun_anggaran')
+        ->where('status', 'active')
+        ->get()
+        ->getRowArray();
+}
+public function getListTahun()
+{
+    return $this->db->table('tahun_anggaran')
+        ->orderBy('tahun', 'DESC')
+        ->get()
+        ->getResultArray();
+}
 
-            LEFT JOIN sasaran_strategis ss ON ss.tahun_id = ta.id
-            LEFT JOIN (
-                SELECT
-                    ik.id,
-                    ik.sasaran_id,
-                    CASE 
-                        WHEN ik.mode='akumulatif' THEN ik.target_tw4
-                        ELSE ik.target_tw1 + ik.target_tw2 + ik.target_tw3 + ik.target_tw4
-                    END AS target,
-                    CASE 
-                        WHEN ik.mode='akumulatif' THEN COALESCE(MAX(pk.realisasi),0)
-                        ELSE 
+
+    /* =====================================================
+   GRAFIK INDIKATOR — BERDASARKAN TAHUN (FINAL)
+   ===================================================== */
+public function getGrafikIndikatorByTahun($tahunId)
+{
+    return $this->db->query("
+        SELECT
+            ik.id AS indikator_id,
+            ss.kode_sasaran,
+            ss.nama_sasaran,
+            ik.kode_indikator,
+            ik.nama_indikator,
+            ik.mode,
+
+            -- TARGET PK TAHUNAN
+            CASE
+                WHEN ik.mode = 'akumulatif' THEN ik.target_tw4
+                ELSE ik.target_tw1 + ik.target_tw2 + ik.target_tw3 + ik.target_tw4
+            END AS target_pk,
+
+            -- REALISASI (AKUMULATIF / NON)
+            CASE
+                WHEN ik.mode = 'akumulatif' THEN COALESCE(MAX(pk.realisasi), 0)
+                ELSE
+                    LEAST(COALESCE(SUM(CASE WHEN pk.triwulan = 1 THEN pk.realisasi ELSE 0 END),0), ik.target_tw1)
+                  + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan = 2 THEN pk.realisasi ELSE 0 END),0), ik.target_tw2)
+                  + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan = 3 THEN pk.realisasi ELSE 0 END),0), ik.target_tw3)
+                  + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan = 4 THEN pk.realisasi ELSE 0 END),0), ik.target_tw4)
+            END AS realisasi,
+
+            -- PROGRES (%)
+            LEAST(
+                (
+                    CASE
+                        WHEN ik.mode = 'akumulatif' THEN COALESCE(MAX(pk.realisasi), 0)
+                        ELSE
                             LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=1 THEN pk.realisasi ELSE 0 END),0), ik.target_tw1)
                           + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=2 THEN pk.realisasi ELSE 0 END),0), ik.target_tw2)
                           + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=3 THEN pk.realisasi ELSE 0 END),0), ik.target_tw3)
                           + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=4 THEN pk.realisasi ELSE 0 END),0), ik.target_tw4)
-                    END AS realisasi
-                FROM indikator_kinerja ik
-                LEFT JOIN pengukuran_kinerja pk ON pk.indikator_id = ik.id
-                GROUP BY ik.id
-            ) ind ON ind.sasaran_id = ss.id
-
-            WHERE ta.tahun <= (SELECT tahun FROM tahun_anggaran WHERE status='active' LIMIT 1)
-
-            GROUP BY ta.id
-            ORDER BY ta.tahun DESC
-            LIMIT 5
-        ")->getResultArray();
-    }
-
-    /* =====================================================
-       STEP 2 — GRAFIK SASARAN
-       ===================================================== */
-    public function getGrafikSasaran($tahunId)
-    {
-        return $this->db->query("
-            SELECT
-                ss.id,
-                ss.kode_sasaran,
-                ss.nama_sasaran,
-                COALESCE(
-                    (SUM(ind.realisasi) / NULLIF(SUM(ind.target),0)) * 100,
-                    0
-                ) AS progres
-            FROM sasaran_strategis ss
-
-            LEFT JOIN (
-                SELECT
-                    ik.id,
-                    ik.sasaran_id,
-                    CASE 
-                        WHEN ik.mode='akumulatif' THEN ik.target_tw4
-                        ELSE ik.target_tw1 + ik.target_tw2 + ik.target_tw3 + ik.target_tw4
-                    END AS target,
-                    CASE 
-                        WHEN ik.mode='akumulatif' THEN COALESCE(MAX(pk.realisasi),0)
-                        ELSE 
-                            LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=1 THEN pk.realisasi ELSE 0 END),0), ik.target_tw1)
-                          + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=2 THEN pk.realisasi ELSE 0 END),0), ik.target_tw2)
-                          + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=3 THEN pk.realisasi ELSE 0 END),0), ik.target_tw3)
-                          + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=4 THEN pk.realisasi ELSE 0 END),0), ik.target_tw4)
-                    END AS realisasi
-                FROM indikator_kinerja ik
-                LEFT JOIN pengukuran_kinerja pk ON pk.indikator_id = ik.id
-                GROUP BY ik.id
-            ) ind ON ind.sasaran_id = ss.id
-
-            WHERE ss.tahun_id = ?
-            GROUP BY ss.id
-        ", [$tahunId])->getResultArray();
-    }
-
-    /* =====================================================
-       STEP 3 — GRAFIK INDIKATOR
-       ===================================================== */
-    public function getGrafikIndikator($sasaranId)
-    {
-        return $this->db->query("
-            SELECT
-                ik.id,
-                ik.kode_indikator,
-                ik.nama_indikator,
-                CASE
-                    WHEN ik.mode = 'akumulatif' THEN ik.target_tw4
-                    ELSE ik.target_tw1 + ik.target_tw2 + ik.target_tw3 + ik.target_tw4
-                END AS target_pk,
-                CASE
-                    WHEN ik.mode = 'akumulatif' THEN COALESCE(MAX(pk.realisasi), 0)
-                    ELSE
-                        LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=1 THEN pk.realisasi ELSE 0 END),0), ik.target_tw1)
-                      + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=2 THEN pk.realisasi ELSE 0 END),0), ik.target_tw2)
-                      + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=3 THEN pk.realisasi ELSE 0 END),0), ik.target_tw3)
-                      + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=4 THEN pk.realisasi ELSE 0 END),0), ik.target_tw4)
-                END AS realisasi,
-                LEAST(
-                    (
+                    END
+                    /
+                    NULLIF(
                         CASE
-                            WHEN ik.mode = 'akumulatif' THEN COALESCE(MAX(pk.realisasi), 0)
-                            ELSE
-                                LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=1 THEN pk.realisasi ELSE 0 END),0), ik.target_tw1)
-                              + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=2 THEN pk.realisasi ELSE 0 END),0), ik.target_tw2)
-                              + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=3 THEN pk.realisasi ELSE 0 END),0), ik.target_tw3)
-                              + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=4 THEN pk.realisasi ELSE 0 END),0), ik.target_tw4)
-                        END
-                        /
-                        NULLIF(
-                            CASE
-                                WHEN ik.mode = 'akumulatif' THEN ik.target_tw4
-                                ELSE ik.target_tw1 + ik.target_tw2 + ik.target_tw3 + ik.target_tw4
-                            END,
-                            0
-                        )
-                    ) * 100,
-                    100
-                ) AS progres
-            FROM indikator_kinerja ik
-            LEFT JOIN pengukuran_kinerja pk ON pk.indikator_id = ik.id
-            WHERE ik.sasaran_id = ?
-            GROUP BY ik.id
-            ORDER BY ik.kode_indikator ASC
-        ", [$sasaranId])->getResultArray();
-    }
+                            WHEN ik.mode='akumulatif' THEN ik.target_tw4
+                            ELSE ik.target_tw1 + ik.target_tw2 + ik.target_tw3 + ik.target_tw4
+                        END,
+                        0
+                    )
+                ) * 100,
+                100
+            ) AS progres
+
+        FROM indikator_kinerja ik
+        JOIN sasaran_strategis ss ON ss.id = ik.sasaran_id
+        LEFT JOIN pengukuran_kinerja pk ON pk.indikator_id = ik.id
+
+        WHERE ss.tahun_id = ?
+
+        GROUP BY ik.id
+        ORDER BY ss.kode_sasaran ASC, ik.kode_indikator ASC
+    ", [$tahunId])->getResultArray();
+}
+
 
     /* =====================================================
        STEP 4 — GRAFIK TRIWULAN

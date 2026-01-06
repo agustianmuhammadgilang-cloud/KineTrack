@@ -413,46 +413,27 @@ $routes->group('admin/grafik', ['filter' => 'auth'], function($routes) {
     // LEVEL 1 — Grafik Tahun
     $routes->get('/', 'Admin\GrafikKinerja::index');
 
-    // LEVEL 2 — Grafik Sasaran per Tahun
-    $routes->get('sasaran/(:num)', 'Admin\GrafikKinerja::sasaran/$1');
-
-    // LEVEL 3 — Grafik Indikator per Sasaran
-    $routes->get('indikator/(:num)/(:num)', 'Admin\GrafikKinerja::indikator/$1/$2');
-
-    // LEVEL 4 — Grafik Triwulan per Indikator
+    // LEVEL 2 — Grafik Triwulan per Indikator
     $routes->get('triwulan/(:num)', 'Admin\GrafikKinerja::triwulan/$1');
+
+    // AJAX — GRAFIK INDIKATOR PER TAHUN
+    $routes->get('data-indikator/(:num)', 'Admin\GrafikKinerja::dataIndikator/$1');
 });
 
 // STAFF
 $routes->group('staff/grafik', ['filter' => 'auth'], function($routes) {
-
-    // LEVEL 1 — Grafik Tahun
     $routes->get('/', 'Staff\GrafikKinerja::index');
-
-    // LEVEL 2 — Grafik Sasaran
-    $routes->get('sasaran/(:num)', 'Staff\GrafikKinerja::sasaran/$1');
-
-    // LEVEL 3 — Grafik Indikator
-    $routes->get('indikator/(:num)/(:num)', 'Staff\GrafikKinerja::indikator/$1/$2');
-
-    // LEVEL 4 — Grafik Triwulan
+    $routes->get('data-indikator/(:num)', 'Staff\GrafikKinerja::dataIndikator/$1');
     $routes->get('triwulan/(:num)', 'Staff\GrafikKinerja::triwulan/$1');
 });
 
 
+
 // ATASAN
 $routes->group('atasan/grafik', ['filter' => 'auth'], function($routes) {
-
-    // LEVEL 1 — Grafik Tahun
     $routes->get('/', 'Atasan\GrafikKinerja::index');
-
-    // LEVEL 2 — Grafik Sasaran
-    $routes->get('sasaran/(:num)', 'Atasan\GrafikKinerja::sasaran/$1');
-
-    // LEVEL 3 — Grafik Indikator
-    $routes->get('indikator/(:num)/(:num)', 'Atasan\GrafikKinerja::indikator/$1/$2');
-
-    // LEVEL 4 — Grafik Triwulan
+    $routes->get('data-indikator/(:num)', 'Atasan\GrafikKinerja::dataIndikator/$1');
     $routes->get('triwulan/(:num)', 'Atasan\GrafikKinerja::triwulan/$1');
 });
+
 

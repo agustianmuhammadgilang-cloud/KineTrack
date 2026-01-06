@@ -5,16 +5,19 @@ namespace App\Controllers\Atasan;
 use App\Controllers\BaseController;
 use App\Models\DokumenModel;
 use App\Models\BidangModel;
+use App\Models\NotificationModel;
 // Controller untuk mengelola dokumen oleh atasan (kaprodi/kajur)
 class Dokumen extends BaseController
 {
     protected $dokumenModel;
     protected $bidangModel;
+    protected $notifModel;
 
     public function __construct()
     {
         $this->dokumenModel = new DokumenModel();
         $this->bidangModel  = new BidangModel();
+        $this->notifModel   = new NotificationModel();
     }
 
     /**
@@ -113,11 +116,13 @@ class Dokumen extends BaseController
         return redirect()->back()->with('error', 'Aksi tidak valid');
     }
 
+    $bidangId   = session()->get('bidang_id');
+    $bidangUser = $this->bidangModel->find($bidangId);
+
     /**
      * =========================
      * KETUA PRODI
      * =========================
-     * Pending Kaprodi → Kirim ke Kajur
      */
     if ($dokumen['status'] === 'pending_kaprodi') {
 
@@ -127,13 +132,31 @@ class Dokumen extends BaseController
             'catatan'          => null,
             'updated_at'       => date('Y-m-d H:i:s'),
         ]);
+
+        // 🔔 NOTIF KE KAJUR
+        $kajurList = model('UserModel')
+            ->where('role', 'atasan')
+            ->where('bidang_id', $dokumen['unit_jurusan_id'])
+            ->findAll();
+
+        foreach ($kajurList as $kajur) {
+            $this->notifModel->insert([
+                'user_id' => $kajur['id'],
+                'message' => 'Dokumen "' . $dokumen['judul'] . '" telah disetujui Kaprodi dan menunggu persetujuan Anda.',
+                'meta'    => json_encode([
+                    'dokumen_id' => $dokumen['id'],
+                    'type'       => 'approve_forward'
+                ]),
+                'status' => 'unread',
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+        }
     }
 
     /**
      * =========================
      * KETUA JURUSAN (FINAL)
      * =========================
-     * Pending Kajur → Arsip / Publish
      */
     elseif ($dokumen['status'] === 'pending_kajur') {
 
@@ -142,31 +165,51 @@ class Dokumen extends BaseController
             'current_reviewer' => null,
             'catatan'          => null,
             'updated_at'       => date('Y-m-d H:i:s'),
+            
         ];
 
-        //  Dokumen public → auto publish
         if ($dokumen['scope'] === 'public') {
             $updateData['published_at'] = date('Y-m-d H:i:s');
         }
 
         $this->dokumenModel->update($id, $updateData);
+
+        // 🔔 NOTIF KE STAFF
+        $this->notifModel->insert([
+            'user_id' => $dokumen['created_by'],
+            'message' => 'Dokumen "' . $dokumen['judul'] . '" telah disetujui dan diarsipkan.',
+            'meta'    => json_encode([
+                'dokumen_id' => $dokumen['id'],
+                'type'       => 'approve_final'
+            ]),
+            'status' => 'unread',
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
     }
 
-    else {
-        return redirect()->back()->with('error', 'Status dokumen tidak valid');
-    }
-// LOG AKTIVITAS
+    // 🔔 NOTIF KE ATASAN SENDIRI
+    $this->notifModel->insert([
+        'user_id' => session()->get('user_id'),
+        'message' => 'Anda berhasil menyetujui dokumen "' . $dokumen['judul'] . '".',
+        'meta'    => json_encode([
+            'dokumen_id' => $dokumen['id'],
+            'type'       => 'approve_success'
+        ]),
+        'status' => 'unread',
+        'created_at' => date('Y-m-d H:i:s')
+    ]);
+
     log_activity(
-    'approve_dokumen',
-    "Menyetujui dokumen '{$dokumen['judul']}' dari unit {$dokumen['unit_asal_id']} (scope {$dokumen['scope']})",
-    'dokumen',
-    $dokumen['id']
-);
-
+        'approve_dokumen',
+        "Menyetujui dokumen '{$dokumen['judul']}'",
+        'dokumen',
+        $dokumen['id']
+    );
 
     return redirect()->to('/atasan/dokumen')
         ->with('success', 'Dokumen berhasil disetujui');
 }
+
 
 
 
@@ -188,48 +231,59 @@ class Dokumen extends BaseController
         return redirect()->back()->with('error', 'Catatan penolakan wajib diisi');
     }
 
-    // Ambil unit atasan
     $bidangId   = session()->get('bidang_id');
     $bidangUser = $this->bidangModel->find($bidangId);
 
-    if (!$bidangUser) {
-        return redirect()->back()->with('error', 'Unit tidak valid');
-    }
-
-    // =========================
-    // KETUA PRODI
-    // =========================
     if ($bidangUser['parent_id'] !== null) {
-
-        $this->dokumenModel->update($id, [
-            'status'           => 'rejected_kaprodi',
-            'current_reviewer' => null,
-            'catatan'          => $catatan
-        ]);
+        $statusReject = 'rejected_kaprodi';
+        $penolak     = 'Ketua Program Studi';
+    } else {
+        $statusReject = 'rejected_kajur';
+        $penolak     = 'Ketua Jurusan';
     }
-    // =========================
-    // KETUA JURUSAN
-    // =========================
-    else {
 
-        $this->dokumenModel->update($id, [
-            'status'           => 'rejected_kajur',
-            'current_reviewer' => null,
-            'catatan'          => $catatan
-        ]);
-    }
-    // LOG AKTIVITAS
+    $this->dokumenModel->update($id, [
+        'status'           => $statusReject,
+        'current_reviewer' => null,
+        'catatan'          => $catatan,
+        'updated_at'       => date('Y-m-d H:i:s')
+    ]);
+
+    // 🔔 NOTIF KE STAFF
+    $this->notifModel->insert([
+        'user_id' => $dokumen['created_by'],
+        'message' => 'Dokumen "' . $dokumen['judul'] . '" ditolak oleh ' . $penolak . '. Silakan lakukan revisi.',
+        'meta'    => json_encode([
+            'dokumen_id' => $dokumen['id'],
+            'type'       => 'dokumen_reject'
+        ]),
+        'status' => 'unread',
+        'created_at' => date('Y-m-d H:i:s')
+    ]);
+
+    // 🔔 NOTIF KE ATASAN SENDIRI
+    $this->notifModel->insert([
+        'user_id' => session()->get('user_id'),
+        'message' => 'Dokumen "' . $dokumen['judul'] . '" berhasil ditolak dan dikembalikan ke staff.',
+        'meta'    => json_encode([
+            'dokumen_id' => $dokumen['id'],
+            'type'       => 'reject_success'
+        ]),
+        'status' => 'unread',
+        'created_at' => date('Y-m-d H:i:s')
+    ]);
+
     log_activity(
-    'reject_dokumen',
-    "Menolak dokumen '{$dokumen['judul']}' dengan catatan penolakan",
-    'dokumen',
-    $dokumen['id']
-);
-
+        'reject_dokumen',
+        "Menolak dokumen '{$dokumen['judul']}'",
+        'dokumen',
+        $dokumen['id']
+    );
 
     return redirect()->to('/atasan/dokumen')
         ->with('success', 'Dokumen berhasil ditolak');
 }
+
 
 
     /**

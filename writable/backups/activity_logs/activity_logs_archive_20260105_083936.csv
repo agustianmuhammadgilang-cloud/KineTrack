@@ -1,0 +1,6 @@
+﻿Tanggal;"Nama User";Role;Aksi;Deskripsi;Subjek;"IP Address";"User Agent"
+"05-11-2025 08:37";Administrator;ADMIN;LOGIN;"Login ke sistem";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"05-11-2025 08:37";repan;STAFF;LOGIN;"Login ke sistem";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"05-11-2025 08:37";Administrator;ADMIN;LOGIN;"Login ke sistem";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"05-11-2025 08:37";repan;STAFF;LOGIN;"Login ke sistem";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"05-11-2025 08:37";repan;STAFF;VIEW_PROFILE;"Melihat halaman profil pribadi";"user #2";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"

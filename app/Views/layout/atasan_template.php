@@ -280,14 +280,117 @@ function fileUpload() {
 
 </svg>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<?php if (session()->getFlashdata('alert')): 
-    $a = session()->getFlashdata('alert'); ?>
 <script>
-  Swal.fire({
-    toast: true, position: 'top-end', showConfirmButton:false, timer:4000,
-    icon: '<?= esc($a['type']) ?>', title: '<?= esc($a['title']) ?>', text: '<?= esc($a['message']) ?>'
-  });
+document.addEventListener("DOMContentLoaded", () => {
+
+    let lastNotifId = localStorage.getItem("lastNotifId_staff") ?? 0;
+
+    async function checkNewNotif() {
+        const res = await fetch("<?= base_url('notifications/latest') ?>");
+        const notif = await res.json();
+
+        if (!notif || !notif.id) return;
+
+        if (notif.id != lastNotifId) {
+            lastNotifId = notif.id;
+            localStorage.setItem("lastNotifId_staff", notif.id);
+
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                timer: 8000,
+                showConfirmButton: false,
+                icon: 'info',
+                title: notif.message
+            });
+        }
+    }
+
+    async function refreshBadge() {
+        const res = await fetch("<?= base_url('notifications/unread-count') ?>");
+        const data = await res.json();
+
+        const badge = document.getElementById('notifBadge');
+        if (!badge) return;
+
+        if (data.count > 0) {
+            badge.innerText = data.count;
+            badge.classList.remove("hidden");
+        } else {
+            badge.classList.add("hidden");
+        }
+    }
+
+    async function loadDropdown() {
+        const list = document.getElementById("notifList");
+        if (!list) return;
+
+        const res = await fetch("<?= base_url('notifications/list/10') ?>");
+        const data = await res.json();
+
+        list.innerHTML = "";
+
+        data.forEach(n => {
+            const li = document.createElement("li");
+            li.className = "px-4 py-2 hover:bg-gray-100 cursor-pointer";
+
+            li.innerHTML = `
+                <div class="${n.status === 'unread' ? 'font-semibold text-blue-600' : ''}">
+                    ${n.message}
+                </div>
+                <div class="text-xs text-gray-500">${n.created_at}</div>
+            `;
+
+            li.onclick = () => markAsRead(n.id, n);
+            list.appendChild(li);
+        });
+    }
+
+    async function markAsRead(id, n) {
+        await fetch("<?= base_url('notifications/mark') ?>/" + id, { method: "POST" });
+        refreshBadge();
+        loadDropdown();
+
+        Swal.fire({
+            title: "Detail Notifikasi",
+            text: n.message,
+            icon: "info"
+        });
+    }
+
+    window.markAllNotif = async () => {
+        await fetch("<?= base_url('notifications/mark-all') ?>", { method: "POST" });
+        refreshBadge();
+        loadDropdown();
+    };
+
+    setInterval(() => {
+        checkNewNotif();
+        refreshBadge();
+        loadDropdown();
+    }, 6000);
+
+    checkNewNotif();
+    refreshBadge();
+    loadDropdown();
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<?php if (session()->getFlashdata('alert')): 
+    $alert = session()->getFlashdata('alert');
+?>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    Swal.fire({
+        icon: "<?= esc($alert['type']) ?>",
+        title: "<?= esc($alert['title']) ?>",
+        text: "<?= esc($alert['message']) ?>",
+        timer: 3000,
+        showConfirmButton: false
+    });
+});
 </script>
 <?php endif; ?>
 
