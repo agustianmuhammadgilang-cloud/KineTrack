@@ -16,7 +16,8 @@ class PicModel extends Model
         'tw',
         'bidang_id',
         'jabatan_id',
-        'created_at'
+        'created_at',
+        'is_viewed_by_staff',
     ];
     protected $useTimestamps = true;
 

@@ -40,6 +40,19 @@ class TaskController extends BaseController
 {
     $userId = session()->get('user_id');
 
+// 🔴 Ambil status badge SEBELUM di-reset
+$badgePengukuran = $this->picModel
+    ->where('user_id', $userId)
+    ->where('is_viewed_by_staff', 0)
+    ->countAllResults() > 0;
+
+// 🔴 Reset badge (anggap sudah dibaca)
+$this->picModel
+    ->where('user_id', session()->get('user_id'))
+    ->where('is_viewed_by_staff', 0)
+    ->set('is_viewed_by_staff', 1)
+    ->update();
+
     $tasks = $this->picModel
         ->select("
             pic_indikator.*,
@@ -106,8 +119,10 @@ class TaskController extends BaseController
     );
 
     return view('staff/task/index', [
-        'tasksGrouped' => $result
-    ]);
+    'tasksGrouped'    => $result,
+    'badgePengukuran' => $badgePengukuran
+]);
+
 }
 
 
@@ -317,10 +332,10 @@ log_activity(
 }
 
 
-    // ============================================================
-    // REPORT PDF — ONLY IF >= 100%
-    // ============================================================
-    public function report($indikatorId, $tw, $mode = 'view')
+// ============================================================
+// REPORT PDF — ONLY IF >= 100%
+// ============================================================
+public function report($indikatorId, $tw, $mode = 'view')
 {
     $tahunId = $this->getTahunFromIndikator($indikatorId);
     $userId  = session()->get('user_id');
@@ -332,17 +347,23 @@ log_activity(
         ->where('user_id', $userId)
         ->first();
 
+    // ❗ PDF MODE TIDAK BOLEH REDIRECT / FAIL
     if (!$measure) {
-        return $this->fail("Tidak dapat membuat report.");
+        return $this->response
+            ->setStatusCode(404)
+            ->setBody('Data pengukuran tidak ditemukan');
     }
 
     $indikator = $this->indikatorModel->find($indikatorId);
-    $target = $indikator['target_tw' . $tw];
+    $target    = $indikator['target_tw' . $tw];
 
     if ($measure['realisasi'] < $target) {
-        return $this->fail("Report hanya tersedia jika progress ≥ 100%");
+        return $this->response
+            ->setStatusCode(403)
+            ->setBody('Report hanya tersedia jika progress ≥ 100%');
     }
 
+    // ================= RENDER HTML =================
     $html = view('staff/task/report_pdf', [
         'measure'   => $measure,
         'indikator' => $indikator,
@@ -350,38 +371,60 @@ log_activity(
         'tw'        => $tw
     ]);
 
-    $options = new Options();
+    // ================= DOMPDF =================
+    $options = new \Dompdf\Options();
     $options->set('isRemoteEnabled', true);
     $options->set('isHtml5ParserEnabled', true);
 
-    $dompdf = new Dompdf($options);
+    $dompdf = new \Dompdf\Dompdf($options);
+
+    // 🔴 WAJIB: bersihkan output buffer
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+
     $dompdf->loadHtml($html);
     $dompdf->setPaper('A4', 'portrait');
     $dompdf->render();
 
     $attachment = ($mode === 'download');
 
-if ($attachment) {
-    log_activity(
-        'download_pengukuran_report',
-        "Mengunduh laporan pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$this->tahunModel->find($tahunId)['tahun']}",
-        'pengukuran_kinerja',
-        $indikatorId
-    );
-} else {
-    log_activity(
-        'view_pengukuran_report',
-        "Melihat laporan pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$this->tahunModel->find($tahunId)['tahun']}",
-        'pengukuran_kinerja',
-        $indikatorId
-    );
+    // ================= LOG ACTIVITY (TETAP) =================
+    if ($attachment) {
+        log_activity(
+            'download_pengukuran_report',
+            "Mengunduh laporan pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$this->tahunModel->find($tahunId)['tahun']}",
+            'pengukuran_kinerja',
+            $indikatorId
+        );
+    } else {
+        log_activity(
+            'view_pengukuran_report',
+            "Melihat laporan pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$this->tahunModel->find($tahunId)['tahun']}",
+            'pengukuran_kinerja',
+            $indikatorId
+        );
+    }
+
+    // ================= RETURN PDF CLEAN =================
+    $rawName = $indikator['nama_indikator'];
+
+    // sanitize untuk header HTTP
+    $safeName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $rawName);
+    $safeName = trim($safeName, '_');
+
+    $filename = "Report_{$safeName}_TW{$tw}.pdf";
+
+
+    return $this->response
+        ->setHeader('Content-Type', 'application/pdf')
+        ->setHeader(
+            'Content-Disposition',
+            ($attachment ? 'attachment' : 'inline') . '; filename="' . $filename . '"'
+        )
+        ->setBody($dompdf->output());
 }
 
-return $dompdf->stream(
-    "Report_{$indikator['nama_indikator']}_TW{$tw}.pdf",
-    ['Attachment' => $attachment]
-);
-}
 
 
 

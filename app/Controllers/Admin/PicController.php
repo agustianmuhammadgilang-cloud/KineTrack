@@ -95,7 +95,8 @@ class PicController extends BaseController
             'tahun_id'     => $tahunId,
             'sasaran_id'   => $sasaranId,
             'bidang_id'    => $user['bidang_id'],
-            'jabatan_id'   => $user['jabatan_id']
+            'jabatan_id'   => $user['jabatan_id'],
+            'is_viewed_by_staff' => 0
         ]);
 
         $assignedUserIds[] = $userId; // PENTING
