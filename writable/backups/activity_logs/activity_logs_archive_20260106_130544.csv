@@ -1,0 +1,6 @@
+﻿Tanggal;"Nama User";Role;Aksi;Deskripsi;Subjek;"IP Address";"User Agent"
+"06-09-2025 12:52";Algies_4444;STAFF;OPEN_UPLOAD_DOKUMEN_FORM;"Membuka form upload dokumen kinerja";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"06-09-2025 12:52";Algies_4444;STAFF;VIEW_DOKUMEN_LIST;"Melihat daftar dokumen kinerja pribadi";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"06-09-2025 12:52";Algies_4444;STAFF;OPEN_RESUBMIT_DOKUMEN_FORM;"Membuka form revisi dokumen ""p""";"dokumen #74";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"06-09-2025 12:52";Algies_4444;STAFF;VIEW_DOKUMEN_LIST;"Melihat daftar dokumen kinerja pribadi";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"06-09-2025 12:52";Algies_4444;STAFF;OPEN_PENGAJUAN_KATEGORI;"Membuka form pengajuan kategori dokumen";"kategori_dokumen #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"

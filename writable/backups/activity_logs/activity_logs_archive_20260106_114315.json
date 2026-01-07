@@ -1,0 +1,79 @@
+{
+    "meta": {
+        "type": "AUTO_ARCHIVE_BACKUP",
+        "total_records": 5,
+        "period": {
+            "from": "2025-09-06",
+            "to": "2025-09-06"
+        },
+        "created_at": "2026-01-06 11:43:15",
+        "created_by": "SYSTEM"
+    },
+    "data": [
+        {
+            "id": "6",
+            "user_id": "64",
+            "role": "staff",
+            "action": "view_profile",
+            "description": "Melihat halaman profil pribadi",
+            "subject_type": "user",
+            "subject_id": "64",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-06 11:43:09",
+            "archived_at": "2026-01-06 11:43:15"
+        },
+        {
+            "id": "7",
+            "user_id": "64",
+            "role": "staff",
+            "action": "view_task_list",
+            "description": "Melihat daftar tugas pengukuran kinerja yang ditugaskan",
+            "subject_type": "task_pengukuran",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-06 11:43:09",
+            "archived_at": "2026-01-06 11:43:15"
+        },
+        {
+            "id": "8",
+            "user_id": "64",
+            "role": "staff",
+            "action": "view_profile",
+            "description": "Melihat halaman profil pribadi",
+            "subject_type": "user",
+            "subject_id": "64",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-06 11:43:09",
+            "archived_at": "2026-01-06 11:43:15"
+        },
+        {
+            "id": "9",
+            "user_id": "64",
+            "role": "staff",
+            "action": "view_task_list",
+            "description": "Melihat daftar tugas pengukuran kinerja yang ditugaskan",
+            "subject_type": "task_pengukuran",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-06 11:43:09",
+            "archived_at": "2026-01-06 11:43:15"
+        },
+        {
+            "id": "10",
+            "user_id": "64",
+            "role": "staff",
+            "action": "open_pengukuran_form",
+            "description": "Membuka form pengukuran indikator Tingkat Penyerapan Lulusan di Dunia Kerja TW 2 Tahun 3025",
+            "subject_type": "indikator_kinerja",
+            "subject_id": "53",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-06 11:43:09",
+            "archived_at": "2026-01-06 11:43:15"
+        }
+    ]
+}
