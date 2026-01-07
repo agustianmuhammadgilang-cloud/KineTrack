@@ -404,6 +404,10 @@ $routes->post('activity-logs/cleanup/run', 'Admin\LogCleanupController::run');
 // Log Backup Download
 $routes->get('activity-logs/backup/download/(:any)', 'Admin\ActivityLogBackupController::download/$1');
 
+// =====================
+// SYSTEM REMINDER (AUDIT)
+// =====================
+$routes->get('activity-logs/reminder', 'Admin\ActivityLogReminderController::index');
 });
 // ==========================
 // GRAFIK KINERJA - ADMIN
@@ -437,3 +441,4 @@ $routes->group('atasan/grafik', ['filter' => 'auth'], function($routes) {
 });
 
 
+$routes->get('badge/pengukuran', 'BadgeController::pengukuran');
