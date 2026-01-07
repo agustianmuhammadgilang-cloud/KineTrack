@@ -11,7 +11,8 @@ use App\Models\TahunAnggaranModel;
 use App\Models\NotificationModel;
 use Dompdf\Dompdf;
 use Dompdf\Options;
-// Controller untuk mengelola tugas pengukuran kinerja oleh atasan
+
+// Controller untuk mengelola tugas pengukuran kinerja oleh atasan (PIC)
 class TaskController extends BaseController
 {
     protected $picModel;
@@ -20,7 +21,7 @@ class TaskController extends BaseController
     protected $pengukuranModel;
     protected $tahunModel;
     protected $notifModel;
-
+    // Konstruktor untuk inisialisasi model-model yang dibutuhkan
     public function __construct()
 {
     $this->picModel        = new \App\Models\PicModel();
@@ -38,6 +39,19 @@ class TaskController extends BaseController
     public function index()
 {
     $userId = session()->get('user_id');
+
+// 🔴 Ambil status badge SEBELUM di-reset
+$badgePengukuran = $this->picModel
+    ->where('user_id', $userId)
+    ->where('is_viewed_by_staff', 0)
+    ->countAllResults() > 0;
+
+// 🔴 Reset badge (anggap sudah dibaca)
+$this->picModel
+    ->where('user_id', session()->get('user_id'))
+    ->where('is_viewed_by_staff', 0)
+    ->set('is_viewed_by_staff', 1)
+    ->update();
 
     $tasks = $this->picModel
         ->select("
@@ -58,24 +72,24 @@ class TaskController extends BaseController
         ->findAll();
 
     $result = [];
-
+    // Group tasks by sasaran
     foreach ($tasks as $row) {
         $tahunId = $row['tahun_id'];
-
+        // Triwulan status
         $twStatus = [
             1 => getTwStatus($tahunId, 1),
             2 => getTwStatus($tahunId, 2),
             3 => getTwStatus($tahunId, 3),
             4 => getTwStatus($tahunId, 4)
         ];
-
+        // Target per triwulan
         $targetTw = [
             1 => $row['target_tw1'],
             2 => $row['target_tw2'],
             3 => $row['target_tw3'],
             4 => $row['target_tw4']
         ];
-
+        // Pengukuran per triwulan
         $measurements = [];
         foreach ([1,2,3,4] as $tw) {
             $measurements[$tw] = $this->pengukuranModel
@@ -85,7 +99,7 @@ class TaskController extends BaseController
                 ->where('user_id', $userId) // filter PIC sendiri
                 ->first();
         }
-
+        // Simpan ke result
         $result[$row['nama_sasaran']][] = [
             'indikator_id' => $row['indikator_id'],
             'nama_indikator' => $row['nama_indikator'],
@@ -96,18 +110,19 @@ class TaskController extends BaseController
             'pengukuran' => $measurements
         ];
     }
-// LOG AKTIVITAS    
+    // Log aktivitas melihat daftar tugas
     log_activity(
-    'view_task_list',
-    'Melihat daftar tugas pengukuran kinerja (mode atasan)',
-    'task_pengukuran',
-    null
-);
+        'view_task_list',
+        'Melihat daftar tugas pengukuran kinerja yang ditugaskan',
+        'task_pengukuran',
+        null
+    );
 
+    return view('atasan/task/index', [
+    'tasksGrouped'    => $result,
+    'badgePengukuran' => $badgePengukuran
+]);
 
-        return view('atasan/task/index', [
-            'tasksGrouped' => $result
-        ]);
 }
 
 
@@ -138,20 +153,21 @@ class TaskController extends BaseController
             ->where('pic_indikator.user_id', $userId)
             ->where('pic_indikator.indikator_id', $indikatorId)
             ->first();
-
+        // Cek akses PIC
         if (!$pic) {
             return $this->failAccess();
         }
 
-        // TW open?
+        // Cek status triwulan
         $twInfo = getTwStatus($pic['tahun_id'], $tw);
+        // Jika triwulan ditutup
         if (!$twInfo['is_open']) {
             return $this->failTwClosed();
         }
-// LOG AKTIVITAS
+        // Log aktivitas membuka form input
         log_activity(
     'open_pengukuran_form',
-    "Membuka form pengukuran indikator {$pic['nama_indikator']} TW {$tw} Tahun {$pic['tahun']} (oleh atasan)",
+    "Membuka form pengukuran indikator {$pic['nama_indikator']} TW {$tw} Tahun {$pic['tahun']}",
     'indikator_kinerja',
     $indikatorId
 );
@@ -185,16 +201,16 @@ class TaskController extends BaseController
     $indikatorId = $this->request->getPost('indikator_id');
     $tw = $this->request->getPost('triwulan');
     $userId = session()->get('user_id');
-
+    // Cek akses PIC
     $pic = $this->picModel
         ->where('user_id', $userId)
         ->where('indikator_id', $indikatorId)
         ->first();
-
+    
     if (!$pic) {
         return $this->failAccess();
     }
-
+    // Cek status triwulan
     $twInfo = getTwStatus($pic['tahun_id'], $tw);
     if (!$twInfo['is_open']) {
         return $this->failTwClosed();
@@ -207,7 +223,7 @@ class TaskController extends BaseController
 
     $files = $this->request->getFiles();
     $uploaded = [];
-
+    // Tangani unggahan file pendukung
     if (isset($files['file_dukung'])) {
         foreach ($files['file_dukung'] as $file) {
             if ($file->isValid() && !$file->hasMoved()) {
@@ -217,6 +233,24 @@ class TaskController extends BaseController
             }
         }
     }
+
+  
+$indikator = $this->indikatorModel->find($indikatorId);
+$tahun     = $this->tahunModel->find($pic['tahun_id'])['tahun'] ?? '-';
+$targetTw  = $indikator['target_tw' . $tw] ?? null;
+
+// Log aktivitas unggah file pendukung jika ada
+if (count($uploaded) > 0) {
+    log_activity(
+        'upload_file_pengukuran',
+        "Mengunggah " . count($uploaded) . " file pendukung pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$tahun}",
+        'pengukuran_kinerja',
+        $indikatorId
+    );
+}
+
+
+
 
     $this->pengukuranModel->insert([
         'indikator_id' => $indikatorId,
@@ -229,18 +263,19 @@ class TaskController extends BaseController
         'strategi'     => $strategi,
         'file_dukung'  => json_encode($uploaded)
     ]);
-
     $indikator = $this->indikatorModel->find($indikatorId);
 $targetTw = $indikator['target_tw' . $tw] ?? null;
-// LOG AKTIVITAS
+
+// Log aktivitas pengisian pengukuran
 log_activity(
     'submit_pengukuran',
-    "Mengisi pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$this->tahunModel->find($pic['tahun_id'])['tahun']} dengan realisasi {$realisasi} dari target {$targetTw} (oleh atasan)",
+    "Mengisi pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$tahun} dengan realisasi {$realisasi} dari target {$targetTw}",
     'pengukuran_kinerja',
     $indikatorId
 );
 
 
+    // Kirim notifikasi ke atasan (misal user_id = 1)
     $this->notifModel->insert([
         'user_id' => 1,
         'message' => "PIC mengisi pengukuran indikator ID $indikatorId pada TW $tw.",
@@ -260,16 +295,17 @@ log_activity(
     // ============================================================
     public function progress($indikatorId, $tw)
 {
+    // Cek akses PIC
     $tahunId = $this->getTahunFromIndikator($indikatorId);
     $userId  = session()->get('user_id');
-
+    // Ambil data pengukuran
     $measure = $this->pengukuranModel
         ->where('indikator_id', $indikatorId)
         ->where('triwulan', $tw)
         ->where('tahun_id', $tahunId)
         ->where('user_id', $userId)
         ->first();
-
+    // Cek apakah ada data pengukuran
     if (!$measure) {
         return $this->fail("Belum ada pengukuran untuk TW ini.");
     }
@@ -278,14 +314,13 @@ log_activity(
     $target = $indikator['target_tw' . $tw];
     $percent = $target > 0 ? ($measure['realisasi'] / $target) * 100 : 0;
 
-// LOG AKTIVITAS
+    // Log aktivitas melihat progress pengukuran
 log_activity(
     'view_pengukuran_progress',
-    "Melihat progress pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$this->tahunModel->find($tahunId)['tahun']} (oleh atasan)",
+    "Melihat progress pengukuran indikator {$indikator['nama_indikator']} TW {$tw} Tahun {$this->tahunModel->find($tahunId)['tahun']}",
     'pengukuran_kinerja',
     $indikatorId
 );
-
 
     return view('atasan/task/progress', [
         'measure' => $measure,
@@ -391,6 +426,8 @@ public function report($indikatorId, $tw, $mode = 'view')
 }
 
 
+
+
     // ============================================================
     // HELPER
     // ============================================================
@@ -401,6 +438,7 @@ public function report($indikatorId, $tw, $mode = 'view')
         ->first()['tahun_id'] ?? null;
 }
 
+// Fungsi untuk mengembalikan response gagal dengan pesan
 private function fail($msg)
 {
     return redirect()->back()->with('alert', [
@@ -410,11 +448,13 @@ private function fail($msg)
     ]);
 }
 
+// Fungsi untuk mengembalikan response gagal akses
     private function failAccess()
     {
         return $this->fail("Anda tidak memiliki akses.");
     }
 
+// Fungsi untuk mengembalikan response gagal triwulan ditutup
     private function failTwClosed()
     {
         return $this->fail("Triwulan ini sedang dikunci.");
