@@ -1,3 +1,18 @@
+<?php
+use App\Models\PicModel;
+
+$badgePengukuran = false;
+
+if (session()->has('user_id')) {
+    $picModel = new PicModel();
+
+    $badgePengukuran = $picModel
+        ->where('user_id', session()->get('user_id'))
+        ->where('is_viewed_by_staff', 0)
+        ->countAllResults() > 0;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -178,12 +193,26 @@ function fileUpload() {
 
 
 
-        <!-- ISI PENGUKURAN KINERJA -->
-        <a href="<?= base_url('atasan/task') ?>"
-           class="sidebar-link <?= service('uri')->getSegment(2)=='task' ? 'active':'' ?>">
-            <svg class="sidebar-icon"><use href="#chart-pie"/></svg>
-            <span>Isi Pengukuran Kinerja</span>
-        </a>
+<!-- ISI PENGUKURAN KINERJA -->
+<a href="<?= base_url('atasan/task') ?>"
+   class="sidebar-link <?= service('uri')->getSegment(2)=='task' ? 'active':'' ?> relative">
+
+    <svg class="sidebar-icon">
+        <use href="#chart-pie"/>
+    </svg>
+
+    <span class="flex items-center gap-2">
+        Isi Pengukuran Kinerja
+
+        <!-- BADGE MERAH -->
+        <span id="badge-pengukuran"
+              class="relative flex h-2.5 w-2.5 hidden">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+        </span>
+    </span>
+</a>
+
 
         <!-- DOKUMEN GROUP -->
         <?php
@@ -393,6 +422,36 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 <?php endif; ?>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const badge = document.getElementById('badge-pengukuran');
+    if (!badge) return;
+
+    async function refreshBadgePengukuran() {
+        try {
+            const res = await fetch("<?= base_url('badge/pengukuran') ?>");
+            const data = await res.json();
+
+            const currentMenu = "<?= service('uri')->getSegment(2) ?>";
+
+            if (data.show && currentMenu !== 'task') {
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    refreshBadgePengukuran();
+    setInterval(refreshBadgePengukuran, 5000);
+});
+</script>
 
 </body>
 </html>
