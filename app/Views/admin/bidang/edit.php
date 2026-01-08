@@ -14,6 +14,27 @@
                               focus:outline-none focus:ring-2 focus:ring-orange-400 dark:bg-gray-700 dark:text-white">
             </div>
 
+            <input type="hidden" name="jenis_unit" value="<?= esc($bidang['jenis_unit']) ?>">
+
+<?php if ($bidang['jenis_unit'] == 'prodi'): ?>
+<div>
+    <label class="block text-gray-700 dark:text-gray-200 mb-1 font-medium">Induk Jurusan</label>
+    <select name="parent_id" required
+            class="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 
+                   focus:outline-none focus:ring-2 focus:ring-orange-400 dark:bg-gray-700 dark:text-white">
+        <option value="">-- Pilih Jurusan --</option>
+        <?php foreach($jurusan as $j): ?>
+        <option value="<?= $j['id'] ?>" <?= $j['id'] == $bidang['parent_id'] ? 'selected' : '' ?>>
+            <?= esc($j['nama_bidang']) ?>
+        </option>
+        <?php endforeach; ?>
+    </select>
+</div>
+<?php else: ?>
+    <!-- Kalau Jurusan, parent tidak dipakai -->
+    <input type="hidden" name="parent_id" value="">
+<?php endif; ?>
+
             <div class="flex flex-col sm:flex-row justify-end gap-2">
                 <a href="<?= base_url('admin/bidang'); ?>" 
                    class="px-4 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded-md font-medium text-center transition">
