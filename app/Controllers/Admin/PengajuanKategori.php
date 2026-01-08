@@ -22,21 +22,17 @@ class PengajuanKategori extends BaseController
 // ============================
 // LIST PENGAJUAN KATEGORI
 // ============================
-    public function index()
+public function index()
     {
+        // Ambil semua pengajuan sekaligus normalisasi status
         $data['pengajuan'] = array_map(function ($row) {
-
-    // NORMALISASI STATUS
-    if (empty($row['status'])) {
-        $row['status'] = 'pending';
-    }
-
-    return $row;
-
-}, $this->pengajuanModel
-        ->orderBy('created_at', 'DESC')
-        ->findAll());
-
+            if (empty($row['status'])) {
+                $row['status'] = 'pending';
+            }
+            return $row;
+        }, $this->pengajuanModel
+            ->orderBy('created_at', 'DESC')
+            ->findAll());
 
         return view('admin/pengajuan_kategori/index', $data);
     }

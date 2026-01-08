@@ -131,6 +131,7 @@ class Dokumen extends BaseController
             'current_reviewer' => 'kajur',
             'catatan'          => null,
             'updated_at'       => date('Y-m-d H:i:s'),
+            'is_viewed_by_atasan' => 0
         ]);
 
         // 🔔 NOTIF KE KAJUR

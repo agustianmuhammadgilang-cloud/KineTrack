@@ -381,6 +381,15 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
 
     $routes->get('dokumen-tidak-tervalidasi', 'Admin\DokumenTidakTervalidasi::kategori');
     $routes->get('dokumen-tidak-tervalidasi/(:num)', 'Admin\DokumenTidakTervalidasi::dokumen/$1');
+
+    // DOKUMEN TIDAK TERVALIDASI
+    $routes->get('dokumen-tidak-tervalidasi', 'Admin\DokumenTidakTervalidasi::kategori');
+
+    $routes->get(
+        'dokumen-tidak-tervalidasi/dokumen/(:num)',
+        'Admin\DokumenTidakTervalidasi::dokumen/$1'
+    );
+    
     // =====================
     // ACTIVITY LOG
     // =====================
@@ -442,3 +451,21 @@ $routes->group('atasan/grafik', ['filter' => 'auth'], function($routes) {
 
 
 $routes->get('badge/pengukuran', 'BadgeController::pengukuran');
+$routes->get('badge/pengajuan', 'BadgeController::pengajuan');
+$routes->post('badge/pengajuan/mark-all', 'BadgeController::markPengajuanRead');
+$routes->get('badge/dokumen-atasan', 'BadgeController::dokumenKinerja');
+
+$routes->post('badge/dokumen-atasan/mark-all', 'BadgeController::markDokumenRead');
+
+$routes->get('badge/dokumen-unit', 'BadgeController::dokumenUnit');
+$routes->get('badge/dokumen-public', 'BadgeController::dokumenPublic');
+
+$routes->post('badge/dokumen-unit/mark-all', 'BadgeController::markDokumenUnitRead');
+$routes->post('badge/dokumen-public/mark-all', 'BadgeController::markDokumenPublicRead');
+
+// Badge Dokumen untuk STAFF
+$routes->get('badge/staff-dokumen-unit', 'BadgeController::staffDokumenUnit');
+$routes->post('badge/staff-dokumen-unit/mark-all', 'BadgeController::markStaffDokumenUnitRead');
+
+$routes->get('badge/staff-dokumen-public', 'BadgeController::staffDokumenPublic');
+$routes->post('badge/staff-dokumen-public/mark-all', 'BadgeController::markStaffDokumenPublicRead');

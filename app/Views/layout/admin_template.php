@@ -1,3 +1,18 @@
+<?php
+use App\Models\PengajuanKategoriModel;
+
+$badgePengajuan = false;
+
+if (session()->has('user_id')) {
+    $pengajuanModel = new PengajuanKategoriModel();
+
+    $badgePengajuan = $pengajuanModel
+        ->where('status', 'pending')
+        ->where('is_viewed_by_admin', 0)
+        ->countAllResults() > 0;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -333,11 +348,24 @@ LHE
             Kategori Dokumen
         </a>
 
-        <a href="<?= base_url('admin/pengajuan-kategori') ?>"
-            class="px-4 py-2 rounded hover:bg-white/10 transition
-            <?= (service('uri')->getSegment(2) == 'pengajuan-kategori') ? 'bg-white/20 font-semibold' : '' ?>">
-            Pengajuan Kategori
-        </a>
+    <a href="<?= base_url('admin/pengajuan-kategori') ?>"
+        class="px-4 py-2 rounded hover:bg-white/10 transition relative
+        <?= (service('uri')->getSegment(2) == 'pengajuan-kategori') ? 'bg-white/20 font-semibold' : '' ?>">
+
+        <span class="flex items-center justify-between">
+            <span>Pengajuan Kategori</span>
+
+            <!-- BADGE MERAH -->
+            <span id="badge-pengajuan"
+                class="relative flex h-2.5 w-2.5 hidden">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+            </span>
+        </span>
+    </a>
+
+
+
         <a href="<?= base_url('admin/dokumen-tervalidasi') ?>"
     class="px-4 py-2 rounded hover:bg-white/10 transition
     <?= (service('uri')->getSegment(2) == 'dokumen-tervalidasi') ? 'bg-white/20 font-semibold' : '' ?>">
@@ -763,6 +791,44 @@ document.addEventListener("DOMContentLoaded", () => {
     loadDropdown();
 });
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const badge = document.getElementById('badge-pengajuan');
+    if (!badge) return;
+
+    async function refreshBadgePengajuan() {
+        try {
+            const res = await fetch("<?= base_url('badge/pengajuan') ?>");
+            const data = await res.json();
+
+            if (data.show) {
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    // Hapus badge saat user klik menu
+    badge.closest('a').addEventListener('click', async () => {
+        try {
+            await fetch("<?= base_url('badge/pengajuan/mark-all') ?>", { method: "POST" });
+            badge.classList.add('hidden');
+        } catch (e) {
+            console.error(e);
+        }
+    });
+
+    refreshBadgePengajuan();
+    setInterval(refreshBadgePengajuan, 5000); // realtime tiap 5 detik
+});
+</script>
+
+
 
 </body>
 </html>
