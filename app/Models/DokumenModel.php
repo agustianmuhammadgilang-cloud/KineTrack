@@ -19,9 +19,11 @@ class DokumenModel extends Model
         'status',
         'current_reviewer',
         'catatan',
+        'is_viewed_by_atasan',
         'kategori_id',
         'scope',
         'published_at'
+        
     ];
 
     protected $useTimestamps = true;
@@ -74,14 +76,11 @@ class DokumenModel extends Model
             ->where('dokumen_kinerja.unit_asal_id', $unitId)
             ->orWhere('dokumen_kinerja.unit_jurusan_id', $unitId)
         ->groupEnd()
-        ->whereIn('dokumen_kinerja.status', [
-            'pending_kaprodi',
-            'pending_kajur',
-            'archived'
-        ])
+        ->where('dokumen_kinerja.status', 'archived') // Hanya arsip yang sudah disetujui
         ->orderBy('dokumen_kinerja.created_at', 'DESC')
         ->findAll();
 }
+
 
 
     /**

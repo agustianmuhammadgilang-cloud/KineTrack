@@ -242,19 +242,45 @@ function fileUpload() {
             ?>
             <div x-show="open" x-transition class="submenu space-y-1">
                 <a href="<?= base_url('atasan/dokumen') ?>"
-                   class="submenu-link <?= $seg2=='dokumen' && $seg3=='' ? 'active':'' ?>">
-                    Dokumen Kinerja
-                </a>
+   class="submenu-link relative <?= $seg2=='dokumen' && $seg3=='' ? 'active':'' ?>">
+
+    <span class="flex items-center gap-2">
+        Dokumen Kinerja
+
+        <!-- BADGE MERAH -->
+        <span id="badge-dokumen-atasan"
+              class="relative flex h-2.5 w-2.5 hidden">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+        </span>
+    </span>
+</a>
+
                 <!--  -->
                 <!-- Dokumen Unit (PUBLIC UNIT) -->
-    <a href="<?= base_url('atasan/dokumen/unit') ?>"
-       class="submenu-link <?= $seg3=='unit' ? 'active':'' ?>">
-        Dokumen Unit
-    </a>
+<a href="<?= base_url('atasan/dokumen/unit') ?>" 
+   class="submenu-link <?= $seg3=='unit' ? 'active':'' ?>">
+    Dokumen Unit
+    <span id="badge-unit"
+          class="ml-2 px-2 py-0.5 
+                 bg-red-100 text-red-700 
+                 text-xs font-medium 
+                 rounded hidden">
+        Baru
+    </span>
+</a>
 
-    <a href="<?= base_url('atasan/dokumen/public') ?>"
+
+<a href="<?= base_url('atasan/dokumen/public') ?>" 
    class="submenu-link <?= $seg3=='public' ? 'active':'' ?>">
     Dokumen Publik
+    <span id="badge-public"
+          class="ml-2 px-2 py-0.5 
+                 bg-red-100 text-red-700 
+                 text-xs font-medium 
+                 rounded hidden">
+        Baru
+    </span>
 </a>
 
                 <a href="<?= base_url('atasan/dokumen/arsip') ?>"
@@ -450,6 +476,106 @@ document.addEventListener("DOMContentLoaded", () => {
 
     refreshBadgePengukuran();
     setInterval(refreshBadgePengukuran, 5000);
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const badge = document.getElementById('badge-dokumen-atasan');
+    if (!badge) return;
+
+    const link = badge.closest('a');
+
+    async function refreshBadgeDokumen() {
+        try {
+            const res = await fetch("<?= base_url('badge/dokumen-atasan') ?>", {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            if (!res.ok) return;
+
+            const data = await res.json();
+
+            if (data.show) {
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        } catch (err) {
+            console.error('Badge dokumen error:', err);
+        }
+    }
+
+    // Saat atasan klik menu dokumen → badge dihapus
+    if (link) {
+        link.addEventListener('click', async () => {
+            try {
+                await fetch("<?= base_url('badge/dokumen-atasan/mark-all') ?>", {
+                    method: "POST",
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                badge.classList.add('hidden');
+            } catch (err) {
+                console.error('Mark dokumen read error:', err);
+            }
+        });
+    }
+
+    // Load pertama
+    refreshBadgeDokumen();
+
+    // Realtime (polling)
+    setInterval(refreshBadgeDokumen, 5000);
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    async function checkBadge(endpoint, elementId) {
+        try {
+            const res = await fetch("<?= base_url() ?>/" + endpoint, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            const data = await res.json();
+            const badge = document.getElementById(elementId);
+            if (!badge) return;
+
+            if (data.show) badge.classList.remove('hidden');
+            else badge.classList.add('hidden');
+
+        } catch (err) { console.error(err); }
+    }
+
+    // Klik menu → hilangkan badge
+    function hideOnClick(linkSelector, markEndpoint, badgeId) {
+        const link = document.querySelector(linkSelector);
+        if (!link) return;
+
+        link.addEventListener('click', async () => {
+            await fetch("<?= base_url() ?>/" + markEndpoint, {
+                method: "POST", headers:{'X-Requested-With':'XMLHttpRequest'}
+            });
+            document.getElementById(badgeId)?.classList.add('hidden');
+        });
+    }
+
+    // RUN
+    setInterval(() => checkBadge('badge/dokumen-unit', 'badge-unit'), 5000);
+    setInterval(() => checkBadge('badge/dokumen-public', 'badge-public'), 5000);
+
+    hideOnClick('a[href$="dokumen/unit"]', 'badge/dokumen-unit/mark-all', 'badge-unit');
+    hideOnClick('a[href$="dokumen/public"]', 'badge/dokumen-public/mark-all', 'badge-public');
+
+    // pertama load
+    checkBadge('badge/dokumen-unit', 'badge-unit');
+    checkBadge('badge/dokumen-public', 'badge-public');   
+
 });
 </script>
 

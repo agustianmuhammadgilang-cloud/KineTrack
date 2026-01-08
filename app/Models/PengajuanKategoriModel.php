@@ -14,7 +14,8 @@ class PengajuanKategoriModel extends Model
         'deskripsi',
         'pengaju_user_id',
         'status',
-        'admin_id'
+        'admin_id',
+        'is_viewed_by_admin',
     ];
 
     protected $useTimestamps = true;

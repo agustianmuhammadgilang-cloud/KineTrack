@@ -159,6 +159,48 @@ $this->notifModel->insert([
 ]);
 
 // ===============================
+// Kirim Notif Ke Atasan sesuai scope
+$viewsModel = model('DokumenViewModel');
+
+if ($reviewer === 'kaprodi') {
+    // cari KETUA PRODI
+    $atasanList = model('UserModel')
+        ->where('role', 'atasan')
+        ->where('bidang_id', $unitAsal) // PRODI
+        ->findAll();
+
+    $pesan = 'Dokumen baru "' . $this->request->getPost('judul') . '" menunggu persetujuan Ketua Prodi.';
+} else {
+    // cari KETUA JURUSAN
+    $atasanList = model('UserModel')
+        ->where('role', 'atasan')
+        ->where('bidang_id', $unitJurusan) // JURUSAN
+        ->findAll();
+
+    $pesan = 'Dokumen baru "' . $this->request->getPost('judul') . '" menunggu persetujuan Ketua Jurusan.';
+}
+
+// Reset view state agar badge muncul
+foreach ($atasanList as $atasan) {
+    $viewsModel->where([
+        'dokumen_id' => $dokumenId,
+        'user_id'    => $atasan['id']
+    ])->delete();
+
+    // Kirim notif ke atasan
+    $this->notifModel->insert([
+        'user_id' => $atasan['id'],
+        'message' => $pesan,
+        'meta'    => json_encode([
+            'dokumen_id' => $dokumenId,
+            'type'       => 'upload'
+        ]),
+        'status'     => 'unread',
+        'created_at' => date('Y-m-d H:i:s')
+    ]);
+}
+
+// ===============================
 if ($reviewer === 'kaprodi') {
     // cari KETUA PRODI
     $atasanList = model('UserModel')
