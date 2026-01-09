@@ -828,6 +828,43 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<script>
+/**
+ * ===============================
+ * GLOBAL NOTIFICATION HANDLER
+ * ===============================
+ */
+
+// tandai satu notifikasi (opsional, jika nanti dipakai)
+function markNotif(id) {
+    fetch(`<?= base_url('admin/dashboard/markRead') ?>/${id}`, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    }).then(res => res.json())
+      .then(res => {
+          if (res.success) {
+              location.reload();
+          }
+      });
+}
+
+// tandai semua notifikasi dibaca
+function markAllNotif() {
+    fetch(`<?= base_url('admin/dashboard/markAllRead') ?>`, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    }).then(res => res.json())
+      .then(res => {
+          if (res.success) {
+              location.reload();
+          }
+      });
+}
+</script>
 
 
 </body>

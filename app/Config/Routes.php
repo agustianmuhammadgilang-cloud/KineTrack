@@ -469,3 +469,5 @@ $routes->post('badge/staff-dokumen-unit/mark-all', 'BadgeController::markStaffDo
 
 $routes->get('badge/staff-dokumen-public', 'BadgeController::staffDokumenPublic');
 $routes->post('badge/staff-dokumen-public/mark-all', 'BadgeController::markStaffDokumenPublicRead');
+
+$routes->post('admin/notifikasi/read-all', 'Admin\Dashboard::markAllRead');
