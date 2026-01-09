@@ -52,7 +52,7 @@
                 <i class="ph-fill ph-chart-line text-polban-orange text-2xl"></i>
             </div>
             <span class="text-2xl font-bold text-polban-navy tracking-tight">
-                POLBAN<span class="text-polban-orange">eKINETRACK</span>
+                POLBAN<span class="text-polban-orange">e-KINETRACK</span>
             </span>
         </div>
 
