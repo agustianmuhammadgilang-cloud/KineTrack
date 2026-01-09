@@ -22,12 +22,25 @@ class Indikator extends BaseController
 // Menampilkan daftar indikator
     public function index()
     {
-        $data['indikator'] = $this->model
-            ->select('indikator_kinerja.*, sasaran_strategis.kode_sasaran, sasaran_strategis.nama_sasaran, tahun_anggaran.tahun')
-            ->join('sasaran_strategis','sasaran_strategis.id = indikator_kinerja.sasaran_id')
-            ->join('tahun_anggaran','tahun_anggaran.id = sasaran_strategis.tahun_id')
-            ->orderBy('tahun_anggaran.tahun','DESC')
-            ->findAll();
+$data['indikator'] = $this->model
+    ->select('
+        indikator_kinerja.*,
+        sasaran_strategis.kode_sasaran,
+        sasaran_strategis.nama_sasaran,
+        tahun_anggaran.tahun
+    ')
+    ->join(
+        'sasaran_strategis',
+        'sasaran_strategis.id = indikator_kinerja.sasaran_id'
+    )
+    ->join(
+        'tahun_anggaran',
+        'tahun_anggaran.id = sasaran_strategis.tahun_id'
+    )
+    ->where('tahun_anggaran.status', 'active') // 🔥 FILTER UTAMA
+    ->orderBy('indikator_kinerja.id', 'ASC')
+    ->findAll();
+
 
         return view('admin/indikator/index', $data);
     }
