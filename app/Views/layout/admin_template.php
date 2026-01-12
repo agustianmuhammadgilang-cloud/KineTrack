@@ -307,14 +307,7 @@ $seg3 = $segments[2] ?? null;
 </svg>
 
 
-         <!-- Analisis Bidang -->
-        <a href="<?= base_url('admin/bidang-select') ?>"
-            class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition">
-<svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
-    <use href="#document-chart" />
-</svg>
-LHE
-        </a>
+       
         <!-- MASTER DOKUMEN -->
 <div 
     x-data="{

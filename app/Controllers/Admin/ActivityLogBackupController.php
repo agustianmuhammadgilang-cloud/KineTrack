@@ -134,6 +134,9 @@ foreach ($logs as $log) {
 fclose($fp);
 // ======================
 
+$periodStart = $meta['period']['from'];
+$periodEnd   = $meta['period']['to'];
+
     // ======================
     // 🔥 LOG BACKUP ARSIP
 log_activity(

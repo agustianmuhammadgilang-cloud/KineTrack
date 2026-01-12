@@ -1,0 +1,6 @@
+﻿Tanggal;"User ID";Role;Aksi;Deskripsi;Subjek;IP;"User Agent"
+"12-10-2025 10:47";2;ATASAN;APPROVE_DOKUMEN;"Menyetujui dokumen 'Laporan zona'";"dokumen #2";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-10-2025 10:47";2;ATASAN;VIEW_DOKUMEN_MASUK;"Melihat daftar dokumen masuk untuk direview";"dokumen #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-10-2025 10:47";2;ATASAN;VIEW_DOKUMEN_UNIT;"Melihat dokumen unit (read-only)";"dokumen #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-10-2025 10:47";2;ATASAN;VIEW_DOKUMEN_PUBLIC;"Melihat dokumen publik";"dokumen #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-10-2025 10:47";2;ATASAN;VIEW_DOKUMEN_ARSIP;"Melihat arsip dokumen kinerja";"dokumen #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"

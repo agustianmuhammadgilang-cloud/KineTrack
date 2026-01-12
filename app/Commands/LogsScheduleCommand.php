@@ -132,66 +132,111 @@ class LogsScheduleCommand extends BaseCommand
          */
         if ($autoBackup === 1 && $hasArchiveProcess === true) {
 
-            $archiveLogs = $archiveModel
-                ->orderBy('created_at', 'ASC')
-                ->findAll();
+    $archiveLogs = $archiveModel
+        ->orderBy('created_at', 'ASC')
+        ->findAll();
 
-            if (!empty($archiveLogs)) {
+    if (!empty($archiveLogs)) {
 
-                $backupDir = WRITEPATH . 'backups/activity_logs/';
-                if (!is_dir($backupDir)) {
-                    mkdir($backupDir, 0777, true);
-                }
-
-                $timestamp = date('Ymd_His');
-                $baseName  = 'activity_logs_archive_' . $timestamp;
-
-                $periodStart = date('Y-m-d', strtotime($archiveLogs[0]['created_at']));
-                $periodEnd   = date('Y-m-d', strtotime(end($archiveLogs)['created_at']));
-
-                file_put_contents(
-                    $backupDir . $baseName . '.json',
-                    json_encode([
-                        'meta' => [
-                            'type'          => 'AUTO_ARCHIVE_BACKUP',
-                            'total_records' => count($archiveLogs),
-                            'period' => [
-                                'from' => $periodStart,
-                                'to'   => $periodEnd,
-                            ],
-                            'created_at' => date('Y-m-d H:i:s'),
-                            'created_by' => 'SYSTEM',
-                        ],
-                        'data' => $archiveLogs
-                    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
-                );
-
-                $db->table('activity_log_backups')->insert([
-                    'backup_name'  => $baseName,
-                    'file_path'    => $baseName . '.json',
-                    'period_start' => $periodStart,
-                    'period_end'   => $periodEnd,
-                    'created_by'   => 1,
-                    'created_at'   => date('Y-m-d H:i:s'),
-                ]);
-
-                log_activity(
-                    'LOG_SCHEDULE_AUTO_BACKUP',
-                    'Backup otomatis log arsip dibuat (' . count($archiveLogs) . ' data).',
-                    'activity_logs_archive'
-                );
-
-                $this->systemReminder(
-                    'BACKUP',
-                    'Backup otomatis log arsip berhasil dibuat.',
-                    'activity_logs_archive',
-                    count($archiveLogs)
-                );
-
-                CLI::write('Auto backup log arsip berhasil.', 'green');
-            }
+        $backupDir = WRITEPATH . 'backups/activity_logs/';
+        if (!is_dir($backupDir)) {
+            mkdir($backupDir, 0777, true);
         }
 
+        $timestamp = date('Ymd_His');
+        $baseName  = 'activity_logs_archive_' . $timestamp;
+
+        $periodStart = date('Y-m-d', strtotime($archiveLogs[0]['created_at']));
+        $periodEnd   = date('Y-m-d', strtotime(end($archiveLogs)['created_at']));
+
+        // ======================
+        // JSON BACKUP
+        // ======================
+        $jsonFile = $baseName . '.json';
+        file_put_contents(
+            $backupDir . $jsonFile,
+            json_encode([
+                'meta' => [
+                    'type'          => 'AUTO_ARCHIVE_BACKUP',
+                    'total_records' => count($archiveLogs),
+                    'period' => [
+                        'from' => $periodStart,
+                        'to'   => $periodEnd,
+                    ],
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'created_by' => 'SYSTEM',
+                ],
+                'data' => $archiveLogs
+            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+        );
+
+        // ======================
+        // CSV BACKUP
+        // ======================
+        $csvFile = $baseName . '.csv';
+        $fp = fopen($backupDir . $csvFile, 'w');
+
+        // BOM UTF-8 agar Excel aman
+        fprintf($fp, chr(0xEF).chr(0xBB).chr(0xBF));
+
+        fputcsv($fp, [
+            'Tanggal',
+            'User ID',
+            'Role',
+            'Aksi',
+            'Deskripsi',
+            'Subjek',
+            'IP',
+            'User Agent'
+        ], ';');
+
+        foreach ($archiveLogs as $log) {
+            $desc = trim(preg_replace('/\s+/', ' ', $log['description']));
+            $ua   = trim(preg_replace('/\s+/', ' ', $log['user_agent']));
+
+            fputcsv($fp, [
+                date('d-m-Y H:i', strtotime($log['created_at'])),
+                $log['user_id'],
+                strtoupper($log['role']),
+                strtoupper($log['action']),
+                $desc,
+                ($log['subject_type'] ?? '-') . ' #' . ($log['subject_id'] ?? '-'),
+                $log['ip_address'],
+                $ua,
+            ], ';', '"');
+        }
+
+        fclose($fp);
+
+        // ======================
+        // SIMPAN DB
+        // ======================
+        $db->table('activity_log_backups')->insert([
+            'backup_name'  => $baseName,
+            'file_path'    => $jsonFile,   // tetap JSON utk UI
+            'csv_path'     => $csvFile,    // <---- tambahkan ini
+            'period_start' => $periodStart,
+            'period_end'   => $periodEnd,
+            'created_by'   => 1,
+            'created_at'   => date('Y-m-d H:i:s'),
+        ]);
+
+        log_activity(
+            'LOG_SCHEDULE_AUTO_BACKUP',
+            'Backup otomatis log arsip dibuat (' . count($archiveLogs) . ' data).',
+            'activity_logs_archive'
+        );
+
+        $this->systemReminder(
+            'BACKUP',
+            'Backup otomatis log arsip berhasil dibuat.',
+            'activity_logs_archive',
+            count($archiveLogs)
+        );
+
+        CLI::write('Auto backup log arsip berhasil.', 'green');
+    }
+}
         /**
          * ======================================================
          * 3️⃣ CLEANUP LOG ARSIP

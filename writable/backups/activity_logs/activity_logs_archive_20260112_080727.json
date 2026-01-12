@@ -1,0 +1,79 @@
+{
+    "meta": {
+        "type": "AUTO_ARCHIVE_BACKUP",
+        "total_records": 5,
+        "period": {
+            "from": "2025-09-12",
+            "to": "2025-09-12"
+        },
+        "created_at": "2026-01-12 08:07:27",
+        "created_by": "SYSTEM"
+    },
+    "data": [
+        {
+            "id": "6",
+            "user_id": "1",
+            "role": "admin",
+            "action": "create_user",
+            "description": "Menambahkan user baru: Algies_444",
+            "subject_type": "users",
+            "subject_id": "5",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-12 08:07:00",
+            "archived_at": "2026-01-12 08:07:27"
+        },
+        {
+            "id": "7",
+            "user_id": "1",
+            "role": "admin",
+            "action": "create_tahun",
+            "description": "Menambahkan tahun anggaran 2025 dan mengaktifkannya",
+            "subject_type": "tahun_anggaran",
+            "subject_id": "1",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-12 08:07:00",
+            "archived_at": "2026-01-12 08:07:27"
+        },
+        {
+            "id": "8",
+            "user_id": "1",
+            "role": "admin",
+            "action": "create_tahun",
+            "description": "Menambahkan tahun anggaran 2021 dan mengaktifkannya",
+            "subject_type": "tahun_anggaran",
+            "subject_id": "2",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-12 08:07:00",
+            "archived_at": "2026-01-12 08:07:27"
+        },
+        {
+            "id": "9",
+            "user_id": "1",
+            "role": "admin",
+            "action": "create_tahun",
+            "description": "Menambahkan tahun anggaran 2022 dan mengaktifkannya",
+            "subject_type": "tahun_anggaran",
+            "subject_id": "3",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-12 08:07:00",
+            "archived_at": "2026-01-12 08:07:27"
+        },
+        {
+            "id": "10",
+            "user_id": "1",
+            "role": "admin",
+            "action": "create_tahun",
+            "description": "Menambahkan tahun anggaran 2024 dan mengaktifkannya",
+            "subject_type": "tahun_anggaran",
+            "subject_id": "4",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-12 08:07:00",
+            "archived_at": "2026-01-12 08:07:27"
+        }
+    ]
+}

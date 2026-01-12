@@ -280,7 +280,7 @@ $seg3 = $uri->getTotalSegments() >= 3 ? $uri->getSegment(3) : ''; // aman
             Dokumen Saya
         </a>
 
-<a href="<?= base_url('atasan/dokumen/unit') ?>" 
+<a href="<?= base_url('staff/dokumen/unit') ?>" 
    class="submenu-link <?= $seg3=='unit' ? 'active':'' ?>">
     Dokumen Unit
     <span id="badge-unit"
@@ -293,7 +293,7 @@ $seg3 = $uri->getTotalSegments() >= 3 ? $uri->getSegment(3) : ''; // aman
 </a>
 
 
-<a href="<?= base_url('atasan/dokumen/public') ?>" 
+<a href="<?= base_url('staff/dokumen/public') ?>" 
    class="submenu-link <?= $seg3=='public' ? 'active':'' ?>">
     Dokumen Publik
     <span id="badge-public"
