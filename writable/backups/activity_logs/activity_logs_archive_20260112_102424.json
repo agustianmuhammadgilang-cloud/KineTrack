@@ -1,0 +1,79 @@
+{
+    "meta": {
+        "type": "AUTO_ARCHIVE_BACKUP",
+        "total_records": 5,
+        "period": {
+            "from": "2025-09-12",
+            "to": "2025-09-12"
+        },
+        "created_at": "2026-01-12 10:24:24",
+        "created_by": "SYSTEM"
+    },
+    "data": [
+        {
+            "id": "1",
+            "user_id": "4",
+            "role": "staff",
+            "action": "open_resubmit_dokumen_form",
+            "description": "Membuka form revisi dokumen \"Laporan zona\"",
+            "subject_type": "dokumen",
+            "subject_id": "2",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-12 10:24:14",
+            "archived_at": "2026-01-12 10:24:24"
+        },
+        {
+            "id": "2",
+            "user_id": "4",
+            "role": "staff",
+            "action": "resubmit_dokumen",
+            "description": "Mengirim revisi dokumen \"Laporan zona\"",
+            "subject_type": "dokumen",
+            "subject_id": "2",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-12 10:24:14",
+            "archived_at": "2026-01-12 10:24:24"
+        },
+        {
+            "id": "3",
+            "user_id": "4",
+            "role": "staff",
+            "action": "view_dokumen_list",
+            "description": "Melihat daftar dokumen kinerja pribadi",
+            "subject_type": null,
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-12 10:24:14",
+            "archived_at": "2026-01-12 10:24:24"
+        },
+        {
+            "id": "4",
+            "user_id": "2",
+            "role": "atasan",
+            "action": "view_dokumen_masuk",
+            "description": "Melihat daftar dokumen masuk untuk direview",
+            "subject_type": "dokumen",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-12 10:24:14",
+            "archived_at": "2026-01-12 10:24:24"
+        },
+        {
+            "id": "5",
+            "user_id": "2",
+            "role": "atasan",
+            "action": "review_dokumen",
+            "description": "Membuka review dokumen 'Laporan zona'",
+            "subject_type": "dokumen",
+            "subject_id": "2",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-12 10:24:14",
+            "archived_at": "2026-01-12 10:24:24"
+        }
+    ]
+}

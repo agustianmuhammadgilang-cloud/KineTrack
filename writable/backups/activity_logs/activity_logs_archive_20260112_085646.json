@@ -1,0 +1,79 @@
+{
+    "meta": {
+        "type": "AUTO_ARCHIVE_BACKUP",
+        "total_records": 5,
+        "period": {
+            "from": "2025-09-12",
+            "to": "2025-09-12"
+        },
+        "created_at": "2026-01-12 08:56:46",
+        "created_by": "SYSTEM"
+    },
+    "data": [
+        {
+            "id": "1",
+            "user_id": "3",
+            "role": "atasan",
+            "action": "login",
+            "description": "Login ke sistem",
+            "subject_type": null,
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-12 08:56:40",
+            "archived_at": "2026-01-12 08:56:46"
+        },
+        {
+            "id": "2",
+            "user_id": "3",
+            "role": "atasan",
+            "action": "view_dokumen_masuk",
+            "description": "Melihat daftar dokumen masuk untuk direview",
+            "subject_type": "dokumen",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-12 08:56:40",
+            "archived_at": "2026-01-12 08:56:46"
+        },
+        {
+            "id": "3",
+            "user_id": "3",
+            "role": "atasan",
+            "action": "review_dokumen",
+            "description": "Membuka review dokumen 'laporan anggaran polban2025'",
+            "subject_type": "dokumen",
+            "subject_id": "1",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-12 08:56:40",
+            "archived_at": "2026-01-12 08:56:46"
+        },
+        {
+            "id": "4",
+            "user_id": "3",
+            "role": "atasan",
+            "action": "reject_dokumen",
+            "description": "Menolak dokumen 'laporan anggaran polban2025'",
+            "subject_type": "dokumen",
+            "subject_id": "1",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-12 08:56:40",
+            "archived_at": "2026-01-12 08:56:46"
+        },
+        {
+            "id": "5",
+            "user_id": "3",
+            "role": "atasan",
+            "action": "view_dokumen_masuk",
+            "description": "Melihat daftar dokumen masuk untuk direview",
+            "subject_type": "dokumen",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-12 08:56:40",
+            "archived_at": "2026-01-12 08:56:46"
+        }
+    ]
+}

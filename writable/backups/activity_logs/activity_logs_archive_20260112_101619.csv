@@ -1,0 +1,6 @@
+﻿Tanggal;"User ID";Role;Aksi;Deskripsi;Subjek;IP;"User Agent"
+"12-09-2025 10:16";2;ATASAN;VIEW_DOKUMEN_MASUK;"Melihat daftar dokumen masuk untuk direview";"dokumen #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-09-2025 10:16";2;ATASAN;REVIEW_DOKUMEN;"Membuka review dokumen 'Laporan zona'";"dokumen #2";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-09-2025 10:16";2;ATASAN;REJECT_DOKUMEN;"Menolak dokumen 'Laporan zona'";"dokumen #2";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-09-2025 10:16";2;ATASAN;VIEW_DOKUMEN_MASUK;"Melihat daftar dokumen masuk untuk direview";"dokumen #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-09-2025 10:16";4;STAFF;VIEW_DOKUMEN_LIST;"Melihat daftar dokumen kinerja pribadi";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"

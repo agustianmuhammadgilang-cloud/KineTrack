@@ -1,0 +1,6 @@
+﻿Tanggal;"Nama User";Role;Aksi;Deskripsi;Subjek;"IP Address";"User Agent"
+"12-09-2025 09:31";Repan_444;ATASAN;REVIEW_DOKUMEN;"Membuka review dokumen 'laporan anggaran polban2025'";"dokumen #1";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-09-2025 09:31";System;STAFF;VIEW_DOKUMEN_LIST;"Melihat daftar dokumen kinerja pribadi";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-09-2025 09:31";Repan_444;ATASAN;REJECT_DOKUMEN;"Menolak dokumen 'laporan anggaran polban2025'";"dokumen #1";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-09-2025 09:31";Repan_444;ATASAN;VIEW_DOKUMEN_MASUK;"Melihat daftar dokumen masuk untuk direview";"dokumen #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-09-2025 09:31";System;STAFF;VIEW_DOKUMEN_LIST;"Melihat daftar dokumen kinerja pribadi";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"

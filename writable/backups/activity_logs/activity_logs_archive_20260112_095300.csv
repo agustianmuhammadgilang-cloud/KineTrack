@@ -1,0 +1,6 @@
+﻿Tanggal;"User ID";Role;Aksi;Deskripsi;Subjek;IP;"User Agent"
+"12-09-2025 09:52";3;ATASAN;APPROVE_DOKUMEN;"Menyetujui dokumen 'laporan anggaran polban2025'";"dokumen #1";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-09-2025 09:52";3;ATASAN;VIEW_DOKUMEN_MASUK;"Melihat daftar dokumen masuk untuk direview";"dokumen #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-09-2025 09:52";2;ATASAN;VIEW_DOKUMEN_MASUK;"Melihat daftar dokumen masuk untuk direview";"dokumen #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-09-2025 09:52";2;ATASAN;REVIEW_DOKUMEN;"Membuka review dokumen 'laporan anggaran polban2025'";"dokumen #1";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-09-2025 09:52";2;ATASAN;APPROVE_DOKUMEN;"Menyetujui dokumen 'laporan anggaran polban2025'";"dokumen #1";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
