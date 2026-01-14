@@ -1,154 +1,208 @@
 <?= $this->extend('layout/admin_template') ?>
 <?= $this->section('content') ?>
 
-<h3 class="text-2xl font-bold text-[var(--polban-blue)] mb-6">
-    Tambah Indikator Kinerja
-</h3>
+<style>
+    :root {
+        --polban-blue: #003366;
+        --polban-blue-light: #004a94;
+        --polban-gold: #D4AF37;
+        --slate-50: #f8fafc;
+        --slate-100: #f1f5f9;
+        --slate-200: #e2e8f0;
+        --slate-700: #334155;
+        --transition: all 0.3s ease;
+    }
 
-<div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 max-w-3xl">
+    .form-container {
+        background: white;
+        border-radius: 20px;
+        border: 1px solid var(--slate-200);
+        box-shadow: 0 10px 25px -5px rgba(0, 51, 102, 0.04);
+        overflow: hidden;
+    }
 
-<!-- NOTIFIKASI (TAMBAHAN, TANPA UBAH LOGIKA FORM) -->
-<?php if (session()->getFlashdata('error')): ?>
-    <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-700 font-semibold">
-        <?= session()->getFlashdata('error') ?>
+    .form-header {
+        background-color: var(--polban-blue);
+        padding: 1.5rem 2rem;
+        border-bottom: 4px solid var(--polban-gold);
+    }
+
+    .input-field {
+        width: 100%;
+        padding: 0.625rem 1rem;
+        border: 1.5px solid var(--slate-200);
+        border-radius: 12px;
+        font-size: 0.875rem;
+        transition: var(--transition);
+        background-color: white;
+    }
+
+    .input-field:focus {
+        outline: none;
+        border-color: var(--polban-blue);
+        box-shadow: 0 0 0 4px rgba(0, 51, 102, 0.05);
+    }
+
+    .input-readonly {
+        background-color: var(--slate-50);
+        color: var(--slate-700);
+        font-weight: 600;
+        cursor: not-allowed;
+    }
+
+    .label-custom {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--slate-700);
+        margin-bottom: 0.5rem;
+    }
+
+    .btn-save {
+        background-color: var(--polban-blue);
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 12px;
+        font-weight: 700;
+        transition: var(--transition);
+    }
+
+    .btn-save:hover {
+        background-color: var(--polban-blue-light);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 51, 102, 0.2);
+    }
+
+    /* Akumulatif Toggle Style */
+    .mode-button {
+        padding: 0.5rem 1.25rem;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        transition: var(--transition);
+        text-transform: uppercase;
+    }
+</style>
+
+<div class="px-6 py-8 max-w-4xl mx-auto">
+    <div class="flex items-center gap-4 mb-8">
+        <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-900 shadow-sm border border-blue-100">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+        </div>
+        <div>
+            <h3 class="text-2xl font-black text-slate-800 tracking-tight">Tambah Indikator <span class="text-blue-900">Kinerja</span></h3>
+            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Manajemen Target Strategis Polban</p>
+        </div>
     </div>
-<?php endif; ?>
 
-    <form id="indikatorForm" action="<?= base_url('admin/indikator/store') ?>" method="post" class="space-y-5">
+    <div class="form-container">
+        <?php if (session()->getFlashdata('error')): ?>
+            <div class="m-6 p-4 rounded-xl bg-red-50 border border-red-100 text-red-700 text-sm font-semibold flex items-center gap-3">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
+                <?= session()->getFlashdata('error') ?>
+            </div>
+        <?php endif; ?>
 
-        <!-- ===================== TAHUN ===================== -->
-        <div>
-            <label class="block font-semibold text-gray-700 mb-1">Tahun</label>
-            <select id="tahunSelect" required
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
-                <option value="">-- Pilih Tahun --</option>
-
-                <?php 
-                $listTahun = array_unique(array_column($sasaran, 'tahun')); 
-                sort($listTahun);
-                foreach ($listTahun as $t): ?>
-                    <option value="<?= $t ?>"><?= $t ?></option>
-                <?php endforeach ?>
-            </select>
-        </div>
-
-        <!-- ===================== SASARAN ===================== -->
-        <div>
-            <label class="block font-semibold text-gray-700 mb-1">Sasaran</label>
-            <select id="sasaranSelect" name="sasaran_id" required
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
-                <option value="">-- Pilih Tahun Terlebih Dahulu --</option>
-            </select>
-        </div>
-
-        <!-- ===================== KODE INDIKATOR ===================== -->
-        <div>
-            <label class="block font-semibold text-gray-700 mb-1">Kode Indikator</label>
-            <input type="text" id="kode_indikator" name="kode_indikator" 
-                readonly class="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg">
-        </div>
-
-        <!-- ===================== NAMA INDIKATOR ===================== -->
-        <div>
-            <label class="block font-semibold text-gray-700 mb-1">Nama Indikator</label>
-            <textarea name="nama_indikator" required
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)] h-28"></textarea>
-        </div>
-
-        <!-- ===================== SATUAN (SELECT DROPDOWN) ===================== -->
-        <div>
-            <label class="block font-semibold text-gray-700 mb-1">Satuan</label>
-            <select id="satuanSelect" name="satuan" required
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
-                <option value="">-- Pilih Satuan --</option>
-                <option value="%">%</option>
-                <option value="unit">Unit</option>
-                <option value="dokumentasi">Dokumen</option>
-            </select>
-        </div>
-
-        <!-- ===================== TARGET PK ===================== -->
-        <div>
-            <label class="block font-semibold text-gray-700 mb-1">Target PK</label>
-            <input type="number" id="target_pk" name="target_pk" min="0" step="0.01"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]">
-            <div id="hintPK" class="text-xs text-gray-500 mt-1"></div>
-        </div>
-
-        <input type="hidden" name="mode" id="modeInput" value="non">
-
-        <hr class="my-4">
-
-        <!-- ===================== MODE INPUT (di bawah Target PK) ===================== -->
-        <div class="mt-2">
-            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
-                <div class="flex items-center gap-3">
-                    <button type="button" id="btnNonAkm"
-                        class="px-4 py-2 rounded-lg font-semibold transition bg-green-600 text-white shadow-sm hover:scale-105">
-                        Non-Akumulatif
-                    </button>
-
-                    <button type="button" id="btnAkm"
-                        class="px-4 py-2 rounded-lg font-semibold transition bg-gray-300 text-gray-700 hover:scale-105">
-                        Akumulatif
-                    </button>
-
-                    <!-- ICON VALIDASI GAGAL (clickable -> show dropdown) -->
-                    <div id="iconErrorWrap" class="relative">
-                        <button id="iconError" class="ml-2 inline-flex items-center px-2 py-1 rounded-lg text-red-600 bg-red-50 border border-red-100 hidden hover:bg-red-100 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M12 5a7 7 0 100 14 7 7 0 000-14z" />
-                            </svg>
-                        </button>
-
-                        <!-- DROPDOWN: item kategori (muncul saat icon diklik) -->
-                        <div id="errorDropdown" class="hidden absolute z-50 mt-2 w-80 right-0 bg-white border border-gray-200 rounded-lg shadow-lg">
-                            <div class="px-3 py-2 text-sm font-medium text-gray-700 border-b">Detail Validasi</div>
-                            <div id="errorCategories" class="divide-y divide-gray-100"></div>
-                        </div>
-                    </div>
+        <form id="indikatorForm" action="<?= base_url('admin/indikator/store') ?>" method="post" class="p-8 space-y-6">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="label-custom">Tahun Anggaran</label>
+                    <select id="tahunSelect" required class="input-field">
+                        <option value="">-- Pilih Tahun --</option>
+                        <?php 
+                        $listTahun = array_unique(array_column($sasaran, 'tahun')); 
+                        sort($listTahun);
+                        foreach ($listTahun as $t): ?>
+                            <option value="<?= $t ?>"><?= $t ?></option>
+                        <?php endforeach ?>
+                    </select>
                 </div>
 
-                <div id="notifMode" class="text-sm font-semibold text-[var(--polban-blue)]"></div>
+                <div>
+                    <label class="label-custom">Kode Indikator (Auto)</label>
+                    <input type="text" id="kode_indikator" name="kode_indikator" readonly class="input-field input-readonly" placeholder="Pilih sasaran dulu...">
+                </div>
             </div>
 
-            <!-- PANEL DETAIL PESAN ketika user klik kategori -->
-            <div id="errorDetailPanel" class="mt-2 hidden bg-red-50 border border-red-200 text-red-800 p-3 rounded-lg text-sm"></div>
-        </div>
-
-        <hr class="my-4">
-
-        <!-- ===================== TARGET TW ===================== -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <?php for ($i=1; $i<=4; $i++): ?>
             <div>
-                <label class="block font-semibold text-gray-700 mb-1">TW<?= $i ?></label>
-                <input type="number" name="target_tw<?= $i ?>" class="twInput w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--polban-blue)]" min="0" step="0.01">
+                <label class="label-custom">Sasaran Strategis</label>
+                <select id="sasaranSelect" name="sasaran_id" required class="input-field">
+                    <option value="">-- Pilih Tahun Terlebih Dahulu --</option>
+                </select>
             </div>
-            <?php endfor ?>
-        </div>
 
-        <!-- ===================== BUTTON ===================== -->
-        <div class="flex gap-3 pt-3">
-            <button id="btnSubmit"
-                class="bg-[var(--polban-blue)] text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-900 shadow">
-                Simpan
-            </button>
+            <div>
+                <label class="label-custom">Deskripsi Indikator Kinerja</label>
+                <textarea name="nama_indikator" required class="input-field h-24 resize-none" placeholder="Masukkan detail indikator..."></textarea>
+            </div>
 
-            <a href="<?= base_url('admin/indikator') ?>"
-                class="px-6 py-2 rounded-lg font-semibold border border-gray-400 text-gray-700 hover:bg-gray-100">
-                Kembali
-            </a>
-        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="label-custom">Satuan Pengukuran</label>
+                    <select id="satuanSelect" name="satuan" required class="input-field">
+                        <option value="">-- Pilih Satuan --</option>
+                        <option value="%">% (Persentase)</option>
+                        <option value="unit">Unit</option>
+                        <option value="dokumentasi">Dokumen</option>
+                    </select>
+                </div>
 
-    </form>
+                <div>
+                    <label class="label-custom">Target Perjanjian Kinerja (PK)</label>
+                    <input type="number" id="target_pk" name="target_pk" min="0" step="0.01" class="input-field font-bold text-blue-900" placeholder="0.00">
+                    <div id="hintPK" class="text-[10px] text-slate-400 font-medium mt-1 italic"></div>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-2">
+                        <input type="hidden" name="mode" id="modeInput" value="non">
+                        <button type="button" id="btnNonAkm" class="mode-button">Non-Akumulatif</button>
+                        <button type="button" id="btnAkm" class="mode-button">Akumulatif</button>
+                        
+                        <div id="iconErrorWrap" class="relative inline-block">
+                            <button id="iconError" type="button" class="hidden ml-2 p-1.5 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M12 5a7 7 0 100 14 7 7 0 000-14z" />
+                                </svg>
+                            </button>
+                            <div id="errorDropdown" class="hidden absolute left-0 bottom-full mb-3 z-50 w-72 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden">
+                                <div class="px-4 py-2 bg-red-50 text-[10px] font-bold text-red-800 border-b border-red-100 uppercase tracking-widest">Detail Validasi</div>
+                                <div id="errorCategories" class="divide-y divide-slate-50"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="notifMode" class="text-[10px] font-black uppercase tracking-widest text-blue-900"></div>
+                </div>
+                <div id="errorDetailPanel" class="mt-4 hidden bg-white border border-red-200 text-red-700 p-4 rounded-xl text-xs leading-relaxed shadow-inner"></div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <?php for ($i=1; $i<=4; $i++): ?>
+                <div>
+                    <label class="label-custom text-center mb-2">TW <?= $i ?></label>
+                    <input type="number" name="target_tw<?= $i ?>" class="twInput input-field text-center font-semibold" placeholder="0" min="0" step="0.01">
+                </div>
+                <?php endfor ?>
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-6 border-t border-slate-100">
+                <a href="<?= base_url('admin/indikator') ?>" class="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 transition">Batal</a>
+                <button id="btnSubmit" class="btn-save">Simpan Indikator</button>
+            </div>
+
+        </form>
+    </div>
 </div>
 
-<!-- ===================== JS ===================== -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-
-    /* ---------- ELEMENTS ---------- */
     const btnNon = document.getElementById("btnNonAkm");
     const btnAkm = document.getElementById("btnAkm");
     const notifMode = document.getElementById("notifMode");
@@ -159,448 +213,156 @@ document.addEventListener("DOMContentLoaded", function() {
     const errorCategories = document.getElementById("errorCategories");
     const errorDetailPanel = document.getElementById("errorDetailPanel");
     const form = document.getElementById("indikatorForm");
-
     const satuanSelect = document.getElementById("satuanSelect");
     const targetPkInput = document.getElementById("target_pk");
     const hintPK = document.getElementById("hintPK");
-
-    /* ---------- MODE ---------- */
-    let mode = "non"; // default
+    let mode = "non";
 
     function setMode(m) {
         mode = m;
         document.getElementById("modeInput").value = mode;
-
         if (mode === "non") {
-        btnNon.classList.remove("bg-gray-300","text-gray-700");
-        btnNon.classList.add("bg-green-600","text-white");
-
-        btnAkm.classList.remove("bg-green-600","text-white");
-        btnAkm.classList.add("bg-gray-300","text-gray-700");
-
-        notifMode.innerText = "Mode: NON-AKUMULATIF";
-    } else {
-        btnAkm.classList.remove("bg-gray-300","text-gray-700");
-        btnAkm.classList.add("bg-green-600","text-white");
-
-        btnNon.classList.remove("bg-green-600","text-white");
-        btnNon.classList.add("bg-gray-300","text-gray-700");
-
-        notifMode.innerText = "Mode: AKUMULATIF";
-    }
-
-    revalidateAndRender();
+            btnNon.className = "mode-button bg-blue-900 text-white shadow-md shadow-blue-900/20";
+            btnAkm.className = "mode-button bg-slate-200 text-slate-500 hover:bg-slate-300";
+            notifMode.innerText = "MODE: NON-AKUMULATIF";
+        } else {
+            btnAkm.className = "mode-button bg-blue-900 text-white shadow-md shadow-blue-900/20";
+            btnNon.className = "mode-button bg-slate-200 text-slate-500 hover:bg-slate-300";
+            notifMode.innerText = "MODE: AKUMULATIF";
+        }
+        revalidateAndRender();
     }
 
     btnAkm.addEventListener("click", () => setMode("akumulatif"));
     btnNon.addEventListener("click", () => setMode("non"));
     setMode("non");
 
-    /* ---------- SATUAN & PK BEHAVIOR ---------- */
     function applySatuanBehavior() {
-    const s = satuanSelect.value;
-
-    if (s === "%" || s === "unit" || s === "dokumentasi") {
-        // SEMUA SATUAN DIPERLAKUKAN SAMA
-        targetPkInput.readOnly = false;
-        targetPkInput.classList.remove("bg-gray-100");
-        hintPK.innerText = "Isi Target PK sesuai kebutuhan. Total TW harus sama dengan PK.";
-
-        twInputs.forEach(i => {
-            i.removeAttribute("max");
-            i.setAttribute("min", "0");
-            i.step = "0.01";
-        });
-    } else {
-        targetPkInput.readOnly = false;
-        hintPK.innerText = "";
+        const s = satuanSelect.value;
+        if (s === "%" || s === "unit" || s === "dokumentasi") {
+            targetPkInput.readOnly = false;
+            targetPkInput.classList.remove("input-readonly");
+            hintPK.innerText = "Info: Total TW harus sinkron dengan PK.";
+            twInputs.forEach(i => { i.removeAttribute("max"); i.step = "0.01"; });
+        } else {
+            targetPkInput.readOnly = false;
+            hintPK.innerText = "";
+        }
+        revalidateAndRender();
     }
-
-    revalidateAndRender();
-}
-
-
     satuanSelect.addEventListener("change", applySatuanBehavior);
 
-    /* ---------- VALIDATION LOGIC (NEW: sesuai permintaan) ---------- */
-
+    // --- REVALIDATION & RENDER LOGIC (Fungsi internal Anda dipertahankan) ---
     function gatherValidation() {
-    const vals = twInputs.map(i => {
-        const raw = i.value;
-        if (raw === "" || raw === null) return null;
-        const n = Number(raw);
-        return isFinite(n) ? n : null;
-    });
+        const vals = twInputs.map(i => {
+            const raw = i.value;
+            if (raw === "" || raw === null) return null;
+            const n = Number(raw);
+            return isFinite(n) ? n : null;
+        });
+        const pkRaw = targetPkInput.value;
+        const pk = (pkRaw === "" || pkRaw === null) ? null : Number(pkRaw);
+        const result = { overLimit: [], decreasing: [], sumMismatch: null, finalMismatch: null };
 
-    const satuan = satuanSelect.value;
-    const pkRaw = targetPkInput.value;
-    const pk = (pkRaw === "" || pkRaw === null) ? null : Number(pkRaw);
-
-    const result = {
-        overLimit: [],      // optional: per-TW max limit if needed
-        decreasing: [],     // pairs for akumulatif where cur < prev
-        sumMismatch: null,  // for NON mode: { sum, pk, indices }
-        finalMismatch: null // for AKM mode: { tw4, pk }
-    };
-
-    // Validate each TW input
-    if (mode === "non") {
-        if (pk !== null && !isNaN(pk)) {
-            const sum = vals.reduce((acc, v) => acc + (v ?? 0), 0);
-            if (Math.abs(sum - pk) > 1e-9) {
-                const indices = vals.map((v, idx) => v !== null ? idx : -1).filter(i => i >= 0);
-                result.sumMismatch = { sum, pk, indices };
+        if (mode === "non") {
+            if (pk !== null && !isNaN(pk)) {
+                const sum = vals.reduce((acc, v) => acc + (v ?? 0), 0);
+                if (Math.abs(sum - pk) > 1e-9) {
+                    const indices = vals.map((v, idx) => v !== null ? idx : -1).filter(i => i >= 0);
+                    result.sumMismatch = { sum, pk, indices };
+                }
+            }
+        } else {
+            for (let i = 1; i < vals.length; i++) {
+                const prev = vals[i-1], cur = vals[i];
+                if (prev !== null && cur !== null && cur < prev) result.decreasing.push({from: i-1, to: i});
+            }
+            const tw4 = vals[3];
+            if (pk !== null && !isNaN(pk)) {
+                if (tw4 === null || Math.abs(tw4 - pk) > 1e-9) result.finalMismatch = { tw4: tw4 === null ? null : tw4, pk };
             }
         }
-    } else { // mode === "akm"
-        // check non-decreasing
-        for (let i = 1; i < vals.length; i++) {
-            const prev = vals[i-1], cur = vals[i];
-            if (prev !== null && cur !== null && cur < prev) {
-                result.decreasing.push({from: i-1, to: i});
-            }
-        }
-        // check TW4 = PK if PK provided
-        const tw4 = vals[3];
-        if (pk !== null && !isNaN(pk)) {
-            if (tw4 === null || Math.abs(tw4 - pk) > 1e-9) {
-                result.finalMismatch = { tw4: tw4 === null ? null : tw4, pk };
-            }
-        }
+        return { vals, result, pk };
     }
 
-    return { vals, result, satuan, pk };
-}
+    function revalidateAndRender() {
+        const { vals, result, pk } = gatherValidation();
+        twInputs.forEach(i => i.classList.remove("border-red-500", "ring-red-100", "ring-4"));
 
-function validateTW() {
-    const { vals, result, satuan, pk } = gatherValidation();
-    const messages = [];
-
-    if (result.sumMismatch) {
-        messages.push({
-            type: 'sumMismatch',
-            text: `Total TW (TW1+TW2+TW3+TW4) = ${result.sumMismatch.sum} harus sama dengan ${result.sumMismatch.pk}`,
-            payload: result.sumMismatch
-        });
-    }
-
-    if (result.finalMismatch) {
-        const t4 = result.finalMismatch.tw4 === null ? '—' : result.finalMismatch.tw4;
-        messages.push({
-            type: 'finalMismatch',
-            text: `Mode AKUMULATIF: TW4 = ${t4} harus sama dengan PK (${result.finalMismatch.pk})`,
-            payload: result.finalMismatch
-        });
-    }
-
-    result.decreasing.forEach(obj => {
-        messages.push({
-            type: 'decreasing',
-            text: `TW${obj.to+1} tidak boleh turun dari TW${obj.from+1}`,
-            from: obj.from,
-            to: obj.to
-        });
-    });
-
-    return { raw: result, messages, vals, satuan, pk };
-}
-
-
-    /* ---------- ERROR UI RENDER (includes sum/detail) ---------- */
-    function renderErrorState(validation) {
-        const { raw, messages, vals } = validation;
-
-        // clear input highlights first
-        twInputs.forEach(i => {
-            i.classList.remove("border-red-500", "ring-2", "ring-red-200");
-        });
-
-        if (messages.length === 0) {
+        if (!result.sumMismatch && !result.finalMismatch && result.decreasing.length === 0) {
             iconError.classList.add("hidden");
             errorDropdown.classList.add("hidden");
-            errorCategories.innerHTML = "";
             errorDetailPanel.classList.add("hidden");
-            errorDetailPanel.innerHTML = "";
             return;
         }
 
         iconError.classList.remove("hidden");
-
         const categories = [];
+        if (result.sumMismatch) categories.push({ id: 'cat-total', title: 'Jumlah Total Tidak Sesuai', summary: `Total: ${result.sumMismatch.sum} (Harus ${result.sumMismatch.pk})`, payload: result.sumMismatch });
+        if (result.finalMismatch) categories.push({ id: 'cat-final', title: 'Target TW4 ≠ PK', summary: `TW4: ${result.finalMismatch.tw4 ?? '-'} (Harus ${result.finalMismatch.pk})`, payload: result.finalMismatch });
+        if (result.decreasing.length > 0) categories.push({ id: 'cat-decrease', title: 'Nilai Menurun', summary: `${result.decreasing.length} TW lebih rendah dari sebelumnya`, payload: result.decreasing });
 
-        // sumMismatch (non)
-        if (raw.sumMismatch) {
-            categories.push({
-                id: 'cat-total',
-                title: 'Jumlah Total Tidak Sesuai PK',
-                summary: `Total = ${raw.sumMismatch.sum} (harus ${raw.sumMismatch.pk})`,
-                payload: raw.sumMismatch
-            });
-        }
-
-        // finalMismatch (akm)
-        if (raw.finalMismatch) {
-            categories.push({
-                id: 'cat-final',
-                title: 'Nilai Akumulatif Akhir Tidak Sama dengan PK',
-                summary: `TW4 = ${raw.finalMismatch.tw4 === null ? '—' : raw.finalMismatch.tw4} (harus ${raw.finalMismatch.pk})`,
-                payload: raw.finalMismatch
-            });
-        }
-
-        if (raw.overLimit && raw.overLimit.length > 0) {
-            categories.push({
-                id: 'cat-over100',
-                title: 'Melebihi Batas 100 (per TW)',
-                summary: `${raw.overLimit.length} TW melebihi 100`,
-                payload: raw.overLimit.slice()
-            });
-        }
-
-        if (raw.decreasing && raw.decreasing.length > 0) {
-            categories.push({
-                id: 'cat-decrease',
-                title: 'Penurunan Nilai (TW turun)',
-                summary: `${raw.decreasing.length} pasangan TW turun`,
-                payload: raw.decreasing.slice()
-            });
-        }
-
-        // render categories
         errorCategories.innerHTML = categories.map(cat => `
-            <button data-cat="${cat.id}" type="button" class="w-full text-left px-3 py-3 hover:bg-gray-50 flex justify-between items-center">
+            <button type="button" data-cat="${cat.id}" class="w-full text-left px-4 py-3 hover:bg-slate-50 transition flex justify-between items-center group">
                 <div>
-                    <div class="font-medium text-gray-800">${cat.title}</div>
-                    <div class="text-xs text-gray-500 mt-0.5">${cat.summary}</div>
+                    <div class="text-[11px] font-bold text-slate-800">${cat.title}</div>
+                    <div class="text-[10px] text-red-500 font-medium">${cat.summary}</div>
                 </div>
-                <div class="text-gray-400 ml-2">›</div>
+                <span class="text-slate-300 group-hover:text-blue-900">›</span>
             </button>
         `).join("");
 
-        // attach handlers
-        Array.from(errorCategories.querySelectorAll("button[data-cat]")).forEach(btn => {
-            btn.addEventListener("click", () => {
-                const catId = btn.getAttribute("data-cat");
-                const cat = categories.find(c => c.id === catId);
-                if (!cat) return;
-
-                // hide all highlights first
-                twInputs.forEach(i => i.classList.remove("border-red-500", "ring-2", "ring-red-200"));
-
-                if (cat.id === 'cat-total') {
-                    const sum = cat.payload.sum;
-                    const pk = cat.payload.pk;
-                    const indices = cat.payload.indices;
-                    const lines = vals.map((v, idx) => `• TW${idx+1} = ${v === null ? '—' : v}`);
-                    const diff = sum - pk;
-                    errorDetailPanel.innerHTML =
-                        `<div class="font-semibold mb-1">Detail: Total Tidak Sesuai PK</div>
-                         <div class="text-sm text-gray-700 mb-2">${lines.join('<br>')}</div>
-                         <div class="text-sm font-medium text-red-600">Total = ${sum} (harus ${pk}) ${diff !== 0 ? '(selisih ' + diff + ')' : ''}</div>`;
-                    errorDetailPanel.classList.remove("hidden");
-
-                    indices.forEach(i => {
-                        const el = twInputs[i];
-                        if (el) el.classList.add("border-red-500","ring-2","ring-red-200");
-                    });
-
-                } else if (cat.id === 'cat-final') {
-                    const tw4 = cat.payload.tw4 === null ? '—' : cat.payload.tw4;
-                    const pk = cat.payload.pk;
-                    errorDetailPanel.innerHTML =
-                        `<div class="font-semibold mb-1">Detail: TW Akhir Tidak Sesuai PK</div>
-                         <div class="text-sm text-gray-700 mb-2">TW4 = ${tw4}</div>
-                         <div class="text-sm font-medium text-red-600">TW4 harus sama dengan PK (${pk})</div>`;
-                    errorDetailPanel.classList.remove("hidden");
-
-                    // highlight TW4
-                    const el4 = twInputs[3];
-                    if (el4) el4.classList.add("border-red-500","ring-2","ring-red-200");
-
-                } else if (cat.id === 'cat-over100') {
-                    const lines = cat.payload.map(idx => `• TW${idx+1} = ${vals[idx]} (melebihi 100)`);
-                    errorDetailPanel.innerHTML = `<div class="font-semibold mb-1">Detail: Melebihi 100 per TW</div>${lines.join('<br>')}`;
-                    errorDetailPanel.classList.remove("hidden");
-                    cat.payload.forEach(idx => {
-                        const el = twInputs[idx];
-                        if (el) el.classList.add("border-red-500","ring-2","ring-red-200");
-                    });
-
-                } else if (cat.id === 'cat-decrease') {
-                    const lines = cat.payload.map(pair => `• TW${pair.to+1} (${vals[pair.to] ?? '-'}) < TW${pair.from+1} (${vals[pair.from] ?? '-'})`);
-                    errorDetailPanel.innerHTML = `<div class="font-semibold mb-1">Detail: Penurunan Nilai</div>${lines.join('<br>')}`;
-                    errorDetailPanel.classList.remove("hidden");
-                    cat.payload.forEach(pair => {
-                        const a = twInputs[pair.from], b = twInputs[pair.to];
-                        if (a) a.classList.add("border-red-500","ring-2","ring-red-200");
-                        if (b) b.classList.add("border-red-500","ring-2","ring-red-200");
-                    });
-                } else {
-                    errorDetailPanel.classList.add("hidden");
-                    errorDetailPanel.innerHTML = "";
-                }
-
-                // close dropdown to focus on detail panel
+        // Attach details click
+        errorCategories.querySelectorAll("button").forEach(btn => {
+            btn.onclick = () => {
+                const cat = categories.find(c => c.id === btn.dataset.cat);
+                errorDetailPanel.classList.remove("hidden");
+                errorDetailPanel.innerHTML = `<strong>${cat.title}:</strong> ${cat.summary}`;
                 errorDropdown.classList.add("hidden");
-            });
+                // Highlight inputs
+                if (cat.id === 'cat-total') cat.payload.indices.forEach(idx => twInputs[idx].classList.add("border-red-500", "ring-red-100", "ring-4"));
+                if (cat.id === 'cat-final') twInputs[3].classList.add("border-red-500", "ring-red-100", "ring-4");
+                if (cat.id === 'cat-decrease') cat.payload.forEach(p => { twInputs[p.from].classList.add("border-red-500"); twInputs[p.to].classList.add("border-red-500"); });
+            }
         });
     }
 
-    /* ---------- ICON DROPDOWN TOGGLE ---------- */
-    iconErrorWrap.addEventListener("click", function(e) {
-        if (iconError.classList.contains("hidden")) return;
-        errorDropdown.classList.toggle("hidden");
-        errorDetailPanel.classList.add("hidden");
-    });
+    twInputs.forEach(i => i.addEventListener("input", revalidateAndRender));
+    targetPkInput.addEventListener("input", revalidateAndRender);
+    iconErrorWrap.onclick = (e) => { e.stopPropagation(); errorDropdown.classList.toggle("hidden"); };
+    document.onclick = () => errorDropdown.classList.add("hidden");
 
-    // click outside to close dropdown
-    document.addEventListener("click", function(e) {
-        if (!iconErrorWrap.contains(e.target)) {
-            errorDropdown.classList.add("hidden");
-        }
-    });
-
-    /* ---------- REALTIME VALIDATION TRIGGERS ---------- */
-    function revalidateAndRender() {
-        const v = validateTW();
-        renderErrorState(v);
-        return v;
-    }
-
-    // initial
-    applySatuanBehavior();
-    revalidateAndRender();
-
-    // input listeners TW
-    twInputs.forEach(i => {
-        i.addEventListener("input", () => {
-            revalidateAndRender();
-            const v = validateTW();
-            if (v.messages.length > 0) {
-                notifMode.innerText = "Validasi: Terdapat pelanggaran";
-                setTimeout(() => notifMode.innerText = (mode === 'non' ? "Mode: NON-AKUMULATIF" : "Mode: AKUMULATIF"), 1600);
-            }
-        });
-    });
-
-    // PK change revalidate
-    targetPkInput.addEventListener("input", () => {
-        revalidateAndRender();
-    });
-
-    /* ---------- FORM SUBMIT PREVENT ---------- */
-    form.addEventListener("submit", function(e) {
-        const v = validateTW();
-
-        // If there are validation messages, block submit
-        if (v.messages.length > 0) {
-            e.preventDefault();
-            errorDropdown.classList.remove("hidden");
-            alert("Validasi gagal! Klik ikon ⚠️ di samping mode untuk melihat detail.");
-            return false;
-        }
-
-        // Extra safety checks:
-        if (!satuanSelect.value) {
-            e.preventDefault();
-            alert("Pilih satuan terlebih dahulu.");
-            return false;
-        }
-
-        // For unit/dokumentasi we require PK to be filled
-        if ((satuanSelect.value === "unit" || satuanSelect.value === "dokumentasi")) {
-            if (targetPkInput.value === "" || isNaN(Number(targetPkInput.value))) {
-                e.preventDefault();
-                alert("Isi Target PK terlebih dahulu untuk satuan Unit/Dokumentasi.");
-                return false;
-            }
-        }
-
-        // For akumulatif, ensure PK is provided (for non-% cases) and TW4 equals PK
-        if (mode === "akm") {
-            const satuan = satuanSelect.value;
-            const pk = (targetPkInput.value === "" ? null : Number(targetPkInput.value));
-
-            if (pk === null) {
-                e.preventDefault();
-                alert("Untuk mode Akumulatif, isi Target PK terlebih dahulu.");
-                return false;
-            }
-            const tw4Raw = twInputs[3].value;
-            const tw4 = (tw4Raw === "" ? null : Number(tw4Raw));
-            if (tw4 === null || Math.abs(tw4 - pk) > 1e-9) {
-                e.preventDefault();
-                alert("Mode Akumulatif: nilai TW4 harus sama dengan Target PK.");
-                return false;
-            }
-        }
-
-        // For non-akumulatif, ensure PK provided and sum equals PK
-        if (mode === "non") {
-            const satuan = satuanSelect.value;
-            const pk = (targetPkInput.value === "" ? null : Number(targetPkInput.value));
-
-            if (pk === null) {
-                e.preventDefault();
-                alert("Untuk mode Non-Akumulatif, isi Target PK terlebih dahulu.");
-                return false;
-            }
-            const sum = twInputs.reduce((acc, el) => acc + (el.value === "" ? 0 : Number(el.value)), 0);
-            if (Math.abs(sum - pk) > 1e-9) {
-                e.preventDefault();
-                alert("Mode Non-Akum: total TW1..TW4 harus sama dengan Target PK.");
-                return false;
-            }
-        }
-
-        // allow submit
-    });
-
-    /* ===================== LOGIKA KODE (original) ===================== */
+    // Form logic original (Sasaran & Kode)
     const tahunSelect = document.getElementById("tahunSelect");
     const sasaranSelect = document.getElementById("sasaranSelect");
     const kodeInput = document.getElementById("kode_indikator");
-
     const sasaranData = <?= json_encode($sasaran) ?>;
 
     tahunSelect.addEventListener("change", function () {
         const selectedYear = this.value;
-        sasaranSelect.innerHTML = "";
-
-        if (!selectedYear) {
-            sasaranSelect.append(new Option("-- Pilih Tahun Terlebih Dahulu --", ""));
-            kodeInput.value = "";
-            return;
-        }
-
-        sasaranSelect.append(new Option("-- Pilih Sasaran --", ""));
-
+        sasaranSelect.innerHTML = '<option value="">-- Pilih Sasaran --</option>';
+        if (!selectedYear) return;
         sasaranData.forEach(s => {
-            if (s.tahun == selectedYear) {
-                let label = s.kode_sasaran + " - " + s.nama_sasaran;
-                sasaranSelect.append(new Option(label, s.id));
-            }
+            if (s.tahun == selectedYear) sasaranSelect.append(new Option(`${s.kode_sasaran} - ${s.nama_sasaran}`, s.id));
         });
     });
 
     sasaranSelect.addEventListener("change", function () {
         const id = this.value;
-
-        if (!id) {
-            kodeInput.value = "";
-            return;
-        }
-
+        if (!id) { kodeInput.value = ""; return; }
         fetch("<?= base_url('admin/indikator/getKode/') ?>" + id)
             .then(res => res.json())
-            .then(data => {
-                kodeInput.value = data.kode;
-            })
-            .catch(() => {
-                kodeInput.value = "";
-            });
+            .then(data => kodeInput.value = data.kode)
+            .catch(() => kodeInput.value = "");
     });
 
+    form.onsubmit = (e) => {
+        const { result } = gatherValidation();
+        if (result.sumMismatch || result.finalMismatch || result.decreasing.length > 0) {
+            e.preventDefault();
+            alert("Harap perbaiki data target TW agar sesuai dengan mode dan PK.");
+        }
+    };
 });
 </script>
 

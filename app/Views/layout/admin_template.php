@@ -266,6 +266,13 @@ $seg3 = $segments[2] ?? null;
                     <?= (service('uri')->getSegment(2) == 'indikator') ? 'bg-white/20 font-semibold' : '' ?>">
                     Kelola Indikator Kinerja
                 </a>
+
+                <a href="<?= base_url('admin/perjanjian-kinerja') ?>"
+                    class="px-4 py-2 rounded hover:bg-white/10 transition
+                    <?= (service('uri')->getSegment(2) == 'perjanjian-kinerja') ? 'bg-white/20 font-semibold' : '' ?>">
+                    Report Perjanjian Kinerja
+                </a>
+
             </div>
         </div>
 

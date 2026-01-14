@@ -9,6 +9,9 @@ use App\Models\SasaranModel;
 use App\Models\IndikatorModel;
 use App\Models\UserModel;
 use App\Models\NotificationModel;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 // Controller untuk mengelola PIC indikator kinerja
 class PicController extends BaseController
 {
@@ -23,18 +26,28 @@ class PicController extends BaseController
         $this->notifModel = new NotificationModel();
     }
 // Menampilkan daftar PIC indikator
-    public function index()
-    {
-        $data['pic_list'] = $this->picModel
-            ->select('pic_indikator.*, users.nama, jabatan.nama_jabatan, bidang.nama_bidang, indikator_kinerja.nama_indikator')
-            ->join('users', 'users.id = pic_indikator.user_id')
-            ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
-            ->join('bidang', 'bidang.id = users.bidang_id', 'left')
-            ->join('indikator_kinerja', 'indikator_kinerja.id = pic_indikator.indikator_id')
-            ->findAll();
+public function index()
+{
+    $data['pic_list'] = $this->picModel
+        ->select('
+            pic_indikator.id,
+            indikator_kinerja.nama_indikator,
+            users.nama AS nama_pic,
+            jabatan.nama_jabatan,
+            bidang.nama_bidang,
+            tahun_anggaran.tahun
+        ')
+        ->join('users', 'users.id = pic_indikator.user_id')
+        ->join('jabatan', 'jabatan.id = pic_indikator.jabatan_id', 'left')
+        ->join('bidang', 'bidang.id = pic_indikator.bidang_id', 'left')
+        ->join('indikator_kinerja', 'indikator_kinerja.id = pic_indikator.indikator_id')
+        ->join('tahun_anggaran', 'tahun_anggaran.id = pic_indikator.tahun_id') // <-- tambah join ini
+        ->orderBy('pic_indikator.id', 'ASC')
+        ->findAll();
 
-        return view('admin/pic/index', $data);
-    }
+    return view('admin/pic/index', $data);
+}
+
 // Menampilkan form untuk menambahkan PIC baru
     public function create()
     {
@@ -182,4 +195,50 @@ class PicController extends BaseController
                 ->findAll()
         );
     }
+
+// ====================== EXPORT PDF ======================
+public function exportPdf()
+{
+    if (session()->get('role') !== 'admin') {
+        return redirect()->back();
+    }
+
+    $pic_list = $this->picModel
+        ->select('
+            pic_indikator.id,
+            indikator_kinerja.nama_indikator,
+            users.nama AS nama_pic,
+            jabatan.nama_jabatan,
+            bidang.nama_bidang,
+            tahun_anggaran.tahun
+        ')
+        ->join('users', 'users.id = pic_indikator.user_id')
+        ->join('jabatan', 'jabatan.id = pic_indikator.jabatan_id', 'left')
+        ->join('bidang', 'bidang.id = pic_indikator.bidang_id', 'left')
+        ->join('indikator_kinerja', 'indikator_kinerja.id = pic_indikator.indikator_id')
+        ->join('tahun_anggaran', 'tahun_anggaran.id = pic_indikator.tahun_id')
+        ->orderBy('pic_indikator.id', 'ASC')
+        ->findAll();
+
+    $html = view('admin/pic/export_pdf', [
+        'pic_list' => $pic_list
+    ]);
+
+    $options = new Options();
+    $options->set('defaultFont', 'Helvetica');
+    $dompdf = new Dompdf($options);
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    log_activity(
+    'EXPORT_PIC_PDF',
+    'Admin mengekspor laporan PIC indikator kinerja lintas unit dan jabatan ke dalam file PDF.',
+    'pic_indikator'
+);
+
+
+    $dompdf->stream('Laporan_PIC_' . date('Ymd_His') . '.pdf', ['Attachment' => true]);
+}
+
 }

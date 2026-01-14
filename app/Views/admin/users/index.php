@@ -10,6 +10,12 @@
    + Tambah User
 </a>
 
+<a href="<?= base_url('admin/users/export-pdf') ?>"
+   class="inline-block mb-4 ml-2 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition">
+   ⬇ Export PDF
+</a>
+
+
 <!-- NOTIFIKASI (TAMBAHAN, TANPA UBAH LOGIKA FORM) -->
 <?php if (session()->getFlashdata('error')): ?>
     <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-700 font-semibold">

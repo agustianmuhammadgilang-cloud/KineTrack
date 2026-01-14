@@ -7,6 +7,8 @@ use App\Models\DokumenModel;
 use App\Models\BidangModel;
 use App\Models\KategoriDokumenModel;
 use App\Models\NotificationModel;
+use Dompdf\Dompdf;
+
 // Controller untuk mengelola dokumen kinerja staff
 class Dokumen extends BaseController
 {
@@ -14,6 +16,7 @@ class Dokumen extends BaseController
     protected $bidangModel;
     protected $kategoriModel;
     protected $notifModel;
+
     // Konstruktor untuk inisialisasi model dokumen, bidang, dan kategori
     public function __construct()
     {
@@ -504,6 +507,39 @@ public function public()
 );
 
     return view('staff/dokumen/public', $data);
+}
+
+public function exportArsipPdf()
+{
+    $userId = session()->get('user_id');
+    if (!$userId) {
+        return redirect()->to('/login');
+    }
+
+    $dokumen = $this->dokumenModel->getArsipDenganKategori($userId);
+
+    $html = view('staff/dokumen/export_pdf', [
+        'dokumen' => $dokumen
+    ]);
+
+    $dompdf = new \Dompdf\Dompdf();
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    $filename = 'arsip_dokumen_' . date('Ymd_His') . '.pdf';
+     /**
+     * ======================================
+     * LOG AKTIVITAS (EXPORT ARSIP)
+     * ======================================
+     */
+    log_activity(
+        'EXPORT_ARSIP_DOKUMEN',
+        'Mengunduh arsip dokumen unit/bidang dalam bentuk PDF',
+        'dokumen_arsip',
+        null
+    );
+    return $dompdf->stream($filename, ['Attachment' => true]);
 }
 
 

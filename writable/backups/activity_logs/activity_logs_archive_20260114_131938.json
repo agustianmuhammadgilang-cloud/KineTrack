@@ -1,0 +1,144 @@
+{
+    "meta": {
+        "type": "AUTO_ARCHIVE_BACKUP",
+        "total_records": 10,
+        "period": {
+            "from": "2025-10-14",
+            "to": "2025-10-14"
+        },
+        "created_at": "2026-01-14 13:19:38",
+        "created_by": "SYSTEM"
+    },
+    "data": [
+        {
+            "id": "6",
+            "user_id": "1",
+            "role": "admin",
+            "action": "login",
+            "description": "Login ke sistem",
+            "subject_type": null,
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 13:17:53",
+            "archived_at": "2025-06-14 13:19:32"
+        },
+        {
+            "id": "7",
+            "user_id": "1",
+            "role": "admin",
+            "action": "view_pengukuran",
+            "description": "Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2026",
+            "subject_type": "pengukuran_kinerja",
+            "subject_id": "5",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 13:17:53",
+            "archived_at": "2025-06-14 13:19:32"
+        },
+        {
+            "id": "8",
+            "user_id": "1",
+            "role": "admin",
+            "action": "update_tahun_status",
+            "description": "Menonaktifkan tahun anggaran 2026",
+            "subject_type": "tahun_anggaran",
+            "subject_id": "5",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 13:17:53",
+            "archived_at": "2025-06-14 13:19:32"
+        },
+        {
+            "id": "9",
+            "user_id": "1",
+            "role": "admin",
+            "action": "update_tahun_status",
+            "description": "Mengaktifkan tahun anggaran 2026",
+            "subject_type": "tahun_anggaran",
+            "subject_id": "5",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 13:17:53",
+            "archived_at": "2025-06-14 13:19:32"
+        },
+        {
+            "id": "10",
+            "user_id": "1",
+            "role": "admin",
+            "action": "toggle_triwulan",
+            "description": "Mengubah status TW 3 menjadi TERKUNCI",
+            "subject_type": "tw_settings",
+            "subject_id": "7",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 13:17:53",
+            "archived_at": "2025-06-14 13:19:32"
+        },
+        {
+            "id": "11",
+            "user_id": "1",
+            "role": "admin",
+            "action": "RESTORED_LOGIN",
+            "description": "Login ke sistem",
+            "subject_type": null,
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 13:17:53",
+            "archived_at": "2026-01-14 13:19:38"
+        },
+        {
+            "id": "12",
+            "user_id": "1",
+            "role": "admin",
+            "action": "RESTORED_VIEW_PENGUKURAN",
+            "description": "Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2026",
+            "subject_type": "pengukuran_kinerja",
+            "subject_id": "5",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 13:17:53",
+            "archived_at": "2026-01-14 13:19:38"
+        },
+        {
+            "id": "13",
+            "user_id": "1",
+            "role": "admin",
+            "action": "RESTORED_UPDATE_TAHUN_STATUS",
+            "description": "Menonaktifkan tahun anggaran 2026",
+            "subject_type": "tahun_anggaran",
+            "subject_id": "5",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 13:17:53",
+            "archived_at": "2026-01-14 13:19:38"
+        },
+        {
+            "id": "14",
+            "user_id": "1",
+            "role": "admin",
+            "action": "RESTORED_UPDATE_TAHUN_STATUS",
+            "description": "Mengaktifkan tahun anggaran 2026",
+            "subject_type": "tahun_anggaran",
+            "subject_id": "5",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 13:17:53",
+            "archived_at": "2026-01-14 13:19:38"
+        },
+        {
+            "id": "15",
+            "user_id": "1",
+            "role": "admin",
+            "action": "RESTORED_TOGGLE_TRIWULAN",
+            "description": "Mengubah status TW 3 menjadi TERKUNCI",
+            "subject_type": "tw_settings",
+            "subject_id": "7",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 13:17:53",
+            "archived_at": "2026-01-14 13:19:38"
+        }
+    ]
+}

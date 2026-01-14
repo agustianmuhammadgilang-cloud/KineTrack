@@ -5,6 +5,7 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\ActivityLogArchiveModel;
 use App\Models\ActivityLogModel;
+use App\Models\ActivityLogsRestoreModel;
 
 class ActivityLogBackupController extends BaseController
 {
@@ -134,9 +135,6 @@ foreach ($logs as $log) {
 fclose($fp);
 // ======================
 
-$periodStart = $meta['period']['from'];
-$periodEnd   = $meta['period']['to'];
-
     // ======================
     // 🔥 LOG BACKUP ARSIP
 log_activity(
@@ -180,33 +178,26 @@ public function restore()
 
     foreach ($logs as $log) {
 
-        // Hindari bentrok PK
-        unset($log['id']);
+    unset($log['id']);
+    unset($log['archived_at']);
+    unset($log['updated_at']);
 
-        /**
-         * 🔥 FIX FK USER
-         * kalau user_id tidak ada → fallback ke SYSTEM (id=1)
-         */
-        if (!isset($log['user_id']) || !$this->userExists($log['user_id'])) {
-            $log['user_id'] = 1; // SYSTEM
-        }
-
-        /**
-         * =========================
-         * 🔥 TANDAI HASIL RESTORE
-         * =========================
-         */
-        $log['is_restored']          = 1;
-        $log['restored_at']          = date('Y-m-d H:i:s');
-        $log['restored_from_backup'] = $file;
-
-        /**
-         * (Logika lama tetap)
-         */
-        $log['action'] = 'RESTORED_' . strtoupper($log['action']);
-
-        $logModel->insert($log);
+    if (!isset($log['user_id']) || !$this->userExists($log['user_id'])) {
+        $log['user_id'] = 1;
     }
+
+    $log['action'] = strtoupper($log['action']);
+
+    // FLAG RESTORE
+    $log['is_restored'] = 1;
+    $log['restored_at'] = date('Y-m-d H:i:s');
+    $log['restored_from_backup'] = $file;
+
+    // dianggap lahir baru
+    $log['created_at'] = date('Y-m-d H:i:s');
+
+    $logModel->insert($log);
+}
 // ======================
     // ======================
     // 🔥 LOG RESTORE ARSIP

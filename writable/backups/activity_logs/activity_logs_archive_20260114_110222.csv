@@ -1,0 +1,6 @@
+﻿Tanggal;"User ID";Role;Aksi;Deskripsi;Subjek;IP;"User Agent"
+"14-10-2025 11:02";2;ATASAN;VIEW_DOKUMEN_ARSIP;"Melihat arsip dokumen kinerja";"dokumen #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 11:02";2;ATASAN;VIEW_DOKUMEN_ARSIP;"Melihat arsip dokumen kinerja";"dokumen #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 11:02";2;ATASAN;EXPORT_ARSIP_DOKUMEN;"Mengunduh arsip dokumen unit/bidang dalam bentuk PDF";"dokumen_arsip #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 11:02";4;STAFF;VIEW_DOKUMEN_ARSIP;"Melihat arsip dokumen kinerja";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 11:02";4;STAFF;EXPORT_ARSIP_DOKUMEN;"Mengunduh arsip dokumen unit/bidang dalam bentuk PDF";"dokumen_arsip #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"

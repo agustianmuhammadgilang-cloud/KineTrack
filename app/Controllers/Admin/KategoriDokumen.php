@@ -141,7 +141,45 @@ class KategoriDokumen extends BaseController
         ->with('success', 'Status kategori diperbarui');
 }
 
+public function export()
+{
+    $kategoriModel = new \App\Models\KategoriDokumenModel();
+    $dokumenModel  = new \App\Models\DokumenModel();
 
+    $kategoriList = $kategoriModel->findAll();
 
-    
+    $statusMap = [
+        'resmi'   => 'RESMI',
+        'pending' => 'PENDING',
+        'reject'  => 'REJECT',
+    ];
+
+    $data = [
+        'kategoriList' => $kategoriList,
+        'statusMap'    => $statusMap,
+        'dokumenModel' => $dokumenModel,
+    ];
+
+    $html = view('admin/kategori/export', $data);
+
+    $dompdf = new \Dompdf\Dompdf();
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    $filename = 'export-dokumen-' . date('Ymd_His') . '.pdf';
+    /**
+     * =====================================================
+     * 🔥 ACTIVITY LOG — EXPORT DOKUMEN
+     * =====================================================
+     * Human-readable, audit-ready, scalable
+     */
+    log_activity(
+        'EXPORT_DOKUMEN_PDF',
+        'Admin mengekspor daftar dokumen ke file PDF melalui menu kategori dokumen.',
+        'dokumen'
+    );
+    return $dompdf->stream($filename, ['Attachment' => true]);
+}
+
 }

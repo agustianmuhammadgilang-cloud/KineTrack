@@ -1,0 +1,6 @@
+﻿Tanggal;"User ID";Role;Aksi;Deskripsi;Subjek;IP;"User Agent"
+"14-10-2025 13:17";1;ADMIN;LOGIN;"Login ke sistem";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 13:17";1;ADMIN;VIEW_PENGUKURAN;"Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2026";"pengukuran_kinerja #5";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 13:17";1;ADMIN;UPDATE_TAHUN_STATUS;"Menonaktifkan tahun anggaran 2026";"tahun_anggaran #5";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 13:17";1;ADMIN;UPDATE_TAHUN_STATUS;"Mengaktifkan tahun anggaran 2026";"tahun_anggaran #5";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 13:17";1;ADMIN;TOGGLE_TRIWULAN;"Mengubah status TW 3 menjadi TERKUNCI";"tw_settings #7";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"

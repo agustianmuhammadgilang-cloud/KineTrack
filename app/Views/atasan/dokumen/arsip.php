@@ -4,151 +4,193 @@
 <style>
     :root {
         --polban-blue: #003366;
-        --polban-blue-light: #004a94;
-        --polban-gold: #D4AF37; /* Gold yang lebih modern/deep daripada kuning terang */
-        --polban-gold-soft: #FCF8E3;
-        --slate-soft: #f8fafc;
-        --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        --polban-gold: #D4AF37;
+        --slate-50: #f8fafc;
+        --slate-100: #f1f5f9;
+        --slate-200: #e2e8f0;
+        --slate-600: #475569;
+        --transition: all 0.3s ease;
+    }
+
+    /* Card Container */
+    .report-card {
+        background: white;
+        border-radius: 16px;
+        border: 1px solid var(--slate-200);
+        box-shadow: 0 4px 20px -5px rgba(0, 51, 102, 0.05);
+        overflow: hidden;
+        margin-top: 1.5rem;
     }
 
     /* Table Styling */
-    .table-container {
-        border-radius: 20px;
-        overflow: hidden;
-        border: 1px solid #eef2f6;
-        background: white;
-        box-shadow: 0 10px 25px -5px rgba(0, 51, 102, 0.04);
+    .table-report {
+        width: 100%;
+        border-collapse: collapse;
     }
 
-    .table-header-polban {
+    .table-report thead th {
         background-color: var(--polban-blue);
+        color: white;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 700;
+        padding: 15px;
         border-bottom: 3px solid var(--polban-gold);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
     }
 
-    /* Hover Effect: Konsisten & Halus */
+    .table-report tbody td {
+        padding: 14px 15px;
+        font-size: 13px;
+        color: var(--slate-600);
+        border-bottom: 1px solid var(--slate-200);
+        border-right: 1px solid var(--slate-100);
+        line-height: 1.5;
+    }
+
+    .table-report tbody td:last-child, 
+    .table-report thead th:last-child {
+        border-right: none;
+    }
+
     .row-hover {
-        transition: var(--transition-smooth);
+        transition: var(--transition);
     }
 
     .row-hover:hover {
-        background-color: var(--slate-soft);
-        /* Inset shadow agar konten tidak bergeser */
-        box-shadow: inset 4px 0 0 0 var(--polban-blue);
+        background-color: #fbfcfe;
     }
 
-    /* Ikon Dokumen Minimalis */
-    .doc-preview {
-        transition: var(--transition-smooth);
-        border: 1.5px solid #e2e8f0;
-    }
-    
-    .row-hover:hover .doc-preview {
-        border-color: var(--polban-blue);
-        background-color: white;
-        transform: translateY(-2px);
-    }
-
-    /* Badge Modern */
+    /* Status Badge */
     .badge-ekinerja {
         background-color: #f0fdf4;
         color: #15803d;
         border: 1px solid #dcfce7;
-        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 99px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
     }
 
-    /* Button Download: Tidak terlalu mencolok tapi tetap terlihat */
-    .btn-download-polban {
-        transition: var(--transition-smooth);
-        background-color: white;
-        color: var(--polban-blue);
-        border: 1.5px solid var(--polban-blue);
-    }
-    
-    .btn-download-polban:hover {
+    /* Button Styling */
+    .btn-pdf {
         background-color: var(--polban-blue);
         color: white;
-        box-shadow: 0 4px 12px rgba(0, 51, 102, 0.15);
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-pdf:hover {
+        background-color: #004a94;
+        box-shadow: 0 4px 12px rgba(0, 51, 102, 0.2);
+    }
+
+    .btn-view-soft {
+        background-color: #f0f7ff;
+        color: #003366;
+        border: 1px solid #e0eefe;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-view-soft:hover {
+        background-color: #e0eefe;
+        transform: translateY(-1px);
     }
 </style>
 
-<div class="px-4 py-8 max-w-7xl mx-auto">
-    <di class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-        <div class="flex items-center gap-5">
-            <div class="w-16 h-16 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center shadow-sm">
-                <svg class="w-9 h-9 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<div class="p-6 max-w-[1600px] mx-auto">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-2">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center shadow-sm">
+                <svg class="w-7 h-7 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
             </div>
             <div>
-                <h4 class="text-2xl font-black text-blue-900 tracking-tight">
-                    E-Kinerja <span class="text-slate-400 font-light">|</span> <span class="text-yellow-600">Arsip</span>
-                </h4>
-                <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-[0.2em] mt-1">
-                    Politeknik Negeri Bandung
-                </p>
+                <h2 class="text-2xl font-black text-slate-800 leading-none">Arsip Dokumen Kinerja</h2>
+                <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1">Laporan Terverifikasi • Politeknik Negeri Bandung</p>
             </div>
         </div>
 
-        
+        <a href="<?= base_url('atasan/dokumen/export_pdf') ?>" class="btn-pdf">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Export PDF Arsip
+        </a>
     </div>
 
-    <div class="table-container">
+    <div class="report-card">
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="table-report">
                 <thead>
-                    <tr class="table-header-polban text-white uppercase text-[11px] font-bold tracking-widest">
-                        <th class="p-5">Dokumen Kinerja</th>
-                        <th class="p-5">Unit Asal</th>
-                        <th class="p-5">Tgl Terbit</th>
-                        <th class="p-5 text-center">Status</th>
-                        <th class="p-5 text-right">Aksi</th>
+                    <tr>
+                        <th style="width: 40%;">Judul Dokumen</th>
+                        <th style="width: 15%;">Unit Asal</th>
+                        <th style="width: 15%;">Tgl Terbit</th>
+                        <th style="width: 15%;">Status</th>
+                        <th style="width: 15%;">Aksi</th>
                     </tr>
                 </thead>
-
-                <tbody class="text-sm text-slate-600 divide-y divide-slate-100">
+                <tbody>
                     <?php if (!empty($dokumen)): ?>
                         <?php foreach ($dokumen as $d): ?>
-                        <tr class="row-hover group">
+                        <tr class="row-hover">
                             <td class="p-5">
                                 <div class="flex items-center gap-4">
-                                    <div class="doc-preview w-10 h-12 bg-white rounded-lg flex flex-col items-center justify-center relative shrink-0">
-                                        <div class="absolute top-0 w-full h-1 bg-blue-900/10"></div>
-                                        <svg class="w-6 h-6 text-slate-300 group-hover:text-blue-900 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div class="w-10 h-10 bg-slate-50 rounded-lg flex items-center justify-center border border-slate-200 text-slate-400 group-hover:text-blue-900 transition-colors shrink-0">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                         </svg>
                                     </div>
                                     <div>
-                                        <span class="block font-bold text-slate-800 group-hover:text-blue-900 transition-colors leading-tight mb-1"><?= esc($d['judul']) ?></span>
-                                        <span class="text-[10px] text-slate-400 font-bold tracking-wider">Ref: #<?= esc($d['id'] ?? 'ARK') ?></span>
+                                        <span class="block font-bold text-slate-700 leading-tight mb-0.5"><?= esc($d['judul']) ?></span>
+                                        <span class="text-[10px] text-slate-400 font-bold tracking-wider">REF: #<?= esc($d['id'] ?? 'ARK') ?></span>
                                     </div>
                                 </div>
                             </td>
-                            <td class="p-5">
-                                <span class="text-xs font-semibold text-slate-500 italic">Unit <?= esc($d['unit_asal_id']) ?></span>
-                            </td>
-                            <td class="p-5">
-                                <span class="text-slate-400 text-xs font-medium"><?= date('d/m/Y', strtotime($d['updated_at'])) ?></span>
-                            </td>
-                            <td class="p-5 text-center">
-                                <span class="px-3 py-1 rounded-full text-[10px] badge-ekinerja uppercase tracking-tighter">
-                                    Verified
+                            <td class="text-center">
+                                <span class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-[11px] font-bold uppercase tracking-tight">
+                                    Unit <?= esc($d['unit_asal_id']) ?>
                                 </span>
                             </td>
-                            <td class="p-5 text-right">
-                                <a href="<?= base_url('uploads/dokumen/'.$d['file_path']) ?>" target="_blank"
-                                   class="btn-download-polban inline-flex items-center gap-2 px-5 py-2 rounded-xl text-[11px] font-bold uppercase tracking-tight active:scale-95">
+                            <td class="text-center font-medium text-slate-500">
+                                <?= date('d/m/Y', strtotime($d['updated_at'])) ?>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge-ekinerja">Verified</span>
+                            </td>
+                            <td class="text-center">
+                                <a href="<?= base_url('uploads/dokumen/'.$d['file_path']) ?>" target="_blank" class="btn-view-soft">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
-                                    Lihat Dokumen
+                                    Lihat Arsip
                                 </a>
                             </td>
                         </tr>
                         <?php endforeach ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="5" class="p-20 text-center text-slate-300 font-medium">
-                                Belum ada arsip dokumen tersedia.
+                            <td colspan="5" class="p-20 text-center text-slate-300 font-medium italic">
+                                Belum ada arsip dokumen tersedia untuk saat ini.
                             </td>
                         </tr>
                     <?php endif; ?>
@@ -158,16 +200,22 @@
     </div>
 
     <div class="mt-8">
-        <div class="p-6 rounded-3xl bg-slate-50 border border-slate-100 flex flex-col md:flex-row items-center gap-4 justify-between">
+        <div class="p-6 rounded-3xl bg-slate-50 border border-slate-100 flex flex-col md:flex-row items-center gap-6 justify-between">
             <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-blue-900 shadow-sm">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-blue-900 shadow-sm border border-slate-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04M12 2.944V22m0-19.056c1.11 0 2.129.454 2.872 1.186m-5.744 0a4.052 4.052 0 012.872-1.186" />
+                    </svg>
                 </div>
-                <p class="text-xs text-slate-500 font-medium">
-                    Seluruh dokumen di atas telah melewati proses verifikasi sistem <span class="text-blue-900 font-bold">E-Kinerja Polban</span>.
-                </p>
+                <div>
+                    <p class="text-xs text-slate-600 font-bold">Keamanan Data Terjamin</p>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Seluruh arsip ini telah divalidasi dan tersinkronisasi dengan sistem pusat E-Kinerja Polban.</p>
+                </div>
             </div>
-            <span class="text-[10px] font-bold text-slate-300 uppercase tracking-[0.3em]">Official Archive System</span>
+            <div class="flex gap-2">
+                <span class="text-[10px] font-bold text-slate-300 uppercase tracking-[0.3em]">Official Access</span>
+                <span class="text-[10px] font-bold text-blue-900/30 uppercase tracking-[0.3em]">Atasan Tier</span>
+            </div>
         </div>
     </div>
 </div>

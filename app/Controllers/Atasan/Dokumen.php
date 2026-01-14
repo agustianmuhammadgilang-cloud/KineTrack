@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\DokumenModel;
 use App\Models\BidangModel;
 use App\Models\NotificationModel;
+use Dompdf\Dompdf;
 // Controller untuk mengelola dokumen oleh atasan (kaprodi/kajur)
 class Dokumen extends BaseController
 {
@@ -450,6 +451,44 @@ public function public()
 );
 
     return view('atasan/dokumen/public', $data);
+}
+
+ public function exportArsipPdf()
+{
+    $userId = session()->get('user_id');
+    $bidangId = session()->get('bidang_id'); // gunakan bidan_id, bukan unit_id
+    if (!$userId || !$bidangId) {
+        return redirect()->to('/login');
+    }
+
+    // Ambil semua dokumen arsip unit atasan
+    $dokumen = $this->dokumenModel->getDokumenUnit($bidangId);
+
+    // Render view menjadi HTML
+    $html = view('atasan/dokumen/export_pdf', ['dokumen' => $dokumen]);
+
+    // Inisialisasi Dompdf
+    $dompdf = new Dompdf();
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    // Nama file PDF
+    $filename = 'arsip_dokumen_atasan_' . date('Ymd_His') . '.pdf';
+     /**
+     * ======================================
+     * LOG AKTIVITAS (EXPORT ARSIP)
+     * ======================================
+     */
+    log_activity(
+        'EXPORT_ARSIP_DOKUMEN',
+        'Mengunduh arsip dokumen unit/bidang dalam bentuk PDF',
+        'dokumen_arsip',
+        null
+    );
+
+    // Download PDF
+    return $dompdf->stream($filename, ['Attachment' => true]);
 }
 
 

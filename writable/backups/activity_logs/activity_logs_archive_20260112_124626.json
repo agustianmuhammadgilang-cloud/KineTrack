@@ -1,0 +1,144 @@
+{
+    "meta": {
+        "type": "AUTO_ARCHIVE_BACKUP",
+        "total_records": 10,
+        "period": {
+            "from": "2025-05-12",
+            "to": "2025-10-12"
+        },
+        "created_at": "2026-01-12 12:46:26",
+        "created_by": "SYSTEM"
+    },
+    "data": [
+        {
+            "id": "36",
+            "user_id": "1",
+            "role": "admin",
+            "action": "create_sasaran",
+            "description": "Menambahkan sasaran strategis: adalah",
+            "subject_type": "sasaran",
+            "subject_id": "1",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36 Edg\/143.0.0.0",
+            "created_at": "2025-05-12 12:46:23",
+            "archived_at": "2025-05-12 12:46:23"
+        },
+        {
+            "id": "37",
+            "user_id": "1",
+            "role": "admin",
+            "action": "create_indikator",
+            "description": "Menambahkan indikator: ada",
+            "subject_type": "indikator_kinerja",
+            "subject_id": "1",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36 Edg\/143.0.0.0",
+            "created_at": "2025-05-12 12:46:23",
+            "archived_at": "2025-05-12 12:46:23"
+        },
+        {
+            "id": "38",
+            "user_id": "1",
+            "role": "admin",
+            "action": "assign_pic",
+            "description": "Menetapkan PIC indikator kepada 1 pegawai",
+            "subject_type": "indikator",
+            "subject_id": "1",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36 Edg\/143.0.0.0",
+            "created_at": "2025-05-12 12:46:23",
+            "archived_at": "2025-05-12 12:46:23"
+        },
+        {
+            "id": "39",
+            "user_id": "1",
+            "role": "admin",
+            "action": "assign_pic",
+            "description": "Menetapkan PIC indikator kepada 2 pegawai",
+            "subject_type": "indikator",
+            "subject_id": "1",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36 Edg\/143.0.0.0",
+            "created_at": "2025-05-12 12:46:23",
+            "archived_at": "2025-05-12 12:46:23"
+        },
+        {
+            "id": "40",
+            "user_id": "2",
+            "role": "atasan",
+            "action": "view_task_list",
+            "description": "Melihat daftar tugas pengukuran kinerja (mode atasan)",
+            "subject_type": "task_pengukuran",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-05-12 12:46:23",
+            "archived_at": "2025-05-12 12:46:23"
+        },
+        {
+            "id": "41",
+            "user_id": "1",
+            "role": "admin",
+            "action": "RESTORED_CREATE_SASARAN",
+            "description": "Menambahkan sasaran strategis: adalah",
+            "subject_type": "sasaran",
+            "subject_id": "1",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36 Edg\/143.0.0.0",
+            "created_at": "2025-10-12 12:45:12",
+            "archived_at": "2026-01-12 12:46:26"
+        },
+        {
+            "id": "42",
+            "user_id": "1",
+            "role": "admin",
+            "action": "RESTORED_CREATE_INDIKATOR",
+            "description": "Menambahkan indikator: ada",
+            "subject_type": "indikator_kinerja",
+            "subject_id": "1",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36 Edg\/143.0.0.0",
+            "created_at": "2025-10-12 12:45:12",
+            "archived_at": "2026-01-12 12:46:26"
+        },
+        {
+            "id": "43",
+            "user_id": "1",
+            "role": "admin",
+            "action": "RESTORED_ASSIGN_PIC",
+            "description": "Menetapkan PIC indikator kepada 1 pegawai",
+            "subject_type": "indikator",
+            "subject_id": "1",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36 Edg\/143.0.0.0",
+            "created_at": "2025-10-12 12:45:12",
+            "archived_at": "2026-01-12 12:46:26"
+        },
+        {
+            "id": "44",
+            "user_id": "1",
+            "role": "admin",
+            "action": "RESTORED_ASSIGN_PIC",
+            "description": "Menetapkan PIC indikator kepada 2 pegawai",
+            "subject_type": "indikator",
+            "subject_id": "1",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36 Edg\/143.0.0.0",
+            "created_at": "2025-10-12 12:45:12",
+            "archived_at": "2026-01-12 12:46:26"
+        },
+        {
+            "id": "45",
+            "user_id": "2",
+            "role": "atasan",
+            "action": "RESTORED_VIEW_TASK_LIST",
+            "description": "Melihat daftar tugas pengukuran kinerja (mode atasan)",
+            "subject_type": "task_pengukuran",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-12 12:45:12",
+            "archived_at": "2026-01-12 12:46:26"
+        }
+    ]
+}

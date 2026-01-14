@@ -1,0 +1,6 @@
+﻿Tanggal;"User ID";Role;Aksi;Deskripsi;Subjek;IP;"User Agent"
+"14-10-2025 13:26";1;ADMIN;TOGGLE_TRIWULAN;"Mengubah status TW 2 menjadi TERKUNCI";"tw_settings #6";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 13:26";1;ADMIN;TOGGLE_TRIWULAN;"Mengubah status TW 4 menjadi TERKUNCI";"tw_settings #8";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 13:26";4;STAFF;VIEW_DOKUMEN_ARSIP;"Melihat arsip dokumen kinerja";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 13:26";4;STAFF;VIEW_DOKUMEN_UNIT;"Melihat dokumen unit kerja";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 13:26";4;STAFF;VIEW_DOKUMEN_PUBLIC;"Melihat dokumen publik";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"

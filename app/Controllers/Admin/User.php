@@ -6,6 +6,9 @@ use App\Controllers\BaseController;
 use App\Models\UserModel;
 use App\Models\JabatanModel;
 use App\Models\BidangModel;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 // Controller untuk mengelola user
 class User extends BaseController
 {
@@ -26,6 +29,59 @@ class User extends BaseController
 
         return view('admin/users/index', $data);
     }
+
+    public function exportPdf()
+{
+    if (session()->get('role') !== 'admin') {
+        return redirect()->back();
+    }
+
+    $users = $this->userModel
+        ->select('users.*, jabatan.nama_jabatan, bidang.nama_bidang')
+        ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
+        ->join('bidang', 'bidang.id = users.bidang_id', 'left')
+        ->orderBy('bidang.nama_bidang', 'ASC')
+        ->findAll();
+
+    // =========================
+    // GROUP SESUAI TAMPILAN
+    // =========================
+    $groupedUsers = [];
+
+    foreach ($users as $u) {
+        $unit = $u['nama_bidang'] ?? 'Tanpa Unit';
+        $groupedUsers[$unit][] = $u;
+    }
+
+    $html = view('admin/users/export_pdf', [
+        'groupedUsers' => $groupedUsers
+    ]);
+
+    $options = new Options();
+    $options->set('defaultFont', 'Helvetica');
+
+    $dompdf = new Dompdf($options);
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    // ======================
+// 🔥 LOG AKTIVITAS EXPORT USER
+// ======================
+log_activity(
+    'EXPORT_USERS_PDF',
+    'Mengunduh daftar pengguna dalam format PDF (' .
+    count($users) . ' data, dikelompokkan per bidang).',
+    'users'
+);
+
+
+    $dompdf->stream(
+        'data_user_' . date('Ymd_His') . '.pdf',
+        ['Attachment' => true]
+    );
+}
+
 // Menampilkan form untuk menambahkan user baru
     public function create()
     {
