@@ -46,6 +46,7 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     $routes->get('users/edit/(:num)', 'Admin\User::edit/$1');
     $routes->post('users/update/(:num)', 'Admin\User::update/$1');
     $routes->get('users/delete/(:num)', 'Admin\User::delete/$1');
+    $routes->get('users/export-pdf', 'Admin\User::exportPdf');
     // Kelola Users
 
     // Kelola MASTER: TAHUN
@@ -73,7 +74,11 @@ $routes->group('admin', ['filter' => 'auth'], function($routes) {
     $routes->get('indikator/edit/(:num)', 'Admin\Indikator::edit/$1');
     $routes->post('indikator/update/(:num)', 'Admin\Indikator::update/$1');
     $routes->get('indikator/delete/(:num)', 'Admin\Indikator::delete/$1');
-    // Kelola MASTER: INDIKATOR
+    
+    // Halaman Report Perjanjian Kinerja Admin
+    $routes->get('perjanjian-kinerja', 'Admin\PerjanjianKinerja::index');
+    $routes->get('perjanjian-kinerja/export-pdf', 'Admin\PerjanjianKinerja::exportPdf');
+
 
     // Kelola INPUT PENGUKURAN
     $routes->get('pengukuran', 'Admin\Pengukuran::index'); // pilih tahun & TW
@@ -295,6 +300,9 @@ $routes->group('staff', ['filter' => 'auth'], function ($routes) {
     // Arsip
     $routes->get('dokumen/arsip', 'Staff\Dokumen::arsip');
      $routes->get('dokumen/public', 'Staff\Dokumen::public');
+
+      // ✅ Tambahkan route export PDF di sini
+    $routes->get('dokumen/export_pdf', 'Staff\Dokumen::exportArsipPdf');
 });
 
 
@@ -336,6 +344,11 @@ $routes->group('atasan', ['filter' => 'auth'], function ($routes) {
     $routes->get('dokumen/public', 'Atasan\Dokumen::public');
     $routes->get('dokumen/arsip', 'Atasan\Dokumen::arsip');
 
+    // export PDF arsip dokumen
+    $routes->get('dokumen/export_pdf', 'Atasan\Dokumen::exportArsipPdf');
+
+    
+
     // =====================
     // ⬇️ TAMBAHAN HALAMAN BARU (DARI STAFF)
     // =====================
@@ -372,6 +385,16 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->post('kategori-dokumen/update/(:num)', 'Admin\KategoriDokumen::update/$1');
 
     $routes->get('kategori-dokumen/toggle/(:num)', 'Admin\KategoriDokumen::toggleStatus/$1');
+
+$routes->get('kategori-dokumen/export', 'Admin\KategoriDokumen::export');
+
+
+// =====================
+// PIC - EXPORT PDF
+// =====================
+$routes->get('pic/export_pdf', 'Admin\PicController::exportPdf');
+
+    
     // =====================
     // DOKUMEN
     // =====================

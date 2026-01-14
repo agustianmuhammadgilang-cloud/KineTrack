@@ -1,0 +1,79 @@
+{
+    "meta": {
+        "type": "AUTO_ARCHIVE_BACKUP",
+        "total_records": 5,
+        "period": {
+            "from": "2025-10-14",
+            "to": "2025-10-14"
+        },
+        "created_at": "2026-01-14 11:11:28",
+        "created_by": "SYSTEM"
+    },
+    "data": [
+        {
+            "id": "1",
+            "user_id": "1",
+            "role": "admin",
+            "action": "LOG_ARCHIVE_RESTORE",
+            "description": "Data log aktivitas berhasil direstore dari file backup activity_logs_archive_20260114_110222.json.",
+            "subject_type": "activity_logs",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 11:11:21",
+            "archived_at": "2026-01-14 11:11:28"
+        },
+        {
+            "id": "2",
+            "user_id": "1",
+            "role": "admin",
+            "action": "update_log_schedule",
+            "description": "Admin memperbarui jadwal log: arsip setelah 2 bulan, hapus setelah 6 bulan, backup otomatis nonaktif",
+            "subject_type": "activity_log_schedule",
+            "subject_id": "1",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 11:11:21",
+            "archived_at": "2026-01-14 11:11:28"
+        },
+        {
+            "id": "3",
+            "user_id": "1",
+            "role": "admin",
+            "action": "view_pengukuran",
+            "description": "Melihat output pengukuran kinerja Triwulan 1 Tahun Anggaran 2026",
+            "subject_type": "pengukuran_kinerja",
+            "subject_id": "5",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 11:11:21",
+            "archived_at": "2026-01-14 11:11:28"
+        },
+        {
+            "id": "4",
+            "user_id": "1",
+            "role": "admin",
+            "action": "EXPORT_USERS_PDF",
+            "description": "Mengunduh daftar pengguna dalam format PDF (5 data, dikelompokkan per bidang).",
+            "subject_type": "users",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 11:11:21",
+            "archived_at": "2026-01-14 11:11:28"
+        },
+        {
+            "id": "5",
+            "user_id": "1",
+            "role": "admin",
+            "action": "update_log_schedule",
+            "description": "Admin memperbarui jadwal log: arsip setelah 2 bulan, hapus setelah 6 bulan, backup otomatis aktif",
+            "subject_type": "activity_log_schedule",
+            "subject_id": "1",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 11:11:21",
+            "archived_at": "2026-01-14 11:11:28"
+        }
+    ]
+}

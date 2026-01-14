@@ -1,0 +1,6 @@
+﻿Tanggal;"User ID";Role;Aksi;Deskripsi;Subjek;IP;"User Agent"
+"12-10-2025 13:08";1;;LOG_SCHEDULE_ARCHIVE;"Penjadwalan otomatis mengarsipkan 4 log aktivitas lebih lama dari 2 bulan.";"activity_logs #-";CLI;"SYSTEM (CLI)"
+"12-10-2025 13:08";1;;LOG_SCHEDULE_AUTO_BACKUP;"Backup otomatis log arsip dibuat (8 data).";"activity_logs_archive #-";CLI;"SYSTEM (CLI)"
+"12-10-2025 13:08";1;;LOG_SCHEDULE_CLEANUP;"Penjadwalan otomatis membersihkan log arsip lebih lama dari 6 bulan.";"activity_logs_archive #-";CLI;"SYSTEM (CLI)"
+"12-10-2025 13:08";1;;LOG_SCHEDULE_RUN;"Siklus penjadwalan log aktivitas dijalankan oleh sistem.";"system #-";CLI;"SYSTEM (CLI)"
+"12-10-2025 13:08";1;;LOG_SCHEDULE_RUN;"Siklus penjadwalan log aktivitas dijalankan oleh sistem.";"system #-";CLI;"SYSTEM (CLI)"

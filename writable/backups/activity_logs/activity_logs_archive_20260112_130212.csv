@@ -1,0 +1,5 @@
+﻿Tanggal;"User ID";Role;Aksi;Deskripsi;Subjek;IP;"User Agent"
+"12-10-2025 13:02";2;ATASAN;LOGIN;"Login ke sistem";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-10-2025 13:02";2;ATASAN;VIEW_DOKUMEN_MASUK;"Melihat daftar dokumen masuk untuk direview";"dokumen #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-10-2025 13:02";2;ATASAN;VIEW_TASK_LIST;"Melihat daftar tugas pengukuran kinerja yang ditugaskan";"task_pengukuran #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-10-2025 13:02";1;ADMIN;UPDATE_LOG_SCHEDULE;"Admin menetapkan jadwal log pertama kali jadwal log: arsip setelah 2 bulan, hapus setelah 6 bulan, backup otomatis aktif";"activity_log_schedule #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"

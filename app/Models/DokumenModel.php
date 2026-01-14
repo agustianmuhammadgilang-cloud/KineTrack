@@ -192,4 +192,22 @@ class DokumenModel extends Model
             'catatan'          => $catatan
         ]);
     }
+
+    public function getArsipDenganKategori($userId)
+{
+    return $this->select(
+            'dokumen_kinerja.*, kategori_dokumen.nama_kategori'
+        )
+        ->join(
+            'kategori_dokumen',
+            'kategori_dokumen.id = dokumen_kinerja.kategori_id',
+            'left'
+        )
+        ->where('dokumen_kinerja.created_by', $userId)
+        ->where('dokumen_kinerja.status', 'archived')
+        ->orderBy('dokumen_kinerja.updated_at', 'DESC')
+        ->findAll();
+}
+
+
 }

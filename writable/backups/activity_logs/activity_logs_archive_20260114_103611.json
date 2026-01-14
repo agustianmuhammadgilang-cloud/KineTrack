@@ -1,0 +1,79 @@
+{
+    "meta": {
+        "type": "AUTO_ARCHIVE_BACKUP",
+        "total_records": 5,
+        "period": {
+            "from": "2025-10-14",
+            "to": "2025-10-14"
+        },
+        "created_at": "2026-01-14 10:36:11",
+        "created_by": "SYSTEM"
+    },
+    "data": [
+        {
+            "id": "6",
+            "user_id": "1",
+            "role": "admin",
+            "action": "EXPORT_USERS_PDF",
+            "description": "Mengunduh daftar pengguna dalam format PDF (5 data, dikelompokkan per bidang).",
+            "subject_type": "users",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 10:36:08",
+            "archived_at": "2026-01-14 10:36:11"
+        },
+        {
+            "id": "7",
+            "user_id": "1",
+            "role": "admin",
+            "action": "EXPORT_PIC_PDF",
+            "description": "Admin mengekspor laporan PIC indikator kinerja lintas unit dan jabatan ke dalam file PDF.",
+            "subject_type": "pic_indikator",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 10:36:08",
+            "archived_at": "2026-01-14 10:36:11"
+        },
+        {
+            "id": "8",
+            "user_id": "1",
+            "role": "admin",
+            "action": "EXPORT_PERJANJIAN_KINERJA",
+            "description": "Admin mengekspor dokumen Perjanjian Kinerja untuk tahun 2026 dalam format PDF.",
+            "subject_type": "perjanjian_kinerja",
+            "subject_id": "5",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 10:36:08",
+            "archived_at": "2026-01-14 10:36:11"
+        },
+        {
+            "id": "9",
+            "user_id": "4",
+            "role": "staff",
+            "action": "view_dokumen_arsip",
+            "description": "Melihat arsip dokumen kinerja",
+            "subject_type": null,
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 10:36:08",
+            "archived_at": "2026-01-14 10:36:11"
+        },
+        {
+            "id": "10",
+            "user_id": "1",
+            "role": "admin",
+            "action": "EXPORT_DOKUMEN_PDF",
+            "description": "Admin mengekspor daftar dokumen ke file PDF melalui menu kategori dokumen.",
+            "subject_type": "dokumen",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 10:36:08",
+            "archived_at": "2026-01-14 10:36:11"
+        }
+    ]
+}

@@ -9,19 +9,35 @@
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div class="py-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div class="animate-fade-in-down">
-                <nav class="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">
-                    <span class="hover:text-[#1D2F83] cursor-pointer transition-colors">Dashboard</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
-                    <span class="text-[#1D2F83]">Kategori Dokumen</span>
-                </nav>
-                <h1 class="text-4xl font-black text-[#1D2F83] tracking-tight">
-                    Master <span class="text-[#F58025]">Kategori</span>
-                </h1>
-                <p class="text-gray-500 mt-1 font-medium italic">Manajemen repositori dokumen kinerja POLBAN.</p>
-            </div>
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        
+    <div class="py-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="animate-fade-in-down">
+            <nav class="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">
+                <span class="hover:text-[#1D2F83] cursor-pointer transition-colors">Dashboard</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+                </svg>
+                <span class="text-[#1D2F83]">Kategori Dokumen</span>
+            </nav>
+            <h1 class="text-4xl font-black text-[#1D2F83] tracking-tight">
+                Master <span class="text-[#F58025]">Kategori</span>
+            </h1>
+            <p class="text-gray-500 mt-1 font-medium italic">Manajemen repositori dokumen kinerja POLBAN.</p>
+        </div>
+        
+        <div class="flex gap-3">
+            <!-- Tombol Export -->
+            <a href="<?= base_url('admin/kategori-dokumen/export') ?>"
+               class="group relative inline-flex items-center justify-center gap-3 bg-[#F58025] hover:bg-orange-600 text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-orange-100 transition-all hover:-translate-y-1 active:scale-95 overflow-hidden">
+                <div class="absolute inset-0 w-3 bg-white/10 skew-x-[-20deg] group-hover:left-full transition-all duration-700 -left-full"></div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+                </svg>
+                Export Dokumen
+            </a>
 
+            <!-- Tombol Buat Wadah -->
             <button onclick="document.getElementById('modal-create').showModal()"
                     class="group relative inline-flex items-center justify-center gap-3 bg-[#1D2F83] hover:bg-[#253a9e] text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-blue-100 transition-all hover:-translate-y-1 active:scale-95 overflow-hidden">
                 <div class="absolute inset-0 w-3 bg-white/10 skew-x-[-20deg] group-hover:left-full transition-all duration-700 -left-full"></div>
@@ -31,6 +47,8 @@
                 Buat Wadah Baru
             </button>
         </div>
+    </div>
+
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-white">
             <div class="bg-gradient-to-br from-[#1D2F83] to-[#2d46b8] p-6 rounded-3xl shadow-lg border-b-4 border-blue-900">

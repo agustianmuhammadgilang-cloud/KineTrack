@@ -1,0 +1,79 @@
+{
+    "meta": {
+        "type": "AUTO_ARCHIVE_BACKUP",
+        "total_records": 5,
+        "period": {
+            "from": "2025-09-14",
+            "to": "2025-09-14"
+        },
+        "created_at": "2026-01-14 15:15:26",
+        "created_by": "SYSTEM"
+    },
+    "data": [
+        {
+            "id": "6",
+            "user_id": "1",
+            "role": "",
+            "action": "LOG_SCHEDULE_RUN",
+            "description": "Siklus penjadwalan log aktivitas dijalankan oleh sistem.",
+            "subject_type": "system",
+            "subject_id": null,
+            "ip_address": "CLI",
+            "user_agent": "SYSTEM (CLI)",
+            "created_at": "2025-09-14 15:15:19",
+            "archived_at": "2026-01-14 15:15:26"
+        },
+        {
+            "id": "7",
+            "user_id": "1",
+            "role": "",
+            "action": "LOG_SCHEDULE_ARCHIVE",
+            "description": "Penjadwalan otomatis mengarsipkan 5 log aktivitas lebih lama dari 2 bulan.",
+            "subject_type": "activity_logs",
+            "subject_id": null,
+            "ip_address": "CLI",
+            "user_agent": "SYSTEM (CLI)",
+            "created_at": "2025-09-14 15:15:19",
+            "archived_at": "2026-01-14 15:15:26"
+        },
+        {
+            "id": "8",
+            "user_id": "1",
+            "role": "",
+            "action": "LOG_SCHEDULE_AUTO_BACKUP",
+            "description": "Backup otomatis log arsip dibuat (5 data).",
+            "subject_type": "activity_logs_archive",
+            "subject_id": null,
+            "ip_address": "CLI",
+            "user_agent": "SYSTEM (CLI)",
+            "created_at": "2025-09-14 15:15:19",
+            "archived_at": "2026-01-14 15:15:26"
+        },
+        {
+            "id": "9",
+            "user_id": "1",
+            "role": "",
+            "action": "LOG_SCHEDULE_RUN",
+            "description": "Siklus penjadwalan log aktivitas dijalankan oleh sistem.",
+            "subject_type": "system",
+            "subject_id": null,
+            "ip_address": "CLI",
+            "user_agent": "SYSTEM (CLI)",
+            "created_at": "2025-09-14 15:15:19",
+            "archived_at": "2026-01-14 15:15:26"
+        },
+        {
+            "id": "10",
+            "user_id": "1",
+            "role": "admin",
+            "action": "LOG_ARCHIVE_RESTORE",
+            "description": "Data log aktivitas berhasil direstore dari file backup activity_logs_archive_20260114_134133.json.",
+            "subject_type": "activity_logs",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-09-14 15:15:19",
+            "archived_at": "2026-01-14 15:15:26"
+        }
+    ]
+}

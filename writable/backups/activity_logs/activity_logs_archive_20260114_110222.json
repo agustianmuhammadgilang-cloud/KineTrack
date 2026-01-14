@@ -1,0 +1,79 @@
+{
+    "meta": {
+        "type": "AUTO_ARCHIVE_BACKUP",
+        "total_records": 5,
+        "period": {
+            "from": "2025-10-14",
+            "to": "2025-10-14"
+        },
+        "created_at": "2026-01-14 11:02:22",
+        "created_by": "SYSTEM"
+    },
+    "data": [
+        {
+            "id": "1",
+            "user_id": "2",
+            "role": "atasan",
+            "action": "view_dokumen_arsip",
+            "description": "Melihat arsip dokumen kinerja",
+            "subject_type": "dokumen",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 11:02:12",
+            "archived_at": "2026-01-14 11:02:22"
+        },
+        {
+            "id": "2",
+            "user_id": "2",
+            "role": "atasan",
+            "action": "view_dokumen_arsip",
+            "description": "Melihat arsip dokumen kinerja",
+            "subject_type": "dokumen",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 11:02:12",
+            "archived_at": "2026-01-14 11:02:22"
+        },
+        {
+            "id": "3",
+            "user_id": "2",
+            "role": "atasan",
+            "action": "EXPORT_ARSIP_DOKUMEN",
+            "description": "Mengunduh arsip dokumen unit\/bidang dalam bentuk PDF",
+            "subject_type": "dokumen_arsip",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 11:02:12",
+            "archived_at": "2026-01-14 11:02:22"
+        },
+        {
+            "id": "4",
+            "user_id": "4",
+            "role": "staff",
+            "action": "view_dokumen_arsip",
+            "description": "Melihat arsip dokumen kinerja",
+            "subject_type": null,
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 11:02:12",
+            "archived_at": "2026-01-14 11:02:22"
+        },
+        {
+            "id": "5",
+            "user_id": "4",
+            "role": "staff",
+            "action": "EXPORT_ARSIP_DOKUMEN",
+            "description": "Mengunduh arsip dokumen unit\/bidang dalam bentuk PDF",
+            "subject_type": "dokumen_arsip",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-14 11:02:12",
+            "archived_at": "2026-01-14 11:02:22"
+        }
+    ]
+}

@@ -1,0 +1,66 @@
+{
+    "meta": {
+        "type": "AUTO_ARCHIVE_BACKUP",
+        "total_records": 4,
+        "period": {
+            "from": "2025-10-12",
+            "to": "2025-10-12"
+        },
+        "created_at": "2026-01-12 13:02:12",
+        "created_by": "SYSTEM"
+    },
+    "data": [
+        {
+            "id": "1",
+            "user_id": "2",
+            "role": "atasan",
+            "action": "login",
+            "description": "Login ke sistem",
+            "subject_type": null,
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-12 13:02:01",
+            "archived_at": "2026-01-12 13:02:12"
+        },
+        {
+            "id": "2",
+            "user_id": "2",
+            "role": "atasan",
+            "action": "view_dokumen_masuk",
+            "description": "Melihat daftar dokumen masuk untuk direview",
+            "subject_type": "dokumen",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-12 13:02:01",
+            "archived_at": "2026-01-12 13:02:12"
+        },
+        {
+            "id": "3",
+            "user_id": "2",
+            "role": "atasan",
+            "action": "view_task_list",
+            "description": "Melihat daftar tugas pengukuran kinerja yang ditugaskan",
+            "subject_type": "task_pengukuran",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-12 13:02:01",
+            "archived_at": "2026-01-12 13:02:12"
+        },
+        {
+            "id": "4",
+            "user_id": "1",
+            "role": "admin",
+            "action": "update_log_schedule",
+            "description": "Admin menetapkan jadwal log pertama kali jadwal log: arsip setelah 2 bulan, hapus setelah 6 bulan, backup otomatis aktif",
+            "subject_type": "activity_log_schedule",
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-12 13:02:01",
+            "archived_at": "2026-01-12 13:02:12"
+        }
+    ]
+}

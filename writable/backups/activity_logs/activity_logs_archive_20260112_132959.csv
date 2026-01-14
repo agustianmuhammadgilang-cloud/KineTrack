@@ -1,0 +1,6 @@
+﻿Tanggal;"Nama User";Role;Aksi;Deskripsi;Subjek;"IP Address";"User Agent"
+"12-10-2025 13:29";Administrator;ADMIN;LOG_ARCHIVE_AUDIT_DOWNLOAD;"Admin mengunduh file audit log arsip: activity_logs_archive_20260112_130855.csv";"activity_logs_archive #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-10-2025 13:29";Administrator;;LOG_SCHEDULE_CLEANUP;"Penjadwalan otomatis membersihkan log arsip lebih lama dari 6 bulan.";"activity_logs_archive #-";CLI;"SYSTEM (CLI)"
+"12-10-2025 13:29";Administrator;;LOG_SCHEDULE_RUN;"Siklus penjadwalan log aktivitas dijalankan oleh sistem.";"system #-";CLI;"SYSTEM (CLI)"
+"12-10-2025 13:29";Administrator;ADMIN;LOGIN;"Login ke sistem";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-10-2025 13:29";Administrator;;LOG_SCHEDULE_ARCHIVE;"Penjadwalan otomatis mengarsipkan 5 log aktivitas lebih lama dari 2 bulan.";"activity_logs #-";CLI;"SYSTEM (CLI)"

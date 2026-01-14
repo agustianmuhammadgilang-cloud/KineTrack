@@ -1,0 +1,6 @@
+﻿Tanggal;"User ID";Role;Aksi;Deskripsi;Subjek;IP;"User Agent"
+"14-10-2025 13:28";4;STAFF;VIEW_TASK_LIST;"Melihat daftar tugas pengukuran kinerja yang ditugaskan";"task_pengukuran #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 13:28";4;STAFF;OPEN_PENGUKURAN_FORM;"Membuka form pengukuran indikator Persentase lulusan S1 dan D4/D3/D2/D1 yang berhasil memiliki pekerjaan; melanjutkan studi; atau menjadi wiraswasta TW 1 Tahun 2026";"indikator_kinerja #1";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 13:28";4;STAFF;VIEW_DOKUMEN_ARSIP;"Melihat arsip dokumen kinerja";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 13:28";1;ADMIN;UPDATE_LOG_SCHEDULE;"Admin menetapkan jadwal log pertama kali jadwal log: arsip setelah 2 bulan, hapus setelah 6 bulan, backup otomatis aktif";"activity_log_schedule #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 13:28";1;;LOG_SCHEDULE_ARCHIVE;"Penjadwalan otomatis mengarsipkan 5 log aktivitas lebih lama dari 2 bulan.";"activity_logs #-";CLI;"SYSTEM (CLI)"
