@@ -8,6 +8,8 @@ use App\Models\JabatanModel;
 use App\Models\BidangModel;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 // Controller untuk mengelola user
 class User extends BaseController
@@ -237,4 +239,97 @@ log_activity(
 
         return $this->response->setJSON(['exists' => $exists ? true : false]);
     }
+
+    public function exportExcel()
+{
+    if (session()->get('role') !== 'admin') {
+        return redirect()->back();
+    }
+
+    $users = $this->userModel
+        ->select('users.*, jabatan.nama_jabatan, bidang.nama_bidang')
+        ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
+        ->join('bidang', 'bidang.id = users.bidang_id', 'left')
+        ->orderBy('bidang.nama_bidang', 'ASC')
+        ->orderBy('users.nama', 'ASC')
+        ->findAll();
+
+    // =========================
+    // GROUP PER BIDANG
+    // =========================
+    $groupedUsers = [];
+    foreach ($users as $u) {
+        $unit = $u['nama_bidang'] ?? 'Tanpa Unit Kerja';
+        $groupedUsers[$unit][] = $u;
+    }
+
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+    $sheet->setTitle('Data User');
+
+    $row = 1;
+
+    foreach ($groupedUsers as $unitName => $unitUsers) {
+
+        // 🔹 Judul Unit
+        $sheet->mergeCells("A{$row}:E{$row}");
+        $sheet->setCellValue("A{$row}", strtoupper($unitName));
+        $sheet->getStyle("A{$row}")->getFont()->setBold(true);
+        $sheet->getStyle("A{$row}")->getFill()
+            ->setFillType('solid')
+            ->getStartColor()->setARGB('FFE5E7EB');
+        $row++;
+
+        // 🔹 Header Tabel
+        $sheet->setCellValue("A{$row}", 'No');
+        $sheet->setCellValue("B{$row}", 'Nama');
+        $sheet->setCellValue("C{$row}", 'Email');
+        $sheet->setCellValue("D{$row}", 'Jabatan');
+        $sheet->setCellValue("E{$row}", 'Role');
+
+        $sheet->getStyle("A{$row}:E{$row}")->getFont()->setBold(true);
+        $row++;
+
+        // 🔹 Data User
+        $no = 1;
+        foreach ($unitUsers as $u) {
+            $sheet->setCellValue("A{$row}", $no++);
+            $sheet->setCellValue("B{$row}", $u['nama']);
+            $sheet->setCellValue("C{$row}", $u['email']);
+            $sheet->setCellValue("D{$row}", $u['nama_jabatan']);
+            $sheet->setCellValue("E{$row}", ucfirst($u['role']));
+            $row++;
+        }
+
+        $row += 2; // spasi antar unit
+    }
+
+    // Auto width
+    foreach (range('A', 'E') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+
+    // ======================
+    // LOG AKTIVITAS
+    // ======================
+    log_activity(
+        'EXPORT_USERS_EXCEL',
+        'Mengunduh daftar pengguna dalam format Excel (' . count($users) . ' data, dikelompokkan per bidang).',
+        'users'
+    );
+
+    // ======================
+    // DOWNLOAD
+    // ======================
+    $filename = 'data_user_' . date('Ymd_His') . '.xlsx';
+
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    header('Cache-Control: max-age=0');
+
+    $writer = new Xlsx($spreadsheet);
+    $writer->save('php://output');
+    exit;
+}
+
 }

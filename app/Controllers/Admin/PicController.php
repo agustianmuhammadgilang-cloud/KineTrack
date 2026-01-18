@@ -11,6 +11,12 @@ use App\Models\UserModel;
 use App\Models\NotificationModel;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+
 
 // Controller untuk mengelola PIC indikator kinerja
 class PicController extends BaseController
@@ -239,6 +245,133 @@ public function exportPdf()
 
 
     $dompdf->stream('Laporan_PIC_' . date('Ymd_His') . '.pdf', ['Attachment' => true]);
+}
+
+public function exportExcel()
+{
+    if (session()->get('role') !== 'admin') {
+        return redirect()->back();
+    }
+
+    // ======================
+    // AMBIL DATA (SAMA PERSIS DENGAN PDF)
+    // ======================
+    $pic_list = $this->picModel
+        ->select('
+            pic_indikator.id,
+            indikator_kinerja.nama_indikator,
+            users.nama AS nama_pic,
+            jabatan.nama_jabatan,
+            bidang.nama_bidang,
+            tahun_anggaran.tahun
+        ')
+        ->join('users', 'users.id = pic_indikator.user_id')
+        ->join('jabatan', 'jabatan.id = pic_indikator.jabatan_id', 'left')
+        ->join('bidang', 'bidang.id = pic_indikator.bidang_id', 'left')
+        ->join('indikator_kinerja', 'indikator_kinerja.id = pic_indikator.indikator_id')
+        ->join('tahun_anggaran', 'tahun_anggaran.id = pic_indikator.tahun_id')
+        ->orderBy('pic_indikator.id', 'ASC')
+        ->findAll();
+
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+    $sheet->setTitle('Manajemen PIC');
+
+    // ======================
+    // JUDUL
+    // ======================
+    $sheet->mergeCells('A1:D1');
+    $sheet->setCellValue('A1', 'LAPORAN MANAJEMEN PIC');
+    $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+    $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+    // ======================
+    // HEADER TABEL
+    // ======================
+    $headerRow = 3;
+
+    $headers = [
+        'A' => 'Informasi Indikator',
+        'B' => 'Penanggung Jawab (PIC)',
+        'C' => 'Bidang / Jabatan',
+        'D' => 'Tahun'
+    ];
+
+    foreach ($headers as $col => $text) {
+        $sheet->setCellValue($col . $headerRow, $text);
+    }
+
+    $sheet->getStyle("A{$headerRow}:D{$headerRow}")->applyFromArray([
+        'font' => [
+            'bold' => true,
+            'color' => ['rgb' => 'FFFFFF']
+        ],
+        'alignment' => [
+            'horizontal' => Alignment::HORIZONTAL_CENTER,
+            'vertical'   => Alignment::VERTICAL_CENTER
+        ],
+        'fill' => [
+            'fillType' => Fill::FILL_SOLID,
+            'startColor' => ['rgb' => '003366']
+        ],
+        'borders' => [
+            'allBorders' => [
+                'borderStyle' => Border::BORDER_THIN
+            ]
+        ]
+    ]);
+
+    // ======================
+    // ISI DATA
+    // ======================
+    $row = $headerRow + 1;
+
+    foreach ($pic_list as $p) {
+
+        $sheet->setCellValue("A{$row}", $p['nama_indikator']);
+        $sheet->setCellValue("B{$row}", $p['nama_pic']);
+        $sheet->setCellValue(
+            "C{$row}",
+            $p['nama_bidang'] . ' / ' . $p['nama_jabatan']
+        );
+        $sheet->setCellValue("D{$row}", $p['tahun']);
+
+        $sheet->getStyle("A{$row}:D{$row}")
+            ->getBorders()
+            ->getAllBorders()
+            ->setBorderStyle(Border::BORDER_THIN);
+
+        $row++;
+    }
+
+    // ======================
+    // AUTO WIDTH
+    // ======================
+    foreach (range('A', 'D') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+
+    // ======================
+    // LOG AKTIVITAS
+    // ======================
+    log_activity(
+        'EXPORT_PIC_EXCEL',
+        'Admin mengekspor laporan PIC indikator kinerja dalam format Excel.',
+        'pic_indikator'
+    );
+
+    // ======================
+    // DOWNLOAD
+    // ======================
+    $filename = 'Laporan_PIC_' . date('Ymd_His') . '.xlsx';
+
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    header('Cache-Control: max-age=0');
+
+    $writer = new Xlsx($spreadsheet);
+    $writer->save('php://output');
+    exit;
 }
 
 }

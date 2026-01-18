@@ -303,6 +303,8 @@ $routes->group('staff', ['filter' => 'auth'], function ($routes) {
 
       // ✅ Tambahkan route export PDF di sini
     $routes->get('dokumen/export_pdf', 'Staff\Dokumen::exportArsipPdf');
+    $routes->get('dokumen/exportArsipExcel', 'Staff\Dokumen::exportArsipExcel');
+
 });
 
 
@@ -346,6 +348,7 @@ $routes->group('atasan', ['filter' => 'auth'], function ($routes) {
 
     // export PDF arsip dokumen
     $routes->get('dokumen/export_pdf', 'Atasan\Dokumen::exportArsipPdf');
+    $routes->get('dokumen/export_excel_arsip', 'Atasan\Dokumen::exportArsipExcel');
 
     
 
@@ -387,6 +390,11 @@ $routes->group('admin', ['filter' => 'auth'], function ($routes) {
     $routes->get('kategori-dokumen/toggle/(:num)', 'Admin\KategoriDokumen::toggleStatus/$1');
 
 $routes->get('kategori-dokumen/export', 'Admin\KategoriDokumen::export');
+$routes->get(
+    'kategori-dokumen/export-excel',
+    'Admin\KategoriDokumen::exportExcel'
+);
+
 
 
 // =====================
@@ -394,7 +402,14 @@ $routes->get('kategori-dokumen/export', 'Admin\KategoriDokumen::export');
 // =====================
 $routes->get('pic/export_pdf', 'Admin\PicController::exportPdf');
 
-    
+//excel user
+$routes->get('users/export-excel', 'Admin\User::exportExcel');
+//perjanjian kinerja
+$routes->get('perjanjian-kinerja/export-excel', 'Admin\PerjanjianKinerja::exportExcel');
+//manajemen pic
+$routes->get('pic/export-excel', 'Admin\PicController::exportExcel');
+
+
     // =====================
     // DOKUMEN
     // =====================

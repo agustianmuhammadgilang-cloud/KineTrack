@@ -28,6 +28,15 @@
         
         <div class="flex gap-3">
             <!-- Tombol Export -->
+             <a href="<?= base_url('admin/kategori-dokumen/export-excel') ?>"
+   class="group relative inline-flex items-center justify-center gap-3 bg-[#10B981] hover:bg-green-600 text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-green-100 transition-all hover:-translate-y-1 active:scale-95 overflow-hidden">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+              d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+    </svg>
+    Export Excel
+</a>
+
             <a href="<?= base_url('admin/kategori-dokumen/export') ?>"
                class="group relative inline-flex items-center justify-center gap-3 bg-[#F58025] hover:bg-orange-600 text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-orange-100 transition-all hover:-translate-y-1 active:scale-95 overflow-hidden">
                 <div class="absolute inset-0 w-3 bg-white/10 skew-x-[-20deg] group-hover:left-full transition-all duration-700 -left-full"></div>

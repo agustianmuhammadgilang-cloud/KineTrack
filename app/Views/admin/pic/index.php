@@ -80,6 +80,12 @@
 
         <div>
 
+        <a href="<?= base_url('admin/pic/export-excel') ?>" 
+   class="btn-add-polban inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider"
+   style="background:#059669;">
+    Export Excel
+</a>
+
             <a href="<?= base_url('admin/pic/export_pdf') ?>" 
    class="btn-add-polban inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider">
    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

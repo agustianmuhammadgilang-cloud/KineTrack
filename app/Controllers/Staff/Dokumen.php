@@ -8,6 +8,12 @@ use App\Models\BidangModel;
 use App\Models\KategoriDokumenModel;
 use App\Models\NotificationModel;
 use Dompdf\Dompdf;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 // Controller untuk mengelola dokumen kinerja staff
 class Dokumen extends BaseController
@@ -540,6 +546,118 @@ public function exportArsipPdf()
         null
     );
     return $dompdf->stream($filename, ['Attachment' => true]);
+}
+
+public function exportArsipExcel()
+{
+    $userId = session()->get('user_id');
+    if (!$userId) {
+        return redirect()->to('/login');
+    }
+
+    // =========================
+    // AMBIL DATA (SAMA DENGAN arsip())
+    // =========================
+    $dokumen = $this->dokumenModel
+        ->where('created_by', $userId)
+        ->where('status', 'archived')
+        ->orderBy('updated_at', 'DESC')
+        ->findAll();
+
+    // =========================
+    // BUAT EXCEL
+    // =========================
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+    $sheet->setTitle('Arsip Dokumen');
+
+    // JUDUL
+    $sheet->mergeCells('A1:C1');
+    $sheet->setCellValue('A1', 'ARSIP DOKUMEN SAYA');
+    $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+    $sheet->getStyle('A1')->getAlignment()
+          ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+    // HEADER
+    $headerRow = 3;
+    $headers = ['Judul Dokumen', 'Tanggal Selesai', 'Status'];
+
+    foreach ($headers as $i => $text) {
+        $col = Coordinate::stringFromColumnIndex($i + 1);
+        $sheet->setCellValue($col . $headerRow, $text);
+    }
+
+    $sheet->getStyle("A{$headerRow}:C{$headerRow}")->applyFromArray([
+        'font' => [
+            'bold' => true,
+            'color' => ['rgb' => 'FFFFFF']
+        ],
+        'alignment' => [
+            'horizontal' => Alignment::HORIZONTAL_CENTER
+        ],
+        'fill' => [
+            'fillType' => Fill::FILL_SOLID,
+            'startColor' => ['rgb' => '003366']
+        ],
+        'borders' => [
+            'allBorders' => [
+                'borderStyle' => Border::BORDER_THIN
+            ]
+        ]
+    ]);
+
+    // =========================
+    // ISI DATA
+    // =========================
+    $row = $headerRow + 1;
+
+    foreach ($dokumen as $d) {
+        $sheet->setCellValue("A{$row}", $d['judul']);
+        $sheet->setCellValue(
+            "B{$row}",
+            date('d/m/Y', strtotime($d['updated_at']))
+        );
+        $sheet->setCellValue("C{$row}", 'VERIFIED');
+
+        $sheet->getStyle("A{$row}:C{$row}")
+              ->getBorders()
+              ->getAllBorders()
+              ->setBorderStyle(Border::BORDER_THIN);
+
+        $sheet->getStyle("B{$row}:C{$row}")
+              ->getAlignment()
+              ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        $row++;
+    }
+
+    // AUTO WIDTH
+    foreach (range('A', 'C') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+
+    // =========================
+    // LOG AKTIVITAS
+    // =========================
+    log_activity(
+        'EXPORT_ARSIP_DOKUMEN_EXCEL',
+        'Mengunduh arsip dokumen pribadi dalam format Excel',
+        'dokumen_arsip',
+        null
+    );
+
+    // =========================
+    // DOWNLOAD
+    // =========================
+    $filename = 'arsip_dokumen_saya_' . date('Ymd_His') . '.xlsx';
+
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    header('Cache-Control: max-age=0');
+
+    $writer = new Xlsx($spreadsheet);
+    $writer->save('php://output');
+    exit;
 }
 
 

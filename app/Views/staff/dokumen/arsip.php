@@ -129,12 +129,18 @@
                 <p class="text-xs text-slate-400 mt-1 font-bold uppercase tracking-widest">Laporan Kinerja yang telah disetujui</p>
             </div>
         </div>
+        <a href="<?= base_url('staff/dokumen/exportArsipExcel') ?>" 
+       class="btn-pdf"
+       style="background:#15803d">
+        Export Excel
+    </a>
+</div>
 
         <a href="<?= base_url('staff/dokumen/export_pdf') ?>" class="btn-pdf">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
             </svg>
-            Export PDF Laporan
+            Export PDF
         </a>
     </div>
 
@@ -144,7 +150,7 @@
                 <thead>
                     <tr>
                         <th style="width: 50%;">Judul Dokumen</th>
-                        <th style="width: 20%;">Tanggal Disetujui</th>
+                        <th style="width: 20%;">Tgl Selesai</th>
                         <th style="width: 15%;">Status</th>
                         <th style="width: 15%;">Aksi</th>
                     </tr>
