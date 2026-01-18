@@ -128,11 +128,15 @@
             </div>
         </div>
 
+        <a href="<?= base_url('atasan/dokumen/export_excel_arsip') ?>" class="btn-pdf" style="background:#15803d">
+    Export Excel
+</a>
+
         <a href="<?= base_url('atasan/dokumen/export_pdf') ?>" class="btn-pdf">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
             </svg>
-            Export PDF Arsip
+            Export PDF
         </a>
     </div>
 
@@ -143,7 +147,7 @@
                     <tr>
                         <th style="width: 40%;">Judul Dokumen</th>
                         <th style="width: 15%;">Unit Asal</th>
-                        <th style="width: 15%;">Tgl Terbit</th>
+                        <th style="width: 15%;">Tgl Selesai</th>
                         <th style="width: 15%;">Status</th>
                         <th style="width: 15%;">Aksi</th>
                     </tr>

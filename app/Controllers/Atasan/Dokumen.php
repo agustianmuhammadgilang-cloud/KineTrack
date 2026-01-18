@@ -7,6 +7,13 @@ use App\Models\DokumenModel;
 use App\Models\BidangModel;
 use App\Models\NotificationModel;
 use Dompdf\Dompdf;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+
 // Controller untuk mengelola dokumen oleh atasan (kaprodi/kajur)
 class Dokumen extends BaseController
 {
@@ -489,6 +496,133 @@ public function public()
 
     // Download PDF
     return $dompdf->stream($filename, ['Attachment' => true]);
+}
+
+
+public function exportArsipExcel()
+{
+    if (session()->get('role') !== 'atasan') {
+        return redirect()->back();
+    }
+
+    $bidangId = session()->get('bidang_id');
+    $bidang   = $this->bidangModel->find($bidangId);
+
+    if (!$bidang) {
+        return redirect()->back();
+    }
+
+    // =========================
+    // AMBIL DATA
+    // =========================
+    if ($bidang['parent_id'] === null) {
+        // KAJUR
+        $dokumen = $this->dokumenModel
+            ->where('status', 'archived')
+            ->where('unit_jurusan_id', $bidangId)
+            ->orderBy('updated_at', 'DESC')
+            ->findAll();
+    } else {
+        // KAPRODI
+        $dokumen = $this->dokumenModel
+            ->where('status', 'archived')
+            ->where('unit_jurusan_id', $bidang['parent_id'])
+            ->where('unit_asal_id', $bidangId)
+            ->orderBy('updated_at', 'DESC')
+            ->findAll();
+    }
+
+    // =========================
+    // BUAT EXCEL
+    // =========================
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+    $sheet->setTitle('Arsip Dokumen');
+
+    // JUDUL
+    $sheet->mergeCells('A1:D1');
+    $sheet->setCellValue('A1', 'ARSIP DOKUMEN KINERJA');
+    $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+    $sheet->getStyle('A1')->getAlignment()
+          ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+    // HEADER
+    $headerRow = 3;
+    $headers = ['Judul Dokumen', 'Unit Asal', 'Tanggal Selesai', 'Status'];
+
+    foreach ($headers as $i => $text) {
+        $col = Coordinate::stringFromColumnIndex($i + 1);
+        $sheet->setCellValue($col . $headerRow, $text);
+    }
+
+    $sheet->getStyle("A{$headerRow}:D{$headerRow}")->applyFromArray([
+        'font' => [
+            'bold' => true,
+            'color' => ['rgb' => 'FFFFFF']
+        ],
+        'alignment' => [
+            'horizontal' => Alignment::HORIZONTAL_CENTER
+        ],
+        'fill' => [
+            'fillType' => Fill::FILL_SOLID,
+            'startColor' => ['rgb' => '003366']
+        ],
+        'borders' => [
+            'allBorders' => [
+                'borderStyle' => Border::BORDER_THIN
+            ]
+        ]
+    ]);
+
+    // =========================
+    // ISI DATA
+    // =========================
+    $row = $headerRow + 1;
+
+    foreach ($dokumen as $d) {
+        $sheet->setCellValue("A{$row}", $d['judul']);
+        $sheet->setCellValue("B{$row}", 'Unit ' . $d['unit_asal_id']);
+        $sheet->setCellValue(
+            "C{$row}",
+            date('d/m/Y', strtotime($d['updated_at']))
+        );
+        $sheet->setCellValue("D{$row}", 'VERIFIED');
+
+        $sheet->getStyle("A{$row}:D{$row}")
+              ->getBorders()
+              ->getAllBorders()
+              ->setBorderStyle(Border::BORDER_THIN);
+
+        $sheet->getStyle("C{$row}:D{$row}")
+              ->getAlignment()
+              ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        $row++;
+    }
+
+    // AUTO WIDTH
+    foreach (range('A', 'D') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+
+    // LOG
+    log_activity(
+        'EXPORT_ARSIP_DOKUMEN_EXCEL',
+        'Mengunduh arsip dokumen kinerja dalam format Excel',
+        'dokumen_arsip',
+        null
+    );
+
+    // DOWNLOAD
+    $filename = 'arsip_dokumen_atasan_' . date('Ymd_His') . '.xlsx';
+
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    header('Cache-Control: max-age=0');
+
+    $writer = new Xlsx($spreadsheet);
+    $writer->save('php://output');
+    exit;
 }
 
 

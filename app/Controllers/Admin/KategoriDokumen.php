@@ -4,6 +4,12 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\KategoriDokumenModel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+
 // Controller untuk mengelola kategori dokumen
 class KategoriDokumen extends BaseController
 {
@@ -181,5 +187,134 @@ public function export()
     );
     return $dompdf->stream($filename, ['Attachment' => true]);
 }
+
+public function exportExcel()
+{
+    if (session()->get('role') !== 'admin') {
+        return redirect()->back();
+    }
+
+    $kategoriModel = new \App\Models\KategoriDokumenModel();
+    $dokumenModel  = new \App\Models\DokumenModel();
+
+    $kategoriList = $kategoriModel->findAll();
+
+    $statusMap = [
+        'resmi'   => 'RESMI',
+        'pending' => 'PENDING',
+        'reject'  => 'REJECT',
+    ];
+
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+    $sheet->setTitle('Kategori & Dokumen');
+
+    // =====================
+    // JUDUL
+    // =====================
+    $sheet->mergeCells('A1:C1');
+    $sheet->setCellValue('A1', 'LAPORAN KATEGORI & DOKUMEN');
+    $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+    $sheet->getStyle('A1')->getAlignment()
+          ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+    // =====================
+    // HEADER
+    // =====================
+    $headerRow = 3;
+    $sheet->fromArray(
+        ['Kategori', 'Nama Dokumen', 'Status Dokumen'],
+        null,
+        "A{$headerRow}"
+    );
+
+    $sheet->getStyle("A{$headerRow}:C{$headerRow}")->applyFromArray([
+        'font' => [
+            'bold' => true,
+            'color' => ['rgb' => 'FFFFFF']
+        ],
+        'alignment' => [
+            'horizontal' => Alignment::HORIZONTAL_CENTER
+        ],
+        'fill' => [
+            'fillType' => Fill::FILL_SOLID,
+            'startColor' => ['rgb' => '1D2F83']
+        ],
+        'borders' => [
+            'allBorders' => ['borderStyle' => Border::BORDER_THIN]
+        ]
+    ]);
+
+    // =====================
+    // ISI DATA
+    // =====================
+    $row = $headerRow + 1;
+
+    foreach ($kategoriList as $kategori) {
+
+        $dokumenList = $dokumenModel
+            ->where('kategori_id', $kategori['id'])
+            ->findAll();
+
+        if (empty($dokumenList)) {
+            $sheet->setCellValue("A{$row}", $kategori['nama_kategori']);
+            $sheet->setCellValue("B{$row}", '-');
+            $sheet->setCellValue("C{$row}", '-');
+            $row++;
+            continue;
+        }
+
+        foreach ($dokumenList as $dok) {
+            $sheet->setCellValue("A{$row}", $kategori['nama_kategori']);
+            $sheet->setCellValue("B{$row}", $dok['judul']);
+            $sheet->setCellValue(
+                "C{$row}",
+                $statusMap[$dok['status']] ?? strtoupper($dok['status'])
+            );
+
+            $sheet->getStyle("A{$row}:C{$row}")
+                  ->getBorders()
+                  ->getAllBorders()
+                  ->setBorderStyle(Border::BORDER_THIN);
+
+            $sheet->getStyle("C{$row}")
+                  ->getAlignment()
+                  ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+            $row++;
+        }
+    }
+
+    // =====================
+    // AUTO WIDTH
+    // =====================
+    foreach (['A','B','C'] as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+
+    // =====================
+    // LOG AKTIVITAS
+    // =====================
+    log_activity(
+        'EXPORT_DOKUMEN_EXCEL',
+        'Admin mengekspor kategori beserta dokumen ke format Excel.',
+        'dokumen'
+    );
+
+    // =====================
+    // DOWNLOAD
+    // =====================
+    $filename = 'Kategori_Dokumen_' . date('Ymd_His') . '.xlsx';
+
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    header('Cache-Control: max-age=0');
+
+    $writer = new Xlsx($spreadsheet);
+    $writer->save('php://output');
+    exit;
+}
+
+
 
 }
