@@ -25,25 +25,36 @@ class DokumenTervalidasi extends BaseController
      * LEVEL 1 — LIST SEMUA KATEGORI
      * ================================
      */
-    public function kategori()
-    {
-        $kategori = $this->kategoriModel
-            ->select('kategori_dokumen.*, COUNT(dk.id) as total')
-            ->join(
-                'dokumen_kinerja dk',
-                'dk.kategori_id = kategori_dokumen.id',
-                'left'
-            )
-            ->where('kategori_dokumen.status', 'aktif')
-            ->groupBy('kategori_dokumen.id')
-            ->orderBy('kategori_dokumen.nama_kategori', 'ASC')
-            ->findAll();
+public function kategori()
+{
+    $keyword = $this->request->getGet('q');
 
-        return view('admin/dokumen_tervalidasi/kategori', [
-            'title'    => 'Dokumen Tervalidasi',
-            'kategori' => $kategori
-        ]);
+    $builder = $this->kategoriModel
+        ->select('kategori_dokumen.*, COUNT(dk.id) as total')
+        ->join(
+            'dokumen_kinerja dk',
+            'dk.kategori_id = kategori_dokumen.id',
+            'left'
+        )
+        ->where('kategori_dokumen.status', 'aktif')
+        ->groupBy('kategori_dokumen.id')
+        ->orderBy('kategori_dokumen.nama_kategori', 'ASC');
+
+    // 🔍 SEARCH KHUSUS TERVALIDASI
+    if ($keyword) {
+        $builder->groupStart()
+            ->like('kategori_dokumen.nama_kategori', $keyword)
+            ->orLike('kategori_dokumen.deskripsi', $keyword)
+        ->groupEnd();
     }
+
+    return view('admin/dokumen_tervalidasi/kategori', [
+        'title'    => 'Dokumen Tervalidasi',
+        'kategori' => $builder->findAll(),
+        'keyword'  => $keyword
+    ]);
+}
+
 
     /**
      * ================================

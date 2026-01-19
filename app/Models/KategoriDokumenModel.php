@@ -97,6 +97,23 @@ public function getUntukFormStaff()
         ->findAll();
 }
 
-
-
+public function searchAdmin($keyword)
+{
+    return $this->groupStart()
+            ->like('nama_kategori', $keyword)
+            ->orLike('deskripsi', $keyword)
+            ->orLike('status', $keyword)
+        ->groupEnd()
+        ->orderBy(
+            "CASE 
+                WHEN status = 'aktif' THEN 1
+                WHEN status = 'pending' THEN 2
+                WHEN status = 'rejected' THEN 3
+            END",
+            '',
+            false
+        )
+        ->orderBy('nama_kategori', 'ASC')
+        ->findAll();
+}
 }

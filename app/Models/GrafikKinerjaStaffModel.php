@@ -47,7 +47,6 @@ class GrafikKinerjaStaffModel extends Model
             ss.kode_sasaran,
             ss.nama_sasaran,
 
-            -- TARGET PK TAHUNAN
             CASE
                 WHEN ik.mode = 'akumulatif'
                     THEN ik.target_tw4
@@ -57,15 +56,10 @@ class GrafikKinerjaStaffModel extends Model
                    + ik.target_tw4
             END AS target_pk,
 
-            -- REALISASI (AKUMULATIF / NON)
             CASE
                 WHEN ik.mode = 'akumulatif' THEN
                     COALESCE(
-                        MAX(
-                            CASE
-                                WHEN pk.triwulan = 4 THEN pk.realisasi
-                            END
-                        ),
+                        MAX(CASE WHEN pk.triwulan = 4 THEN pk.realisasi END),
                         0
                     )
                 ELSE
@@ -75,19 +69,11 @@ class GrafikKinerjaStaffModel extends Model
                   + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan = 4 THEN pk.realisasi ELSE 0 END),0), ik.target_tw4)
             END AS realisasi,
 
-            -- PROGRES (%)
             LEAST(
                 (
                     CASE
                         WHEN ik.mode = 'akumulatif' THEN
-                            COALESCE(
-                                MAX(
-                                    CASE
-                                        WHEN pk.triwulan = 4 THEN pk.realisasi
-                                    END
-                                ),
-                                0
-                            )
+                            COALESCE(MAX(CASE WHEN pk.triwulan = 4 THEN pk.realisasi END),0)
                         ELSE
                             LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=1 THEN pk.realisasi ELSE 0 END),0), ik.target_tw1)
                           + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=2 THEN pk.realisasi ELSE 0 END),0), ik.target_tw2)
@@ -107,12 +93,23 @@ class GrafikKinerjaStaffModel extends Model
             ) AS progres
         ")
         ->join('sasaran_strategis ss', 'ss.id = ik.sasaran_id')
+
+        // 🔑 JOIN KHUSUS FILTER KEPEMILIKAN
+        ->join(
+            'pengukuran_kinerja pk_owner',
+            'pk_owner.indikator_id = ik.id
+             AND pk_owner.user_id = '.$this->db->escape($userId),
+            'inner'
+        )
+
+        // 🔑 JOIN UNTUK HITUNG REALISASI (TETAP LEFT)
         ->join(
             'pengukuran_kinerja pk',
             'pk.indikator_id = ik.id
              AND pk.user_id = '.$this->db->escape($userId),
             'left'
         )
+
         ->where('ss.tahun_id', $tahunId)
         ->groupBy('ik.id')
         ->orderBy('ss.kode_sasaran', 'ASC')
@@ -120,6 +117,7 @@ class GrafikKinerjaStaffModel extends Model
         ->get()
         ->getResultArray();
 }
+
 
 
 
