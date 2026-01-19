@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\ActivityLogArchiveModel;
 use App\Models\ActivityLogModel;
 use App\Models\ActivityLogsRestoreModel;
+use App\Models\ActivityLogBackupModel;
 
 class ActivityLogBackupController extends BaseController
 {
@@ -22,26 +23,58 @@ class ActivityLogBackupController extends BaseController
         return redirect()->back();
     }
 
-    $dir = WRITEPATH . 'backups/activity_logs/';
+    $backupModel = new ActivityLogBackupModel();
+
+    // ======================
+    // 🔍 FILTER & SEARCH
+    // ======================
+    $date  = $this->request->getGet('date'); // format: Y-m-d
+    $q     = $this->request->getGet('q');    // search keyword
+
+    $builder = $backupModel->orderBy('created_at', 'DESC');
+
+    // FILTER TANGGAL BACKUP
+    if ($date) {
+        $builder->where('DATE(created_at)', $date);
+    }
+
+    // SEARCH (nama file / path)
+    if ($q) {
+        $builder->groupStart()
+                ->like('backup_name', $q)
+                ->orLike('file_path', $q)
+                ->groupEnd();
+    }
+
+    $rows = $builder->findAll();
+
+    // ======================
+    // FORMAT DATA KE VIEW
+    // ======================
     $backups = [];
 
-    if (is_dir($dir)) {
-        foreach (glob($dir . '*.json') as $jsonFile) {
+    foreach ($rows as $row) {
+        $base = $row['backup_name'];
 
-            $content = json_decode(file_get_contents($jsonFile), true);
-            if (!isset($content['meta'], $content['data'])) continue;
+        // 🔥 AMBIL TOTAL RECORD DARI METADATA JSON (SEPERTI VERSI AWAL)
+        $jsonPath = WRITEPATH . 'backups/activity_logs/' . $base . '.json';
 
-            $meta = $content['meta'];
-            $base = basename($jsonFile, '.json');
-
-            $backups[] = [
-                'period'     => $meta['period']['from'] . ' s/d ' . $meta['period']['to'],
-                'total'      => $meta['total_records'],
-                'created_at' => $meta['created_at'],
-                'json_file'  => basename($jsonFile),
-                'csv_file'   => $base . '.csv',
-            ];
+        $total = 0;
+        if (file_exists($jsonPath)) {
+            $json = json_decode(file_get_contents($jsonPath), true);
+            $total = $json['meta']['total_records'] ?? 0;
         }
+
+        $backups[] = [
+            'period'     => date('d M Y', strtotime($row['period_start']))
+                            . ' s/d ' .
+                            date('d M Y', strtotime($row['period_end'])),
+
+            'total'      => $total, // ✅ ANGKA RECORD BALIK MUNCUL
+            'created_at' => $row['created_at'],
+            'json_file'  => $base . '.json',
+            'csv_file'   => $base . '.csv',
+        ];
     }
 
     return view('admin/activity_logs/backup', [
@@ -49,6 +82,8 @@ class ActivityLogBackupController extends BaseController
         'backups' => $backups,
     ]);
 }
+
+
 
  public function backup()
 {

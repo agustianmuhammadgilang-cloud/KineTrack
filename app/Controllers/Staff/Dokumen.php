@@ -38,27 +38,57 @@ class Dokumen extends BaseController
      * ============================
      */
     public function index()
-    {
-        // Ambil dokumen milik staff yang sedang login
-        $userId = session()->get('user_id');
-        // Cek jika user tidak login
-        if (!$userId) {
-            return redirect()->to('/login');
-        }
-        // Ambil dokumen
-        $data['dokumen'] = $this->dokumenModel
-            ->where('created_by', $userId)
-            ->orderBy('created_at', 'DESC')
-            ->findAll();
-            // LOG AKTIVITAS STAFF Dokumen
-            log_activity(
-    'view_dokumen_list',
-    'Melihat daftar dokumen kinerja pribadi'
-);
-
-
-        return view('staff/dokumen/index', $data);
+{
+    $userId = session()->get('user_id');
+    if (!$userId) {
+        return redirect()->to('/login');
     }
+
+    // ======================
+    // FILTER INPUT
+    // ======================
+    $keyword = $this->request->getGet('q');       // search judul
+    $date    = $this->request->getGet('date');    // YYYY-MM-DD
+    $month   = $this->request->getGet('month');   // 1-12
+    $year    = $this->request->getGet('year');    // YYYY
+
+    $builder = $this->dokumenModel
+        ->where('created_by', $userId)
+        ->orderBy('created_at', 'DESC');
+
+    // ======================
+    // SEARCH JUDUL DOKUMEN
+    // ======================
+    if ($keyword) {
+        $builder->like('judul', $keyword);
+    }
+
+    // ======================
+    // FILTER TANGGAL
+    // ======================
+    if ($date) {
+        $builder->where('DATE(created_at)', $date);
+    }
+
+    if ($month) {
+        $builder->where('MONTH(created_at)', $month);
+    }
+
+    if ($year) {
+        $builder->where('YEAR(created_at)', $year);
+    }
+
+    $data['dokumen'] = $builder->findAll();
+
+    // LOG AKTIVITAS
+    log_activity(
+        'search_filter_dokumen_staff',
+        'Melakukan pencarian / filter dokumen pribadi'
+    );
+
+    return view('staff/dokumen/index', $data);
+}
+
 
     /**
      * ============================
@@ -420,27 +450,46 @@ foreach ($atasanList as $atasan) {
      * ============================
      */
     public function arsip()
-    {
-        $userId = session()->get('user_id');
+{
+    $userId = session()->get('user_id');
 
-        if (!$userId) {
-            return redirect()->to('/login');
-        }
-
-        $data['dokumen'] = $this->dokumenModel
-            ->where('created_by', $userId)
-            ->where('status', 'archived')
-            ->orderBy('updated_at', 'DESC')
-            ->findAll();
-            // LOG AKTIVITAS STAFF Dokumen
-            log_activity(
-    'view_dokumen_arsip',
-    'Melihat arsip dokumen kinerja'
-);
-
-
-        return view('staff/dokumen/arsip', $data);
+    if (!$userId) {
+        return redirect()->to('/login');
     }
+
+    // ======================
+    // FILTER INPUT
+    // ======================
+    $q    = $this->request->getGet('q');     // search judul
+    $date = $this->request->getGet('date');  // YYYY-MM-DD
+
+    $builder = $this->dokumenModel
+        ->where('created_by', $userId)
+        ->where('status', 'archived');
+
+    // SEARCH JUDUL DOKUMEN
+    if ($q) {
+        $builder->like('judul', $q);
+    }
+
+    // FILTER TANGGAL SELESAI (updated_at)
+    if ($date) {
+        $builder->where('DATE(updated_at)', $date);
+    }
+
+    $data['dokumen'] = $builder
+        ->orderBy('updated_at', 'DESC')
+        ->findAll();
+
+    // LOG AKTIVITAS STAFF
+    log_activity(
+        'view_dokumen_arsip',
+        'Melihat arsip dokumen kinerja'
+    );
+
+    return view('staff/dokumen/arsip', $data);
+}
+
     /**
  * ============================
  * DOKUMEN PERSONAL (DOKUMEN SAYA)
@@ -448,21 +497,36 @@ foreach ($atasanList as $atasan) {
  */
 public function personal()
 {
-    // Ambil dokumen personal milik staff yang sedang login
     $userId = session()->get('user_id');
-    // Cek jika user tidak login
     if (!$userId) {
         return redirect()->to('/login');
     }
-    // Ambil dokumen
-    $data['dokumen'] = $this->dokumenModel
+
+    // ======================
+    // FILTER INPUT
+    // ======================
+    $q    = $this->request->getGet('q');     // search judul
+    $date = $this->request->getGet('date');  // YYYY-MM-DD
+
+    $builder = $this->dokumenModel
         ->where('created_by', $userId)
-        ->where('scope', 'personal') // asumsi dari pilihan saat create
-        ->orderBy('created_at', 'DESC')
-        ->findAll();
+        ->orderBy('created_at', 'DESC');
+
+    // SEARCH NAMA DOKUMEN
+    if ($q) {
+        $builder->like('judul', $q);
+    }
+
+    // FILTER TANGGAL UPLOAD
+    if ($date) {
+        $builder->where('DATE(created_at)', $date);
+    }
+
+    $data['dokumen'] = $builder->findAll();
 
     return view('staff/dokumen/personal', $data);
 }
+
 
 /**
  * ============================
@@ -471,49 +535,106 @@ public function personal()
  */
 public function unit()
 {
-    // Ambil dokumen unit kerja milik staff yang sedang login
     $userId   = session()->get('user_id');
     $bidangId = session()->get('bidang_id');
-    // Cek jika user tidak login
+
     if (!$userId || !$bidangId) {
         return redirect()->to('/login');
     }
-    // Tentukan alur berdasarkan unit kerja
-    $bidangUser = $this->bidangModel->find($bidangId);
 
-    // Jika unit kerja adalah prodi
+    // ======================
+    // FILTER INPUT
+    // ======================
+    $q        = $this->request->getGet('q');        // judul dokumen
+    $pengirim = $this->request->getGet('pengirim'); // nama pengirim
+    $unit     = $this->request->getGet('unit');     // unit kerja
+
+    $bidangUser  = $this->bidangModel->find($bidangId);
     $unitJurusan = $bidangUser['parent_id'] ?? $bidangUser['id'];
 
-    // Ambil dokumen
-    $data['dokumen'] = $this->dokumenModel->getDokumenUnit($unitJurusan);
-    // LOG AKTIVITAS STAFF Dokumen
-    log_activity(
-    'view_dokumen_unit',
-    'Melihat dokumen unit kerja'
-);
+    // DATA ASLI (JANGAN DIUBAH)
+    $dokumen = $this->dokumenModel->getDokumenUnit($unitJurusan);
 
-    return view('staff/dokumen/unit', $data);
+    // ======================
+    // FILTER DI PHP (AMAN)
+    // ======================
+    $dokumen = array_filter($dokumen, function ($d) use ($q, $pengirim, $unit) {
+
+        if ($q && stripos($d['judul'], $q) === false) {
+            return false;
+        }
+
+        if ($pengirim && stripos($d['nama_pengirim'] ?? '', $pengirim) === false) {
+            return false;
+        }
+
+        if ($unit && stripos($d['nama_unit'] ?? '', $unit) === false) {
+            return false;
+        }
+
+        return true;
+    });
+
+    log_activity(
+        'search_filter_dokumen_unit',
+        'Melakukan pencarian / filter dokumen unit kerja'
+    );
+
+    return view('staff/dokumen/unit', [
+        'dokumen' => $dokumen
+    ]);
 }
+
 
 // ============================
 // DOKUMEN PUBLIC
 // ============================
 public function public()
 {
-    // Cek jika user tidak login
     if (!session()->get('user_id')) {
         return redirect()->to('/login');
     }
-    // Ambil dokumen publik
-    $data['dokumen'] = $this->dokumenModel->getDokumenPublic();
-    // LOG AKTIVITAS STAFF Dokumen
-    log_activity(
-    'view_dokumen_public',
-    'Melihat dokumen publik'
-);
 
-    return view('staff/dokumen/public', $data);
+    // ======================
+    // FILTER INPUT
+    // ======================
+    $q        = $this->request->getGet('q');         // judul dokumen
+    $pengirim = $this->request->getGet('pengirim'); // nama pengirim
+    $unit     = $this->request->getGet('unit');     // unit kerja
+
+    // DATA ASLI (JANGAN DIUBAH)
+    $dokumen = $this->dokumenModel->getDokumenPublic();
+
+    // ======================
+    // FILTER DI PHP (AMAN)
+    // ======================
+    $dokumen = array_filter($dokumen, function ($d) use ($q, $pengirim, $unit) {
+
+        if ($q && stripos($d['judul'], $q) === false) {
+            return false;
+        }
+
+        if ($pengirim && stripos($d['nama_pengirim'] ?? '', $pengirim) === false) {
+            return false;
+        }
+
+        if ($unit && stripos($d['nama_unit'] ?? '', $unit) === false) {
+            return false;
+        }
+
+        return true;
+    });
+
+    log_activity(
+        'search_filter_dokumen_public',
+        'Melakukan pencarian / filter dokumen publik'
+    );
+
+    return view('staff/dokumen/public', [
+        'dokumen' => $dokumen
+    ]);
 }
+
 
 public function exportArsipPdf()
 {
