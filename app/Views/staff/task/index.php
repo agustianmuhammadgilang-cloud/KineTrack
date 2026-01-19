@@ -3,7 +3,6 @@
 
 <style>
     :root {
-        --polban-blue: #003366;
         --polban-gold: #D4AF37;
         --soft-slate: #f8fafc;
     }
