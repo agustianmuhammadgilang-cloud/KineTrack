@@ -20,6 +20,32 @@
     </a>
 </div>
 
+<form method="get" class="bg-white rounded-2xl p-4 mb-6 shadow-sm">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+
+        <!-- SEARCH -->
+        <input type="text"
+               name="q"
+               value="<?= esc($_GET['q'] ?? '') ?>"
+               placeholder="Cari judul dokumen..."
+               class="border rounded-xl px-4 py-2 w-full">
+
+        <!-- TANGGAL -->
+        <input type="date"
+               name="date"
+               value="<?= esc($_GET['date'] ?? '') ?>"
+               class="border rounded-xl px-4 py-2 w-full">
+               
+        <!-- BUTTON -->
+        <button type="submit"
+                class="bg-orange-500 hover:bg-orange-600
+                       text-white rounded-xl px-4 py-2">
+            Filter
+        </button>
+    </div>
+</form>
+
+
 <?php if (empty($dokumen)): ?>
     <!-- EMPTY STATE -->
     <div class="bg-white rounded-2xl p-10 text-center border border-dashed">

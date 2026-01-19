@@ -12,6 +12,45 @@
         </p>
     </div>
 </div>
+<!-- FILTER -->
+<form method="get" class="mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+        <input type="text"
+               name="q"
+               value="<?= esc($_GET['q'] ?? '') ?>"
+               placeholder="Cari judul dokumen"
+               class="px-4 py-2 rounded-xl border text-sm">
+
+        <input type="text"
+               name="pengirim"
+               value="<?= esc($_GET['pengirim'] ?? '') ?>"
+               placeholder="Nama pengirim"
+               class="px-4 py-2 rounded-xl border text-sm">
+
+        <input type="text"
+               name="unit"
+               value="<?= esc($_GET['unit'] ?? '') ?>"
+               placeholder="Nama unit"
+               class="px-4 py-2 rounded-xl border text-sm">
+
+        <div class="flex gap-2">
+            <button type="submit"
+                    class="flex-1 bg-slate-900 hover:bg-blue-600
+                           text-white rounded-xl text-sm font-semibold">
+                Filter
+            </button>
+
+            <a href="<?= current_url() ?>"
+               class="flex-1 text-center bg-slate-100 hover:bg-slate-200
+                      rounded-xl text-sm font-semibold py-2">
+                Reset
+            </a>
+        </div>
+
+    </div>
+</form>
+
 
 <!-- EMPTY STATE -->
 <?php if (empty($dokumen)): ?>
