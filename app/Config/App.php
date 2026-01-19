@@ -7,6 +7,15 @@ use CodeIgniter\Config\BaseConfig;
 class App extends BaseConfig
 {
     /**
+ * --------------------------------------------------------------------------
+ * Composer Autoload
+ * --------------------------------------------------------------------------
+ *
+ * Enables loading of Composer's autoload file.
+ */
+public bool|string $composerAutoload = true;
+
+    /**
      * --------------------------------------------------------------------------
      * Base Site URL
      * --------------------------------------------------------------------------

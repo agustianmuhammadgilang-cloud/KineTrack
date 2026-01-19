@@ -1,157 +1,186 @@
 <?= $this->extend('layout/staff_template') ?>
 <?= $this->section('content') ?>
 
-<h3 class="text-2xl font-bold text-[var(--polban-blue)] mb-6">
-    Input Pengukuran Indikator — TW <?= esc($tw) ?>
-</h3>
+<div class="min-h-screen bg-slate-50 px-6 py-8 font-sans text-slate-800">
 
-<!-- PIC Info -->
-<div class="bg-white shadow-md rounded-xl p-5 mb-6 border border-gray-200">
-    <h4 class="text-lg font-semibold text-gray-800 mb-3">PIC Terkait</h4>
-
-    <p class="text-gray-700">
-        <span class="font-semibold"><?= esc($pic['nama']) ?></span>
-        (<?= esc($pic['email']) ?>)
-    </p>
-    <p class="text-sm text-gray-600">
-        <?= esc($pic['nama_bidang']) ?> / <?= esc($pic['nama_jabatan']) ?>
-    </p>
-</div>
-
-<!-- Sasaran & Indikator -->
-<div class="bg-white shadow-md rounded-xl p-5 mb-6 border border-gray-200">
-    <h4 class="text-lg font-semibold text-gray-800 mb-3">Sasaran Strategis & Indikator</h4>
-
-    <p class="text-gray-700 mb-1">
-        <span class="font-semibold">Sasaran Strategis:</span> <?= esc($sasaran['nama_sasaran']) ?>
-    </p>
-    <p class="text-gray-700 mb-1">
-        <span class="font-semibold">Indikator:</span> <?= esc($indikator['nama_indikator']) ?>
-    </p>
-    <p class="text-gray-700 mb-1">
-        <span class="font-semibold">Satuan:</span> <?= esc($indikator['satuan']) ?>
-    </p>
-    <p class="text-gray-700 mb-1">
-        <span class="font-semibold">Target PK (<?= esc($tahun) ?>):</span> <?= esc($indikator['target_pk']) ?>
-    </p>
-</div>
-
-<!-- Informasi Target TW -->
-<div class="bg-blue-50 border border-blue-200 p-5 rounded-xl mb-6">
-    <h4 class="font-semibold text-blue-800 mb-3">Informasi Target Triwulan</h4>
-
-    <div class="grid grid-cols-2 gap-3 text-gray-700">
-        <p><span class="font-semibold">Target TW 1:</span> <?= esc($target_tw[1] ?? '-') ?></p>
-        <p><span class="font-semibold">Target TW 2:</span> <?= esc($target_tw[2] ?? '-') ?></p>
-        <p><span class="font-semibold">Target TW 3:</span> <?= esc($target_tw[3] ?? '-') ?></p>
-        <p><span class="font-semibold">Target TW 4:</span> <?= esc($target_tw[4] ?? '-') ?></p>
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+        <div>
+            <div class="flex items-center gap-2 mb-2">
+                <a href="<?= base_url('staff/task') ?>" class="p-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 text-slate-500 transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+                <span class="text-xs font-bold text-blue-600 uppercase tracking-widest">Input Capaian Kinerja</span>
+            </div>
+            <h1 class="text-3xl font-bold text-slate-900 tracking-tight">
+                Triwulan <?= esc($tw) ?> — Pengukuran
+            </h1>
+        </div>
     </div>
 
-    <p class="mt-3 text-sm text-blue-700">
-        Triwulan yang sedang dibuka: <strong>TW <?= esc($tw) ?></strong>
-    </p>
-</div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <div class="lg:col-span-1 space-y-6">
+            
+            <div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-6 text-white shadow-lg shadow-blue-200">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <h4 class="font-bold tracking-tight">Informasi Target TW</h4>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <?php foreach ([1, 2, 3, 4] as $t): ?>
+                    <div class="p-3 rounded-xl <?= $t == $tw ? 'bg-white/20 border border-white/30' : 'bg-black/5' ?>">
+                        <p class="text-[10px] font-bold uppercase opacity-70">TW <?= $t ?></p>
+                        <p class="text-lg font-black"><?= esc($target_tw[$t] ?? '0') ?></p>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
 
-<!-- FORM INPUT -->
-<div class="bg-white shadow-md rounded-xl p-6 border border-gray-200">
-    <form action="<?= base_url('staff/task/store') ?>" method="post" enctype="multipart/form-data" class="space-y-5">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Detail Indikator</h4>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase">Sasaran Strategis</p>
+                        <p class="text-sm font-semibold text-slate-700 mt-0.5 leading-snug"><?= esc($sasaran['nama_sasaran']) ?></p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase">Indikator</p>
+                        <p class="text-sm font-semibold text-slate-700 mt-0.5 leading-snug"><?= esc($indikator['nama_indikator']) ?></p>
+                    </div>
+                    <div class="flex justify-between border-t border-slate-50 pt-4">
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase">Satuan</p>
+                            <p class="text-sm font-bold text-slate-700"><?= esc($indikator['satuan']) ?></p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase">Target PK <?= $tahun ?></p>
+                            <p class="text-sm font-bold text-blue-600"><?= esc($indikator['target_pk']) ?></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <!-- HIDDEN INPUTS -->
-        <input type="hidden" name="indikator_id" value="<?= esc($indikator_id) ?>">
-        <input type="hidden" name="triwulan" value="<?= esc($tw) ?>">
-        <input type="hidden" name="tahun" value="<?= esc($tahun) ?>">
-
-        <!-- Realisasi -->
-        <div>
-            <label class="block font-medium mb-1 text-gray-700">Realisasi</label>
-            <input type="number" name="realisasi" step="any" min="0" required
-                   class="w-full rounded-lg border border-gray-300 px-3 py-2
-                          focus:ring-2 focus:ring-[var(--polban-blue)] focus:outline-none">
+            <div class="bg-slate-800 rounded-2xl p-6 text-white shadow-sm">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">PIC Terkait</h4>
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center font-bold text-slate-300">
+                        <?= substr(esc($pic['nama']), 0, 1) ?>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold"><?= esc($pic['nama']) ?></p>
+                        <p class="text-[10px] text-slate-400 font-medium tracking-wide uppercase mt-0.5"><?= esc($pic['nama_jabatan']) ?></p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Progress -->
-        <div>
-            <label class="block font-medium mb-1 text-gray-700">Progress / Kegiatan</label>
-            <textarea name="progress" rows="3"
-                      class="w-full rounded-lg border border-gray-300 px-3 py-2
-                             focus:ring-2 focus:ring-[var(--polban-blue)] focus:outline-none"></textarea>
-        </div>
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+                    <div class="flex items-center gap-2">
+                        <div class="w-1.5 h-5 bg-blue-600 rounded-full"></div>
+                        <h4 class="text-lg font-bold text-slate-800">Form Pengisian</h4>
+                    </div>
+                </div>
+                
+                <form action="<?= base_url('staff/task/store') ?>" method="post" enctype="multipart/form-data" class="p-8 space-y-6">
+                    <input type="hidden" name="indikator_id" value="<?= esc($indikator_id) ?>">
+                    <input type="hidden" name="triwulan" value="<?= esc($tw) ?>">
+                    <input type="hidden" name="tahun" value="<?= esc($tahun) ?>">
 
-        <!-- Kendala -->
-        <div>
-            <label class="block font-medium mb-1 text-gray-700">Kendala / Permasalahan</label>
-            <textarea name="kendala" rows="3"
-                      class="w-full rounded-lg border border-gray-300 px-3 py-2
-                             focus:ring-2 focus:ring-[var(--polban-blue)] focus:outline-none"></textarea>
-        </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Realisasi</label>
+                            <input type="number" name="realisasi" step="any" min="0" required
+                                   class="w-full rounded-xl border-slate-200 bg-slate-50 px-4 py-3 font-bold text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                                   placeholder="Masukkan realisasi...">
+                        </div>
 
-        <!-- Strategi -->
-        <div>
-            <label class="block font-medium mb-1 text-gray-700">Strategi / Tindak Lanjut</label>
-            <textarea name="strategi" rows="3"
-                      class="w-full rounded-lg border border-gray-300 px-3 py-2
-                             focus:ring-2 focus:ring-[var(--polban-blue)] focus:outline-none"></textarea>
-        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Progress / Kegiatan</label>
+                            <textarea name="progress" rows="3" required
+                                      class="w-full rounded-xl border-slate-200 bg-slate-50 px-4 py-3 text-slate-700 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
+                                      placeholder="Uraikan detail kegiatan yang dilakukan..."></textarea>
+                        </div>
 
-        <!-- MULTIPLE FILE UPLOAD -->
-        <!-- MULTIPLE FILE UPLOAD -->
-<div x-data="fileUpload()" class="space-y-2">
-    <label class="block font-medium mb-1 text-gray-700">File Dukung (Boleh lebih dari 1 file)</label>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 text-rose-500">Kendala</label>
+                            <textarea name="kendala" rows="3"
+                                      class="w-full rounded-xl border-slate-200 bg-slate-50 px-4 py-3 text-slate-700 focus:bg-white focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 outline-none transition-all"
+                                      placeholder="Tuliskan hambatan jika ada..."></textarea>
+                        </div>
 
-    <!-- DROPZONE -->
-    <div
-        class="flex flex-col items-center justify-center w-full p-5 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition"
-        @click="$refs.input.click()"
-        @dragover.prevent="drag = true"
-        @dragleave.prevent="drag = false"
-        @drop.prevent="handleDrop($event)"
-        :class="drag ? 'border-blue-500 bg-blue-50' : ''"
-    >
-        <svg class="w-10 h-10 text-gray-400 mb-2" fill="none" stroke="currentColor" stroke-width="1.8"
-             viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3 15a4 4 0 004 4h10a4 4 0 004-4M7 10l5-5m0 0l5 5m-5-5v12"/>
-        </svg>
-
-        <p class="text-gray-600 text-sm">
-            <span class="font-semibold">Klik</span> atau <span class="font-semibold">Drag & Drop</span> file ke sini
-        </p>
-
-        <input type="file" name="file_dukung[]" multiple class="hidden" x-ref="input" @change="handleFileSelect">
-    </div>
-
-    <!-- FILE LIST -->
-    <template x-if="files.length > 0">
-        <ul class="space-y-2 mt-3">
-            <template x-for="(file, index) in files" :key="index">
-                <li class="flex items-center justify-between bg-white p-3 rounded-lg shadow border">
-                    <div class="flex items-center space-x-3">
-                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" stroke-width="1.8"
-                             viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  d="M3 7a2 2 0 012-2h10l4 4v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-                        </svg>
-                        <p class="text-gray-700 text-sm" x-text="file.name"></p>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 text-emerald-500">Strategi</label>
+                            <textarea name="strategi" rows="3"
+                                      class="w-full rounded-xl border-slate-200 bg-slate-50 px-4 py-3 text-slate-700 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
+                                      placeholder="Tindak lanjut untuk periode berikutnya..."></textarea>
+                        </div>
                     </div>
 
-                    <button type="button" @click="removeFile(index)"
-                            class="text-red-600 hover:text-red-800 text-sm font-medium">
-                        Hapus
-                    </button>
-                </li>
-            </template>
-        </ul>
-    </template>
-</div>
+                    <div x-data="fileUpload()" class="space-y-4 pt-4">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">File Bukti Dukung</label>
+                        
+                        <div class="relative group border-2 border-dashed border-slate-200 rounded-2xl p-8 transition-all hover:bg-slate-50 hover:border-blue-400 text-center cursor-pointer"
+                             @click="$refs.input.click()"
+                             @dragover.prevent="drag = true"
+                             @dragleave.prevent="drag = false"
+                             @drop.prevent="handleDrop($event)"
+                             :class="drag ? 'border-blue-500 bg-blue-50' : ''">
+                            
+                            <input type="file" name="file_dukung[]" multiple class="hidden" x-ref="input" @change="handleFileSelect">
+                            
+                            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                            <p class="text-sm font-bold text-slate-700">Tarik file ke sini atau klik untuk mencari</p>
+                            <p class="text-xs text-slate-400 mt-1">Mendukung banyak file sekaligus (PDF, Image, Doc)</p>
+                        </div>
 
-<!-- Alpine Script -->
+                        <template x-if="files.length > 0">
+                            <div class="grid grid-cols-1 gap-2 mt-4">
+                                <template x-for="(file, index) in files" :key="index">
+                                    <div class="flex items-center justify-between bg-slate-50 border border-slate-200 p-3 rounded-xl">
+                                        <div class="flex items-center gap-3">
+                                            <div class="p-2 bg-white rounded-lg text-blue-500 shadow-sm">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-width="2"/></svg>
+                                            </div>
+                                            <div>
+                                                <p class="text-xs font-bold text-slate-700 truncate max-w-[200px]" x-text="file.name"></p>
+                                                <p class="text-[10px] text-slate-400 uppercase font-medium" x-text="(file.size/1024).toFixed(1) + ' KB'"></p>
+                                            </div>
+                                        </div>
+                                        <button type="button" @click="removeFile(index)" class="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
 
-        <button type="submit"
-                class="px-5 py-2 bg-[var(--polban-blue)] text-white rounded-lg font-medium shadow
-                       hover:bg-blue-700 transition">
-            Simpan
-        </button>
-    </form>
+                    <div class="pt-6 border-t border-slate-100 flex justify-end">
+                        <button type="submit"
+                                class="flex items-center gap-2 px-8 py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 hover:-translate-y-0.5 transition-all">
+                            <span>Simpan Pengukuran</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-16 pt-8 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-slate-200 rounded-lg flex items-center justify-center font-bold text-slate-400 text-xs">KT</div>
+            <p class="text-xs text-slate-400 font-medium tracking-wide uppercase">
+                © <?= date('Y') ?> <span class="text-slate-600 font-bold">KINETRACK</span> — Politeknik Negeri Bandung
+            </p>
+        </div>
+    </div>
 </div>
 
 <?= $this->endSection() ?>

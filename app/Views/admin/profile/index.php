@@ -1,69 +1,185 @@
 <?= $this->extend('layout/admin_template') ?>
 <?= $this->section('content') ?>
 
-<h2 class="text-3xl font-bold text-[var(--polban-blue)] mb-6">Pengaturan Profil</h2>
-
-<?php if(session()->getFlashdata('success')): ?>
-<div class="p-3 mb-4 bg-green-100 text-green-700 rounded-lg">
-    <?= session()->getFlashdata('success') ?>
-</div>
-<?php endif; ?>
-
-<div class="bg-white shadow border border-gray-200 rounded-xl p-6 
-            max-w-xl w-full mx-auto sm:w-full">
-
-<form action="<?= base_url('admin/profile/update') ?>" method="post" enctype="multipart/form-data"
-      class="space-y-5">
-
-    <!-- NAMA -->
-    <div>
-        <label class="block font-medium mb-1">Nama</label>
-        <input type="text" name="nama" value="<?= esc($admin['nama'] ?? '') ?>"
-               class="w-full border rounded-lg p-2" required>
+<div class="max-w-4xl mx-auto py-8 px-4 font-sans text-slate-800">
+    
+    <div class="mb-8">
+        <h3 class="text-3xl font-extrabold text-[var(--polban-blue)] tracking-tight">
+            Pengaturan Profil Admin
+        </h3>
+        <p class="text-slate-500 mt-1">
+            Kelola informasi kredensial dan tanda tangan digital Anda untuk otoritas administrasi.
+        </p>
     </div>
 
-    <!-- EMAIL -->
-    <div>
-        <label class="block font-medium mb-1">Email</label>
-        <input type="email" name="email" value="<?= esc($admin['email'] ?? '') ?>"
-               class="w-full border rounded-lg p-2" required>
+    <?php if(session()->getFlashdata('success')): ?>
+    <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-r-xl flex items-center gap-3 animate-slide-in">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+        <span class="font-medium"><?= session()->getFlashdata('success') ?></span>
     </div>
-
-    <!-- PASSWORD -->
-    <div>
-        <label class="block font-medium mb-1">Password Baru (opsional)</label>
-        <input type="password" name="password"
-               class="w-full border rounded-lg p-2"
-               placeholder="Kosongkan jika tidak diubah">
-    </div>
-
-    <!-- FOTO -->
-    <div>
-        <label class="block font-medium mb-1">Foto Profil</label>
-        <input type="file" name="foto" class="w-full border rounded-lg p-2">
-    </div>
-
-    <?php if (!empty($admin['foto'])): ?>
-        <img src="<?= base_url('uploads/profile/'.$admin['foto']) ?>"
-             class="w-24 h-24 rounded-full border mt-2">
     <?php endif; ?>
 
-    <!-- TTD ADMIN -->
-    <div>
-        <label class="block font-medium mb-1">Tanda Tangan (TTD)</label>
-        <input type="file" name="ttd_digital" accept="image/*"
-               class="w-full border rounded-lg p-2">
+    <div class="bg-white border border-slate-200 shadow-xl rounded-2xl overflow-hidden">
+        <form
+            action="<?= base_url('admin/profile/update') ?>"
+            method="POST"
+            enctype="multipart/form-data"
+            class="divide-y divide-slate-100">
+
+            <div class="p-6 md:p-8 space-y-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-1 h-5 bg-[var(--polban-blue)] rounded-full"></div>
+                    <h4 class="font-bold text-slate-700 uppercase tracking-wider text-sm">Informasi Dasar</h4>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col space-y-1.5">
+                        <label class="text-sm font-semibold text-slate-600 ml-1">Nama Lengkap</label>
+                        <input 
+                            type="text" 
+                            name="nama"
+                            value="<?= esc($admin['nama'] ?? '') ?>"
+                            required
+                            placeholder="Masukkan nama lengkap"
+                            class="w-full rounded-xl border-slate-200 bg-slate-50/50 px-4 py-2.5 focus:border-[var(--polban-blue)] focus:ring-4 focus:ring-blue-500/10 transition-all outline-none border">
+                    </div>
+
+                    <div class="flex flex-col space-y-1.5">
+                        <label class="text-sm font-semibold text-slate-600 ml-1">Alamat Email</label>
+                        <input 
+                            type="email" 
+                            name="email"
+                            value="<?= esc($admin['email'] ?? '') ?>"
+                            required
+                            placeholder="admin@polban.ac.id"
+                            class="w-full rounded-xl border-slate-200 bg-slate-50/50 px-4 py-2.5 focus:border-[var(--polban-blue)] focus:ring-4 focus:ring-blue-500/10 transition-all outline-none border">
+                    </div>
+                </div>
+
+                <div class="flex flex-col space-y-1.5 pt-2">
+                    <label class="text-sm font-semibold text-slate-600 ml-1">Password Baru</label>
+                    <input 
+                        type="password" 
+                        name="password"
+                        placeholder="••••••••"
+                        class="w-full rounded-xl border-slate-200 bg-slate-50/50 px-4 py-2.5 focus:border-[var(--polban-blue)] focus:ring-4 focus:ring-blue-500/10 transition-all outline-none border">
+                    <div class="flex items-center gap-1.5 mt-1 ml-1 text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p class="text-xs italic">Kosongkan jika tidak ingin mengganti password.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 md:p-8 bg-slate-50/30 space-y-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-1 h-5 bg-emerald-500 rounded-full"></div>
+                    <h4 class="font-bold text-slate-700 uppercase tracking-wider text-sm">Foto Profil</h4>
+                </div>
+
+                <div class="flex items-center gap-8">
+                    <div class="flex flex-col items-center gap-2">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Foto Saat Ini</span>
+                        <div class="w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-lg bg-slate-100">
+                            <?php if (!empty($admin['foto'])): ?>
+                                <img
+                                    src="<?= base_url('uploads/profile/' . $admin['foto']) ?>"
+                                    class="w-full h-full object-cover"
+                                    alt="Foto Profil">
+                            <?php else: ?>
+                                <div class="w-full h-full flex items-center justify-center text-slate-400 text-sm">
+                                    No Photo
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="flex-1">
+                        <label class="text-sm font-semibold text-slate-600 mb-2 block">Unggah Foto Baru</label>
+                        <input
+                            type="file"
+                            name="foto"
+                            accept="image/png, image/jpeg"
+                            class="block w-full text-sm text-slate-500
+                                file:mr-4 file:py-2.5 file:px-4
+                                file:rounded-xl file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-emerald-50 file:text-emerald-700
+                                hover:file:bg-emerald-100
+                                cursor-pointer border border-slate-200 rounded-xl bg-white p-1">
+                        <p class="mt-2 text-xs text-slate-500">Format JPG/PNG • Maks 2MB</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 md:p-8 bg-slate-50/30 space-y-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-1 h-5 bg-[var(--polban-orange)] rounded-full"></div>
+                    <h4 class="font-bold text-slate-700 uppercase tracking-wider text-sm">Validasi Digital Admin</h4>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-8 items-start">
+                    <?php if (!empty($admin['ttd_digital'])): ?>
+                        <div class="flex flex-col items-center">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase mb-2 tracking-widest">TTD Aktif</span>
+                            <div class="p-4 bg-white border border-dashed border-slate-300 rounded-xl shadow-inner">
+                                <img
+                                    src="<?= base_url('uploads/ttd/'.$admin['ttd_digital']) ?>"
+                                    alt="Tanda Tangan"
+                                    class="h-20 object-contain mix-blend-multiply">
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="flex-1 w-full">
+                        <label class="text-sm font-semibold text-slate-600 mb-2 block ml-1">Perbarui Tanda Tangan (PNG/JPG)</label>
+                        <input
+                            type="file"
+                            name="ttd_digital"
+                            accept="image/png, image/jpeg"
+                            class="block w-full text-sm text-slate-500
+                                file:mr-4 file:py-2.5 file:px-4
+                                file:rounded-xl file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-orange-50 file:text-orange-700
+                                hover:file:bg-orange-100
+                                cursor-pointer border border-slate-200 rounded-xl bg-white p-1">
+                        <p class="mt-3 text-xs text-slate-500 leading-relaxed">
+                            <span class="font-bold text-[var(--polban-orange)]">Catatan:</span> TTD ini akan digunakan untuk validasi laporan resmi pada sistem.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 md:px-8 py-6 bg-white flex flex-col md:flex-row-reverse gap-3">
+                <button 
+                    type="submit"
+                    class="group flex items-center justify-center gap-2 bg-[var(--polban-orange)] hover:bg-orange-600 text-white font-bold px-8 py-3 rounded-xl shadow-lg shadow-orange-200 transition-all active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                    </svg>
+                    Simpan Perubahan
+                </button>
+
+                <a 
+                    href="<?= base_url('admin') ?>"
+                    class="flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold px-8 py-3 rounded-xl transition-all border border-slate-200">
+                    Batal
+                </a>
+            </div>
+
+        </form>
     </div>
 
-    <?php if (!empty($admin['ttd_digital'])): ?>
-        <img src="<?= base_url('uploads/ttd/'.$admin['ttd_digital']) ?>"
-             class="w-32 border mt-2">
-    <?php endif; ?>
-
-    <button class="px-5 py-2 bg-[var(--polban-blue)] text-white rounded-lg w-full">
-        Simpan Perubahan
-    </button>
-</form>
+    <div class="mt-8 flex items-center justify-center gap-2 text-slate-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+        </svg>
+        <span class="text-[11px] uppercase tracking-widest font-medium text-center">Security Access: Admin Level - KINETRACK</span>
+    </div>
 </div>
 
 <?= $this->endSection() ?>
