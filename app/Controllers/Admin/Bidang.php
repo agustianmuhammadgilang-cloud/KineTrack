@@ -8,15 +8,77 @@ use App\Models\BidangModel;
 class Bidang extends BaseController
 {
     // Menampilkan daftar unit kerja
-    public function index()
-    {
-        $model = new BidangModel();
+public function index()
+{
+    $model = new \App\Models\BidangModel();
 
-        $data['jurusan'] = $model->where('jenis_unit', 'jurusan')->findAll();
-        $data['prodi']   = $model->where('jenis_unit', 'prodi')->findAll();
+    $keyword = $this->request->getGet('q');
 
-        return view('admin/bidang/index', $data);
+    // =============================
+    // DEFAULT (tanpa search)
+    // =============================
+    if (!$keyword) {
+        return view('admin/bidang/index', [
+            'jurusan' => $model->where('jenis_unit', 'jurusan')->findAll(),
+            'prodi'   => $model->where('jenis_unit', 'prodi')->findAll(),
+            'keyword' => null
+        ]);
     }
+
+    // =============================
+    // SEARCH MODE
+    // =============================
+
+    // 1. Cari jurusan yang match keyword
+    $jurusanMatch = $model
+        ->where('jenis_unit', 'jurusan')
+        ->like('nama_bidang', $keyword)
+        ->findAll();
+
+    // Ambil ID jurusan yang match
+    $jurusanIds = array_column($jurusanMatch, 'id');
+
+    // 2. Cari prodi yang match keyword
+    $prodiMatch = $model
+        ->where('jenis_unit', 'prodi')
+        ->like('nama_bidang', $keyword)
+        ->findAll();
+
+    // Ambil parent_id dari prodi yang match
+    $parentIdsFromProdi = array_unique(array_column($prodiMatch, 'parent_id'));
+
+    // 3. Gabungkan jurusan:
+    // - jurusan hasil search langsung
+    // - jurusan induk dari prodi yang match
+    $allJurusanIds = array_unique(array_merge($jurusanIds, $parentIdsFromProdi));
+
+    $jurusanFinal = [];
+    if (!empty($allJurusanIds)) {
+        $jurusanFinal = $model
+            ->where('jenis_unit', 'jurusan')
+            ->whereIn('id', $allJurusanIds)
+            ->findAll();
+    }
+
+    // 4. Ambil prodi:
+    // - prodi di bawah jurusan yang tampil
+    // - ATAU prodi hasil search langsung
+    $prodiFinal = [];
+
+    if (!empty($allJurusanIds)) {
+        $prodiFinal = $model
+            ->where('jenis_unit', 'prodi')
+            ->whereIn('parent_id', $allJurusanIds)
+            ->findAll();
+    }
+
+    return view('admin/bidang/index', [
+        'jurusan' => $jurusanFinal,
+        'prodi'   => $prodiFinal,
+        'keyword' => $keyword
+    ]);
+}
+
     // Menampilkan form untuk menambahkan unit kerja baru
     public function create()
     {

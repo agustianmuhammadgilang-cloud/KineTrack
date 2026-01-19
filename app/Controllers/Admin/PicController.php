@@ -34,7 +34,9 @@ class PicController extends BaseController
 // Menampilkan daftar PIC indikator
 public function index()
 {
-    $data['pic_list'] = $this->picModel
+    $keyword = $this->request->getGet('q');
+
+    $builder = $this->picModel
         ->select('
             pic_indikator.id,
             indikator_kinerja.nama_indikator,
@@ -47,12 +49,28 @@ public function index()
         ->join('jabatan', 'jabatan.id = pic_indikator.jabatan_id', 'left')
         ->join('bidang', 'bidang.id = pic_indikator.bidang_id', 'left')
         ->join('indikator_kinerja', 'indikator_kinerja.id = pic_indikator.indikator_id')
-        ->join('tahun_anggaran', 'tahun_anggaran.id = pic_indikator.tahun_id') // <-- tambah join ini
+        ->join('tahun_anggaran', 'tahun_anggaran.id = pic_indikator.tahun_id');
+
+    // 🔍 SEARCH
+    if (!empty($keyword)) {
+        $builder->groupStart()
+            ->like('users.nama', $keyword)
+            ->orLike('indikator_kinerja.nama_indikator', $keyword)
+            ->orLike('jabatan.nama_jabatan', $keyword)
+            ->orLike('bidang.nama_bidang', $keyword)
+            ->orLike('tahun_anggaran.tahun', $keyword)
+        ->groupEnd();
+    }
+
+    $data['pic_list'] = $builder
         ->orderBy('pic_indikator.id', 'ASC')
         ->findAll();
 
+    $data['keyword'] = $keyword;
+
     return view('admin/pic/index', $data);
 }
+
 
 // Menampilkan form untuk menambahkan PIC baru
     public function create()

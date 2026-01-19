@@ -82,13 +82,32 @@
         </div>
 
         <div>
-            <a href="<?= base_url('admin/bidang/create') ?>" 
-               class="btn-add-polban inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider active:scale-95">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </svg>
-                Tambah Unit Kerja
-            </a>
+<div class="flex items-center gap-3">
+    <div class="relative">
+        <input 
+            type="text" 
+            id="searchBidang"
+            placeholder="Cari jurusan / prodi..."
+            class="pl-10 pr-4 py-2 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-blue-100 w-64"
+        >
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+        </span>
+    </div>
+
+    <a href="<?= base_url('admin/bidang/create') ?>" 
+       class="btn-add-polban inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 4v16m8-8H4" />
+        </svg>
+        Tambah Unit Kerja
+    </a>
+</div>
+
         </div>
     </div>
 
@@ -116,7 +135,10 @@
                 <tbody class="text-sm text-slate-600">
                     <?php $no = 1; ?>
                     <?php foreach($jurusan as $j): ?>
-                        <tr class="row-jurusan border-b border-slate-100">
+                        <tr class="row-jurusan border-b border-slate-100"
+                            data-type="jurusan"
+                            data-name="<?= strtolower($j['nama_bidang']) ?>"
+                            data-id="<?= $j['id'] ?>">
                             <td class="p-5 text-center font-bold text-slate-400"><?= $no++ ?></td>
                             <td class="p-5">
                                 <div class="flex items-center gap-3">
@@ -148,7 +170,10 @@
 
                         <?php foreach($prodi as $p): ?>
                             <?php if($p['parent_id'] == $j['id']): ?>
-                            <tr class="row-prodi border-b border-slate-50">
+                            <tr class="row-prodi border-b border-slate-50"
+                                data-type="prodi"
+                                data-name="<?= strtolower($p['nama_bidang']) ?>"
+                                data-parent="<?= $p['parent_id'] ?>">
                                 <td class="p-4"></td>
                                 <td class="p-4 pl-12">
                                     <div class="flex items-center gap-3">
@@ -193,5 +218,50 @@
         </div>
     </div>
 </div>
+
+<script>
+document.getElementById('searchBidang').addEventListener('input', function () {
+    const keyword = this.value.toLowerCase();
+
+    const jurusanRows = document.querySelectorAll('tr[data-type="jurusan"]');
+    const prodiRows   = document.querySelectorAll('tr[data-type="prodi"]');
+
+    // Reset
+    jurusanRows.forEach(j => j.style.display = '');
+    prodiRows.forEach(p => p.style.display = '');
+
+    if (!keyword) return;
+
+    jurusanRows.forEach(jurusan => {
+        const jurusanName = jurusan.dataset.name;
+        const jurusanId   = jurusan.dataset.id;
+
+        const jurusanMatch = jurusanName.includes(keyword);
+
+        let hasProdiMatch = false;
+
+        prodiRows.forEach(prodi => {
+            if (prodi.dataset.parent === jurusanId) {
+                const prodiMatch = prodi.dataset.name.includes(keyword);
+
+                if (prodiMatch) {
+                    hasProdiMatch = true;
+                    prodi.style.display = '';
+                } else {
+                    // SEMBUNYIKAN prodi hanya kalau jurusannya juga tidak match
+                    prodi.style.display = jurusanMatch ? '' : 'none';
+                }
+            }
+        });
+
+        if (jurusanMatch || hasProdiMatch) {
+            jurusan.style.display = '';
+        } else {
+            jurusan.style.display = 'none';
+        }
+    });
+});
+</script>
+
 
 <?= $this->endSection() ?>

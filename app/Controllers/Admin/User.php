@@ -21,16 +21,33 @@ class User extends BaseController
         $this->userModel = new UserModel();
     }
 // Menampilkan daftar user
-    public function index()
-    {
-        $data['users'] = $this->userModel
-            ->select('users.*, jabatan.nama_jabatan, bidang.nama_bidang')
-            ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
-            ->join('bidang', 'bidang.id = users.bidang_id', 'left')
-            ->findAll();
+public function index()
+{
+    $keyword = $this->request->getGet('q');
 
-        return view('admin/users/index', $data);
+    $builder = $this->userModel
+        ->select('users.*, jabatan.nama_jabatan, bidang.nama_bidang')
+        ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
+        ->join('bidang', 'bidang.id = users.bidang_id', 'left');
+
+    // 🔍 GLOBAL SEARCH
+    if (!empty($keyword)) {
+        $builder->groupStart()
+            ->like('users.nama', $keyword)
+            ->orLike('users.email', $keyword)
+            ->orLike('jabatan.nama_jabatan', $keyword)
+            ->orLike('bidang.nama_bidang', $keyword)
+        ->groupEnd();
     }
+
+    $data = [
+        'users'   => $builder->findAll(),
+        'keyword' => $keyword
+    ];
+
+    return view('admin/users/index', $data);
+}
+
 
     public function exportPdf()
 {

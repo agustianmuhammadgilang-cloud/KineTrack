@@ -91,6 +91,48 @@
             </div>
         </div>
 
+<form method="get" class="mb-8 w-full max-w-2xl">
+    <div class="group relative flex items-center transition-all duration-300">
+        <div class="relative flex-1 group">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" 
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.5 10.5a7.5 7.5 0 0013.15 6.15z" />
+                </svg>
+            </div>
+            
+            <input
+                type="text"
+                name="q"
+                value="<?= esc($keyword ?? '') ?>"
+                placeholder="Cari nama, email, jabatan..."
+                class="block w-full pl-11 pr-24 py-3.5 text-sm bg-white border border-slate-200 rounded-2xl
+                       focus:ring-4 focus:ring-blue-50 focus:border-blue-600 focus:outline-none
+                       transition-all duration-300 shadow-sm"
+            >
+
+            <div class="absolute inset-y-1.5 right-1.5 flex gap-1.5">
+                <?php if (!empty($keyword)): ?>
+                    <a href="<?= base_url('admin/users') ?>" 
+                       title="Reset pencarian"
+                       class="flex items-center justify-center px-3 rounded-xl text-slate-400 hover:bg-slate-100 hover:text-red-500 transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </a>
+                <?php endif; ?>
+                
+                <button type="submit"
+                    class="btn-polban px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider shadow-md active:scale-95">
+                    Cari
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
         <div class="flex gap-3">
             <a href="<?= base_url('admin/users/export-excel') ?>" 
    class="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider border border-emerald-500 text-emerald-600 hover:bg-emerald-50 transition">

@@ -77,7 +77,56 @@
                 </p>
             </div>
         </div>
+<div>
+    <div class="flex-1 max-w-md">
+    <form method="get" action="<?= base_url('admin/pic') ?>" class="relative group">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+            <svg class="w-4 h-4 text-slate-400 group-focus-within:text-blue-600 transition-colors" 
+                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+        </div>
 
+        <input 
+            type="text"
+            name="q"
+            value="<?= esc($keyword ?? '') ?>"
+            placeholder="Cari indikator, PIC, atau tahun..."
+            class="block w-full pl-10 pr-12 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold
+                   placeholder:text-slate-400 placeholder:font-normal
+                   focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-blue-500 
+                   transition-all duration-300 shadow-sm"
+        >
+
+        <div class="absolute inset-y-1 right-1 flex items-center gap-1">
+            <?php if (!empty($keyword)): ?>
+                <a href="<?= base_url('admin/pic') ?>" 
+                   class="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                   title="Reset Pencarian">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </a>
+            <?php endif; ?>
+            
+            <button type="submit" 
+                    class="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white rounded-lg transition-all duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+        </div>
+    </form>
+    
+    <?php if (!empty($keyword)): ?>
+        <p class="absolute mt-1.5 text-[10px] text-slate-400 italic">
+            Hasil pencarian untuk: <span class="text-blue-600 font-bold">"<?= esc($keyword) ?>"</span>
+        </p>
+    <?php endif; ?>
+</div>
+
+</div>
         <div>
 
         <a href="<?= base_url('admin/pic/export-excel') ?>" 
