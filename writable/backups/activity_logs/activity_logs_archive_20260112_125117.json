@@ -1,0 +1,79 @@
+{
+    "meta": {
+        "type": "AUTO_ARCHIVE_BACKUP",
+        "total_records": 5,
+        "period": {
+            "from": "2025-10-12",
+            "to": "2025-10-12"
+        },
+        "created_at": "2026-01-12 12:51:17",
+        "created_by": "SYSTEM"
+    },
+    "data": [
+        {
+            "id": "1",
+            "user_id": "1",
+            "role": "admin",
+            "action": "login",
+            "description": "Login ke sistem",
+            "subject_type": null,
+            "subject_id": null,
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-12 12:50:50",
+            "archived_at": "2026-01-12 12:51:17"
+        },
+        {
+            "id": "2",
+            "user_id": "1",
+            "role": "admin",
+            "action": "create_jabatan",
+            "description": "Menambahkan jabatan: Ketua Jurusan",
+            "subject_type": "jabatan",
+            "subject_id": "1",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-12 12:50:50",
+            "archived_at": "2026-01-12 12:51:17"
+        },
+        {
+            "id": "3",
+            "user_id": "1",
+            "role": "admin",
+            "action": "create_jabatan",
+            "description": "Menambahkan jabatan: Ketua Prodi",
+            "subject_type": "jabatan",
+            "subject_id": "2",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-12 12:50:50",
+            "archived_at": "2026-01-12 12:51:17"
+        },
+        {
+            "id": "4",
+            "user_id": "1",
+            "role": "admin",
+            "action": "create_jabatan",
+            "description": "Menambahkan jabatan: Staff Jurusan",
+            "subject_type": "jabatan",
+            "subject_id": "3",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-12 12:50:50",
+            "archived_at": "2026-01-12 12:51:17"
+        },
+        {
+            "id": "5",
+            "user_id": "1",
+            "role": "admin",
+            "action": "create_jabatan",
+            "description": "Menambahkan jabatan: Staff Prodi",
+            "subject_type": "jabatan",
+            "subject_id": "4",
+            "ip_address": "::1",
+            "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/143.0.0.0 Safari\/537.36",
+            "created_at": "2025-10-12 12:50:50",
+            "archived_at": "2026-01-12 12:51:17"
+        }
+    ]
+}

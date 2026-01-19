@@ -1,0 +1,6 @@
+﻿Tanggal;"User ID";Role;Aksi;Deskripsi;Subjek;IP;"User Agent"
+"12-10-2025 12:50";1;ADMIN;LOGIN;"Login ke sistem";"- #-";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-10-2025 12:50";1;ADMIN;CREATE_JABATAN;"Menambahkan jabatan: Ketua Jurusan";"jabatan #1";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-10-2025 12:50";1;ADMIN;CREATE_JABATAN;"Menambahkan jabatan: Ketua Prodi";"jabatan #2";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-10-2025 12:50";1;ADMIN;CREATE_JABATAN;"Menambahkan jabatan: Staff Jurusan";"jabatan #3";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"12-10-2025 12:50";1;ADMIN;CREATE_JABATAN;"Menambahkan jabatan: Staff Prodi";"jabatan #4";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"

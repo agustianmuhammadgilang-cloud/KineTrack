@@ -45,7 +45,7 @@ if (session()->has('user_id')) {
 
 
   :root {
-    --polban-blue: #1D2F83;
+    --polban-blue: #003366;
     --polban-orange: #F58025;
   }
 

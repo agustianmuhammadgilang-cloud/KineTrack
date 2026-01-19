@@ -1,0 +1,6 @@
+﻿Tanggal;"User ID";Role;Aksi;Deskripsi;Subjek;IP;"User Agent"
+"14-10-2025 11:28";1;ADMIN;CREATE_USER;"Menambahkan user baru: Algies_444";"users #5";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 11:28";1;ADMIN;CREATE_TAHUN;"Menambahkan tahun anggaran 2025 dan mengaktifkannya";"tahun_anggaran #1";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 11:28";1;ADMIN;CREATE_TAHUN;"Menambahkan tahun anggaran 2021 dan mengaktifkannya";"tahun_anggaran #2";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 11:28";1;ADMIN;CREATE_TAHUN;"Menambahkan tahun anggaran 2022 dan mengaktifkannya";"tahun_anggaran #3";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+"14-10-2025 11:28";1;ADMIN;CREATE_TAHUN;"Menambahkan tahun anggaran 2024 dan mengaktifkannya";"tahun_anggaran #4";::1;"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
