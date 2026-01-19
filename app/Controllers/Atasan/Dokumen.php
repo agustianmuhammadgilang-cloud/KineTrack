@@ -374,6 +374,12 @@ class Dokumen extends BaseController
         return redirect()->back();
     }
 
+    // ======================
+    // FILTER INPUT (FINAL)
+    // ======================
+    $date = $this->request->getGet('date'); // format: YYYY-MM-DD
+    $q    = $this->request->getGet('q');    // judul dokumen
+
     // ============================
     // KETUA JURUSAN (FULL ARSIP)
     // ============================
@@ -398,17 +404,42 @@ class Dokumen extends BaseController
             ->orderBy('updated_at', 'DESC')
             ->findAll();
     }
-// LOG AKTIVITAS
-    log_activity(
-    'view_dokumen_arsip',
-    'Melihat arsip dokumen kinerja',
-    'dokumen',
-    null
-);
 
+    // ======================
+    // FILTER DATA (PHP LEVEL)
+    // TANPA UBAH LOGIKA QUERY
+    // ======================
+    $data['dokumen'] = array_filter($data['dokumen'], function ($d) use ($date, $q) {
+
+        // FILTER TANGGAL (updated_at)
+        if ($date) {
+            if (date('Y-m-d', strtotime($d['updated_at'])) !== $date) {
+                return false;
+            }
+        }
+
+        // FILTER JUDUL
+        if ($q && stripos($d['judul'], $q) === false) {
+            return false;
+        }
+
+        return true;
+    });
+
+    // ======================
+    // LOG AKTIVITAS
+    // ======================
+    log_activity(
+        'search_filter_dokumen_arsip',
+        'Melakukan pencarian dan filter arsip dokumen',
+        'dokumen',
+        null
+    );
 
     return view('atasan/dokumen/arsip', $data);
 }
+
+
 
 
 /**
@@ -427,19 +458,48 @@ public function unit()
         return redirect()->back();
     }
 
+    // ======================
+    // FILTER INPUT
+    // ======================
+    $q        = $this->request->getGet('q');        // judul dokumen
+    $pengirim = $this->request->getGet('pengirim');
+    $unit     = $this->request->getGet('unit');
+
+    // DATA ASLI (JANGAN DIUBAH)
     $dokumen = $this->dokumenModel->getDokumenUnit($bidangId);
-// LOG AKTIVITAS
+
+    // ======================
+    // FILTER DI PHP (AMAN)
+    // ======================
+    $dokumen = array_filter($dokumen, function ($d) use ($q, $pengirim, $unit) {
+
+        if ($q && stripos($d['judul'], $q) === false) {
+            return false;
+        }
+
+        if ($pengirim && stripos($d['nama_pengirim'] ?? '', $pengirim) === false) {
+            return false;
+        }
+
+        if ($unit && stripos($d['nama_unit'] ?? '', $unit) === false) {
+            return false;
+        }
+
+        return true;
+    });
+
     log_activity(
-    'view_dokumen_unit',
-    'Melihat dokumen unit (read-only)',
-    'dokumen',
-    null
-);
+        'search_filter_dokumen_unit_atasan',
+        'Melakukan pencarian dan filter dokumen unit (atasan)',
+        'dokumen',
+        null
+    );
 
     return view('atasan/dokumen/unit', [
         'dokumen' => $dokumen
     ]);
 }
+
 
 //
 public function public()
@@ -448,17 +508,48 @@ public function public()
         return redirect()->back()->with('error', 'Akses tidak diizinkan');
     }
 
-    $data['dokumen'] = $this->dokumenModel->getDokumenPublic();
-// LOG AKTIVITAS
-    log_activity(
-    'view_dokumen_public',
-    'Melihat dokumen publik',
-    'dokumen',
-    null
-);
+    // ======================
+    // FILTER INPUT
+    // ======================
+    $q        = $this->request->getGet('q');
+    $pengirim = $this->request->getGet('pengirim');
+    $unit     = $this->request->getGet('unit');
 
-    return view('atasan/dokumen/public', $data);
+    // DATA ASLI
+    $dokumen = $this->dokumenModel->getDokumenPublic();
+
+    // ======================
+    // FILTER DI PHP
+    // ======================
+    $dokumen = array_filter($dokumen, function ($d) use ($q, $pengirim, $unit) {
+
+        if ($q && stripos($d['judul'], $q) === false) {
+            return false;
+        }
+
+        if ($pengirim && stripos($d['nama_pengirim'] ?? '', $pengirim) === false) {
+            return false;
+        }
+
+        if ($unit && stripos($d['nama_unit'] ?? '', $unit) === false) {
+            return false;
+        }
+
+        return true;
+    });
+
+    log_activity(
+        'search_filter_dokumen_public_atasan',
+        'Melakukan pencarian dan filter dokumen publik (atasan)',
+        'dokumen',
+        null
+    );
+
+    return view('atasan/dokumen/public', [
+        'dokumen' => $dokumen
+    ]);
 }
+
 
  public function exportArsipPdf()
 {

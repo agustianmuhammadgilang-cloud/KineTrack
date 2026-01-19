@@ -3,15 +3,39 @@
 
 <div class="min-h-screen bg-slate-50 px-6 py-8 font-sans text-slate-800">
 
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-        <div>
-            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
-                <span class="w-2 h-8 bg-blue-600 rounded-full"></span>
-                Dokumen Saya
-            </h1>
-            <p class="text-slate-500 mt-1 text-sm font-medium ml-5">
-                Pusat kendali berkas dan riwayat pengajuan kinerja Anda.
-            </p>
+<form method="get" class="bg-white rounded-2xl p-4 mb-6 shadow-sm">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+
+        <!-- SEARCH -->
+        <input type="text"
+               name="q"
+               value="<?= esc($_GET['q'] ?? '') ?>"
+               placeholder="Cari judul dokumen..."
+               class="border rounded-xl px-4 py-2 w-full">
+
+        <!-- TANGGAL -->
+        <input type="date"
+               name="date"
+               value="<?= esc($_GET['date'] ?? '') ?>"
+               class="border rounded-xl px-4 py-2 w-full">
+               
+        <!-- BUTTON -->
+        <button type="submit"
+                class="bg-orange-500 hover:bg-orange-600
+                       text-white rounded-xl px-4 py-2">
+            Filter
+        </button>
+    </div>
+</form>
+
+
+<?php if (empty($dokumen)): ?>
+    <!-- EMPTY STATE -->
+    <div class="bg-white rounded-2xl p-10 text-center border border-dashed">
+        <div class="flex justify-center mb-4">
+            <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 8v8m4-4H8"/>
+            </svg>
         </div>
 
         <a href="<?= base_url('staff/dokumen/create') ?>"

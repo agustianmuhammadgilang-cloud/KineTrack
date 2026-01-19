@@ -37,69 +37,73 @@ class GrafikKinerjaAtasanModel extends Model
        ⚠️ RUMUS PROGRES TIDAK DIUBAH
        ===================================================== */
     public function getGrafikIndikatorByTahun($tahunId, $userId)
-    {
-        return $this->db->query("
-            SELECT
-                ik.id AS indikator_id,
-                ss.kode_sasaran,
-                ss.nama_sasaran,
-                ik.kode_indikator,
-                ik.nama_indikator,
-                ik.mode,
+{
+    return $this->db->query("
+        SELECT
+            ik.id AS indikator_id,
+            ss.kode_sasaran,
+            ss.nama_sasaran,
+            ik.kode_indikator,
+            ik.nama_indikator,
+            ik.mode,
 
-                -- TARGET PK TAHUNAN (SAMA)
-                CASE
-                    WHEN ik.mode = 'akumulatif' THEN ik.target_tw4
-                    ELSE ik.target_tw1 + ik.target_tw2 + ik.target_tw3 + ik.target_tw4
-                END AS target_pk,
+            CASE
+                WHEN ik.mode = 'akumulatif' THEN ik.target_tw4
+                ELSE ik.target_tw1 + ik.target_tw2 + ik.target_tw3 + ik.target_tw4
+            END AS target_pk,
 
-                -- REALISASI (KHUSUS USER)
-                CASE
-                    WHEN ik.mode = 'akumulatif' THEN COALESCE(MAX(pk.realisasi), 0)
-                    ELSE
-                        LEAST(COALESCE(SUM(CASE WHEN pk.triwulan = 1 THEN pk.realisasi ELSE 0 END),0), ik.target_tw1)
-                      + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan = 2 THEN pk.realisasi ELSE 0 END),0), ik.target_tw2)
-                      + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan = 3 THEN pk.realisasi ELSE 0 END),0), ik.target_tw3)
-                      + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan = 4 THEN pk.realisasi ELSE 0 END),0), ik.target_tw4)
-                END AS realisasi,
+            CASE
+                WHEN ik.mode = 'akumulatif' THEN COALESCE(MAX(pk.realisasi), 0)
+                ELSE
+                    LEAST(COALESCE(SUM(CASE WHEN pk.triwulan = 1 THEN pk.realisasi ELSE 0 END),0), ik.target_tw1)
+                  + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan = 2 THEN pk.realisasi ELSE 0 END),0), ik.target_tw2)
+                  + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan = 3 THEN pk.realisasi ELSE 0 END),0), ik.target_tw3)
+                  + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan = 4 THEN pk.realisasi ELSE 0 END),0), ik.target_tw4)
+            END AS realisasi,
 
-                -- PROGRES (%)
-                LEAST(
-                    (
+            LEAST(
+                (
+                    CASE
+                        WHEN ik.mode = 'akumulatif' THEN COALESCE(MAX(pk.realisasi), 0)
+                        ELSE
+                            LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=1 THEN pk.realisasi ELSE 0 END),0), ik.target_tw1)
+                          + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=2 THEN pk.realisasi ELSE 0 END),0), ik.target_tw2)
+                          + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=3 THEN pk.realisasi ELSE 0 END),0), ik.target_tw3)
+                          + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=4 THEN pk.realisasi ELSE 0 END),0), ik.target_tw4)
+                    END
+                    /
+                    NULLIF(
                         CASE
-                            WHEN ik.mode = 'akumulatif' THEN COALESCE(MAX(pk.realisasi), 0)
-                            ELSE
-                                LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=1 THEN pk.realisasi ELSE 0 END),0), ik.target_tw1)
-                              + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=2 THEN pk.realisasi ELSE 0 END),0), ik.target_tw2)
-                              + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=3 THEN pk.realisasi ELSE 0 END),0), ik.target_tw3)
-                              + LEAST(COALESCE(SUM(CASE WHEN pk.triwulan=4 THEN pk.realisasi ELSE 0 END),0), ik.target_tw4)
-                        END
-                        /
-                        NULLIF(
-                            CASE
-                                WHEN ik.mode='akumulatif' THEN ik.target_tw4
-                                ELSE ik.target_tw1 + ik.target_tw2 + ik.target_tw3 + ik.target_tw4
-                            END,
-                            0
-                        )
-                    ) * 100,
-                    100
-                ) AS progres
+                            WHEN ik.mode='akumulatif' THEN ik.target_tw4
+                            ELSE ik.target_tw1 + ik.target_tw2 + ik.target_tw3 + ik.target_tw4
+                        END,
+                        0
+                    )
+                ) * 100,
+                100
+            ) AS progres
 
-            FROM indikator_kinerja ik
-            JOIN sasaran_strategis ss 
-                ON ss.id = ik.sasaran_id
+        FROM indikator_kinerja ik
+        JOIN sasaran_strategis ss 
+            ON ss.id = ik.sasaran_id
 
-            LEFT JOIN pengukuran_kinerja pk 
-                ON pk.indikator_id = ik.id
-               AND pk.user_id = ?
+        -- 🔐 FILTER KEPEMILIKAN (WAJIB ADA DATA USER)
+        INNER JOIN pengukuran_kinerja pk_owner
+            ON pk_owner.indikator_id = ik.id
+           AND pk_owner.user_id = ?
 
-            WHERE ss.tahun_id = ?
+        -- 🔢 HITUNG REALISASI
+        LEFT JOIN pengukuran_kinerja pk
+            ON pk.indikator_id = ik.id
+           AND pk.user_id = ?
 
-            GROUP BY ik.id
-            ORDER BY ss.kode_sasaran ASC, ik.kode_indikator ASC
-        ", [$userId, $tahunId])->getResultArray();
-    }
+        WHERE ss.tahun_id = ?
+
+        GROUP BY ik.id
+        ORDER BY ss.kode_sasaran ASC, ik.kode_indikator ASC
+    ", [$userId, $userId, $tahunId])->getResultArray();
+}
+
 
     /* =====================================================
        GRAFIK TRIWULAN — STAFF (DIRI SENDIRI)

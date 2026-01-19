@@ -27,7 +27,9 @@ class DokumenTidakTervalidasi extends BaseController
      */
 public function kategori()
 {
-    $kategori = $this->kategoriModel
+    $keyword = $this->request->getGet('q');
+
+    $builder = $this->kategoriModel
         ->select('kategori_dokumen.*, COUNT(dk.id) as total')
         ->join(
             'dokumen_kinerja dk',
@@ -36,13 +38,22 @@ public function kategori()
         )
         ->whereIn('kategori_dokumen.status', ['pending', 'rejected'])
         ->groupBy('kategori_dokumen.id')
-        ->orderBy('kategori_dokumen.nama_kategori', 'ASC')
-        ->findAll();
+        ->orderBy('kategori_dokumen.nama_kategori', 'ASC');
+
+    // 🔍 SEARCH KHUSUS TIDAK TERVALIDASI
+    if ($keyword) {
+        $builder->groupStart()
+            ->like('kategori_dokumen.nama_kategori', $keyword)
+            ->orLike('kategori_dokumen.deskripsi', $keyword)
+        ->groupEnd();
+    }
 
     return view('admin/dokumen_tidak_tervalidasi/kategori', [
-        'kategori' => $kategori
+        'kategori' => $builder->findAll(),
+        'keyword'  => $keyword
     ]);
 }
+
 
 
     /**

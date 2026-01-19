@@ -24,6 +24,32 @@
         Upload Dokumen
     </a>
 </div>
+<!-- FILTER -->
+<form method="get" class="bg-white rounded-2xl p-4 mb-8 shadow-sm">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+        <!-- SEARCH NAMA -->
+        <input type="text"
+               name="q"
+               value="<?= esc($_GET['q'] ?? '') ?>"
+               placeholder="Cari nama dokumen..."
+               class="border rounded-xl px-4 py-2 w-full">
+
+        <!-- FILTER TANGGAL -->
+        <input type="date"
+               name="date"
+               value="<?= esc($_GET['date'] ?? '') ?>"
+               class="border rounded-xl px-4 py-2 w-full">
+
+        <!-- BUTTON -->
+        <button type="submit"
+                class="bg-orange-500 hover:bg-orange-600
+                       text-white rounded-xl px-4 py-2">
+            Cari
+        </button>
+    </div>
+</form>
+
 
 <!-- EMPTY STATE -->
 <?php if (empty($dokumen)): ?>

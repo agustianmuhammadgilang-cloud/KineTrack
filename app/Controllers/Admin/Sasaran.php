@@ -20,16 +20,21 @@ class Sasaran extends BaseController
     /* =============================
        INDEX (LIST SASARAN)
     ============================== */
-    public function index()
-    {
-        $data['sasaran'] = $this->model
-            ->select('sasaran_strategis.*, tahun_anggaran.tahun')
-            ->join('tahun_anggaran', 'tahun_anggaran.id = sasaran_strategis.tahun_id')
-            ->orderBy('tahun_anggaran.tahun', 'DESC')
-            ->findAll();
+public function index()
+{
+    $data['sasaran'] = $this->model
+        ->select('sasaran_strategis.*, tahun_anggaran.tahun')
+        ->join(
+            'tahun_anggaran',
+            'tahun_anggaran.id = sasaran_strategis.tahun_id'
+        )
+        ->where('tahun_anggaran.status', 'active') // 🔥 FILTER TAHUN AKTIF
+        ->orderBy('tahun_anggaran.tahun', 'DESC')
+        ->findAll();
 
-        return view('admin/sasaran/index', $data);
-    }
+    return view('admin/sasaran/index', $data);
+}
+
 
     /* =============================
        CREATE FORM
