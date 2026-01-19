@@ -23,15 +23,20 @@ class KategoriDokumen extends BaseController
     // ============================
     // LIST KATEGORI
     // ============================
-    public function index()
-    {
-        $data = [
-            'title'    => 'Kategori Dokumen',
-            'kategori' => $this->kategoriModel->findAll()
-        ];
+public function index()
+{
+    $keyword = $this->request->getGet('q');
 
-        return view('admin/kategori/index', $data);
-    }
+    $kategori = $keyword
+        ? $this->kategoriModel->searchAdmin($keyword)
+        : $this->kategoriModel->findAll();
+
+    return view('admin/kategori/index', [
+        'title'    => 'Kategori Dokumen',
+        'kategori' => $kategori,
+        'keyword'  => $keyword
+    ]);
+}
 
     // ============================
     // FORM TAMBAH

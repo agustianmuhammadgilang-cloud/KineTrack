@@ -1,234 +1,269 @@
 <?= $this->extend('layout/admin_template') ?>
 <?= $this->section('content') ?>
 
-<div class="min-h-screen bg-[#F8FAFC] pb-12">
-    <div class="h-2 w-full flex">
-        <div class="h-full w-1/2 bg-[#1D2F83]"></div>
-        <div class="h-full w-1/2 bg-[#F58025]"></div>
-    </div>
+<style>
+    :root {
+        --polban-blue: #003366;
+        --polban-blue-light: #004a94;
+        --polban-gold: #D4AF37;
+        --polban-gold-soft: #FCF8E3;
+        --slate-soft: #f8fafc;
+        --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        
-<div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        
-    <div class="py-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div class="animate-fade-in-down">
-            <nav class="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">
-                <span class="hover:text-[#1D2F83] cursor-pointer transition-colors">Dashboard</span>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+    /* Konsistensi Card dari User View */
+    .unit-card {
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid #eef2f6;
+        background: white;
+        box-shadow: 0 10px 25px -5px rgba(0, 51, 102, 0.04);
+        margin-bottom: 2rem;
+    }
+
+    .unit-header-polban {
+        background-color: var(--polban-blue);
+        border-bottom: 3px solid var(--polban-gold);
+        padding: 1rem 1.5rem;
+    }
+
+    /* Row Styling agar konsisten dengan User Row */
+    .category-row {
+        transition: var(--transition-smooth);
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .category-row:hover {
+        background-color: var(--slate-soft);
+        box-shadow: inset 4px 0 0 0 var(--polban-blue);
+    }
+
+    /* Button Styling */
+    .btn-polban {
+        transition: var(--transition-smooth);
+        background-color: var(--polban-blue);
+        color: white;
+    }
+    
+    .btn-polban:hover {
+        background-color: var(--polban-blue-light);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 51, 102, 0.2);
+    }
+
+    .btn-outline-excel {
+        border: 1.5px solid #10b981;
+        color: #10b981;
+        transition: var(--transition-smooth);
+    }
+
+    .btn-outline-excel:hover {
+        background-color: #f0fdf4;
+        transform: translateY(-2px);
+    }
+
+    dialog::backdrop {
+        backdrop-filter: blur(4px);
+        background: rgba(0, 51, 102, 0.3);
+    }
+</style>
+
+<div class="px-4 py-8 max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div class="flex items-center gap-5">
+            <div class="w-16 h-16 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center shadow-sm">
+                <svg class="w-9 h-9 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
-                <span class="text-[#1D2F83]">Kategori Dokumen</span>
-            </nav>
-            <h1 class="text-4xl font-black text-[#1D2F83] tracking-tight">
-                Master <span class="text-[#F58025]">Kategori</span>
-            </h1>
-            <p class="text-gray-500 mt-1 font-medium italic">Manajemen repositori dokumen kinerja POLBAN.</p>
+            </div>
+            <div>
+                <h4 class="text-2xl font-black text-blue-900 tracking-tight">
+                    Repository <span class="text-slate-400 font-light">|</span> <span class="text-blue-600">Kategori Dokumen</span>
+                </h4>
+                <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-[0.2em] mt-1">
+                    Kelola struktur wadah arsip digital kinerja
+                </p>
+            </div>
         </div>
-        
+
+        <form method="get" class="mb-0 w-full max-w-xl">
+    <div class="group relative flex items-center transition-all duration-300">
+        <div class="relative flex-1 group">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" 
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.5 10.5a7.5 7.5 0 0013.15 6.15z" />
+                </svg>
+            </div>
+            
+            <input
+                type="text"
+                name="q"
+                value="<?= esc($keyword ?? '') ?>"
+                placeholder="Cari kategori atau deskripsi..."
+                class="block w-full pl-11 pr-24 py-3.5 text-sm bg-white border border-slate-200 rounded-2xl
+                       focus:ring-4 focus:ring-blue-50 focus:border-blue-600 focus:outline-none
+                       transition-all duration-300 shadow-sm"
+            >
+
+            <div class="absolute inset-y-1.5 right-1.5 flex gap-1.5">
+                <?php if (!empty($keyword)): ?>
+                    <a href="<?= base_url('admin/kategori-dokumen') ?>" 
+                       title="Reset pencarian"
+                       class="flex items-center justify-center px-3 rounded-xl text-slate-400 hover:bg-slate-100 hover:text-red-500 transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </a>
+                <?php endif; ?>
+                
+                <button type="submit"
+                    class="btn-polban px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider shadow-md active:scale-95">
+                    Cari
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
         <div class="flex gap-3">
-            <!-- Tombol Export -->
-             <a href="<?= base_url('admin/kategori-dokumen/export-excel') ?>"
-   class="group relative inline-flex items-center justify-center gap-3 bg-[#10B981] hover:bg-green-600 text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-green-100 transition-all hover:-translate-y-1 active:scale-95 overflow-hidden">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-              d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
-    </svg>
-    Export Excel
-</a>
-
-            <a href="<?= base_url('admin/kategori-dokumen/export') ?>"
-               class="group relative inline-flex items-center justify-center gap-3 bg-[#F58025] hover:bg-orange-600 text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-orange-100 transition-all hover:-translate-y-1 active:scale-95 overflow-hidden">
-                <div class="absolute inset-0 w-3 bg-white/10 skew-x-[-20deg] group-hover:left-full transition-all duration-700 -left-full"></div>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
-                </svg>
-                Export Dokumen
+            <a href="<?= base_url('admin/kategori-dokumen/export-excel') ?>" 
+               class="btn-outline-excel inline-flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider">
+                Export Excel
             </a>
-
-            <!-- Tombol Buat Wadah -->
-            <button onclick="document.getElementById('modal-create').showModal()"
-                    class="group relative inline-flex items-center justify-center gap-3 bg-[#1D2F83] hover:bg-[#253a9e] text-white font-bold px-8 py-4 rounded-2xl shadow-xl shadow-blue-100 transition-all hover:-translate-y-1 active:scale-95 overflow-hidden">
-                <div class="absolute inset-0 w-3 bg-white/10 skew-x-[-20deg] group-hover:left-full transition-all duration-700 -left-full"></div>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#F58025]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                Buat Wadah Baru
+            <button onclick="document.getElementById('modal-create').showModal()" 
+                class="btn-polban inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider active:scale-95">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                Tambah Wadah
             </button>
         </div>
     </div>
 
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div class="bg-blue-50 border border-blue-100 p-4 rounded-2xl">
+            <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Total Kategori</p>
+            <p class="text-2xl font-black text-blue-900"><?= count($kategori) ?></p>
+        </div>
+        <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-2xl">
+            <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Status Aktif</p>
+            <p class="text-2xl font-black text-emerald-900"><?= count(array_filter($kategori, fn($k) => $k['status'] === 'aktif')) ?></p>
+        </div>
+    </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-white">
-            <div class="bg-gradient-to-br from-[#1D2F83] to-[#2d46b8] p-6 rounded-3xl shadow-lg border-b-4 border-blue-900">
-                <p class="text-blue-200 text-sm font-bold uppercase tracking-wider">Total Kategori</p>
-                <h3 class="text-3xl font-black mt-1"><?= count($kategori) ?> <span class="text-sm font-normal text-blue-300">Item</span></h3>
-            </div>
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center justify-between group">
-                <div>
-                    <p class="text-gray-400 text-sm font-bold uppercase tracking-wider">Status Aktif</p>
-                    <h3 class="text-3xl font-black mt-1 text-gray-800">
-                        <?= count(array_filter($kategori, fn($k) => $k['status'] === 'aktif')) ?>
-                    </h3>
-                </div>
-                <div class="p-4 bg-green-50 rounded-2xl text-green-500 group-hover:rotate-12 transition-transform">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                </div>
-            </div>
+    <div class="unit-card">
+        <div class="unit-header-polban flex items-center justify-between">
+            <h5 class="text-white text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-width="2" /></svg>
+                Daftar Kategori Dokumen Terdaftar
+            </h5>
         </div>
 
-        <div class="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden relative">
-            <div class="overflow-x-auto p-4">
-                <table class="w-full border-separate border-spacing-y-3">
-                    <thead>
-                        <tr class="text-left text-gray-400 text-xs font-black uppercase tracking-[0.2em]">
-                            <th class="px-6 py-4">ID</th>
-                            <th class="px-6 py-4">Detail Wadah</th>
-                            <th class="px-6 py-4 text-center">Status</th>
-                            <th class="px-6 py-4 text-right">Opsi Pengelola</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if(empty($kategori)): ?>
-                        <tr>
-                            <td colspan="4" class="py-20 text-center">
-                                <div class="flex flex-col items-center">
-                                    <div class="p-6 bg-gray-50 rounded-full mb-4 text-gray-300">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" /></svg>
-                                    </div>
-                                    <h4 class="text-xl font-bold text-gray-400 tracking-tight">Belum Ada Kategori Terdaftar</h4>
-                                    <p class="text-gray-400 text-sm mt-1 px-4">Silakan klik tombol "Buat Wadah Baru" untuk memulai sistem pengarsipan.</p>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endif; ?>
+        <div class="divide-y divide-slate-50">
+            <?php if(empty($kategori)): ?>
+                <div class="p-20 text-center text-slate-400">
+                    <p class="font-bold">Data tidak ditemukan.</p>
+                </div>
+            <?php endif; ?>
 
-                        <?php foreach ($kategori as $i => $k): ?>
-                        <tr class="group bg-white hover:bg-[#F8FAFC] transition-all border border-gray-100">
-                            <td class="px-6 py-5 rounded-l-2xl border-y border-l border-gray-50">
-                                <span class="bg-gray-100 text-gray-500 text-[10px] font-black px-2 py-1 rounded-md">#<?= $k['id'] ?></span>
-                            </td>
-                            <td class="px-6 py-5 border-y border-gray-50">
-                                <div class="flex items-center gap-4">
-                                    <div class="h-12 w-12 rounded-2xl bg-[#1D2F83]/5 flex items-center justify-center text-[#1D2F83] shrink-0">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>
-                                    </div>
-                                    <div>
-                                        <h4 class="text-base font-bold text-gray-800 tracking-tight group-hover:text-[#1D2F83] transition-colors"><?= esc($k['nama_kategori']) ?></h4>
-                                        <p class="text-xs text-gray-400 mt-0.5 max-w-xs truncate"><?= esc($k['deskripsi']) ?: 'Tanpa catatan tambahan.' ?></p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-5 border-y border-gray-50">
-                                <div class="flex justify-center">
-                                    <?php if ($k['status'] === 'aktif'): ?>
-                                        <span class="px-4 py-1.5 rounded-xl text-[10px] font-black uppercase bg-green-50 text-green-600 border border-green-100 flex items-center gap-2">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping"></span> Aktif
-                                        </span>
-                                    <?php else: ?>
-                                        <span class="px-4 py-1.5 rounded-xl text-[10px] font-black uppercase bg-gray-50 text-gray-400 border border-gray-100">Non-Aktif</span>
-                                    <?php endif; ?>
-                                </div>
-                            </td>
-                            <td class="px-6 py-5 rounded-r-2xl border-y border-r border-gray-50 text-right">
-                                <div class="flex justify-end gap-2">
-                                    <button onclick="document.getElementById('modal-edit-<?= $k['id'] ?>').showModal()"
-                                            class="h-10 w-10 flex items-center justify-center rounded-xl bg-blue-50 text-blue-600 hover:bg-[#1D2F83] hover:text-white transition-all shadow-sm">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-                                    </button>
-                                    <a href="<?= base_url('admin/kategori-dokumen/toggle/'.$k['id']) ?>" 
-                                       class="h-10 w-10 flex items-center justify-center rounded-xl <?= $k['status']==='aktif' ? 'bg-orange-50 text-[#F58025] hover:bg-[#F58025]' : 'bg-green-50 text-green-600 hover:bg-green-600' ?> hover:text-white transition-all shadow-sm">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
+            <?php foreach ($kategori as $k): ?>
+            <div class="category-row p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100 text-blue-900">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 mb-0.5">
+                            <span class="font-bold text-slate-800 text-lg"><?= esc($k['nama_kategori']) ?></span>
+                            <?php if($k['status'] === 'aktif'): ?>
+                                <span class="text-[9px] bg-emerald-100 text-emerald-700 font-black uppercase px-2 py-0.5 rounded-full border border-emerald-200">Aktif</span>
+                            <?php else: ?>
+                                <span class="text-[9px] bg-slate-100 text-slate-400 font-black uppercase px-2 py-0.5 rounded-full border border-slate-200">Non-Aktif</span>
+                            <?php endif; ?>
+                        </div>
+                        <p class="text-xs text-slate-500 max-w-xl"><?= esc($k['deskripsi'] ?: 'Tidak ada deskripsi tambahan.') ?></p>
+                    </div>
+                </div>
 
-                        <dialog id="modal-edit-<?= $k['id'] ?>" class="rounded-3xl shadow-2xl backdrop:bg-[#1D2F83]/40 p-0 overflow-hidden w-full max-w-lg">
-                            <div class="bg-white">
-                                <div class="h-2 bg-[#F58025]"></div>
-                                <div class="p-8">
-                                    <h3 class="text-2xl font-black text-[#1D2F83]">Penyesuaian Wadah</h3>
-                                    <p class="text-gray-400 text-sm mb-8 italic italic">ID: #<?= $k['id'] ?></p>
+                <div class="flex items-center justify-end gap-3 min-w-[200px]">
+    <button onclick="document.getElementById('modal-edit-<?= $k['id'] ?>').showModal()"
+        class="w-20 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-blue-50 text-blue-700 text-xs font-bold hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-blue-100">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-width="2" />
+        </svg>
+        Edit
+    </button>
 
-                                    <form method="post" action="<?= base_url('admin/kategori-dokumen/update/'.$k['id']) ?>" class="space-y-6">
-                                        <?= csrf_field() ?>
-                                        <div class="space-y-2">
-                                            <label class="text-xs font-black uppercase tracking-widest text-gray-500 ml-1">Nama Kategori</label>
-                                            <input type="text" name="nama_kategori" required value="<?= esc($k['nama_kategori']) ?>"
-                                                   class="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-[#F58025] transition-all font-bold text-gray-700">
-                                        </div>
-                                        <div class="space-y-2">
-                                            <label class="text-xs font-black uppercase tracking-widest text-gray-500 ml-1">Keterangan</label>
-                                            <textarea name="deskripsi" rows="4" class="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 focus:ring-2 focus:ring-[#F58025] transition-all text-gray-600"><?= esc($k['deskripsi']) ?></textarea>
-                                        </div>
-                                        <div class="flex gap-4 pt-4">
-                                            <button type="button" onclick="this.closest('dialog').close()" class="flex-1 py-4 font-bold text-gray-400 hover:text-gray-600 transition-colors">Batalkan</button>
-                                            <button type="submit" class="flex-[2] bg-[#1D2F83] text-white py-4 rounded-2xl font-black shadow-lg shadow-blue-100 hover:bg-[#2d46b8] transition-all">Simpan Perubahan</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </dialog>
-                        <?php endforeach ?>
-                    </tbody>
-                </table>
+    <a href="<?= base_url('admin/kategori-dokumen/toggle/'.$k['id']) ?>" 
+       class="w-32 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg transition-all shadow-sm border text-xs font-bold
+       <?= $k['status']==='aktif' ? 'bg-orange-50 text-orange-600 border-orange-100 hover:bg-orange-600' : 'bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-600' ?> hover:text-white">
+       
+       <?php if($k['status'] === 'aktif'): ?>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
+            Non-aktif
+       <?php else: ?>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+            Aktifkan
+       <?php endif; ?>
+    </a>
+</div>
             </div>
+
+            <dialog id="modal-edit-<?= $k['id'] ?>" class="rounded-3xl shadow-2xl p-0 overflow-hidden w-full max-w-lg">
+                <div class="bg-white">
+                    <div class="h-2 bg-blue-900"></div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-black text-blue-900">Edit Kategori</h3>
+                        <form method="post" action="<?= base_url('admin/kategori-dokumen/update/'.$k['id']) ?>" class="space-y-5 mt-6">
+                            <?= csrf_field() ?>
+                            <div>
+                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Nama Kategori</label>
+                                <input type="text" name="nama_kategori" required value="<?= esc($k['nama_kategori']) ?>"
+                                       class="w-full bg-slate-50 border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 transition-all font-bold">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Deskripsi</label>
+                                <textarea name="deskripsi" rows="3" class="w-full bg-slate-50 border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 transition-all"><?= esc($k['deskripsi']) ?></textarea>
+                            </div>
+                            <div class="flex gap-3 pt-4">
+                                <button type="button" onclick="this.closest('dialog').close()" class="flex-1 py-3 text-sm font-bold text-slate-400">Batal</button>
+                                <button type="submit" class="flex-[2] btn-polban py-3 rounded-xl font-bold shadow-lg">Simpan Perubahan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
+            <?php endforeach; ?>
         </div>
     </div>
 </div>
 
-<dialog id="modal-create" class="rounded-3xl shadow-2xl backdrop:bg-[#1D2F83]/40 p-0 overflow-hidden w-full max-w-lg animate-fade-in">
+<dialog id="modal-create" class="rounded-3xl shadow-2xl p-0 overflow-hidden w-full max-w-lg">
     <div class="bg-white">
-        <div class="h-2 bg-[#F58025]"></div>
-        <div class="p-10">
-            <div class="flex items-center gap-4 mb-8">
-                <div class="h-14 w-14 bg-orange-50 rounded-2xl flex items-center justify-center text-[#F58025]">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                </div>
-                <div>
-                    <h3 class="text-2xl font-black text-[#1D2F83]">Tambah Kategori</h3>
-                    <p class="text-gray-400 text-sm italic">Definisikan wadah dokumen kinerja baru</p>
-                </div>
-            </div>
-
-            <form method="post" action="<?= base_url('admin/kategori-dokumen/store') ?>" class="space-y-6">
+        <div class="h-2 bg-blue-900"></div>
+        <div class="p-10 text-center">
+            <h3 class="text-2xl font-black text-blue-900">Tambah Wadah Baru</h3>
+            <p class="text-xs text-slate-400 mt-1 uppercase tracking-widest font-bold">Arsip Kinerja Polban</p>
+            
+            <form method="post" action="<?= base_url('admin/kategori-dokumen/store') ?>" class="space-y-5 mt-8 text-left">
                 <?= csrf_field() ?>
-                <div class="group">
-                    <label class="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2 ml-1 transition-colors group-focus-within:text-[#F58025]">Nama Kategori</label>
-                    <input type="text" name="nama_kategori" required placeholder="Misal: Dokumen Penjaminan Mutu"
-                           class="w-full bg-gray-50 border-2 border-transparent focus:border-[#F58025] focus:bg-white rounded-2xl px-5 py-4 focus:ring-0 transition-all font-bold text-gray-700">
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Nama Kategori</label>
+                    <input type="text" name="nama_kategori" required placeholder="Contoh: Dokumen Penelitian"
+                           class="w-full bg-slate-50 border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 transition-all font-bold">
                 </div>
                 <div>
-                    <label class="block text-xs font-black uppercase tracking-widest text-gray-500 mb-2 ml-1">Deskripsi Singkat</label>
-                    <textarea name="deskripsi" rows="4" placeholder="Jelaskan tujuan kategori ini..."
-                              class="w-full bg-gray-50 border-2 border-transparent focus:border-[#F58025] focus:bg-white rounded-2xl px-5 py-4 focus:ring-0 transition-all text-gray-600"></textarea>
+                    <label class="text-[10px] font-black uppercase text-slate-400 ml-1">Deskripsi</label>
+                    <textarea name="deskripsi" rows="3" placeholder="Jelaskan isi kategori ini..."
+                              class="w-full bg-slate-50 border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 transition-all"></textarea>
                 </div>
-                <div class="flex items-center gap-6 pt-6">
-                    <button type="button" onclick="this.closest('dialog').close()" class="text-sm font-bold text-gray-400 hover:text-gray-600">Tutup</button>
-                    <button type="submit" class="flex-1 bg-[#F58025] text-white py-4 rounded-2xl font-black shadow-xl shadow-orange-100 hover:bg-orange-600 transition-all hover:-translate-y-1">Resmikan Kategori</button>
+                <div class="flex items-center gap-4 pt-6">
+                    <button type="button" onclick="this.closest('dialog').close()" class="text-sm font-bold text-slate-400">Tutup</button>
+                    <button type="submit" class="flex-1 btn-polban py-4 rounded-2xl font-black shadow-xl">Resmikan Kategori</button>
                 </div>
             </form>
         </div>
     </div>
 </dialog>
-
-<style>
-    @keyframes fade-in-down {
-        0% { opacity: 0; transform: translateY(-10px); }
-        100% { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-in-down { animation: fade-in-down 0.5s ease-out; }
-    
-    dialog::backdrop {
-        backdrop-filter: blur(4px);
-    }
-    
-    /* Custom Scrollbar for better UI */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #f1f1f1; }
-    ::-webkit-scrollbar-thumb { background: #1D2F83; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: #F58025; }
-</style>
 
 <?= $this->endSection() ?>
