@@ -1,6 +1,25 @@
 <?= $this->extend('layout/staff_template') ?>
 <?= $this->section('content') ?>
 
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+    <div>
+        <h4 class="text-2xl font-semibold text-gray-800">Dokumen Saya</h4>
+        <p class="text-sm text-gray-500 mt-1">
+            Riwayat pengajuan dokumen kinerja Anda
+        </p>
+    </div>
+
+    <a href="<?= base_url('staff/dokumen/create') ?>"
+       class="inline-flex items-center gap-2
+              bg-orange-500 hover:bg-orange-600
+              text-white px-5 py-2.5 rounded-xl shadow-sm transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+        </svg>
+        Upload Dokumen
+    </a>
+</div>
+
 <div class="min-h-screen bg-slate-50 px-6 py-8 font-sans text-slate-800">
 
 <form method="get" class="bg-white rounded-2xl p-4 mb-6 shadow-sm">
@@ -37,17 +56,9 @@
                 <path d="M12 8v8m4-4H8"/>
             </svg>
         </div>
-
-        <a href="<?= base_url('staff/dokumen/create') ?>"
-           class="inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-blue-600 text-white px-6 py-3.5 rounded-2xl font-bold shadow-xl shadow-slate-200 transition-all hover:-translate-y-1 active:scale-95 group">
-            <div class="p-1 bg-white/20 rounded-lg group-hover:bg-white/30 transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"/>
-                </svg>
-            </div>
-            Upload Dokumen Baru
-        </a>
+       
     </div>
+<?php else: ?>
 
     <?php if (empty($dokumen)): ?>
         <div class="bg-white border-2 border-dashed border-slate-200 rounded-[2rem] p-20 text-center shadow-sm">
@@ -168,5 +179,7 @@
         overflow: hidden;
     }
 </style>
+
+<?php endif; ?>
 
 <?= $this->endSection() ?>
