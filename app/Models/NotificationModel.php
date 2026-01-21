@@ -13,11 +13,11 @@ class NotificationModel extends Model
         'user_id',
         'message',
         'meta',
-        'status',
-        'created_at'
+        'status'
     ];
 
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $createdField  = 'created_at';
-    protected $updatedField  = null;
+    protected $updatedField  = 'created_at'; // ← INI KUNCINYA
 }
+

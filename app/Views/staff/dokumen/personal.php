@@ -1,158 +1,201 @@
 <?= $this->extend('layout/staff_template') ?>
 <?= $this->section('content') ?>
 
-<!-- HEADER -->
-<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
-    <div>
-        <h4 class="text-2xl font-semibold text-gray-800">
-            Dokumen Personal
-        </h4>
-        <p class="text-sm text-gray-500 mt-1">
-            Arsip dokumen pribadi yang hanya dapat Anda akses
-        </p>
-    </div>
+<style>
+    :root {
+        --polban-blue: #1D2F83;
+        --polban-blue-light: #004a94;
+        --polban-gold: #D4AF37;
+        --slate-soft: #f8fafc;
+        --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-    <a href="<?= base_url('staff/dokumen/create') ?>"
-       class="inline-flex items-center gap-2
-              bg-orange-500 hover:bg-orange-600
-              text-white px-5 py-2.5 rounded-xl shadow transition">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
-             viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M12 4v16m8-8H4"/>
-        </svg>
-        Upload Dokumen
-    </a>
-</div>
-<!-- FILTER -->
-<form method="get" class="bg-white rounded-2xl p-4 mb-8 shadow-sm">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    /* Card Styling */
+    .archive-card {
+        transition: var(--transition-smooth);
+        background: white;
+        border: 1px solid #eef2f6;
+        border-radius: 28px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
 
-        <!-- SEARCH NAMA -->
-        <input type="text"
-               name="q"
-               value="<?= esc($_GET['q'] ?? '') ?>"
-               placeholder="Cari nama dokumen..."
-               class="border rounded-xl px-4 py-2 w-full">
+    .archive-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 51, 102, 0.08);
+        border-color: var(--polban-blue);
+    }
 
-        <!-- FILTER TANGGAL -->
-        <input type="date"
-               name="date"
-               value="<?= esc($_GET['date'] ?? '') ?>"
-               class="border rounded-xl px-4 py-2 w-full">
+    .btn-polban {
+        transition: var(--transition-smooth);
+        background-color: var(--polban-blue);
+        color: white;
+    }
+    
+    .btn-polban:hover {
+        background-color: var(--polban-blue-light);
+        color: white;
+    }
 
-        <!-- BUTTON -->
-        <button type="submit"
-                class="bg-orange-500 hover:bg-orange-600
-                       text-white rounded-xl px-4 py-2">
-            Cari
-        </button>
-    </div>
-</form>
+    /* Background Icon Decorative */
+    .bg-deco {
+        position: absolute;
+        bottom: -15px;
+        right: -15px;
+        opacity: 0.03;
+        transform: rotate(-15deg);
+        transition: var(--transition-smooth);
+        pointer-events: none;
+    }
 
+    .archive-card:hover .bg-deco {
+        opacity: 0.07;
+        transform: rotate(0deg) scale(1.1);
+        color: var(--polban-blue);
+    }
 
-<!-- EMPTY STATE -->
-<?php if (empty($dokumen)): ?>
-    <div class="bg-white border border-dashed rounded-2xl p-12 text-center">
-        <div class="mx-auto w-16 h-16 flex items-center justify-center
-                    rounded-full bg-gray-100 mb-4">
-            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
-                 viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M12 4v16m8-8H4"/>
-            </svg>
-        </div>
+    .filter-input {
+        transition: var(--transition-smooth);
+        border: 1.5px solid #e2e8f0;
+    }
 
-        <p class="text-gray-700 font-medium">
-            Belum ada dokumen personal
-        </p>
-        <p class="text-sm text-gray-500 mt-1">
-            Dokumen yang Anda upload untuk kebutuhan pribadi akan muncul di sini
-        </p>
-    </div>
+    .filter-input:focus {
+        border-color: var(--polban-blue);
+        box-shadow: 0 0 0 4px rgba(0, 51, 102, 0.05);
+        outline: none;
+    }
+</style>
 
-<?php else: ?>
-
-<!-- GRID -->
-<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-
-<?php foreach ($dokumen as $d): ?>
-
-<?php
-$statusMap = [
-    'pending_kaprodi'  => ['Menunggu Kaprodi', 'bg-yellow-100 text-yellow-800'],
-    'pending_kajur'    => ['Menunggu Kajur', 'bg-blue-100 text-blue-800'],
-    'rejected_kaprodi' => ['Ditolak Kaprodi', 'bg-red-100 text-red-800'],
-    'rejected_kajur'   => ['Ditolak Kajur', 'bg-red-100 text-red-800'],
-    'archived'         => ['Disetujui', 'bg-green-100 text-green-800'],
-];
-[$label, $class] = $statusMap[$d['status']];
-?>
-
-<!-- CARD -->
-<div class="bg-white rounded-2xl border shadow-sm
-            hover:shadow-md transition flex flex-col">
-
-    <!-- HEADER -->
-    <div class="p-5 border-b">
-        <div class="flex items-start justify-between gap-3">
-            <h5 class="font-semibold text-gray-800 line-clamp-2">
-                <?= esc($d['judul']) ?>
-            </h5>
-
-            <span class="px-3 py-1 rounded-full text-xs font-medium <?= $class ?>">
-                <?= $label ?>
-            </span>
-        </div>
-
-        <p class="text-xs text-gray-500 mt-2">
-            <?= date('d M Y', strtotime($d['created_at'])) ?>
-        </p>
-    </div>
-
-    <!-- BODY -->
-    <div class="p-5 flex-1">
-        <p class="text-sm text-gray-600 line-clamp-3">
-            <?= esc($d['deskripsi'] ?? 'Tidak ada deskripsi') ?>
-        </p>
-
-        <?php if (!empty($d['catatan'])): ?>
-            <div class="mt-4 p-3 bg-red-50 border border-red-100 rounded-lg text-xs text-red-700">
-                <strong>Catatan:</strong><br>
-                <?= esc($d['catatan']) ?>
+<div class="px-4 py-8 max-w-7xl mx-auto font-sans">
+    
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
+        <div class="flex items-center gap-5">
+            <div class="w-16 h-16 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center shadow-sm text-blue-900">
+                <svg class="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
             </div>
-        <?php endif; ?>
+            <div>
+                <h1 class="text-3xl font-black text-blue-900 tracking-tight leading-none">Dokumen Personal</h1>
+                <p class="text-[11px] text-slate-400 mt-2 font-black uppercase tracking-[0.2em]">Pribadi • Politeknik Negeri Bandung</p>
+            </div>
+        </div>
     </div>
 
-    <!-- FOOTER -->
-    <div class="p-4 border-t flex items-center justify-between">
+    <div class="bg-white rounded-[2rem] p-5 mb-8 border border-slate-100 shadow-sm">
+        <form method="get" class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+            <div class="md:col-span-5 relative">
+                <input type="text" name="q" value="<?= esc($_GET['q'] ?? '') ?>" 
+                       placeholder="Cari nama dokumen..."
+                       class="filter-input w-full px-5 py-3 rounded-xl text-sm font-bold text-blue-900 bg-slate-50/50">
+            </div>
 
-        <!-- VIEW FILE -->
-        <a href="<?= base_url('uploads/dokumen/'.$d['file_path']) ?>"
-           target="_blank"
-           class="inline-flex items-center gap-2
-                  text-sm text-gray-600 hover:text-orange-600 transition">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            Lihat File
-        </a>
+            <div class="md:col-span-4">
+                <input type="date" name="date" value="<?= esc($_GET['date'] ?? '') ?>"
+                       class="filter-input w-full px-5 py-3 rounded-xl text-sm font-bold text-blue-900 bg-slate-50/50">
+            </div>
 
-        <!-- ACTION -->
-        <?php if (in_array($d['status'], ['rejected_kaprodi', 'rejected_kajur'])): ?>
-            <a href="<?= base_url('staff/dokumen/resubmit/'.$d['id']) ?>"
-               class="text-sm bg-yellow-500 hover:bg-yellow-600
-                      text-white px-4 py-2 rounded-lg transition">
-                Revisi
-            </a>
-        <?php endif; ?>
+            <div class="md:col-span-3 flex items-center gap-2">
+                <button type="submit" 
+                        class="flex-1 btn-polban font-black py-3 rounded-xl text-[10px] uppercase tracking-widest h-[46px]">
+                    Filter
+                </button>
+                
+                <?php if (!empty($_GET['q']) || !empty($_GET['date'])): ?>
+                    <a href="<?= base_url('staff/dokumen/saya') ?>" 
+                       class="flex items-center justify-center w-12 h-[46px] bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl transition-all border border-rose-100 shadow-sm"
+                       title="Reset Filter">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </a>
+                <?php endif; ?>
+            </div>
+        </form>
     </div>
 
-</div>
+    <?php if (empty($dokumen)): ?>
+        <div class="py-20 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[2.5rem] text-center">
+            <div class="flex flex-col items-center text-slate-300">
+                <svg class="h-20 w-20 mb-4 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V5a2 2 0 00-2-2H6a2 2 0 00-2 2v8m16 0l-2 5H6l-2-5m16 0H4" />
+                </svg>
+                <h4 class="text-lg font-bold uppercase tracking-widest">Belum Ada Dokumen</h4>
+                <p class="text-sm italic mt-1">Gunakan tombol upload untuk menambahkan dokumen baru</p>
+            </div>
+        </div>
+    <?php else: ?>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <?php foreach ($dokumen as $d): 
+                $statusMap = [
+                    'pending_kaprodi'  => ['Review Kaprodi', 'bg-amber-50 text-amber-600 border-amber-100'],
+                    'pending_kajur'    => ['Review Kajur', 'bg-blue-50 text-blue-600 border-blue-100'],
+                    'rejected_kaprodi' => ['Revisi Kaprodi', 'bg-rose-50 text-rose-600 border-rose-100'],
+                    'rejected_kajur'   => ['Revisi Kajur', 'bg-rose-50 text-rose-600 border-rose-100'],
+                    'archived'         => ['Tersimpan', 'bg-emerald-50 text-emerald-600 border-emerald-100'],
+                ];
+                [$label, $statusClass] = $statusMap[$d['status']] ?? ['Unknown', 'bg-slate-50 text-slate-600 border-slate-100'];
+            ?>
+                <div class="archive-card p-7 group">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center text-blue-900 group-hover:bg-blue-900 group-hover:text-white transition-all duration-300 shadow-sm">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1.5 rounded-xl border <?= $statusClass ?> text-[9px] font-black uppercase tracking-widest">
+                            <?= $label ?>
+                        </span>
+                    </div>
 
-<?php endforeach; ?>
+                    <div class="flex-grow">
+                        <h3 class="text-lg font-black text-blue-900 group-hover:text-blue-600 transition-colors leading-snug mb-2 uppercase tracking-tight">
+                            <?= esc($d['judul']) ?>
+                        </h3>
+                        <p class="text-xs text-slate-500 line-clamp-3 leading-relaxed italic mb-4">
+                            <?= esc($d['deskripsi'] ?: 'Tidak ada deskripsi tambahan.') ?>
+                        </p>
 
+                        <?php if (!empty($d['catatan'])): ?>
+                            <div class="p-3 bg-rose-50 border border-rose-100 rounded-xl text-[10px] text-rose-700 font-bold mb-4">
+                                <span class="uppercase tracking-widest text-[9px] block mb-1 opacity-70">Umpan Balik:</span>
+                                <?= esc($d['catatan']) ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="mt-4 pt-6 border-t border-slate-50 flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest mb-1 leading-none text-left">Unggah</span>
+                            <span class="text-xs font-bold text-slate-600"><?= date('d M Y', strtotime($d['created_at'])) ?></span>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <?php if (in_array($d['status'], ['rejected_kaprodi', 'rejected_kajur'])): ?>
+                                <a href="<?= base_url('staff/dokumen/resubmit/'.$d['id']) ?>" 
+                                   class="px-4 py-2 bg-rose-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 shadow-md shadow-rose-100 transition-all flex items-center">
+                                    Revisi
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="bg-deco">
+                        <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <div class="mt-16 pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 opacity-50 text-center md:text-left">
+        <p class="text-[10px] text-slate-500 font-black tracking-widest uppercase">
+            &copy; <?= date('Y') ?> KINETRACK — Politeknik Negeri Bandung
+        </p>
+    </div>
 </div>
-<?php endif; ?>
 
 <?= $this->endSection() ?>

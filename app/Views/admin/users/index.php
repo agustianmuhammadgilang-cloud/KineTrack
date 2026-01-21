@@ -51,20 +51,59 @@
         box-shadow: 0 4px 12px rgba(0, 51, 102, 0.2);
     }
 
-    .btn-outline-pdf {
-        border: 1.5px solid #ef4444;
-        color: #ef4444;
-        transition: var(--transition-smooth);
+    /* Button Base Styling (Sama dengan menu user) */
+    .btn-polban-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        font-size: 0.75rem; /* text-xs */
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        color: white;
+        border: none;
+        cursor: pointer;
     }
 
-    .btn-outline-pdf:hover {
-        background-color: #fef2f2;
+    /* Warna Biru Polban */
+    .btn-polban-blue {
+        background-color: var(--polban-blue);
+    }
+    .btn-polban-blue:hover {
+        background-color: #004a94;
         transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 51, 102, 0.2);
+        color: white;
     }
 
-    .avatar-icon {
-        transition: var(--transition-smooth);
-        border: 1.5px solid #e2e8f0;
+    /* Warna Hijau Excel */
+    .btn-polban-excel {
+        background-color: #059669;
+    }
+    .btn-polban-excel:hover {
+        background-color: #047857;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+        color: white;
+    }
+
+    /* Warna Merah PDF (Outline style agar variatif) */
+    .btn-polban-pdf {
+        background-color: #ef4444;
+    }
+    .btn-polban-pdf:hover {
+        background-color: #dc2626;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        color: white;
+    }
+
+    /* Efek klik */
+    .btn-polban-action:active {
+        transform: scale(0.95);
     }
     
     .user-row:hover .avatar-icon {
@@ -134,18 +173,20 @@
 
 
         <div class="flex gap-3">
-            <a href="<?= base_url('admin/users/export-excel') ?>" 
-   class="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider border border-emerald-500 text-emerald-600 hover:bg-emerald-50 transition">
-    Export Excel
-</a>
+            <div class="flex gap-3">
+    <a href="<?= base_url('admin/users/export-excel') ?>" class="btn-polban-action btn-polban-excel">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        Export Excel
+    </a>
 
-            <a href="<?= base_url('admin/users/export-pdf') ?>" 
-               class="btn-outline-pdf inline-flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-                Export PDF
-            </a>
+    <a href="<?= base_url('admin/users/export-pdf') ?>" class="btn-polban-action btn-polban-pdf">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+        Export PDF
+    </a>
             <a href="<?= base_url('admin/users/create') ?>" 
                class="btn-polban inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider active:scale-95">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,6 +194,7 @@
                 </svg>
                 Tambah User Baru
             </a>
+            </div>
         </div>
     </div>
 

@@ -70,7 +70,7 @@
     }
 </style>
 
-<div id="toast-container" class="fixed top-5 right-5 z-[100] space-y-3 w-80"></div>
+
 
 <div class="px-4 py-8 max-w-7xl mx-auto">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
@@ -91,13 +91,6 @@
         </div>
 
         <div class="flex items-center gap-3">
-            <a href="<?= base_url('admin/pengukuran') ?>" 
-               class="btn-back inline-flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Kembali
-            </a>
             <a href="<?= base_url('admin/tahun/create') ?>" 
                class="btn-add-polban inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider active:scale-95">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -186,14 +179,6 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    <?php if(session()->getFlashdata('error')): ?>
-        showToast("<?= session()->getFlashdata('error') ?>", "error");
-    <?php endif; ?>
-    <?php if(session()->getFlashdata('success')): ?>
-        showToast("<?= session()->getFlashdata('success') ?>", "success");
-    <?php endif; ?>
-});
 
 function showToast(message, type = "success") {
     const container = document.getElementById("toast-container");

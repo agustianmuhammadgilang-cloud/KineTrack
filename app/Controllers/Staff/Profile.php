@@ -29,47 +29,74 @@ public function update()
 {
     $userId    = session()->get('user_id');
     $userModel = new \App\Models\UserModel();
-
-    $user = $userModel->find($userId);
+    $user      = $userModel->find($userId);
 
     // =========================
-    // DATA UTAMA
+    // 1. INISIALISASI DATA UPDATE
     // =========================
-    $data = [
+    $updateData = [
         'nama'  => $this->request->getPost('nama'),
         'email' => $this->request->getPost('email'),
     ];
 
-    // =========================
-    // FOTO PROFIL STAFF (BARU)
-    // =========================
-    $foto = $this->request->getFile('foto');
+    // Cek password jika diisi
+    $password = $this->request->getPost('password');
+    if (!empty($password)) {
+        $updateData['password'] = password_hash($password, PASSWORD_DEFAULT);
+    }
 
-    if ($foto && $foto->isValid() && !$foto->hasMoved()) {
+    // =========================
+    // 2. LOGIKA FOTO PROFIL (CROPPER & FALLBACK)
+    // =========================
+    $fotoCropped = $this->request->getPost('foto_cropped');
 
-        // hapus foto lama jika ada
+    if (!empty($fotoCropped)) {
+        // Hapus foto lama jika ada
         if (!empty($user['foto']) && file_exists('uploads/profile/' . $user['foto'])) {
             unlink('uploads/profile/' . $user['foto']);
         }
 
-        $fotoName = $foto->getRandomName();
-        $foto->move('uploads/profile/', $fotoName);
+        // Olah data Base64 - Variabel penampung diubah agar TIDAK bentrok dengan $updateData
+        list($type, $base64String) = explode(';', $fotoCropped);
+        list(, $base64String)      = explode(',', $base64String);
+        $decodedData = base64_decode($base64String);
 
-        $data['foto'] = $fotoName;
+        $namaBaruFoto = 'atasan_' . $userId . '_' . time() . '.jpg';
+        $pathFoto     = 'uploads/profile/' . $namaBaruFoto;
 
-        // update session foto
-        session()->set('foto', $fotoName);
+        if (file_put_contents($pathFoto, $decodedData)) {
+            $updateData['foto'] = $namaBaruFoto;
+            session()->set('foto', $namaBaruFoto);
+        }
+    } else {
+        // Fallback: Upload biasa
+        $foto = $this->request->getFile('foto');
+        if ($foto && $foto->isValid() && !$foto->hasMoved()) {
+            if (!empty($user['foto']) && file_exists('uploads/profile/' . $user['foto'])) {
+                unlink('uploads/profile/' . $user['foto']);
+            }
+            $namaBaruFoto = $foto->getRandomName();
+            $foto->move('uploads/profile/', $namaBaruFoto);
+            
+            $updateData['foto'] = $namaBaruFoto;
+            session()->set('foto', $namaBaruFoto);
+        }
     }
 
     // =========================
-    // TTD DIGITAL (EXISTING)
+    // 3. TTD DIGITAL (EXISTING)
     // =========================
     $fileTtd = $this->request->getFile('ttd_digital');
     if ($fileTtd && $fileTtd->isValid() && !$fileTtd->hasMoved()) {
-        $newName = $fileTtd->getRandomName();
-        $fileTtd->move(FCPATH . 'uploads/ttd', $newName);
+        // Hapus TTD lama jika ingin folder tetap bersih
+        if (!empty($user['ttd_digital']) && file_exists('uploads/ttd/' . $user['ttd_digital'])) {
+            unlink('uploads/ttd/' . $user['ttd_digital']);
+        }
 
-        $data['ttd_digital'] = $newName;
+        $newNameTtd = $fileTtd->getRandomName();
+        $fileTtd->move(FCPATH . 'uploads/ttd', $newNameTtd);
+
+        $updateData['ttd_digital'] = $newNameTtd;
 
         log_activity(
             'upload_ttd_digital',
@@ -80,10 +107,11 @@ public function update()
     }
 
     // =========================
-    // UPDATE DATABASE
+    // 4. UPDATE DATABASE
     // =========================
-    $userModel->update($userId, $data);
+    $userModel->update($userId, $updateData);
 
+    // LOG PROFIL
     log_activity(
         'update_profile',
         'Memperbarui data profil',
@@ -92,9 +120,9 @@ public function update()
     );
 
     // =========================
-    // NOTIFIKASI
+    // 5. NOTIFIKASI & REDIRECT
     // =========================
-    $notifModel = new NotificationModel();
+    $notifModel = new \App\Models\NotificationModel(); // Pastikan namespace benar
     $notifModel->insert([
         'user_id'    => $userId,
         'message'    => 'Profil Anda berhasil diperbarui.',
