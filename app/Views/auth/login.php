@@ -37,6 +37,20 @@
 
         .slide { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.5s ease-in-out; }
         .slide.active { opacity: 1; }
+
+        /* --- PERBAIKAN DISINI --- */
+        /* Menghilangkan ikon mata dan silang bawaan Edge/Chrome */
+        input::-ms-reveal,
+        input::-ms-clear {
+            display: none !important;
+        }
+        /* Untuk browser berbasis webkit jika diperlukan */
+        input::-webkit-contacts-auto-fill-button,
+        input::-webkit-credentials-auto-fill-button {
+            visibility: hidden;
+            display: none !important;
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -44,7 +58,6 @@
 
 <div class="w-full max-w-[1100px] h-auto md:h-[650px] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row fade-in ring-1 ring-gray-200">
 
-    <!-- KIRI -->
     <div class="w-full md:w-[45%] p-8 md:p-12 flex flex-col justify-center relative bg-white z-10">
 
         <div class="mb-8 flex items-center gap-3">
@@ -67,57 +80,50 @@
             </div>
         <?php endif; ?>
 
-        <!-- FORM -->
         <form action="<?= base_url('/login/process'); ?>" method="POST" class="space-y-5">
 
-            <!-- EMAIL -->
-            <div class="group relative">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
-                    <i class="ph ph-user-circle text-gray-400"></i>
-                </div>
+            <div class="relative group">
+                <input type="text" name="email" id="email"
+                    class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm
+                    focus:outline-none focus:border-polban-orange focus:ring-1 focus:ring-polban-orange transition-all peer placeholder-transparent" 
+                    placeholder="NIP/NIK atau Email" required />
 
-                <input type="text" name="email" class="w-full pl-10 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm
-                    focus:outline-none focus:border-polban-orange focus:ring-1 focus:ring-polban-orange transition-all peer" 
-                    placeholder=" " required />
-
-                <label class="absolute left-10 top-3.5 text-gray-400 text-sm transition-all
-                    peer-placeholder-shown:text-base peer-placeholder-shown:top-3.5
-                    peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-polban-orange peer-focus:bg-white peer-focus:px-1">
+                <label for="email" class="absolute left-4 top-3.5 text-gray-400 text-sm transition-all pointer-events-none
+                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
+                    peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-polban-orange peer-focus:bg-white peer-focus:px-1
+                    peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-polban-orange peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-1">
                     NIP/NIK atau Email
                 </label>
             </div>
 
-            <!-- PASSWORD -->
-            <div class="group relative">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
-                    <i class="ph ph-lock-key text-gray-400"></i>
-                </div>
-
+            <div class="relative group">
                 <input type="password" name="password" id="password" 
-                    class="w-full pl-10 pr-12 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm
-                    focus:outline-none focus:border-polban-orange focus:ring-1 focus:ring-polban-orange transition-all peer"
-                    placeholder=" " required />
+                    class="w-full px-4 pr-12 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm
+                    focus:outline-none focus:border-polban-orange focus:ring-1 focus:ring-polban-orange transition-all peer placeholder-transparent"
+                    placeholder="Kata Sandi" required 
+                    autocomplete="current-password" /> 
 
-                <label class="absolute left-10 top-3.5 text-gray-400 text-sm transition-all
-                    peer-placeholder-shown:text-base peer-placeholder-shown:top-3.5
-                    peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-polban-orange peer-focus:bg-white peer-focus:px-1">
+                <label for="password" class="absolute left-4 top-3.5 text-gray-400 text-sm transition-all pointer-events-none
+                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
+                    peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-polban-orange peer-focus:bg-white peer-focus:px-1
+                    peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-polban-orange peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-1">
                     Kata Sandi
                 </label>
 
                 <button type="button" onclick="togglePassword()"
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-polban-navy transition">
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-polban-navy transition-colors z-20">
                     <i id="eye-icon" class="ph ph-eye text-lg"></i>
                 </button>
             </div>
 
-            <!-- MATH CAPTCHA -->
-            <div>
-                <label class="text-sm font-medium text-gray-700">
+            <div class="space-y-1">
+                <label class="text-xs font-medium text-gray-500 ml-1">
                     Berapa <?= $a ?> + <?= $b ?> ?
                 </label>
                 <input type="number" name="captcha_answer"
-                    class="mt-1 w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm
+                    class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm
                     focus:outline-none focus:border-polban-orange focus:ring-1 focus:ring-polban-orange"
+                    placeholder="Hasil penjumlahan"
                     required>
             </div>
 
@@ -127,7 +133,6 @@
                 <span>Masuk eKinerja</span>
                 <i class="ph-bold ph-arrow-right group-hover:translate-x-1 transition-transform"></i>
             </button>
-
         </form>
 
         <div class="mt-auto pt-8 text-center md:text-left">
@@ -135,7 +140,6 @@
         </div>
     </div>
 
-    <!-- KANAN -->
     <div class="hidden md:block w-[55%] relative overflow-hidden bg-polban-navy">
         <div id="slider" class="absolute inset-0">
             <img src="/img/Gedung1.jpg" class="slide active">
