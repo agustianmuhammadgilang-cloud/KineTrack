@@ -1,6 +1,51 @@
 <?= $this->extend('layout/staff_template') ?>
 <?= $this->section('content') ?>
 
+<style>
+    :root {
+        --polban-blue: #1D2F83;
+        --polban-blue-light: #004a94;
+        --polban-gold: #D4AF37;
+        --slate-soft: #f8fafc;
+        --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .form-card {
+        background: white;
+        border-radius: 32px;
+        border: 1px solid #eef2f6;
+        box-shadow: 0 20px 50px -12px rgba(0, 51, 102, 0.08);
+    }
+
+    .input-field {
+        transition: var(--transition-smooth);
+        border: 1.5px solid #e2e8f0;
+        background-color: white;
+    }
+
+    .input-field:focus {
+        border-color: var(--polban-blue);
+        box-shadow: 0 0 0 4px rgba(0, 51, 102, 0.05);
+        outline: none;
+    }
+
+    .btn-polban {
+        transition: var(--transition-smooth);
+        background: var(--polban-blue);
+    }
+
+    .btn-polban:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px -5px rgba(0, 51, 102, 0.3);
+        filter: brightness(1.1);
+    }
+
+    .info-badge {
+        background: linear-gradient(135deg, rgba(0, 51, 102, 0.03) 0%, rgba(212, 175, 55, 0.05) 100%);
+        border-left: 4px solid var(--polban-gold);
+    }
+</style>
+
 <?php
 $kategoriOptions = [];
 foreach ($kategori as $k) {
@@ -28,73 +73,62 @@ foreach ($kategori as $k) {
 }
 ?>
 
-<div class="max-w-2xl mx-auto my-8 font-sans" x-data="wizardForm(<?= esc(json_encode($kategoriOptions)) ?>)">
-
-    <div class="flex items-center gap-5 mb-8">
-        <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-blue-600 shadow-xl shadow-blue-900/5 border border-slate-100">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+<div class="px-4 py-8 max-w-5xl mx-auto" x-data="documentForm(<?= esc(json_encode($kategoriOptions)) ?>)">
+    <div class="flex items-center gap-5 mb-10">
+        <div class="w-14 h-14 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center shadow-sm text-blue-900">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
         </div>
         <div>
-            <h1 class="text-2xl font-black text-slate-900 tracking-tight leading-none">Upload Dokumen</h1>
-            <p class="text-xs text-slate-400 mt-2 font-bold uppercase tracking-widest">Lengkapi Detail Berkas & Verifikasi</p>
+            <h4 class="text-2xl font-black text-blue-900 tracking-tight">
+                Upload <span class="text-blue-600">Dokumen Baru</span>
+            </h4>
+            <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-[0.2em] mt-1">
+                Manajemen Arsip Digital — Lengkapi Detail & Lampiran
+            </p>
         </div>
     </div>
 
-    <div class="mb-10 px-2">
-        <div class="flex items-center gap-3 h-2">
-            <template x-for="n in 2">
-                <div class="flex-1 h-full rounded-full transition-all duration-500"
-                     :class="step >= n ? 'bg-blue-600 shadow-lg shadow-blue-200' : 'bg-slate-200'"></div>
-            </template>
-        </div>
-        <div class="flex justify-between mt-3 px-1">
-            <span class="text-[10px] font-black uppercase tracking-tighter" :class="step >= 1 ? 'text-blue-600' : 'text-slate-400'">Informasi Dasar</span>
-            <span class="text-[10px] font-black uppercase tracking-tighter" :class="step >= 2 ? 'text-blue-600' : 'text-slate-400'">Lampiran Berkas</span>
-        </div>
-    </div>
-
-    <form action="<?= base_url('staff/dokumen/store') ?>"
-          method="post"
-          enctype="multipart/form-data"
-          @submit="submitForm"
-          class="bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200 border border-slate-100 p-8 md:p-10 space-y-6">
-
-        <div x-show="step === 1" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-4">
-            <div class="space-y-6">
-                <div>
-                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Judul Dokumen <span class="text-rose-500">*</span></label>
-                    <input type="text" name="judul" x-model="judul" @input="validate"
-                           placeholder="E.g. Laporan Kinerja Bulanan Januari"
-                           class="w-full rounded-2xl border-slate-200 bg-slate-50/50 text-sm font-bold focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all py-3.5 px-5"
-                           :class="errors.judul ? 'border-rose-500 bg-rose-50' : ''">
+    <div class="form-card overflow-hidden">
+        <div class="p-8 md:p-12">
+            
+            <div class="info-badge p-6 rounded-3xl mb-10">
+                <div class="flex items-start gap-4">
+                    <div class="shrink-0 w-10 h-10 bg-white rounded-xl flex items-center justify-center text-blue-600 shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-blue-900 uppercase tracking-widest mb-1">Catatan Penting</p>
+                        <p class="text-xs text-slate-600 font-medium leading-relaxed">
+                            Pastikan judul dan kategori sesuai. Dokumen yang diunggah akan melalui proses verifikasi oleh atasan unit sebelum dipublikasikan secara resmi.
+                        </p>
+                    </div>
                 </div>
+            </div>
 
-                <div>
-                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Deskripsi Singkat</label>
-                    <textarea name="deskripsi" rows="3" placeholder="Tambahkan keterangan tambahan jika diperlukan..."
-                              class="w-full rounded-2xl border-slate-200 bg-slate-50/50 text-sm font-bold focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all py-3.5 px-5"></textarea>
-                </div>
+            <form action="<?= base_url('staff/dokumen/store') ?>" method="POST" enctype="multipart/form-data" class="space-y-8" @submit="handleSubmit">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="md:col-span-2 space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Judul Dokumen <span class="text-rose-500">*</span></label>
+                        <input type="text" name="judul" required placeholder="Contoh: Laporan Kegiatan Triwulan I"
+                               class="input-field w-full px-5 py-4 rounded-2xl text-blue-900 font-bold text-lg bg-slate-50/50">
+                    </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="relative" @click.away="dropdownOpen = false">
-                        <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Kategori Berkas <span class="text-rose-500">*</span></label>
-                        <input type="hidden" name="kategori_id" x-model="kategori">
+                    <div class="space-y-2 relative" @click.away="dropdownOpen = false">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Kategori Berkas <span class="text-rose-500">*</span></label>
+                        <input type="hidden" name="kategori_id" x-model="kategoriId">
                         <button type="button" @click="dropdownOpen = !dropdownOpen"
-                                class="w-full text-left bg-slate-50/50 border rounded-2xl py-3.5 px-5 text-sm font-bold flex items-center justify-between transition-all"
-                                :class="errors.kategori ? 'border-rose-500 bg-rose-50' : 'border-slate-200 hover:border-blue-400 focus:ring-4 focus:ring-blue-100'">
-                            <span x-text="kategoriLabel || 'Pilih kategori...'" :class="!kategoriLabel ? 'text-slate-400' : 'text-slate-900'"></span>
-                            <svg class="w-5 h-5 text-slate-400 transition-transform" :class="dropdownOpen ? 'rotate-180 text-blue-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2.5"/></svg>
+                                class="input-field w-full px-5 py-4 rounded-2xl text-blue-900 font-bold text-sm bg-white flex items-center justify-between">
+                            <span x-text="kategoriLabel || 'Pilih kategori...'" :class="!kategoriLabel ? 'text-slate-400' : ''"></span>
+                            <svg class="w-5 h-5 text-slate-400" :class="dropdownOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2.5"/></svg>
                         </button>
 
-                        <div x-show="dropdownOpen" 
-                             x-transition:enter="transition ease-out duration-100"
-                             x-transition:enter-start="opacity-0 scale-95"
-                             class="absolute z-30 w-full mt-2 bg-white rounded-2xl shadow-2xl border border-slate-100 max-h-60 overflow-y-auto p-2">
+                        <div x-show="dropdownOpen" class="absolute z-30 w-full mt-2 bg-white rounded-2xl shadow-2xl border border-slate-100 max-h-60 overflow-y-auto p-2">
                             <template x-for="opt in optionsList" :key="opt.id">
                                 <div @click="selectKategori(opt)" 
-                                     class="px-4 py-3 hover:bg-blue-50 rounded-xl cursor-pointer flex items-center justify-between group transition-colors">
+                                     class="px-4 py-3 hover:bg-blue-50 rounded-xl cursor-pointer flex items-center justify-between group">
                                     <span class="text-sm font-bold text-slate-700 group-hover:text-blue-600" x-text="opt.nama"></span>
                                     <span x-html="opt.status_html"></span>
                                 </div>
@@ -102,144 +136,87 @@ foreach ($kategori as $k) {
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Visibilitas <span class="text-rose-500">*</span></label>
-                        <select name="scope" class="w-full rounded-2xl border-slate-200 bg-slate-50/50 text-sm font-bold py-3.5 px-5 focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all appearance-none cursor-pointer">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Visibilitas Akses <span class="text-rose-500">*</span></label>
+                        <select name="scope" class="input-field w-full px-5 py-4 rounded-2xl text-blue-900 font-bold text-sm bg-white appearance-none cursor-pointer">
                             <option value="personal">🔒 Hanya Saya (Personal)</option>
                             <option value="unit">👥 Anggota Unit</option>
                             <option value="public">🌐 Publik (Terverifikasi)</option>
                         </select>
                     </div>
-                </div>
-            </div>
-        </div>
 
-        <div x-show="step === 2" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-4">
-            <div class="text-center mb-8">
-                <h3 class="text-lg font-black text-slate-800">Lampirkan Berkas Digital</h3>
-                <p class="text-xs text-slate-400 mt-1 font-medium text-balance">Pastikan file dalam format PDF, JPG, atau PNG dengan ukuran maks. 5MB</p>
-            </div>
-            
-            <div @dragover.prevent="drag=true" @dragleave="drag=false" @drop.prevent="handleDrop($event)"
-                 :class="drag ? 'border-blue-500 bg-blue-50/50 scale-[1.02]' : 'border-slate-200 bg-slate-50/30'"
-                 class="border-4 border-dashed rounded-[2rem] p-12 text-center transition-all duration-300 cursor-pointer group relative"
-                 @click="$refs.file.click()">
-                
-                <input type="file" name="file" x-ref="file" @change="handleFile" class="hidden">
-
-                <div x-show="!file" class="space-y-4">
-                    <div class="w-20 h-20 bg-white rounded-3xl shadow-lg mx-auto flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
-                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-sm font-black text-slate-700">Tarik berkas ke sini</p>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Atau klik untuk menelusuri</p>
+                    <div class="md:col-span-2 space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Deskripsi / Keterangan</label>
+                        <textarea name="deskripsi" rows="3" 
+                                  placeholder="Tambahkan catatan mengenai isi dokumen ini..."
+                                  class="input-field w-full px-5 py-4 rounded-2xl text-blue-900 font-medium text-sm"></textarea>
                     </div>
                 </div>
 
-                <div x-show="file" class="flex items-center gap-4 bg-white border border-slate-100 rounded-[1.5rem] p-4 shadow-xl text-left animate-bounce-short" @click.stop>
-                    <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 shrink-0">
-                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2"/></svg>
+                <div class="space-y-3">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Lampiran Berkas Digital</label>
+                    <div class="relative group">
+                        <input type="file" name="file" id="file_dokumen" class="hidden" @change="updateFileName">
+                        <label for="file_dokumen" class="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-3xl p-10 hover:bg-blue-50/50 hover:border-blue-400 transition-all cursor-pointer bg-slate-50/30">
+                            <div class="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-4 text-blue-600 group-hover:scale-110 transition-transform">
+                                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                            <p class="text-sm font-bold text-blue-900" x-text="fileName || 'Pilih berkas atau tarik ke sini'"></p>
+                            <p class="text-[10px] text-slate-400 mt-1 uppercase font-black">PDF, JPG, PNG (Maks 5MB)</p>
+                        </label>
                     </div>
-                    <div class="truncate flex-1">
-                        <p class="text-sm font-black text-slate-800 truncate" x-text="file?.name"></p>
-                        <p class="text-[10px] text-slate-400 font-black" x-text="file ? (file.size/1024/1024).toFixed(2) + ' MB' : ''"></p>
-                    </div>
-                    <button type="button" @click="removeFile" class="w-8 h-8 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2.5"/></svg>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 pt-8 border-t border-slate-50">
+                    <button type="submit" class="btn-polban flex-1 text-white font-black py-4 rounded-2xl uppercase tracking-widest text-xs shadow-lg shadow-blue-900/10" :disabled="isLoading">
+                        <span x-text="isLoading ? 'Sedang Mengunggah...' : 'Finalisasi & Simpan'"></span>
                     </button>
+                    <a href="<?= base_url('staff/dokumen') ?>" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-500 font-black py-4 rounded-2xl uppercase tracking-widest text-xs text-center transition-colors">
+                        Batal & Kembali
+                    </a>
                 </div>
-            </div>
+            </form>
         </div>
+    </div>
 
-        <div class="flex justify-between items-center pt-8 border-t border-slate-50">
-            <div>
-                <button type="button" x-show="step > 1" @click="step--" 
-                        class="text-xs text-slate-400 font-black uppercase tracking-widest px-6 py-3 hover:text-blue-600 transition-colors flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="3"/></svg>
-                    Kembali
-                </button>
-            </div>
-            
-            <button type="button" x-show="step === 1" @click="nextStep"
-                    class="bg-blue-600 hover:bg-slate-900 text-white text-xs font-black uppercase tracking-widest px-8 py-4 rounded-2xl shadow-xl shadow-blue-200 transition-all transform active:scale-95 flex items-center gap-2">
-                Lanjutkan
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="3"/></svg>
-            </button>
-
-            <button type="submit" x-show="step === 2" :disabled="loading"
-                    class="bg-emerald-600 hover:bg-slate-900 text-white text-xs font-black uppercase tracking-widest px-8 py-4 rounded-2xl shadow-xl shadow-emerald-200 transition-all flex items-center gap-3 disabled:opacity-50">
-                <svg x-show="loading" class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                <span x-text="loading ? 'Memproses...' : 'Finalisasi & Unggah'"></span>
-            </button>
-        </div>
-    </form>
-
-    <div class="mt-8 p-6 bg-blue-50 rounded-3xl border border-blue-100 flex items-center gap-4">
-        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-blue-600 shadow-sm shrink-0">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-        </div>
-        <p class="text-[11px] text-blue-700 font-bold leading-relaxed italic">
-            Dokumen yang Anda unggah akan masuk ke antrean verifikasi Atasan sebelum dapat diarsipkan secara resmi. Mohon pastikan data sudah benar.
+    <div class="mt-10 text-center">
+        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+            © <?= date('Y') ?> Kinetrack — Politeknik Negeri Bandung
         </p>
     </div>
 </div>
 
-<style>
-    .animate-bounce-short { animation: bounce-short 0.5s ease-out; }
-    @keyframes bounce-short {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-5px); }
-    }
-</style>
-
 <script>
-function wizardForm(optionsData = []) {
+function documentForm(optionsData) {
     return {
-        step: 1, drag: false, file: null, loading: false,
-        judul: '', kategori: '', errors: {},
-        optionsList: optionsData, dropdownOpen: false, kategoriLabel: '',
+        dropdownOpen: false,
+        kategoriId: '',
+        kategoriLabel: '',
+        fileName: '',
+        isLoading: false,
+        optionsList: optionsData,
 
-        selectKategori(option) {
-            this.kategori = option.id;
-            this.kategoriLabel = option.nama;
+        selectKategori(opt) {
+            this.kategoriId = opt.id;
+            this.kategoriLabel = opt.nama;
             this.dropdownOpen = false;
-            this.validate();
         },
-        validate() {
-            this.errors = {};
-            if (!this.judul) this.errors.judul = true;
-            if (!this.kategori) this.errors.kategori = true;
-        },
-        nextStep() {
-            this.validate();
-            if (Object.keys(this.errors).length === 0) {
-                this.step = 2;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        updateFileName(e) {
+            if (e.target.files.length > 0) {
+                this.fileName = e.target.files[0].name;
             }
         },
-        handleFile(e) { this.file = e.target.files[0]; },
-        handleDrop(e) {
-            this.drag = false;
-            if (e.dataTransfer && e.dataTransfer.files.length > 0) {
-                this.file = e.dataTransfer.files[0];
-                this.$refs.file.files = e.dataTransfer.files;
+
+        handleSubmit() {
+            if (!this.kategoriId) {
+                alert('Silakan pilih kategori terlebih dahulu');
+                return false;
             }
-        },
-        removeFile() { this.file = null; this.$refs.file.value = ''; },
-        submitForm(e) {
-            if (!this.file) { 
-                e.preventDefault(); 
-                alert('Silakan pilih berkas terlebih dahulu!'); 
-                return; 
-            }
-            this.loading = true;
+            this.isLoading = true;
         }
     }
 }
 </script>
+
 <?= $this->endSection() ?>

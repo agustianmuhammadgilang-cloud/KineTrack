@@ -51,15 +51,59 @@
         box-shadow: 0 4px 12px rgba(0, 51, 102, 0.2);
     }
 
-    .btn-outline-excel {
-        border: 1.5px solid #10b981;
-        color: #10b981;
-        transition: var(--transition-smooth);
+    /* Button Base Styling (Sama dengan menu user) */
+    .btn-polban-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        font-size: 0.75rem; /* text-xs */
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        color: white;
+        border: none;
+        cursor: pointer;
     }
 
-    .btn-outline-excel:hover {
-        background-color: #f0fdf4;
+    /* Warna Biru Polban */
+    .btn-polban-blue {
+        background-color: var(--polban-blue);
+    }
+    .btn-polban-blue:hover {
+        background-color: #004a94;
         transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 51, 102, 0.2);
+        color: white;
+    }
+
+    /* Warna Hijau Excel */
+    .btn-polban-excel {
+        background-color: #059669;
+    }
+    .btn-polban-excel:hover {
+        background-color: #047857;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+        color: white;
+    }
+
+    /* Warna Merah PDF (Outline style agar variatif) */
+    .btn-polban-pdf {
+        background-color: #ef4444;
+    }
+    .btn-polban-pdf:hover {
+        background-color: #dc2626;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        color: white;
+    }
+
+    /* Efek klik */
+    .btn-polban-action:active {
+        transform: scale(0.95);
     }
 
     dialog::backdrop {
@@ -128,10 +172,20 @@
 </form>
 
         <div class="flex gap-3">
-            <a href="<?= base_url('admin/kategori-dokumen/export-excel') ?>" 
-               class="btn-outline-excel inline-flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider">
+            <a href="<?= base_url('admin/kategori-dokumen/export-excel') ?>" class="btn-polban-action btn-polban-excel">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
                 Export Excel
             </a>
+
+            <a href="<?= base_url('admin/kategori-dokumen/export') ?>" class="btn-polban-action btn-polban-pdf">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+        Export PDF
+    </a>
+
             <button onclick="document.getElementById('modal-create').showModal()" 
                 class="btn-polban inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider active:scale-95">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>

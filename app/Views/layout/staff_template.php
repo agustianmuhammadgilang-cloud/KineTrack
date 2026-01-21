@@ -171,7 +171,8 @@ function fileUpload() {
     }
 }
 </script>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 </head>
 <body class="bg-gray-100">
 
@@ -616,5 +617,66 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 
+<div id="cropperModal" class="fixed inset-0 z-[99] hidden overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center">
+        <div class="fixed inset-0 transition-opacity bg-gray-900 bg-opacity-75" aria-hidden="true"></div>
+
+        <div class="relative inline-block w-full max-w-xl overflow-hidden text-left align-middle transition-all transform bg-white rounded-2xl shadow-xl">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h3 class="text-lg font-bold text-gray-900">Sesuaikan Foto Profil</h3>
+            </div>
+            
+            <div class="p-6">
+                <div class="max-h-[400px] overflow-hidden bg-gray-100 flex justify-center rounded-xl">
+                    <img id="imageToCrop" src="" alt="Source" class="max-w-full block">
+                </div>
+            </div>
+
+            <div class="px-6 py-4 bg-gray-50 flex justify-end gap-3">
+                <button type="button" id="cancelCrop" class="px-5 py-2 text-sm font-semibold text-gray-600 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-all">
+                    Batal
+                </button>
+                <button type="button" id="confirmCrop" class="px-5 py-2 text-sm font-semibold text-white bg-[var(--polban-blue)] rounded-xl hover:opacity-90 transition-all shadow-lg shadow-blue-200">
+                    Terapkan & Potong
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let cropper;
+const cropperModal = document.getElementById('cropperModal');
+const imageToCrop = document.getElementById('imageToCrop');
+
+// Fungsi Global untuk memicu cropper
+window.openCropper = function(file, options = {}) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        imageToCrop.src = e.target.result;
+        cropperModal.classList.remove('hidden');
+        
+        if (cropper) cropper.destroy();
+
+        cropper = new Cropper(imageToCrop, {
+            aspectRatio: 1, 
+            viewMode: 1,
+            dragMode: 'move',
+            autoCropArea: 1,
+            ...options
+        });
+    };
+    reader.readAsDataURL(file);
+};
+
+// Tombol Batal
+document.getElementById('cancelCrop')?.addEventListener('click', () => {
+    cropperModal.classList.add('hidden');
+    if (cropper) cropper.destroy();
+    // Reset input file di view profil agar bisa pilih file yang sama lagi
+    const input = document.getElementById('inputFoto');
+    if(input) input.value = '';
+});
+</script>
 </body>
 </html>

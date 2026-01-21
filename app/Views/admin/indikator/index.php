@@ -134,10 +134,6 @@
 <div class="p-6 max-w-[1600px] mx-auto animate-in">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-2">
         <div>
-            <a href="<?= base_url('admin/pengukuran') ?>" class="btn-back mb-4">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                Kembali ke Input Pengukuran
-            </a>
             <h2 class="text-2xl font-black text-slate-800 flex items-center gap-3">
                 <span class="w-2 h-8 bg-blue-900 rounded-full"></span>
                 Indikator Kinerja

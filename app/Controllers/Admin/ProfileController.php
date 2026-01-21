@@ -51,24 +51,47 @@ class ProfileController extends BaseController
             $updateData['password'] = password_hash($passwordBaru, PASSWORD_DEFAULT);
         }
 
-        // FOTO OPTIONAL
-        $foto = $this->request->getFile('foto');
-        if ($foto && $foto->isValid() && !$foto->hasMoved()) {
+        // --- REVISI BAGIAN FOTO OPTIONAL ---
+$fotoCropped = $this->request->getPost('foto_cropped');
 
-            // Delete foto lama
-            if (!empty($admin['foto']) && file_exists('uploads/profile/' . $admin['foto'])) {
-                unlink('uploads/profile/' . $admin['foto']);
-            }
+if (!empty($fotoCropped)) {
+    // 1. Logika jika user menggunakan fitur CROP (Base64)
+    
+    // Hapus foto lama jika ada
+    if (!empty($admin['foto']) && file_exists('uploads/profile/' . $admin['foto'])) {
+        unlink('uploads/profile/' . $admin['foto']);
+    }
 
-            // Upload foto baru
-            $namaBaru = $foto->getRandomName();
-            $foto->move('uploads/profile/', $namaBaru);
+    // Olah data Base64: "data:image/jpeg;base64,/9j/4AAQ..."
+    list($type, $data) = explode(';', $fotoCropped);
+    list(, $data)      = explode(',', $data);
+    $decodedData = base64_decode($data);
 
-            $updateData['foto'] = $namaBaru;
+    // Buat nama file unik (pertahankan format jpg/png sesuai kebutuhan)
+    $namaBaru = 'profile_' . $userId . '_' . time() . '.jpg';
+    $path = 'uploads/profile/' . $namaBaru;
 
-            // UPDATE SESSION FOTO
-            session()->set('foto', $namaBaru);
+    // Simpan data string ke folder sebagai file fisik
+    if (file_put_contents($path, $decodedData)) {
+        $updateData['foto'] = $namaBaru;
+        session()->set('foto', $namaBaru);
+    }
+
+} else {
+    // 2. Logika Fallback (tetap pertahankan upload biasa jika tidak ada data crop)
+    $foto = $this->request->getFile('foto');
+    if ($foto && $foto->isValid() && !$foto->hasMoved()) {
+        if (!empty($admin['foto']) && file_exists('uploads/profile/' . $admin['foto'])) {
+            unlink('uploads/profile/' . $admin['foto']);
         }
+        $namaBaru = $foto->getRandomName();
+        $foto->move('uploads/profile/', $namaBaru);
+        
+        $updateData['foto'] = $namaBaru;
+        session()->set('foto', $namaBaru);
+    }
+}
+// --- AKHIR REVISI FOTO ---
 
         // TTD ADMIN
 $ttd = $this->request->getFile('ttd_digital');
