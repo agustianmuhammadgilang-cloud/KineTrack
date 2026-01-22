@@ -100,6 +100,14 @@
                         <select name="jabatan_id" id="jabatan" required
                                 class="input-field w-full px-4 py-3.5 rounded-2xl text-blue-900 font-bold bg-slate-50">
                             <option value="">- Pilih Jabatan -</option>
+
+                             <!-- 🔥 ADMIN DEFAULT -->
+                            <option value="admin"
+                                data-nama="admin"
+                                data-role="admin">
+                                Administrator Sistem
+                            </option>
+
                             <?php foreach ($jabatan as $j): ?>
                                 <option value="<?= $j['id'] ?>" data-nama="<?= strtolower($j['nama_jabatan']) ?>">
                                     <?= esc($j['nama_jabatan']) ?>
@@ -197,34 +205,57 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     jabatan.addEventListener('change', () => {
-        resetBidang();
+    resetBidang();
 
-        const jabatanText = jabatan.options[jabatan.selectedIndex]?.dataset.nama || '';
-        if (!jabatanText) return;
+    const selected = jabatan.options[jabatan.selectedIndex];
+    if (!selected) return;
 
-        bidang.disabled = false;
-        bidang.classList.remove('bg-slate-100');
+    const jabatanText = selected.dataset.nama || '';
+    const role = selected.dataset.role || '';
 
-        let allowedType = '';
+    // 🔥 JIKA ADMIN
+    if (role === 'admin' || jabatanText === 'admin') {
+        roleInfo.value = 'ADMIN';
 
-        if (jabatanText.includes('jurusan')) {
-            allowedType = 'jurusan';
-            roleInfo.value = (jabatanText.includes('ketua') || jabatanText.includes('sekretaris')) ? 'atasan' : 'staff';
-        } else if (jabatanText.includes('prodi')) {
-            allowedType = 'prodi';
-            roleInfo.value = (jabatanText.includes('ketua') || jabatanText.includes('koordinator')) ? 'atasan' : 'staff';
-        } else {
-            roleInfo.value = 'staff'; // Default
+        bidang.disabled = true;
+        bidang.value = '';
+        bidang.classList.add('bg-slate-100');
+        return;
+    }
+
+    // =========================
+    // LOGIKA LAMA (AMAN)
+    // =========================
+    bidang.disabled = false;
+    bidang.classList.remove('bg-slate-100');
+
+    let allowedType = '';
+
+    if (jabatanText.includes('jurusan')) {
+        allowedType = 'jurusan';
+        roleInfo.value =
+            (jabatanText.includes('ketua') || jabatanText.includes('sekretaris'))
+            ? 'ATASAN'
+            : 'STAFF';
+    } else if (jabatanText.includes('prodi')) {
+        allowedType = 'prodi';
+        roleInfo.value =
+            (jabatanText.includes('ketua') || jabatanText.includes('koordinator'))
+            ? 'ATASAN'
+            : 'STAFF';
+    } else {
+        roleInfo.value = 'STAFF';
+    }
+
+    options.forEach(opt => {
+        if (opt.dataset.type === allowedType) {
+            opt.disabled = false;
+            opt.classList.remove('text-slate-300');
+            opt.classList.add('text-blue-900', 'font-bold');
         }
-
-        options.forEach(opt => {
-            if (opt.dataset.type === allowedType) {
-                opt.disabled = false;
-                opt.classList.remove('text-slate-300');
-                opt.classList.add('text-blue-900', 'font-bold');
-            }
-        });
     });
+});
+
 });
 </script>
 

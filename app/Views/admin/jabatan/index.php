@@ -129,14 +129,15 @@
                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-[11px] font-bold hover:bg-blue-600 hover:text-white transition-all border border-blue-100">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-width="2" /></svg>
                                         Edit
-                                    </a>
-                                    
-                                    <a href="<?= base_url('admin/jabatan/delete/'.$j['id']) ?>" 
-                                       onclick="return confirm('Hapus jabatan ini?')"
-                                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-[11px] font-bold hover:bg-red-600 hover:text-white transition-all border border-red-100">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" /></svg>
+                                    </a>                                    
+                                    <button type="button" 
+                                            onclick="confirmDelete('<?= base_url('admin/jabatan/delete/'.$j['id']) ?>', '<?= esc($j['nama_jabatan']) ?>')"
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 text-red-600 text-[11px] font-bold hover:bg-red-600 hover:text-white transition-all border border-red-100">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" />
+                                        </svg>
                                         Hapus
-                                    </a>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -173,5 +174,77 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmDelete(url, namaJabatan) {
+        Swal.fire({
+            title: '<div class="text-2xl font-black text-blue-900 tracking-tight mb-2">Konfirmasi Hapus</div>',
+            html: `
+                <div class="text-slate-500 text-sm font-medium leading-relaxed">
+                    Apakah Anda yakin ingin menghapus jabatan <br>
+                    <span class="text-blue-600 font-bold">"${namaJabatan}"</span>?
+                    <p class="text-[10px] text-red-400 mt-3 uppercase tracking-[0.2em] font-bold">Tindakan ini tidak dapat dibatalkan</p>
+                </div>
+            `,
+            icon: 'warning',
+            iconColor: '#D4AF37', // Polban Gold
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Hapus Data',
+            cancelButtonText: 'Batalkan',
+            reverseButtons: true, // Memposisikan "Batal" di kiri (standar UX profesional)
+            background: '#ffffff',
+            padding: '2.5rem',
+            buttonsStyling: false, // Mematikan styling default untuk menggunakan Tailwind/Custom CSS
+            customClass: {
+                popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+                confirmButton: 'px-6 py-3 mx-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-red-600 text-white hover:bg-red-700 transition-all active:scale-95',
+                cancelButton: 'px-6 py-3 mx-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-slate-100 text-slate-500 hover:bg-slate-200 transition-all active:scale-95'
+            },
+            showClass: {
+                popup: 'animate__animated animate__fadeInUp animate__faster'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutDown animate__faster'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Overlay Loading Profesional
+                Swal.fire({
+                    title: '<span class="text-sm font-bold text-slate-500 uppercase tracking-widest">Menghapus Data...</span>',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const loader = Swal.getHtmlContainer().querySelector('.swal2-loader');
+                        if (loader) loader.style.borderTopColor = '#003366';
+                    },
+                    showConfirmButton: false,
+                    customClass: {
+                        popup: 'rounded-[20px]'
+                    }
+                });
+                
+                window.location.href = url;
+            }
+        });
+    }
+
+    // Bonus: Otomatis memicu SweetAlert jika ada Flashdata Success
+    <?php if(session()->getFlashdata('success')): ?>
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '<?= session()->getFlashdata('success') ?>',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            customClass: {
+                popup: 'rounded-2xl shadow-lg border border-green-100'
+            }
+        });
+    <?php endif; ?>
+</script>
 
 <?= $this->endSection() ?>

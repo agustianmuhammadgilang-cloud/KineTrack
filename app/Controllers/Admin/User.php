@@ -103,11 +103,21 @@ log_activity(
 
 // Menampilkan form untuk menambahkan user baru
     public function create()
-    {
-        $data['jabatan'] = (new JabatanModel())->findAll();
-        $data['bidang']  = (new BidangModel())->findAll();
-        return view('admin/users/create', $data);
-    }
+{
+    $jabatanModel = new JabatanModel();
+
+    $data['jabatan'] = $jabatanModel->findAll();
+
+    // 🔥 Tambahan: jabatan default ADMIN (statis)
+    $data['jabatan_admin'] = [
+        'id' => 'admin',
+        'nama_jabatan' => 'Administrator Sistem'
+    ];
+
+    $data['bidang']  = (new BidangModel())->findAll();
+    return view('admin/users/create', $data);
+}
+
 // Menyimpan user baru
     public function store()
 {
@@ -116,48 +126,78 @@ log_activity(
     $jabatan_id = $this->request->getPost('jabatan_id');
     $bidang_id  = $this->request->getPost('bidang_id');
 
-    // Cek duplikat
+    // =========================
+    // CEK DUPLIKAT
+    // =========================
     $existing = $this->userModel
-        ->where('nama', $nama)
-        ->orWhere('email', $email)
+        ->groupStart()
+            ->where('nama', $nama)
+            ->orWhere('email', $email)
+        ->groupEnd()
         ->first();
 
     if ($existing) {
-        return redirect()->back()->withInput()->with('error', 'Akun dengan nama atau email ini sudah terdaftar!');
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Akun dengan nama atau email ini sudah terdaftar!');
     }
 
-    //  Ambil jabatan → tentukan role
+    // =========================
+    // 🔥 KHUSUS ADMIN
+    // =========================
+    if ($jabatan_id === 'admin') {
+
+        $userId = $this->userModel->insert([
+            'nama'       => $nama,
+            'email'      => $email,
+            'jabatan_id' => null,
+            'bidang_id'  => null,
+            'role'       => 'admin',
+            'password'   => password_hash('123456', PASSWORD_DEFAULT)
+        ]);
+
+        log_activity(
+            'create_admin',
+            'Menambahkan ADMIN baru: ' . $nama,
+            'users',
+            $userId
+        );
+
+        return redirect()->to('/admin/users')
+            ->with('success', 'Admin berhasil ditambahkan. Password default: 123456');
+    }
+
+    // =========================
+    // USER NON-ADMIN (LOGIKA LAMA)
+    // =========================
     $jabatan = (new JabatanModel())->find($jabatan_id);
 
     if (!$jabatan || empty($jabatan['default_role'])) {
-        return redirect()->back()->withInput()->with('error', 'Jabatan tidak valid atau belum memiliki role sistem.');
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Jabatan tidak valid atau belum memiliki role sistem.');
     }
 
-    //  Simpan user (ROLE AUTO)
     $userId = $this->userModel->insert([
-    'nama'       => $nama,
-    'email'      => $email,
-    'jabatan_id' => $jabatan_id,
-    'bidang_id'  => $bidang_id,
-    'role'       => $jabatan['default_role'],
-    'password'   => password_hash('123456', PASSWORD_DEFAULT)
-]);
+        'nama'       => $nama,
+        'email'      => $email,
+        'jabatan_id' => $jabatan_id,
+        'bidang_id'  => $bidang_id,
+        'role'       => $jabatan['default_role'],
+        'password'   => password_hash('123456', PASSWORD_DEFAULT)
+    ]);
 
-    //  LOG AKTIVITAS ADMIN
-log_activity(
-    'create_user',
-    'Menambahkan user baru: ' . $nama,
-    'users',
-    $userId
-);
-
-
-
-
+    log_activity(
+        'create_user',
+        'Menambahkan user baru: ' . $nama,
+        'users',
+        $userId
+    );
 
     return redirect()->to('/admin/users')
         ->with('success', 'User berhasil ditambahkan. Password default: 123456');
 }
+
 
 // Menampilkan form untuk mengedit user
     public function edit($id)

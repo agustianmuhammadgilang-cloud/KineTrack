@@ -208,12 +208,19 @@
     <?php endif; ?>
 
     <?php
-    $groupedUsers = [];
-    foreach ($users as $u) {
+$groupedUsers = [];
+foreach ($users as $u) {
+    // 🔥 Logika baru: Jika role admin, masukkan ke grup 'ADMINISTRATOR'
+    // Jika bukan admin, baru ambil nama bidangnya
+    if ($u['role'] === 'admin') {
+        $unit = 'ADMINISTRATOR';
+    } else {
         $unit = $u['nama_bidang'] ?? 'Tanpa Unit Kerja';
-        $groupedUsers[$unit][] = $u;
     }
-    ?>
+    
+    $groupedUsers[$unit][] = $u;
+}
+?>
 
     <div class="space-y-8">
         <?php foreach ($groupedUsers as $unitName => $unitUsers): ?>
@@ -238,11 +245,20 @@
                         <div>
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="font-bold text-slate-800"><?= esc($u['nama']) ?></span>
-                                <?php if($u['role'] === 'atasan'): ?>
-                                    <span class="text-[9px] bg-amber-100 text-amber-700 font-black uppercase px-2 py-0.5 rounded-full border border-amber-200">Atasan</span>
-                                <?php else: ?>
-                                    <span class="text-[9px] bg-slate-100 text-slate-500 font-black uppercase px-2 py-0.5 rounded-full border border-slate-200">Staff</span>
-                                <?php endif; ?>
+                            <?php if ($u['role'] === 'admin'): ?>
+                                <span class="text-[9px] bg-purple-100 text-purple-700 font-black uppercase px-2 py-0.5 rounded-full border border-purple-200">
+                                    Admin
+                                </span>
+                            <?php elseif ($u['role'] === 'atasan'): ?>
+                                <span class="text-[9px] bg-amber-100 text-amber-700 font-black uppercase px-2 py-0.5 rounded-full border border-amber-200">
+                                    Atasan
+                                </span>
+                            <?php else: ?>
+                                <span class="text-[9px] bg-slate-100 text-slate-500 font-black uppercase px-2 py-0.5 rounded-full border border-slate-200">
+                                    Staff
+                                </span>
+                            <?php endif; ?>
+
                             </div>
                             <p class="text-xs text-slate-500"><?= esc($u['nama_jabatan']) ?> <span class="mx-1 text-slate-300">•</span> <?= esc($u['email']) ?></p>
                         </div>
@@ -256,13 +272,17 @@
                             Edit
                         </a>
                         
-                        <form action="<?= base_url('admin/users/delete/'.$u['id']) ?>" method="post" onsubmit="return confirm('Yakin ingin menghapus user ini?')">
-                            <?= csrf_field() ?>
-                            <button type="submit" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-red-50 text-red-600 text-xs font-bold hover:bg-red-600 hover:text-white transition-all shadow-sm border border-red-100">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" /></svg>
-                                Hapus
-                            </button>
-                        </form>
+<form id="delete-form-<?= $u['id'] ?>" action="<?= base_url('admin/users/delete/'.$u['id']) ?>" method="post">
+    <?= csrf_field() ?>
+    <button type="button" 
+            onclick="confirmDeleteUser('<?= $u['id'] ?>', '<?= esc($u['nama']) ?>')"
+            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-red-50 text-red-600 text-xs font-bold hover:bg-red-600 hover:text-white transition-all shadow-sm border border-red-100 active:scale-95">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" />
+        </svg>
+        Hapus
+    </button>
+</form>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -286,5 +306,58 @@
         </div>
     </div>
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function confirmDeleteUser(userId, userName) {
+        Swal.fire({
+            title: '<div class="text-2xl font-black text-blue-900 tracking-tight mb-2">Hapus Pengguna</div>',
+            html: `
+                <div class="text-slate-500 text-sm font-medium leading-relaxed">
+                    Anda akan menghapus akun: <br>
+                    <span class="text-blue-600 font-bold">"${userName}"</span>
+                    <p class="text-[10px] text-red-400 mt-4 uppercase tracking-[0.2em] font-bold italic border-t border-slate-100 pt-3">
+                        Akses pengguna ini ke sistem akan dicabut permanen
+                    </p>
+                </div>
+            `,
+            icon: 'warning',
+            iconColor: '#D4AF37',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Hapus User',
+            cancelButtonText: 'Batalkan',
+            reverseButtons: true,
+            buttonsStyling: false,
+            customClass: {
+                popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+                confirmButton: 'px-6 py-3 mx-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-red-600 text-white hover:bg-red-700 transition-all active:scale-95',
+                cancelButton: 'px-6 py-3 mx-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-slate-100 text-slate-500 hover:bg-slate-200 transition-all active:scale-95'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Tampilkan loading saat proses penghapusan
+                Swal.fire({
+                    title: '<span class="text-sm font-bold text-slate-500 uppercase tracking-widest">Menghapus Akun...</span>',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const loader = Swal.getHtmlContainer().querySelector('.swal2-loader');
+                        if (loader) loader.style.borderTopColor = '#003366';
+                    },
+                    showConfirmButton: false,
+                    customClass: { popup: 'rounded-[20px]' }
+                });
+                
+                // Submit form secara manual
+                document.getElementById('delete-form-' + userId).submit();
+            }
+        });
+    }
+
+    // Penanganan Notifikasi Flashdata (Success & Error)
+</script>
+
 
 <?= $this->endSection() ?>
