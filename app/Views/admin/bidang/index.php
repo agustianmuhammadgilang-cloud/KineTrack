@@ -159,11 +159,13 @@
                                        class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-blue-700 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-width="2" /></svg>
                                     </a>
-                                    <a href="<?= base_url('admin/bidang/delete/'.$j['id']) ?>" 
-                                       onclick="return confirm('Hapus unit kerja ini?')"
-                                       class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-red-600 hover:bg-red-600 hover:text-white transition-all shadow-sm">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" /></svg>
-                                    </a>
+<button type="button" 
+        onclick="confirmDelete('<?= base_url('admin/bidang/delete/'.$j['id']) ?>', '<?= esc($j['nama_bidang']) ?>', 'Jurusan')"
+        class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-red-600 hover:bg-red-600 hover:text-white transition-all shadow-sm">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" />
+    </svg>
+</button>
                                 </div>
                             </td>
                         </tr>
@@ -189,9 +191,13 @@
                                         <a href="<?= base_url('admin/bidang/edit/'.$p['id']) ?>" class="text-slate-400 hover:text-blue-600 transition-colors">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-width="2" /></svg>
                                         </a>
-                                        <a href="<?= base_url('admin/bidang/delete/'.$p['id']) ?>" onclick="return confirm('Hapus prodi ini?')" class="text-slate-400 hover:text-red-600 transition-colors">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" /></svg>
-                                        </a>
+<button type="button" 
+        onclick="confirmDelete('<?= base_url('admin/bidang/delete/'.$p['id']) ?>', '<?= esc($p['nama_bidang']) ?>', 'Prodi')"
+        class="text-slate-400 hover:text-red-600 transition-colors">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" />
+    </svg>
+</button>
                                     </div>
                                 </td>
                             </tr>
@@ -263,5 +269,78 @@ document.getElementById('searchBidang').addEventListener('input', function () {
 });
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function confirmDelete(url, namaUnit, tipe) {
+        // Pesan khusus jika yang dihapus adalah Jurusan (peringatan hierarki)
+        const extraNote = tipe === 'Jurusan' 
+            ? '<p class="text-[10px] text-amber-600 mt-2 font-bold uppercase tracking-widest">Peringatan: Prodi di bawah jurusan ini mungkin akan terpengaruh!</p>' 
+            : '';
+
+        Swal.fire({
+            title: `<div class="text-2xl font-black text-blue-900 tracking-tight mb-2">Hapus ${tipe}</div>`,
+            html: `
+                <div class="text-slate-500 text-sm font-medium leading-relaxed">
+                    Anda akan menghapus unit kerja: <br>
+                    <span class="text-blue-600 font-bold">"${namaUnit}"</span>
+                    ${extraNote}
+                    <p class="text-[10px] text-red-400 mt-4 uppercase tracking-[0.2em] font-bold">Data yang dihapus tidak dapat dipulihkan</p>
+                </div>
+            `,
+            icon: 'warning',
+            iconColor: '#D4AF37',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Hapus Unit',
+            cancelButtonText: 'Batalkan',
+            reverseButtons: true,
+            buttonsStyling: false,
+            customClass: {
+                popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+                confirmButton: 'px-6 py-3 mx-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-red-600 text-white hover:bg-red-700 transition-all active:scale-95',
+                cancelButton: 'px-6 py-3 mx-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-slate-100 text-slate-500 hover:bg-slate-200 transition-all active:scale-95'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: '<span class="text-sm font-bold text-slate-500 uppercase tracking-widest">Menghapus Unit Kerja...</span>',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const loader = Swal.getHtmlContainer().querySelector('.swal2-loader');
+                        if (loader) loader.style.borderTopColor = '#003366';
+                    },
+                    showConfirmButton: false,
+                    customClass: { popup: 'rounded-[20px]' }
+                });
+                window.location.href = url;
+            }
+        });
+    }
+
+    // Integrasi Flashdata Success dengan SweetAlert2 Toast
+    <?php if(session()->getFlashdata('success')): ?>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+
+        Toast.fire({
+            icon: 'success',
+            title: '<span class="text-slate-700 font-bold">Berhasil!</span>',
+            text: '<?= session()->getFlashdata('success') ?>',
+            customClass: {
+                popup: 'rounded-2xl shadow-xl border border-green-50'
+            }
+        });
+    <?php endif; ?>
+</script>
 
 <?= $this->endSection() ?>

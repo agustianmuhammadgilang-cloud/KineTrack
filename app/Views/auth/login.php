@@ -92,7 +92,7 @@
                     peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
                     peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-polban-orange peer-focus:bg-white peer-focus:px-1
                     peer-[:not(:placeholder-shown)]:-top-2.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-polban-orange peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-1">
-                    NIP/NIK atau Email
+                    Email
                 </label>
             </div>
 
