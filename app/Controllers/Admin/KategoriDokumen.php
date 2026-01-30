@@ -269,25 +269,68 @@ public function exportExcel()
             continue;
         }
 
-        foreach ($dokumenList as $dok) {
-            $sheet->setCellValue("A{$row}", $kategori['nama_kategori']);
-            $sheet->setCellValue("B{$row}", $dok['judul']);
-            $sheet->setCellValue(
-                "C{$row}",
-                $statusMap[$dok['status']] ?? strtoupper($dok['status'])
-            );
+        // =====================
+// ISI DATA
+// =====================
+$row = $headerRow + 1;
 
-            $sheet->getStyle("A{$row}:C{$row}")
-                  ->getBorders()
-                  ->getAllBorders()
-                  ->setBorderStyle(Border::BORDER_THIN);
+foreach ($kategoriList as $kategori) {
 
-            $sheet->getStyle("C{$row}")
-                  ->getAlignment()
-                  ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+    $dokumenList = $dokumenModel
+        ->where('kategori_id', $kategori['id'])
+        ->findAll();
 
-            $row++;
-        }
+    // simpan row awal kategori
+    $startRow = $row;
+
+    if (empty($dokumenList)) {
+        $sheet->setCellValue("A{$row}", $kategori['nama_kategori']);
+        $sheet->setCellValue("B{$row}", '-');
+        $sheet->setCellValue("C{$row}", '-');
+
+        $sheet->getStyle("A{$row}:C{$row}")
+              ->getBorders()
+              ->getAllBorders()
+              ->setBorderStyle(Border::BORDER_THIN);
+
+        $row++;
+        continue;
+    }
+
+    foreach ($dokumenList as $dok) {
+        // kolom A diisi nanti (biar bisa merge)
+        $sheet->setCellValue("B{$row}", $dok['judul']);
+        $sheet->setCellValue(
+            "C{$row}",
+            $statusMap[$dok['status']] ?? strtoupper($dok['status'])
+        );
+
+        $sheet->getStyle("A{$row}:C{$row}")
+              ->getBorders()
+              ->getAllBorders()
+              ->setBorderStyle(Border::BORDER_THIN);
+
+        $sheet->getStyle("C{$row}")
+              ->getAlignment()
+              ->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        $row++;
+    }
+
+    // merge kategori jika dokumen > 1
+    if ($row - 1 > $startRow) {
+        $sheet->mergeCells("A{$startRow}:A" . ($row - 1));
+    }
+
+    // isi nama kategori sekali saja
+    $sheet->setCellValue("A{$startRow}", $kategori['nama_kategori']);
+
+    // rata tengah vertikal
+    $sheet->getStyle("A{$startRow}")
+          ->getAlignment()
+          ->setVertical(Alignment::VERTICAL_CENTER);
+}
+
     }
 
     // =====================

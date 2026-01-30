@@ -144,16 +144,16 @@
                 </a>
 
                 <!-- DELETE -->
-                <a href="<?= base_url('admin/pengukuran/delete/' . $p['id']) ?>"
-                   onclick="return confirm('Yakin ingin menghapus data ini?')"
-                   class="p-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 transition"
-                   title="Hapus">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                        stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M6 7h12M9 7v10m6-10v10M4 7h16l-1 12a2 2 0 01-2 2H7a2 2 0 01-2-2L4 7zm5-3h6a1 1 0 011 1v1H8V5a1 1 0 011-1z" />
-                    </svg>
-                </a>
+<button type="button" 
+        onclick="confirmDelete('<?= base_url('admin/pengukuran/delete/' . $p['id']) ?>', '<?= esc($p['user_nama'], 'js') ?>')"
+        class="p-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 transition cursor-pointer"
+        title="Hapus">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+        stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
+        <path stroke-linecap="round" stroke-linejoin="round"
+            d="M6 7h12M9 7v10m6-10v10M4 7h16l-1 12a2 2 0 01-2 2H7a2 2 0 01-2-2L4 7zm5-3h6a1 1 0 011 1v1H8V5a1 1 0 011-1z" />
+    </svg>
+</button>
 
                 <!-- PDF -->
                 <a href="<?= base_url('admin/pengukuran/pdf/' . $p['id']) ?>"
@@ -178,5 +178,54 @@
 
     <?php endif; ?>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function confirmDelete(url, namaStaff) {
+        Swal.fire({
+            title: '<div class="text-2xl font-black text-blue-900 tracking-tight mb-2">Konfirmasi Hapus</div>',
+            html: `
+                <div class="text-slate-500 text-sm font-medium leading-relaxed">
+                    Apakah Anda yakin ingin menghapus data pengukuran dari staff <br>
+                    <span class="text-blue-600 font-bold">"${namaStaff}"</span>?
+                    <p class="text-[10px] text-red-400 mt-3 uppercase tracking-[0.2em] font-bold">Data realisasi dan file dukung akan terhapus permanen</p>
+                </div>
+            `,
+            icon: 'warning',
+            iconColor: '#D4AF37',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Hapus Data',
+            cancelButtonText: 'Batalkan',
+            reverseButtons: true,
+            background: '#ffffff',
+            padding: '2.5rem',
+            buttonsStyling: false,
+            customClass: {
+                popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+                confirmButton: 'px-6 py-3 mx-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-red-600 text-white hover:bg-red-700 transition-all active:scale-95',
+                cancelButton: 'px-6 py-3 mx-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-slate-100 text-slate-500 hover:bg-slate-200 transition-all active:scale-95'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Efek loading
+                Swal.fire({
+                    title: '<span class="text-sm font-bold text-slate-500 uppercase tracking-widest">Memproses Penghapusan...</span>',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const loader = Swal.getHtmlContainer().querySelector('.swal2-loader');
+                        if (loader) loader.style.borderTopColor = '#003366';
+                    },
+                    showConfirmButton: false,
+                    customClass: { popup: 'rounded-[20px]' }
+                });
+                
+                window.location.href = url;
+            }
+        });
+    }
+
+</script>
 
 <?= $this->endSection() ?>

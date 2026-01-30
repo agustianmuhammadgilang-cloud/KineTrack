@@ -33,21 +33,35 @@ class DokumenModel extends Model
      * BASE QUERY (SESUAI STRUKTUR DATABASE)
      * =========================================
      */
-    private function baseSelect()
+    public function baseSelect()
 {
     return $this->select([
             'dokumen_kinerja.*',
-            'users.nama                     AS nama_pengirim',
-            'jabatan.nama_jabatan           AS nama_jabatan',
-            'bidang.nama_bidang             AS nama_unit',
-            'kategori_dokumen.nama_kategori AS nama_kategori'
+
+            // pengirim
+            'users.nama AS nama_pengirim',
+            'jabatan.nama_jabatan',
+
+            // 🔥 UNIT ASAL DOKUMEN (PRODI)
+            'unit_asal.nama_bidang AS nama_unit_asal',
+
+            // 🔥 UNIT JURUSAN
+            'unit_jurusan.nama_bidang AS nama_unit_jurusan',
+
+            'kategori_dokumen.nama_kategori'
         ])
         ->join('users', 'users.id = dokumen_kinerja.created_by')
         ->join('jabatan', 'jabatan.id = users.jabatan_id', 'left')
-        ->join('bidang', 'bidang.id = users.bidang_id', 'left')
-        // 🔥 INI KUNCI NYA
+
+        // 🔥 JOIN UNIT ASAL
+        ->join('bidang AS unit_asal', 'unit_asal.id = dokumen_kinerja.unit_asal_id', 'left')
+
+        // 🔥 JOIN JURUSAN
+        ->join('bidang AS unit_jurusan', 'unit_jurusan.id = dokumen_kinerja.unit_jurusan_id', 'left')
+
         ->join('kategori_dokumen', 'kategori_dokumen.id = dokumen_kinerja.kategori_id', 'left');
 }
+
 
 
     /**
@@ -208,6 +222,27 @@ class DokumenModel extends Model
         ->orderBy('dokumen_kinerja.updated_at', 'DESC')
         ->findAll();
 }
+
+public function getArsipByAtasan(array $bidang)
+{
+    $builder = $this->baseSelect()
+        ->where('dokumen_kinerja.status', 'archived');
+
+    // KAJUR
+    if ($bidang['parent_id'] === null) {
+        $builder->where('dokumen_kinerja.unit_jurusan_id', $bidang['id']);
+    }
+    // KAPRODI
+    else {
+        $builder->where('dokumen_kinerja.unit_jurusan_id', $bidang['parent_id'])
+                ->where('dokumen_kinerja.unit_asal_id', $bidang['id']);
+    }
+
+    return $builder
+        ->orderBy('dokumen_kinerja.updated_at', 'DESC')
+        ->findAll();
+}
+
 
 
 }

@@ -137,7 +137,7 @@
             </div>
 
             <div>
-                <label class="label-custom">Deskripsi Indikator Kinerja</label>
+                <label class="label-custom">Nama Indikator Kinerja</label>
                 <textarea name="nama_indikator" required class="input-field h-24 resize-none" placeholder="Masukkan detail indikator..."></textarea>
             </div>
 

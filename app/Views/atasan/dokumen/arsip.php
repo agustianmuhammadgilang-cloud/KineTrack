@@ -129,7 +129,7 @@
                             </td>
                             <td class="px-8 py-7 text-center">
                                 <span class="text-[10px] font-black text-blue-600 bg-blue-50 border border-blue-100 px-3 py-1.5 rounded-xl uppercase tracking-widest">
-                                    Unit <?= esc($d['unit_asal_id']) ?>
+                                    <?= esc($d['nama_unit_asal'] ?? '-') ?>
                                 </span>
                             </td>
                             <td class="px-8 py-7 text-center">

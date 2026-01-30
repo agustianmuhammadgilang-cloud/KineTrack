@@ -12,9 +12,9 @@
 
     .form-card {
         background: white;
-        border-radius: 32px;
+        border-radius: 24px; /* Sedikit diperkecil dari 32px */
         border: 1px solid #eef2f6;
-        box-shadow: 0 20px 50px -12px rgba(0, 51, 102, 0.08);
+        box-shadow: 0 15px 35px -12px rgba(0, 51, 102, 0.08);
     }
 
     .input-field {
@@ -46,110 +46,107 @@
     }
 </style>
 
-<div class="px-4 py-8 max-w-5xl mx-auto">
-    <div class="flex items-center gap-5 mb-10">
-        <div class="w-14 h-14 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center shadow-sm text-blue-900">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<div class="px-2 py-2 max-w-5xl mx-auto"> <div class="flex items-center gap- mb-2"> <div class="w-12 h-12 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center shadow-sm text-blue-900">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
         </div>
         <div>
-            <h4 class="text-2xl font-black text-blue-900 tracking-tight">
-                Triwulan <?= esc($tw) ?> <span class="text-slate-400 font-light">|</span> <span class="text-blue-600">Pengukuran Kinerja</span>
+            <h4 class="text-xl font-black text-blue-900 tracking-tight leading-tight">
+                Triwulan <?= esc($tw) ?> <span class="text-slate-300 font-light">|</span> <span class="text-blue-600">Pengukuran Kinerja</span>
             </h4>
-            <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-[0.2em] mt-1">
-                Tahun Anggaran <?= $tahun ?> — Input Capaian & Bukti Dukung
+            <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-widest mt-0.5">
+                TA <?= $tahun ?> — Input Capaian & Bukti Dukung
             </p>
         </div>
     </div>
 
     <div class="form-card overflow-hidden">
-        <div class="p-8 md:p-12">
-            
-            <div class="info-badge p-6 rounded-3xl mb-10">
-                <div class="flex flex-col md:flex-row gap-6">
+        <div class="p-6 md:p-8"> <div class="info-badge p-4 rounded-2xl mb-6">
+                <div class="flex flex-col md:flex-row gap-4 items-center">
                     <div class="flex-1">
-                        <p class="text-[10px] font-black text-blue-900 uppercase tracking-widest mb-2">Sasaran & Indikator</p>
-                        <p class="text-sm font-bold text-slate-700 leading-relaxed mb-1">"<?= esc($sasaran['nama_sasaran']) ?>"</p>
-                        <p class="text-xs text-slate-500 font-medium"><?= esc($indikator['nama_indikator']) ?></p>
+                        <p class="text-[9px] font-black text-blue-900 uppercase tracking-widest mb-1">Sasaran & Indikator</p>
+                        <p class="text-sm font-bold text-slate-700 leading-snug">"<?= esc($sasaran['nama_sasaran']) ?>"</p>
+                        <p class="text-[11px] text-slate-500 font-medium mt-1"><?= esc($indikator['nama_indikator']) ?></p>
                     </div>
-                    <div class="shrink-0 flex gap-8 border-t md:border-t-0 md:border-l border-slate-200 pt-4 md:pt-0 md:pl-8">
+                    <div class="shrink-0 flex gap-6 border-t md:border-t-0 md:border-l border-slate-200 pt-3 md:pt-0 md:pl-6">
                         <div>
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Target PK</p>
-                            <p class="text-xl font-black text-blue-900"><?= esc($indikator['target_pk']) ?> <span class="text-[10px] text-slate-400 font-bold"><?= esc($indikator['satuan']) ?></span></p>
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Target PK</p>
+                            <p class="text-lg font-black text-blue-900"><?= esc($indikator['target_pk']) ?> <span class="text-[9px] text-slate-400 font-bold"><?= esc($indikator['satuan']) ?></span></p>
                         </div>
                         <div>
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Target TW <?= $tw ?></p>
-                            <p class="text-xl font-black text-amber-600"><?= esc($target_tw[$tw] ?? '0') ?></p>
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Target TW <?= $tw ?></p>
+                            <p class="text-lg font-black text-amber-600"><?= esc($target_tw[$tw] ?? '0') ?></p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <form action="<?= base_url('staff/task/store') ?>" method="POST" enctype="multipart/form-data" class="space-y-8">
-                <input type="hidden" name="indikator_id" value="<?= esc($indikator_id) ?>">
+            <form action="<?= base_url('staff/task/store') ?>" method="POST" enctype="multipart/form-data" class="space-y-5"> <input type="hidden" name="indikator_id" value="<?= esc($indikator_id) ?>">
                 <input type="hidden" name="triwulan" value="<?= esc($tw) ?>">
                 <input type="hidden" name="tahun" value="<?= esc($tahun) ?>">
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="md:col-span-2 space-y-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="md:col-span-2 space-y-1.5">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Nilai Realisasi Capaian <span class="text-rose-500">*</span></label>
                         <input type="number" name="realisasi" step="any" min="0" required
                                placeholder="0.00"
-                               class="input-field w-full px-5 py-4 rounded-2xl text-blue-900 font-black text-2xl bg-slate-50/50">
+                               class="input-field w-full px-4 py-3 rounded-xl text-blue-900 font-black text-xl bg-slate-50/50">
                     </div>
 
-                    <div class="md:col-span-2 space-y-2">
+                    <div class="md:col-span-2 space-y-1.5">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Progress / Deskripsi Kegiatan</label>
-                        <textarea name="progress" rows="3" required
-                                  placeholder="Uraikan detail kegiatan yang telah dilaksanakan..."
-                                  class="input-field w-full px-5 py-4 rounded-2xl text-blue-900 font-medium text-sm"></textarea>
+                        <textarea name="progress" rows="2" required
+                                  placeholder="Uraikan detail kegiatan..."
+                                  class="input-field w-full px-4 py-3 rounded-xl text-blue-900 font-medium text-sm"></textarea>
                     </div>
 
-                    <div class="space-y-2">
+                    <div class="space-y-1.5">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Hambatan / Kendala</label>
-                        <textarea name="kendala" rows="3"
-                                  placeholder="Tuliskan kendala jika ada..."
-                                  class="input-field w-full px-5 py-4 rounded-2xl text-blue-900 font-medium text-sm"></textarea>
+                        <textarea name="kendala" rows="2"
+                                  placeholder="Kendala (jika ada)..."
+                                  class="input-field w-full px-4 py-3 rounded-xl text-blue-900 font-medium text-sm"></textarea>
                     </div>
 
-                    <div class="space-y-2">
+                    <div class="space-y-1.5">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Strategi Tindak Lanjut</label>
-                        <textarea name="strategi" rows="3"
-                                  placeholder="Rencana perbaikan ke depan..."
-                                  class="input-field w-full px-5 py-4 rounded-2xl text-blue-900 font-medium text-sm"></textarea>
+                        <textarea name="strategi" rows="2"
+                                  placeholder="Rencana perbaikan..."
+                                  class="input-field w-full px-4 py-3 rounded-xl text-blue-900 font-medium text-sm"></textarea>
                     </div>
                 </div>
 
-                <div class="space-y-3">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Unggah Bukti Dukung (Multi Files)</label>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Unggah Bukti Dukung</label>
                     <div class="relative group">
                         <input type="file" name="file_dukung[]" multiple id="file_dukung" class="hidden" onchange="updateFileName(this)">
-                        <label for="file_dukung" class="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-3xl p-8 hover:bg-blue-50/50 hover:border-blue-400 transition-all cursor-pointer bg-slate-50/30">
-                            <div class="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-3 text-blue-600 group-hover:scale-110 transition-transform">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <label for="file_dukung" class="flex items-center gap-4 border-2 border-dashed border-slate-200 rounded-2xl p-4 hover:bg-blue-50/50 hover:border-blue-400 transition-all cursor-pointer bg-slate-50/30">
+                            <div class="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-blue-600 group-hover:scale-105 transition-transform shrink-0">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </div>
-                            <p class="text-sm font-bold text-blue-900" id="file-label">Pilih berkas atau tarik ke sini</p>
-                            <p class="text-[10px] text-slate-400 mt-1 uppercase font-black">PDF, JPG, PNG, DOCX (Maks 5MB)</p>
+                            <div class="text-left">
+                                <p class="text-xs font-bold text-blue-900" id="file-label">Pilih berkas bukti dukung</p>
+                                <p class="text-[9px] text-slate-400 uppercase font-black">Maks 5MB per berkas</p>
+                            </div>
                         </label>
                     </div>
                 </div>
 
-                <div class="flex flex-col sm:flex-row gap-4 pt-8 border-t border-slate-50">
-                    <button type="submit" class="btn-polban flex-1 text-white font-black py-4 rounded-2xl uppercase tracking-widest text-xs shadow-lg shadow-blue-900/10">
+                <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-slate-50">
+                    <button type="submit" class="btn-polban flex-[2] text-white font-black py-3.5 rounded-xl uppercase tracking-widest text-[11px] shadow-lg shadow-blue-900/10">
                         Simpan Pengukuran
                     </button>
-                    <a href="<?= base_url('staff/task') ?>" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-500 font-black py-4 rounded-2xl uppercase tracking-widest text-xs text-center transition-colors">
-                        Batal & Kembali
+                    <a href="<?= base_url('staff/task') ?>" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-500 font-black py-3.5 rounded-xl uppercase tracking-widest text-[11px] text-center transition-colors">
+                        Batal
                     </a>
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="mt-10 text-center">
-        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-            © <?= date('Y') ?> Kinetrack — Politeknik Negeri Bandung
+    <div class="mt-6 text-center">
+        <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">
+            © <?= date('Y') ?> Kinetrack — Polban
         </p>
     </div>
 </div>
@@ -158,10 +155,10 @@
     function updateFileName(input) {
         const label = document.getElementById('file-label');
         if (input.files.length > 0) {
-            label.innerText = input.files.length + ' Berkas terpilih';
+            label.innerText = input.files.length + ' Berkas dipilih';
             label.classList.add('text-blue-600');
         } else {
-            label.innerText = 'Pilih berkas atau tarik ke sini';
+            label.innerText = 'Pilih berkas bukti dukung';
             label.classList.remove('text-blue-600');
         }
     }

@@ -318,29 +318,6 @@ document.getElementById('searchBidang').addEventListener('input', function () {
         });
     }
 
-    // Integrasi Flashdata Success dengan SweetAlert2 Toast
-    <?php if(session()->getFlashdata('success')): ?>
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        });
-
-        Toast.fire({
-            icon: 'success',
-            title: '<span class="text-slate-700 font-bold">Berhasil!</span>',
-            text: '<?= session()->getFlashdata('success') ?>',
-            customClass: {
-                popup: 'rounded-2xl shadow-xl border border-green-50'
-            }
-        });
-    <?php endif; ?>
 </script>
 
 <?= $this->endSection() ?>

@@ -314,11 +314,21 @@ log_activity(
     // =========================
     // GROUP PER BIDANG
     // =========================
-    $groupedUsers = [];
-    foreach ($users as $u) {
+    // =========================
+// GROUP PER BIDANG
+// =========================
+$groupedUsers = [];
+foreach ($users as $u) {
+
+    if ($u['role'] === 'admin') {
+        $unit = 'Administrator';
+    } else {
         $unit = $u['nama_bidang'] ?? 'Tanpa Unit Kerja';
-        $groupedUsers[$unit][] = $u;
     }
+
+    $groupedUsers[$unit][] = $u;
+}
+
 
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();

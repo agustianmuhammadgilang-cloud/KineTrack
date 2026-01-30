@@ -228,23 +228,6 @@
             }
         });
     }
-
-    // Bonus: Otomatis memicu SweetAlert jika ada Flashdata Success
-    <?php if(session()->getFlashdata('success')): ?>
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'success',
-            title: 'Berhasil!',
-            text: '<?= session()->getFlashdata('success') ?>',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            customClass: {
-                popup: 'rounded-2xl shadow-lg border border-green-100'
-            }
-        });
-    <?php endif; ?>
 </script>
 
 <?= $this->endSection() ?>
