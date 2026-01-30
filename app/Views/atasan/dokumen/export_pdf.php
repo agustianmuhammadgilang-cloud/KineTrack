@@ -130,7 +130,7 @@ if (file_exists($logoPolbanPath)) {
                     <td><?= esc($d['judul']) ?></td>
                     <td><?= esc($d['nama_pengirim']) ?></td>
                     <td><?= esc($d['nama_jabatan']) ?></td>
-                    <td><?= esc($d['nama_unit']) ?></td>
+                    <td><?= esc($d['nama_unit_asal'] ?? '-') ?></td>
                     <td class="center"><?= esc($d['nama_kategori']) ?></td>
                     <td class="center"><?= ucfirst(esc($d['status'])) ?></td>
                     <td class="center"><?= date('d/m/Y', strtotime($d['updated_at'])) ?></td>
@@ -156,7 +156,6 @@ if (file_exists($logoPolbanPath)) {
             <?php endif; ?>
 
             <div class="ttd-name"><?= esc($namaUser) ?></div>
-            <div>NIP. .................................</div>
         </div>
     </div>
 

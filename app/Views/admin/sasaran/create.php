@@ -115,7 +115,7 @@
             </div>
 
             <div>
-                <label class="label-custom">Deskripsi Sasaran Strategis</label>
+                <label class="label-custom">Nama Sasaran Strategis</label>
                 <textarea name="nama_sasaran" required class="input-field h-32 resize-none" 
                     placeholder="Masukkan uraian sasaran strategis secara mendetail..."><?= old('nama_sasaran') ?></textarea>
                 <p class="mt-2 text-[10px] text-slate-400 italic font-medium">* Pastikan nama sasaran sesuai dengan dokumen Renstra.</p>

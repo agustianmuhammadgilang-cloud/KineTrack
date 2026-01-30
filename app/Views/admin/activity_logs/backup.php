@@ -4,28 +4,44 @@
 <div class="max-w-6xl mx-auto px-4 py-8 space-y-8">
     
     <div class="relative overflow-hidden bg-white rounded-3xl border border-gray-100 shadow-sm p-8">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#1D2F83]/5 to-transparent rounded-full -mr-32 -mt-32"></div>
-        
-        <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div class="flex items-center gap-5">
-                <div class="w-14 h-14 rounded-2xl bg-[#1D2F83] flex items-center justify-center shadow-lg shadow-blue-900/20">
-                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                </div>
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Database <span class="text-[#1D2F83]">Archive Manager</span></h1>
-                    <div class="flex items-center gap-2 mt-1">
-                        <span class="relative flex h-2 w-2">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                        </span>
-                        <p class="text-sm text-gray-500 font-medium">Sistem Pemulihan & Pencadangan Aktif</p>
-                    </div>
+    <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#1D2F83]/5 to-transparent rounded-full -mr-32 -mt-32"></div>
+    
+    <div class="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div class="flex items-center gap-5">
+            <div class="w-14 h-14 rounded-2xl bg-[#1D2F83] flex items-center justify-center shadow-lg shadow-blue-900/20">
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Database <span class="text-[#1D2F83]">Archive Manager</span></h1>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                    <p class="text-sm text-gray-500 font-medium">Sistem Pemulihan & Pencadangan Aktif</p>
                 </div>
             </div>
         </div>
+
+        <form method="get" class="flex flex-wrap md:flex-nowrap items-end gap-3">
+            <div class="w-full md:w-44">
+                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Filter Tanggal</label>
+                <input type="date" name="date" value="<?= esc(request()->getGet('date')) ?>" 
+                       class="w-full px-4 py-2 bg-gray-50 border border-gray-100 rounded-xl text-xs focus:ring-2 focus:ring-blue-100 focus:bg-white transition-all outline-none text-gray-700 font-bold">
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="px-5 py-2 bg-[#1D2F83] text-white rounded-xl text-[10px] font-black hover:shadow-lg hover:shadow-blue-900/20 transition-all active:scale-95">
+                    FILTER
+                </button>
+                <a href="<?= base_url('admin/activity-logs/backup') ?>" class="px-5 py-2 bg-gray-100 text-gray-500 rounded-xl text-[10px] font-black hover:bg-gray-200 transition-all text-center">
+                    RESET
+                </a>
+            </div>
+        </form>
     </div>
+</div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4">
@@ -68,28 +84,7 @@
         <?php endif; ?>
     <?php endforeach; ?>
 
-    <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
-        <form method="get" class="flex flex-col md:flex-row gap-4 items-end">
-            <div class="w-full md:w-48">
-                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Tanggal</label>
-                <input type="date" name="date" value="<?= esc(request()->getGet('date')) ?>" 
-                       class="w-full px-4 py-2.5 rounded-xl border border-gray-100 bg-gray-50 text-sm focus:ring-2 focus:ring-blue-100 focus:bg-white transition-all outline-none">
-            </div>
-            <div class="flex-1 w-full">
-                <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Cari Arsip</label>
-                <input type="text" name="q" placeholder="Nama file atau periode data..." value="<?= esc(request()->getGet('q')) ?>"
-                       class="w-full px-4 py-2.5 rounded-xl border border-gray-100 bg-gray-50 text-sm focus:ring-2 focus:ring-blue-100 focus:bg-white transition-all outline-none">
-            </div>
-            <div class="flex gap-2 w-full md:w-auto">
-                <button type="submit" class="flex-1 md:flex-none px-6 py-2.5 bg-[#1D2F83] text-white rounded-xl text-xs font-bold hover:shadow-lg hover:shadow-blue-900/20 transition-all active:scale-95">
-                    FILTER
-                </button>
-                <a href="<?= base_url('admin/activity-logs/backup') ?>" class="flex-1 md:flex-none px-6 py-2.5 bg-gray-100 text-gray-500 rounded-xl text-xs font-bold hover:bg-gray-200 transition-all text-center">
-                    RESET
-                </a>
-            </div>
-        </form>
-    </div>
+    
 
     <div class="bg-white rounded-3xl border border-gray-100 shadow-xl overflow-hidden shadow-gray-200/50">
         <div class="overflow-x-auto">

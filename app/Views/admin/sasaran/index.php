@@ -160,12 +160,14 @@
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                         Edit
                                     </a>
-                                    <a href="<?= base_url('admin/sasaran/delete/' . $s['id']) ?>" 
-                                       onclick="return confirm('Apakah Anda yakin ingin menghapus sasaran ini?')"
-                                       class="btn-action btn-delete">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                        Hapus
-                                    </a>
+<button type="button" 
+        onclick="confirmDelete('<?= base_url('admin/sasaran/delete/' . $s['id']) ?>', '<?= esc($s['nama_sasaran'], 'js') ?>')"
+        class="btn-action btn-delete">
+    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+    </svg>
+    Hapus
+</button>
                                 </div>
                             </td>
                         </tr>
@@ -182,5 +184,54 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // 1. Fungsi khusus untuk konfirmasi hapus
+    function confirmDelete(url, namaSasaran) {
+        Swal.fire({
+            title: '<div class="text-2xl font-black text-blue-900 tracking-tight mb-2">Konfirmasi Hapus</div>',
+            html: `
+                <div class="text-slate-500 text-sm font-medium leading-relaxed">
+                    Apakah Anda yakin ingin menghapus sasaran strategis <br>
+                    <span class="text-blue-600 font-bold">"${namaSasaran}"</span>?
+                    <p class="text-[10px] text-red-400 mt-3 uppercase tracking-[0.2em] font-bold">Tindakan ini tidak dapat dibatalkan</p>
+                </div>
+            `,
+            icon: 'warning',
+            iconColor: '#D4AF37',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Hapus Data',
+            cancelButtonText: 'Batalkan',
+            reverseButtons: true,
+            background: '#ffffff',
+            padding: '2.5rem',
+            buttonsStyling: false,
+            customClass: {
+                popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+                confirmButton: 'px-6 py-3 mx-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-red-600 text-white hover:bg-red-700 transition-all active:scale-95',
+                cancelButton: 'px-6 py-3 mx-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-slate-100 text-slate-500 hover:bg-slate-200 transition-all active:scale-95'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Tampilan loading saat proses hapus
+                Swal.fire({
+                    title: '<span class="text-sm font-bold text-slate-500 uppercase tracking-widest">Menghapus Data...</span>',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const loader = Swal.getHtmlContainer().querySelector('.swal2-loader');
+                        if (loader) loader.style.borderTopColor = '#003366';
+                    },
+                    showConfirmButton: false,
+                    customClass: { popup: 'rounded-[20px]' }
+                });
+                window.location.href = url;
+            }
+        });
+    }
+
+</script>
 
 <?= $this->endSection() ?>

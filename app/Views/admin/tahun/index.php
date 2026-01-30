@@ -48,18 +48,6 @@
         box-shadow: 0 4px 12px rgba(0, 51, 102, 0.2);
     }
 
-    .btn-back {
-        transition: var(--transition-smooth);
-        border: 1.5px solid #e2e8f0;
-        color: #64748b;
-    }
-
-    .btn-back:hover {
-        background-color: #f1f5f9;
-        color: var(--polban-blue);
-        border-color: var(--polban-blue);
-    }
-
     .status-badge {
         font-size: 10px;
         font-weight: 800;
@@ -69,8 +57,6 @@
         letter-spacing: 0.5px;
     }
 </style>
-
-
 
 <div class="px-4 py-8 max-w-7xl mx-auto">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
@@ -143,12 +129,12 @@
                                         Edit
                                     </a>
                                     
-                                    <a href="<?= base_url('admin/tahun/delete/'.$t['id']) ?>" 
-                                       onclick="return confirm('Hapus periode tahun ini?')"
-                                       class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-red-50 text-red-600 text-xs font-bold hover:bg-red-600 hover:text-white transition-all border border-red-100 shadow-sm">
+                                    <button type="button" 
+                                            onclick="confirmDelete('<?= base_url('admin/tahun/delete/'.$t['id']) ?>', '<?= $t['tahun'] ?>')"
+                                            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-red-50 text-red-600 text-xs font-bold hover:bg-red-600 hover:text-white transition-all border border-red-100 shadow-sm">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" /></svg>
                                         Hapus
-                                    </a>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -178,36 +164,58 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-
-function showToast(message, type = "success") {
-    const container = document.getElementById("toast-container");
-    const styles = {
-        success: "bg-green-600 border-green-700 text-white",
-        error: "bg-red-600 border-red-700 text-white",
-    };
-    const icons = {
-        success: '<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>',
-        error: '<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>',
-    };
-
-    const toast = document.createElement("div");
-    toast.className = `flex items-start gap-3 p-4 rounded-xl shadow-lg border transform transition-all duration-300 opacity-0 translate-x-10 ${styles[type]}`;
-    toast.innerHTML = `
-        <div class="mt-1">${icons[type]}</div>
-        <div class="flex-1">
-            <p class="font-semibold text-white">${type === 'success' ? 'Berhasil' : 'Gagal'}</p>
-            <p class="text-white/90 text-sm">${message}</p>
-        </div>
-        <button onclick="this.parentElement.remove()" class="text-white hover:text-gray-200 font-bold ml-2">×</button>
-    `;
-    container.appendChild(toast);
-    setTimeout(() => toast.classList.remove("opacity-0", "translate-x-10"), 50);
-    setTimeout(() => {
-        toast.classList.add("opacity-0", "translate-x-10");
-        setTimeout(() => toast.remove(), 300);
-    }, 4000);
-}
+    function confirmDelete(url, tahun) {
+        Swal.fire({
+            title: '<div class="text-2xl font-black text-blue-900 tracking-tight mb-2">Konfirmasi Hapus</div>',
+            html: `
+                <div class="text-slate-500 text-sm font-medium leading-relaxed">
+                    Apakah Anda yakin ingin menghapus periode anggaran <br>
+                    <span class="text-blue-600 font-bold">"Tahun ${tahun}"</span>?
+                    <p class="text-[10px] text-red-400 mt-3 uppercase tracking-[0.2em] font-bold">Tindakan ini tidak dapat dibatalkan</p>
+                </div>
+            `,
+            icon: 'warning',
+            iconColor: '#D4AF37',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Hapus Data',
+            cancelButtonText: 'Batalkan',
+            reverseButtons: true,
+            background: '#ffffff',
+            padding: '2.5rem',
+            buttonsStyling: false,
+            customClass: {
+                popup: 'rounded-[30px] border border-slate-100 shadow-2xl',
+                confirmButton: 'px-6 py-3 mx-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-red-600 text-white hover:bg-red-700 transition-all active:scale-95',
+                cancelButton: 'px-6 py-3 mx-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-slate-100 text-slate-500 hover:bg-slate-200 transition-all active:scale-95'
+            },
+            showClass: {
+                popup: 'animate__animated animate__fadeInUp animate__faster'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutDown animate__faster'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: '<span class="text-sm font-bold text-slate-500 uppercase tracking-widest">Menghapus Data...</span>',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const loader = Swal.getHtmlContainer().querySelector('.swal2-loader');
+                        if (loader) loader.style.borderTopColor = '#003366';
+                    },
+                    showConfirmButton: false,
+                    customClass: {
+                        popup: 'rounded-[20px]'
+                    }
+                });
+                
+                window.location.href = url;
+            }
+        });
+    }
 </script>
 
 <?= $this->endSection() ?>

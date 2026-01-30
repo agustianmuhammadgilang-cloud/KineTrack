@@ -385,11 +385,13 @@ class Dokumen extends BaseController
     // ============================
     if ($bidang['parent_id'] === null) {
 
-        $data['dokumen'] = $this->dokumenModel
-            ->where('status', 'archived')
-            ->where('unit_jurusan_id', $bidangId)
-            ->orderBy('updated_at', 'DESC')
-            ->findAll();
+       $data['dokumen'] = $this->dokumenModel
+    ->baseSelect()
+    ->where('dokumen_kinerja.status', 'archived')
+    ->where('dokumen_kinerja.unit_jurusan_id', $bidangId)
+    ->orderBy('dokumen_kinerja.updated_at', 'DESC')
+    ->findAll();
+
     }
 
     // ============================
@@ -397,12 +399,15 @@ class Dokumen extends BaseController
     // ============================
     else {
 
-        $data['dokumen'] = $this->dokumenModel
-            ->where('status', 'archived')
-            ->where('unit_jurusan_id', $bidang['parent_id']) // 🔥 KUNCI
-            ->where('unit_asal_id', $bidangId)
-            ->orderBy('updated_at', 'DESC')
-            ->findAll();
+       $data['dokumen'] = $this->dokumenModel
+    ->baseSelect()
+    ->where('dokumen_kinerja.status', 'archived')
+    ->where('dokumen_kinerja.unit_jurusan_id', $bidang['parent_id'])
+    ->where('dokumen_kinerja.unit_asal_id', $bidangId)
+    ->orderBy('dokumen_kinerja.updated_at', 'DESC')
+    ->findAll();
+
+
     }
 
     // ======================
@@ -607,21 +612,24 @@ public function exportArsipExcel()
     // AMBIL DATA
     // =========================
     if ($bidang['parent_id'] === null) {
-        // KAJUR
-        $dokumen = $this->dokumenModel
-            ->where('status', 'archived')
-            ->where('unit_jurusan_id', $bidangId)
-            ->orderBy('updated_at', 'DESC')
-            ->findAll();
-    } else {
-        // KAPRODI
-        $dokumen = $this->dokumenModel
-            ->where('status', 'archived')
-            ->where('unit_jurusan_id', $bidang['parent_id'])
-            ->where('unit_asal_id', $bidangId)
-            ->orderBy('updated_at', 'DESC')
-            ->findAll();
-    }
+    // KAJUR
+    $dokumen = $this->dokumenModel
+        ->baseSelect()
+        ->where('dokumen_kinerja.status', 'archived')
+        ->where('dokumen_kinerja.unit_jurusan_id', $bidangId)
+        ->orderBy('dokumen_kinerja.updated_at', 'DESC')
+        ->findAll();
+} else {
+    // KAPRODI
+    $dokumen = $this->dokumenModel
+        ->baseSelect()
+        ->where('dokumen_kinerja.status', 'archived')
+        ->where('dokumen_kinerja.unit_jurusan_id', $bidang['parent_id'])
+        ->where('dokumen_kinerja.unit_asal_id', $bidangId)
+        ->orderBy('dokumen_kinerja.updated_at', 'DESC')
+        ->findAll();
+}
+
 
     // =========================
     // BUAT EXCEL
@@ -672,7 +680,10 @@ public function exportArsipExcel()
 
     foreach ($dokumen as $d) {
         $sheet->setCellValue("A{$row}", $d['judul']);
-        $sheet->setCellValue("B{$row}", 'Unit ' . $d['unit_asal_id']);
+        $sheet->setCellValue(
+                "B{$row}",
+                $d['nama_unit_asal'] ?? '-'
+            );
         $sheet->setCellValue(
             "C{$row}",
             date('d/m/Y', strtotime($d['updated_at']))
