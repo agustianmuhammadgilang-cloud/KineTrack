@@ -180,7 +180,7 @@
                             </div>
                             <div class="flex items-center justify-between text-[10px] font-bold text-slate-600">
                                 <span class="text-slate-400 uppercase tracking-tighter">Unit</span>
-                                <span class="truncate ml-4 px-2 py-0.5 bg-slate-100 rounded-md font-black"><?= esc($d['nama_unit'] ?? '-') ?></span>
+                                <span class="truncate ml-4 px-2 py-0.5 bg-slate-100 rounded-md font-black"><?= esc($d['nama_unit_asal'] ?? '-') ?></span>
                             </div>
                         </div>
                     </div>
