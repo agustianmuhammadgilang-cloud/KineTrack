@@ -563,41 +563,70 @@ public function public()
 
  public function exportArsipPdf()
 {
-    $userId = session()->get('user_id');
-    $bidangId = session()->get('bidang_id'); // gunakan bidan_id, bukan unit_id
-    if (!$userId || !$bidangId) {
-        return redirect()->to('/login');
+    if (session()->get('role') !== 'atasan') {
+        return redirect()->back();
     }
 
-    // Ambil semua dokumen arsip unit atasan
-    $dokumen = $this->dokumenModel->getDokumenUnit($bidangId);
+    $bidangId = session()->get('bidang_id');
+    $bidang   = $this->bidangModel->find($bidangId);
 
-    // Render view menjadi HTML
-    $html = view('atasan/dokumen/export_pdf', ['dokumen' => $dokumen]);
+    if (!$bidang) {
+        return redirect()->back();
+    }
 
-    // Inisialisasi Dompdf
+    // =========================
+    // AMBIL DATA ARSIP (SAMA DENGAN VIEW ARSIP)
+    // =========================
+    if ($bidang['parent_id'] === null) {
+        // =========================
+        // KETUA JURUSAN
+        // =========================
+        $dokumen = $this->dokumenModel
+            ->baseSelect()
+            ->where('dokumen_kinerja.status', 'archived')
+            ->where('dokumen_kinerja.unit_jurusan_id', $bidangId)
+            ->orderBy('dokumen_kinerja.updated_at', 'DESC')
+            ->findAll();
+    } else {
+        // =========================
+        // KETUA PRODI
+        // =========================
+        $dokumen = $this->dokumenModel
+            ->baseSelect()
+            ->where('dokumen_kinerja.status', 'archived')
+            ->where('dokumen_kinerja.unit_jurusan_id', $bidang['parent_id'])
+            ->where('dokumen_kinerja.unit_asal_id', $bidangId)
+            ->orderBy('dokumen_kinerja.updated_at', 'DESC')
+            ->findAll();
+    }
+
+    // =========================
+    // RENDER PDF
+    // =========================
+    $html = view('atasan/dokumen/export_pdf', [
+        'dokumen' => $dokumen
+    ]);
+
     $dompdf = new Dompdf();
     $dompdf->loadHtml($html);
     $dompdf->setPaper('A4', 'portrait');
     $dompdf->render();
 
-    // Nama file PDF
     $filename = 'arsip_dokumen_atasan_' . date('Ymd_His') . '.pdf';
-     /**
-     * ======================================
-     * LOG AKTIVITAS (EXPORT ARSIP)
-     * ======================================
-     */
+
+    // =========================
+    // LOG AKTIVITAS
+    // =========================
     log_activity(
-        'EXPORT_ARSIP_DOKUMEN',
-        'Mengunduh arsip dokumen unit/bidang dalam bentuk PDF',
+        'EXPORT_ARSIP_DOKUMEN_PDF',
+        'Mengunduh arsip dokumen kinerja dalam format PDF',
         'dokumen_arsip',
         null
     );
 
-    // Download PDF
     return $dompdf->stream($filename, ['Attachment' => true]);
 }
+
 
 
 public function exportArsipExcel()

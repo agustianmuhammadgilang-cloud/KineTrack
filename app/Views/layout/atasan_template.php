@@ -258,6 +258,12 @@ function fileUpload() {
     </span>
 </a>
 
+
+    <a href="<?= base_url('document-request') ?>"
+   class="submenu-link <?= service('uri')->getSegment(1)=='document-request' ? 'active':'' ?>">
+    Permintaan Dokumen
+    </a>
+
                 <!--  -->
                 <!-- Dokumen Unit (PUBLIC UNIT) -->
 <a href="<?= base_url('atasan/dokumen/unit') ?>" 
