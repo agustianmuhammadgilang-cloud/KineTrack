@@ -67,10 +67,16 @@ public function index()
     // =========================
     $groupedUsers = [];
 
-    foreach ($users as $u) {
-        $unit = $u['nama_bidang'] ?? 'Tanpa Unit';
-        $groupedUsers[$unit][] = $u;
+foreach ($users as $u) {
+
+    if ($u['role'] === 'admin') {
+        $unit = 'Administrator Sistem';
+    } else {
+        $unit = $u['nama_bidang'] ?? 'Tanpa Unit Kerja';
     }
+
+    $groupedUsers[$unit][] = $u;
+}
 
     $html = view('admin/users/export_pdf', [
         'groupedUsers' => $groupedUsers

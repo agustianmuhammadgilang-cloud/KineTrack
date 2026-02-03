@@ -223,9 +223,11 @@ function fileUpload() {
 
 
     <!-- DOKUMEN GROUP -->
-    <?php
-        $docActive = in_array(service('uri')->getSegment(2), ['dokumen','kategori']);
-    ?>
+   <?php
+    // Cek apakah segmen 1 adalah document-request ATAU segmen 2 adalah dokumen/kategori
+    $docActive = (service('uri')->getSegment(1) == 'document-request') || 
+                 in_array(service('uri')->getSegment(2), ['dokumen', 'kategori']);
+?>
 
     <div x-data="{ open: <?= $docActive ? 'true':'false' ?> }" class="mt-2">
 
@@ -263,6 +265,11 @@ $seg3 = $uri->getTotalSegments() >= 3 ? $uri->getSegment(3) : ''; // aman
     <a href="<?= base_url('staff/kategori/ajukan') ?>"
        class="submenu-link <?= $seg3=='ajukan' ? 'active':'' ?>">
         Pengajuan Kategori Dokumen
+    </a>
+
+    <a href="<?= base_url('document-request') ?>"
+   class="submenu-link <?= service('uri')->getSegment(1)=='document-request' ? 'active':'' ?>">
+    Permintaan Dokumen
     </a>
 
     <a href="<?= base_url('staff/dokumen/arsip') ?>"
