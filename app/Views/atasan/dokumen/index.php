@@ -80,7 +80,9 @@
                             </div>
                             <h6 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.1em]">Informasi Pengirim</h6>
                         </div>
-                        <p class="text-sm text-slate-700 font-bold leading-none">Unit ID: <?= esc($d['unit_asal_id']) ?></p>
+                        <p class="text-sm text-slate-700 font-bold leading-none">
+                            Unit: <?= esc($d['nama_unit_asal'] ?? '-') ?>
+                        </p>
                         <p class="text-[11px] text-slate-400 mt-1">Status: Pegawai Aktif</p>
                     </div>
                 </div>

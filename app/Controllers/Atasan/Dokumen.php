@@ -51,21 +51,25 @@ class Dokumen extends BaseController
         // KETUA PRODI
         // =========================
         if ($bidangUser['parent_id'] !== null) {
-            $dokumen = $this->dokumenModel
-                ->where('status', 'pending_kaprodi')
-                ->where('unit_asal_id', $bidangUser['id'])
-                ->orderBy('created_at', 'DESC')
-                ->findAll();
+           $dokumen = $this->dokumenModel
+    ->baseSelect()
+    ->where('dokumen_kinerja.status', 'pending_kaprodi')
+    ->where('dokumen_kinerja.unit_asal_id', $bidangUser['id'])
+    ->orderBy('dokumen_kinerja.created_at', 'DESC')
+    ->findAll();
+
         }
         // =========================
         // KETUA JURUSAN
         // =========================
         else {
             $dokumen = $this->dokumenModel
-                ->where('status', 'pending_kajur')
-                ->where('unit_jurusan_id', $bidangUser['id'])
-                ->orderBy('created_at', 'DESC')
-                ->findAll();
+    ->baseSelect()
+    ->where('dokumen_kinerja.status', 'pending_kajur')
+    ->where('dokumen_kinerja.unit_jurusan_id', $bidangUser['id'])
+    ->orderBy('dokumen_kinerja.created_at', 'DESC')
+    ->findAll();
+
         }
 // LOG AKTIVITAS
         log_activity(
@@ -486,9 +490,10 @@ public function unit()
             return false;
         }
 
-        if ($unit && stripos($d['nama_unit'] ?? '', $unit) === false) {
-            return false;
+       if ($unit && stripos($d['nama_unit_asal'] ?? '', $unit) === false) {
+        return false;
         }
+
 
         return true;
     });
@@ -536,8 +541,8 @@ public function public()
             return false;
         }
 
-        if ($unit && stripos($d['nama_unit'] ?? '', $unit) === false) {
-            return false;
+        if ($unit && stripos($d['nama_unit_asal'] ?? '', $unit) === false) {
+        return false;
         }
 
         return true;

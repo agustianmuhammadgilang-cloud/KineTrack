@@ -173,7 +173,7 @@
                             </div>
                             <div class="flex items-center gap-2 text-[10px] font-bold text-slate-600">
                                 <span class="w-16 text-slate-400 uppercase tracking-tighter">Unit</span>
-                                <span class="truncate">: <?= esc($d['nama_unit'] ?? '-') ?></span>
+                                <span class="truncate">: <?= esc($d['nama_unit_asal'] ?? '-') ?></span>
                             </div>
                             <div class="flex items-center gap-2 text-[10px] font-bold text-slate-600">
                                 <span class="w-16 text-slate-400 uppercase tracking-tighter">Kategori</span>

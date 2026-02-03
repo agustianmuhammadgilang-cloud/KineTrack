@@ -168,7 +168,7 @@
                             <div class="flex items-center justify-between text-[10px] font-bold text-slate-600">
                                 <span class="text-slate-400 uppercase tracking-tighter">Unit Asal</span>
                                 <span class="truncate ml-4 text-blue-900 font-black px-2 py-0.5 bg-blue-50 rounded-md tracking-tight">
-                                    <?= esc($d['nama_unit'] ?? '-') ?>
+                                    <?= esc($d['nama_unit_asal'] ?? '-') ?>
                                 </span>
                             </div>
                             <div class="flex items-center justify-between text-[10px] font-bold text-slate-600">
