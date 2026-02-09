@@ -218,8 +218,13 @@ function fileUpload() {
 
         <!-- DOKUMEN GROUP -->
         <?php
-            $docActive = in_array(service('uri')->getSegment(2), ['dokumen','kategori']);
-        ?>
+    // Kita cek segment 1 untuk 'document-request' dan segment 2 untuk 'dokumen/kategori'
+    $seg1 = service('uri')->getSegment(1);
+    $seg2 = service('uri')->getSegment(2);
+    
+    $docActive = ($seg1 == 'document-request') || in_array($seg2, ['dokumen', 'kategori']);
+?>
+
         <div x-data="{ open: <?= $docActive ? 'true':'false' ?> }" class="mt-2">
             <button @click="open = !open"
                 class="sidebar-link w-full justify-between <?= $docActive ? 'active':'' ?>">

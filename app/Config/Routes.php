@@ -12,20 +12,26 @@ $routes->get('/', 'Landing::index');
 $routes->get('/login', 'Auth\Login::index');
 $routes->post('/login/process', 'Auth\Login::process');
 $routes->get('/logout', 'Auth\Login::logout');
-
 // =============================
 // DOCUMENT REQUEST (GLOBAL & ATASAN)
 // =============================
+
+// Tambahkan alias group untuk atasan agar link di view tidak mati
+$routes->group('atasan/document-request', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/', 'DocumentRequestController::index');
+    $routes->get('my-status', 'DocumentRequestController::status');
+    $routes->post('store', 'DocumentRequestController::store');
+});
+
+// Group original (untuk Staff atau akses umum)
 $routes->group('document-request', ['filter' => 'auth'], function ($routes) {
-    // Bisa diakses Atasan & Staff
-    $routes->get('/', 'DocumentRequestController::index');           // Cari Dokumen
-    $routes->get('my-status', 'DocumentRequestController::status');  // Status Saya (Riwayat)
-    $routes->post('store', 'DocumentRequestController::store');      // Proses Kirim Request
+    $routes->get('/', 'DocumentRequestController::index');
+    $routes->get('my-status', 'DocumentRequestController::status');
+    $routes->post('store', 'DocumentRequestController::store');
 
     // KHUSUS STAFF (Inbox & Approval)
-    // Tambahkan filter 'role:staff' jika kamu sudah punya filternya
     $routes->group('', ['filter' => 'role:staff'], function($routes) {
-        $routes->get('incoming', 'DocumentRequestController::inbox');    // Permintaan Masuk
+        $routes->get('incoming', 'DocumentRequestController::inbox');
         $routes->post('approve/(:num)', 'DocumentRequestController::approve/$1');
         $routes->post('reject/(:num)', 'DocumentRequestController::reject/$1');
     });
