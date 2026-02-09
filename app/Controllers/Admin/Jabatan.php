@@ -94,10 +94,16 @@ $model->delete($id);
         return redirect()->to('/admin/jabatan')->with('success', 'Data berhasil dihapus');
     }
 // Fungsi untuk mendeteksi default role berdasarkan nama jabatan
-    private function detectDefaultRole(string $namaJabatan): string
+private function detectDefaultRole(string $namaJabatan): string
 {
     $nama = strtolower($namaJabatan);
 
+    // 🔥 TAMBAHAN KHUSUS PIMPINAN (TIDAK MENGGANGGU LOGIKA LAMA)
+    if (str_contains($nama, 'pimpinan')) {
+        return 'pimpinan';
+    }
+
+    // LOGIKA LAMA (TETAP UTUH)
     if (
         str_contains($nama, 'ketua') ||
         str_contains($nama, 'kepala') ||
@@ -115,4 +121,5 @@ $model->delete($id);
 
     return 'staff';
 }
+
 }

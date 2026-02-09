@@ -210,16 +210,20 @@
     <?php
 $groupedUsers = [];
 foreach ($users as $u) {
-    // 🔥 Logika baru: Jika role admin, masukkan ke grup 'ADMINISTRATOR'
-    // Jika bukan admin, baru ambil nama bidangnya
+
     if ($u['role'] === 'admin') {
         $unit = 'ADMINISTRATOR';
+
+    } elseif ($u['role'] === 'pimpinan') {
+        $unit = 'PIMPINAN';
+
     } else {
         $unit = $u['nama_bidang'] ?? 'Tanpa Unit Kerja';
     }
-    
+
     $groupedUsers[$unit][] = $u;
 }
+
 ?>
 
     <div class="space-y-8">
@@ -246,18 +250,25 @@ foreach ($users as $u) {
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="font-bold text-slate-800"><?= esc($u['nama']) ?></span>
                             <?php if ($u['role'] === 'admin'): ?>
-                                <span class="text-[9px] bg-purple-100 text-purple-700 font-black uppercase px-2 py-0.5 rounded-full border border-purple-200">
-                                    Admin
-                                </span>
-                            <?php elseif ($u['role'] === 'atasan'): ?>
-                                <span class="text-[9px] bg-amber-100 text-amber-700 font-black uppercase px-2 py-0.5 rounded-full border border-amber-200">
-                                    Atasan
-                                </span>
-                            <?php else: ?>
-                                <span class="text-[9px] bg-slate-100 text-slate-500 font-black uppercase px-2 py-0.5 rounded-full border border-slate-200">
-                                    Staff
-                                </span>
-                            <?php endif; ?>
+    <span class="text-[9px] bg-purple-100 text-purple-700 font-black uppercase px-2 py-0.5 rounded-full border border-purple-200">
+        Admin
+    </span>
+
+<?php elseif ($u['role'] === 'pimpinan'): ?>
+    <span class="text-[9px] bg-indigo-100 text-indigo-700 font-black uppercase px-2 py-0.5 rounded-full border border-indigo-200">
+        Pimpinan
+    </span>
+
+<?php elseif ($u['role'] === 'atasan'): ?>
+    <span class="text-[9px] bg-amber-100 text-amber-700 font-black uppercase px-2 py-0.5 rounded-full border border-amber-200">
+        Atasan
+    </span>
+
+<?php else: ?>
+    <span class="text-[9px] bg-slate-100 text-slate-500 font-black uppercase px-2 py-0.5 rounded-full border border-slate-200">
+        Staff
+    </span>
+<?php endif; ?>
 
                             </div>
                             <p class="text-xs text-slate-500"><?= esc($u['nama_jabatan']) ?> <span class="mx-1 text-slate-300">•</span> <?= esc($u['email']) ?></p>

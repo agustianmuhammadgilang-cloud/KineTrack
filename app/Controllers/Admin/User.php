@@ -71,12 +71,17 @@ foreach ($users as $u) {
 
     if ($u['role'] === 'admin') {
         $unit = 'Administrator Sistem';
+
+    } elseif ($u['role'] === 'pimpinan') {
+        $unit = 'Pimpinan';
+
     } else {
         $unit = $u['nama_bidang'] ?? 'Tanpa Unit Kerja';
     }
 
     $groupedUsers[$unit][] = $u;
 }
+
 
     $html = view('admin/users/export_pdf', [
         'groupedUsers' => $groupedUsers
@@ -184,6 +189,11 @@ log_activity(
             ->with('error', 'Jabatan tidak valid atau belum memiliki role sistem.');
     }
 
+    // 🔥 TAMBAHAN: jika jabatan = pimpinan → bidang harus null
+if ($jabatan['default_role'] === 'pimpinan') {
+    $bidang_id = null;
+}
+
     $userId = $this->userModel->insert([
         'nama'       => $nama,
         'email'      => $email,
@@ -241,6 +251,11 @@ log_activity(
 
     // Ambil role dari jabatan
     $jabatan = (new JabatanModel())->find($jabatan_id);
+    // 🔥 Jika jabatan = pimpinan → bidang harus null
+if ($jabatan['default_role'] === 'pimpinan') {
+    $bidang_id = null;
+}
+
 
     if (!$jabatan || empty($jabatan['default_role'])) {
         return redirect()->back()->withInput()->with('error', 'Jabatan tidak valid atau belum memiliki role sistem.');
@@ -323,17 +338,21 @@ log_activity(
     // =========================
 // GROUP PER BIDANG
 // =========================
-$groupedUsers = [];
 foreach ($users as $u) {
 
     if ($u['role'] === 'admin') {
         $unit = 'Administrator';
+
+    } elseif ($u['role'] === 'pimpinan') {
+        $unit = 'Pimpinan';
+
     } else {
         $unit = $u['nama_bidang'] ?? 'Tanpa Unit Kerja';
     }
 
     $groupedUsers[$unit][] = $u;
 }
+
 
 
     $spreadsheet = new Spreadsheet();

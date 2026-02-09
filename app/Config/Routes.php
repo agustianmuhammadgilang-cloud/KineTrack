@@ -195,6 +195,7 @@ $routes->group('staff', ['filter' => 'auth'], function($routes) {
     // Pengajuan Kategori Dokumen
     $routes->get('kategori/ajukan', 'Staff\PengajuanKategori::create');
     $routes->post('kategori/ajukan/store', 'Staff\PengajuanKategori::store');
+    $routes->get('rekomendasi', 'Staff\TaskController::rekomendasi');
 
 });
 
@@ -213,6 +214,8 @@ $routes->group('atasan', ['filter' => 'auth'], function($routes){
     //notifications
     $routes->get('notifications/pending-count', 'Atasan\Notifications::pendingCount');
     $routes->get('notifications/list', 'Atasan\Notifications::list');
+    // Cari baris ini dan ubah 'Task' menjadi 'TaskController'
+$routes->get('rekomendasi', 'Atasan\TaskController::rekomendasi');
 });
 // =============================
 // AJAX ROUTES
@@ -530,3 +533,33 @@ $routes->get('badge/staff-dokumen-public', 'BadgeController::staffDokumenPublic'
 $routes->post('badge/staff-dokumen-public/mark-all', 'BadgeController::markStaffDokumenPublicRead');
 
 $routes->post('admin/notifikasi/read-all', 'Admin\Dashboard::markAllRead');
+
+// ======================================================
+// ROUTE PIMPINAN
+// ======================================================
+$routes->group('pimpinan', ['filter' => 'role:pimpinan'], function($routes) {
+
+    $routes->get('/', 'Pimpinan\Dashboard::index');
+
+    // alias supaya kompatibel dengan view admin
+    $routes->get('pengukuran', 'Pimpinan\Pengukuran::output');
+    $routes->get('pengukuran/output', 'Pimpinan\Pengukuran::output');
+
+    // PERBAIKAN DI SINI: Tambahkan Pimpinan\
+    $routes->get('rekomendasi', 'Pimpinan\Rekomendasi::form');
+    $routes->post('rekomendasi/store', 'Pimpinan\Rekomendasi::store');
+
+    $routes->get(
+        'pengukuran/output/detail/(:num)/(:num)/(:num)',
+        'Pimpinan\Pengukuran::detail/$1/$2/$3'
+    );
+
+    $routes->get('dokumen', 'DocumentRequestController::pimpinan');
+    $routes->get('dokumen/view/(:any)', 'DocumentRequestController::viewDocument/$1');
+    $routes->get('dokumen/download/(:any)', 'DocumentRequestController::downloadDocument/$1');
+
+    $routes->get('profile', 'Pimpinan\Profile::index');
+    $routes->post('profile/update', 'Pimpinan\Profile::update');
+});
+
+

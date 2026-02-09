@@ -475,4 +475,115 @@ protected function sendNotification($userId, $message, $meta = null)
     ]);
 }
 
+
+/**
+ * =====================================================
+ * 🔷 HALAMAN DOKUMEN KHUSUS PIMPINAN
+ * Semua dokumen langsung terlihat
+ * =====================================================
+ */
+public function pimpinan()
+{
+    if (session('role') !== 'pimpinan') {
+        return redirect()->to('/pimpinan');
+    }
+
+    // 🔍 Search
+    $search = trim($this->request->getGet('search'));
+
+    // 🔥 Semua dokumen tanpa filter scope
+    $query = $this->documentModel
+        ->select([
+            'dokumen_kinerja.*',
+            'users.nama AS nama_pemilik',
+            'COALESCE(unit_asal.nama_bidang, unit_jurusan.nama_bidang) AS nama_unit'
+        ])
+        ->join('users', 'users.id = dokumen_kinerja.created_by')
+        ->join('bidang AS unit_asal', 'unit_asal.id = dokumen_kinerja.unit_asal_id', 'left')
+        ->join('bidang AS unit_jurusan', 'unit_jurusan.id = dokumen_kinerja.unit_jurusan_id', 'left')
+        ->orderBy('dokumen_kinerja.created_at', 'DESC');
+
+    if (!empty($search)) {
+        $query->groupStart()
+            ->like('dokumen_kinerja.judul', $search)
+            ->orLike('users.nama', $search)
+            ->orLike('unit_asal.nama_bidang', $search)
+            ->orLike('unit_jurusan.nama_bidang', $search)
+        ->groupEnd();
+    }
+
+    log_activity(
+        'view_all_documents_pimpinan',
+        'Pimpinan melihat seluruh dokumen',
+        'dokumen',
+        null
+    );
+
+    return view('pimpinan/document/index', [
+        'documents' => $query->findAll(),
+        'search'    => $search
+    ]);
+}
+
+/**
+ * Preview dokumen (khusus pimpinan)
+ */
+/**
+ * Preview dokumen (khusus pimpinan)
+ */
+public function viewDocument($filename)
+{
+    if (session('role') !== 'pimpinan') {
+        return redirect()->to('/pimpinan');
+    }
+
+    $filename = basename($filename);
+    
+    // COBA CEK DI DUA LOKASI UMUM
+    $pathWritable = WRITEPATH . 'uploads/dokumen/' . $filename;
+    $pathPublic   = FCPATH . 'uploads/dokumen/' . $filename;
+
+    if (file_exists($pathWritable)) {
+        $path = $pathWritable;
+    } elseif (file_exists($pathPublic)) {
+        $path = $pathPublic;
+    } else {
+        // Jika tidak ada di keduanya, lempar error dengan info lokasi agar kamu bisa cek folder
+        return redirect()->back()->with('error', 'File tidak ditemukan di server. Pastikan file ada di writable/uploads/dokumen/ atau public/uploads/dokumen/');
+    }
+
+    log_activity('preview_document', 'Pimpinan membuka preview', 'dokumen', null);
+
+    return $this->response
+        ->setHeader('Content-Type', mime_content_type($path))
+        ->setBody(file_get_contents($path));
+}
+
+/**
+ * Download dokumen (khusus pimpinan)
+ */
+public function downloadDocument($filename)
+{
+    if (session('role') !== 'pimpinan') {
+        return redirect()->to('/login');
+    }
+
+    $filename = basename($filename);
+    
+    $pathWritable = WRITEPATH . 'uploads/dokumen/' . $filename;
+    $pathPublic   = FCPATH . 'uploads/dokumen/' . $filename;
+
+    if (file_exists($pathWritable)) {
+        $path = $pathWritable;
+    } elseif (file_exists($pathPublic)) {
+        $path = $pathPublic;
+    } else {
+        return redirect()->back()->with('error', 'File fisik tidak ditemukan.');
+    }
+
+    log_activity('download_document', 'Pimpinan mengunduh dokumen', 'dokumen', null);
+
+    return $this->response->download($path, null);
+}
+
 }

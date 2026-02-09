@@ -81,14 +81,20 @@ class Login extends BaseController
 
 
         // Redirect sesuai role
-        switch ($user['role']) {
-            case 'admin':
-                return redirect()->to('/admin');
-            case 'atasan':
-                return redirect()->to('/atasan');
-            default:
-                return redirect()->to('/staff/dashboard');
-        }
+            switch ($user['role']) {
+        case 'admin':
+            return redirect()->to('/admin');
+
+        case 'pimpinan':
+            return redirect()->to('/pimpinan');
+
+        case 'atasan':
+            return redirect()->to('/atasan');
+
+        case 'staff':
+        default:
+            return redirect()->to('/staff/dashboard');
+    }
     }
     // Proses logout
     public function logout()

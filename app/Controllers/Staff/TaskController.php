@@ -9,6 +9,7 @@ use App\Models\SasaranModel;
 use App\Models\PengukuranModel;
 use App\Models\TahunAnggaranModel;
 use App\Models\NotificationModel;
+use App\Models\RekomendasiPengukuranModel;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -21,6 +22,7 @@ class TaskController extends BaseController
     protected $pengukuranModel;
     protected $tahunModel;
     protected $notifModel;
+    protected $rekomendasiModel;
     // Konstruktor untuk inisialisasi model-model yang dibutuhkan
     public function __construct()
 {
@@ -30,6 +32,7 @@ class TaskController extends BaseController
     $this->pengukuranModel = new \App\Models\PengukuranModel(); // tabel: pengukuran_kinerja
     $this->tahunModel      = new \App\Models\TahunAnggaranModel();
     $this->notifModel      = new \App\Models\NotificationModel();
+    $this->rekomendasiModel = new \App\Models\RekomendasiPengukuranModel();
 }
 
 
@@ -39,6 +42,15 @@ class TaskController extends BaseController
     public function index()
 {
     $userId = session()->get('user_id');
+
+    // Koreksi di sini: pakai 'status' = 'active'
+    $tahunAktif = $this->tahunModel->where('status', 'active')->first();
+    $tahunIdAktif = $tahunAktif['id'] ?? null;
+
+    $hasRekomendasi = false;
+    if ($tahunIdAktif) {
+        $hasRekomendasi = $this->rekomendasiModel->where('tahun_id', $tahunIdAktif)->countAllResults() > 0;
+    }
 
 // 🔴 Ambil status badge SEBELUM di-reset
 $badgePengukuran = $this->picModel
@@ -120,7 +132,9 @@ $this->picModel
 
     return view('staff/task/index', [
     'tasksGrouped'    => $result,
-    'badgePengukuran' => $badgePengukuran
+    'badgePengukuran' => $badgePengukuran,
+    'hasRekomendasi'  => $hasRekomendasi, // Kirim ke View
+    'tahun_aktif'     => $tahunAktif,     // Optional, untuk label di view
 ]);
 
 }
@@ -459,4 +473,44 @@ private function fail($msg)
     {
         return $this->fail("Triwulan ini sedang dikunci.");
     }
+
+     // Tambahkan model di bagian atas jika belum ada
+// use App\Models\RekomendasiPengukuranModel;
+public function rekomendasi()
+{
+    // 1. Inisialisasi Model
+    $rekomendasiModel = new \App\Models\RekomendasiPengukuranModel();
+
+    // 2. Ambil Tahun yang sedang aktif (Sesuai kolom 'status' => 'active')
+    $tahunAktif = $this->tahunModel->where('status', 'active')->first();
+    
+    // Jika tidak ada yang statusnya active, ambil yang paling terbaru
+    if (!$tahunAktif) {
+        $tahunAktif = $this->tahunModel->orderBy('tahun', 'DESC')->first();
+    }
+
+    $tahunId = $tahunAktif['id'] ?? null;
+
+    // 3. Ambil data rekomendasi jika tahun ditemukan
+    $rekomendasi = [];
+    if ($tahunId) {
+        // Menggunakan helper yang sudah kita buat di model sebelumnya
+        $rekomendasi = $rekomendasiModel->getFullHistory($tahunId);
+    }
+
+    // 4. Log aktivitas (Gunakan helper log_activity milikmu)
+    log_activity(
+        'view_rekomendasi_pimpinan',
+        'Melihat daftar rekomendasi dan evaluasi dari pimpinan untuk tahun ' . ($tahunAktif['tahun'] ?? '-'),
+        'rekomendasi_pengukuran',
+        null
+    );
+
+    // 5. Render ke View
+    // Pastikan path view sesuai: atasan/task/rekomendasi_view
+    return view('staff/task/rekomendasi_view', [
+        'rekomendasi' => $rekomendasi,
+        'tahun_aktif' => $tahunAktif
+    ]);
+}
 }

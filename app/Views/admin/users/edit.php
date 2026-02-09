@@ -99,8 +99,9 @@
                                 class="input-field w-full px-4 py-3.5 rounded-2xl text-blue-900 font-bold bg-slate-50">
                             <option value="">- Pilih Jabatan -</option>
                             <?php foreach ($jabatan as $j): ?>
-                                <option value="<?= $j['id'] ?>" 
-                                        data-nama="<?= strtolower($j['nama_jabatan']) ?>"
+                                <option value="<?= $j['id'] ?>"
+        data-nama="<?= strtolower($j['nama_jabatan']) ?>"
+        data-role="<?= $j['default_role'] ?>"
                                         <?= $j['id'] == $user['jabatan_id'] ? 'selected' : '' ?>>
                                     <?= esc($j['nama_jabatan']) ?>
                                 </option>
@@ -195,39 +196,52 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function applyRule() {
-        const currentVal = bidang.value; // Simpan nilai sementara
-        resetBidang();
+    const currentVal = bidang.value;
+    resetBidang();
 
-        const jabatanText = jabatan.options[jabatan.selectedIndex]?.dataset.nama || '';
-        if (!jabatanText) return;
+    const selected = jabatan.options[jabatan.selectedIndex];
+    if (!selected) return;
 
-        bidang.disabled = false;
-        bidang.classList.remove('bg-slate-100');
+    const role = selected.dataset.role || '';
+    const jabatanText = selected.dataset.nama || '';
 
-        let allowedType = '';
-        if (jabatanText.includes('jurusan')) {
-            allowedType = 'jurusan';
-            roleInfo.value = (jabatanText.includes('ketua') || jabatanText.includes('sekretaris')) ? 'atasan' : 'staff';
-        } else if (jabatanText.includes('prodi')) {
-            allowedType = 'prodi';
-            roleInfo.value = (jabatanText.includes('ketua') || jabatanText.includes('koordinator')) ? 'atasan' : 'staff';
-        } else {
-            roleInfo.value = 'staff';
-        }
+    // tampilkan role dari DB
+    roleInfo.value = role.toUpperCase();
 
-        options.forEach(opt => {
-            if (opt.dataset.type === allowedType) {
-                opt.disabled = false;
-                opt.classList.remove('text-slate-300');
-                opt.classList.add('text-blue-900', 'font-bold');
-
-                // Set selected jika ini inisialisasi awal atau nilainya cocok
-                if (opt.value === selectedBidang) {
-                    opt.selected = true;
-                }
-            }
-        });
+    // ======================
+    // HANDLE PIMPINAN
+    // ======================
+    if (role === 'pimpinan') {
+        bidang.value = '';
+        bidang.disabled = true;
+        bidang.classList.add('bg-slate-100');
+        return;
     }
+
+    bidang.disabled = false;
+    bidang.classList.remove('bg-slate-100');
+
+    let allowedType = '';
+
+    if (jabatanText.includes('jurusan')) {
+        allowedType = 'jurusan';
+    } else if (jabatanText.includes('prodi')) {
+        allowedType = 'prodi';
+    }
+
+    options.forEach(opt => {
+        if (opt.dataset.type === allowedType) {
+            opt.disabled = false;
+            opt.classList.remove('text-slate-300');
+            opt.classList.add('text-blue-900', 'font-bold');
+
+            if (opt.value === selectedBidang) {
+                opt.selected = true;
+            }
+        }
+    });
+}
+
 
     jabatan.addEventListener('change', applyRule);
 

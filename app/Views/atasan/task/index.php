@@ -52,23 +52,45 @@
 <div class="min-h-screen bg-light px-6 py-8">
     <div class="max-w-7xl mx-auto">
         
-        <div class="flex flex-col md:flex-row justify-between items-end border-b border-slate-200 pb-6 mb-8">
-            <div>
-                <h1 class="text-xl font-bold text-slate-800 tracking-tight">Pengukuran Kinerja</h1>
-                <p class="text-sm text-slate-500 mt-1">Status pembukaan indikator dikelola secara sistem dan manual oleh admin.</p>
-            </div>
+        <div class="flex flex-col md:flex-row justify-between items-start border-b border-slate-200 pb-6 mb-8 gap-6">
+    <div class="flex-1">
+        <h1 class="text-xl font-bold text-slate-800 tracking-tight">Pengukuran Kinerja</h1>
+        <p class="text-sm text-slate-500 mt-1">Status pembukaan indikator dikelola secara sistem dan manual oleh admin.</p>
+    </div>
 
-            <div class="w-full md:w-64 mt-4 md:mt-0">
-                <label class="text-[11px] font-semibold text-slate-400 uppercase mb-1.5 block">Filter Sasaran</label>
-                <select id="sasaranFilter" onchange="filterSasaran(this.value)" 
-                    class="w-full bg-white border border-slate-200 text-slate-600 text-sm rounded-lg p-2 outline-none focus:border-blue-400">
-                    <option value="all">Semua Sasaran</option>
-                    <?php foreach (array_keys($tasksGrouped) as $sasaran): ?>
-                        <option value="<?= esc($sasaran) ?>"><?= esc($sasaran) ?></option>
-                    <?php endforeach; ?>
-                </select>
+    <div class="w-full md:w-80 space-y-4">
+        
+        <?php if ($hasRekomendasi): ?>
+        <a href="<?= base_url('atasan/rekomendasi') ?>" class="group block relative overflow-hidden bg-white border border-amber-100 rounded-xl p-3 transition-all hover:shadow-md hover:border-amber-300">
+            <div class="flex items-center gap-3">
+                <div class="shrink-0 w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center text-amber-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                        <h4 class="text-[11px] font-bold text-blue-900 leading-tight truncate">Evaluasi & Rekomendasi</h4>
+                        <span class="px-1.5 py-0.5 bg-amber-100 text-amber-700 text-[8px] font-black rounded uppercase">Penting</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500 truncate mt-0.5">Klik untuk lihat arahan pimpinan.</p>
+                </div>
             </div>
+        </a>
+        <?php endif; ?>
+
+        <div>
+            <label class="text-[11px] font-semibold text-slate-400 uppercase mb-1.5 block">Filter Sasaran</label>
+            <select id="sasaranFilter" onchange="filterSasaran(this.value)" 
+                class="w-full bg-white border border-slate-200 text-slate-600 text-sm rounded-lg p-2 outline-none focus:border-blue-400 shadow-sm">
+                <option value="all">Semua Sasaran</option>
+                <?php foreach (array_keys($tasksGrouped) as $sasaran): ?>
+                    <option value="<?= esc($sasaran) ?>"><?= esc($sasaran) ?></option>
+                <?php endforeach; ?>
+            </select>
         </div>
+    </div>
+</div>
 
         <?php if (empty($tasksGrouped)): ?>
             <div class="bg-white rounded-2xl p-12 text-center border border-slate-100">
