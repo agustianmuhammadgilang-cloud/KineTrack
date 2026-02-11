@@ -28,6 +28,7 @@
             <div class="flex flex-wrap items-center gap-2 bg-gray-50 p-1.5 rounded-2xl border border-gray-100">
                 <button onclick="filterLogs('all', this)" class="filter-btn active">Semua</button>
                 <button onclick="filterLogs('admin', this)" class="filter-btn">Admin</button>
+                <button onclick="filterLogs('pimpinan', this)" class="filter-btn">Pimpinan</button>
                 <button onclick="filterLogs('atasan', this)" class="filter-btn">Atasan</button>
                 <button onclick="filterLogs('staff', this)" class="filter-btn">Staff</button>
                 <div class="w-px h-6 bg-gray-200 mx-1"></div>
@@ -48,6 +49,7 @@
                     $isRestored = (int)($log['is_restored'] ?? 0) === 1;
                     $roleColor = match(strtolower($log['role'])) {
                         'admin' => 'bg-red-50 text-red-700 border-red-100',
+                        'pimpinan'  => 'bg-purple-50 text-purple-700 border-purple-200',
                         'atasan' => 'bg-blue-50 text-blue-700 border-blue-100',
                         default => 'bg-green-50 text-green-700 border-green-100'
                     };

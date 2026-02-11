@@ -37,6 +37,15 @@ class Rekomendasi extends BaseController
     if ($tahunId && $tw) {
         $data['rekomendasi'] = $this->rekomendasiModel->getByPeriode($tahunId, $tw);
     }
+    
+    log_activity(
+    'view_form_rekomendasi',
+    "Pimpinan membuka form rekomendasi" .
+    ($tahunId && $tw ? " TW $tw tahun {$data['tahun_teks']}" : ''),
+    'rekomendasi_pengukuran',
+    null
+);
+
 
     return view('pimpinan/rekomendasi/form', $data);
 }
