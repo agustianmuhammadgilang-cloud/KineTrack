@@ -22,7 +22,7 @@
                         </p>
                         <div class="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                             Mode: <?= ucfirst($mode) ?> 
-                            <?= $mode === 'akumulatif' ? '(Akumulasi TW)' : '(Data Mandiri TW)' ?>
+                            <?= $mode === 'akumulatif' ? '' : 'Akumulatif' ?>
                         </div>
                     </div>
                 </div>

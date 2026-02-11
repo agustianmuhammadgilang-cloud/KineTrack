@@ -54,18 +54,18 @@
 <div class="bg-white shadow-md rounded-xl p-6 border border-gray-200">
 
     <h4 class="text-xl font-semibold text-gray-800 mb-4">
-        Input Pengukuran Staff
+        Input Pengukuran PIC
     </h4>
 
     <?php if (empty($pengukuran)): ?>
-        <p class="text-gray-600 text-sm">Belum ada pengukuran yang diinput staff.</p>
+        <p class="text-gray-600 text-sm">Belum ada pengukuran yang diinput PIC.</p>
 
     <?php else: ?>
         <div class="overflow-x-auto">
             <table class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
                 <thead>
                     <tr class="bg-gray-100 text-left">
-                        <th class="p-3 border">Staff</th>
+                        <th class="p-3 border">PIC</th>
                         <th class="p-3 border">Realisasi</th>
                         <th class="p-3 border">Progress</th>
                         <th class="p-3 border">Kendala</th>
@@ -147,7 +147,7 @@
             title: '<div class="text-2xl font-black text-blue-900 tracking-tight mb-2">Konfirmasi Hapus</div>',
             html: `
                 <div class="text-slate-500 text-sm font-medium leading-relaxed">
-                    Apakah Anda yakin ingin menghapus data pengukuran dari staff <br>
+                    Apakah Anda yakin ingin menghapus data pengukuran dari PIC <br>
                     <span class="text-blue-600 font-bold">"${namaStaff}"</span>?
                     <p class="text-[10px] text-red-400 mt-3 uppercase tracking-[0.2em] font-bold">Data realisasi dan file dukung akan terhapus permanen</p>
                 </div>

@@ -307,6 +307,25 @@ $seg3 = $segments[2] ?? null;
     Manajemen Triwulan
 </a>
 
+     <!-- Output Pengukuran -->
+<a href="<?= base_url('admin/pengukuran/output') ?>"
+    class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition">
+    <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
+        <use href="#chart-analytics" />
+    </svg>
+    Pengukuran Kinerja
+</a>
+
+<a href="<?= base_url('admin/grafik') ?>"
+   class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition
+   <?= (service('uri')->getSegment(2) == 'grafik') ? 'bg-white/20 font-semibold' : '' ?>">
+
+    <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
+        <use href="#chart-bar" />
+    </svg>
+    Grafik Kinerja
+</a>
+
 <!-- Tambahkan di bagian symbol SVG -->
 <svg style="display:none;">
     <symbol id="clock" viewBox="0 0 24 24">
@@ -386,15 +405,6 @@ $seg3 = $segments[2] ?? null;
     </div>
 </div>
 
-        
-        <!-- Output Pengukuran -->
-<a href="<?= base_url('admin/pengukuran/output') ?>"
-    class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition">
-    <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
-        <use href="#chart-analytics" />
-    </svg>
-    Pengukuran Kinerja
-</a>
 <!-- Manajemen Log Aktivitas -->
 <div 
     x-data="{
@@ -472,17 +482,6 @@ $seg3 = $segments[2] ?? null;
 
     </div>
 </div>
-
-<a href="<?= base_url('admin/grafik') ?>"
-   class="flex items-center gap-3 px-6 py-3 rounded hover:bg-white/10 transition
-   <?= (service('uri')->getSegment(2) == 'grafik') ? 'bg-white/20 font-semibold' : '' ?>">
-
-    <svg class="sidebar-icon text-white" fill="none" stroke="currentColor">
-        <use href="#chart-bar" />
-    </svg>
-    Grafik Kinerja
-</a>
-
 
 <!-- Profil -->
 <a href="<?= base_url('admin/profile') ?>"

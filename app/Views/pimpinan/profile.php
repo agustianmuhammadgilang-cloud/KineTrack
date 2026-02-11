@@ -4,10 +4,10 @@
 <div class="max-w-4xl mx-auto py-8 px-4 font-sans text-slate-800">
     <div class="mb-8">
         <h3 class="text-3xl font-extrabold text-[var(--polban-blue)] tracking-tight">
-            Pengaturan Profil Atasan
+            Pengaturan Profil Pimpinan
         </h3>
         <p class="text-slate-500 mt-1">
-            Kelola informasi kredensial dan tanda tangan digital Anda untuk otoritas Staff.
+            Kelola informasi kredensial dan tanda tangan digital Anda untuk otoritas Pimpinan.
         </p>
     </div>
 
